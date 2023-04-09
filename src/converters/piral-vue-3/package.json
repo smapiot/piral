@@ -28,6 +28,9 @@
     "./convert": {
       "import": "./convert.js"
     },
+    "./extend-webpack": {
+      "require": "./extend-webpack.js"
+    },
     "./esm/*": {
       "import": "./esm/*"
     },

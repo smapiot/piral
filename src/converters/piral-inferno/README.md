@@ -79,11 +79,11 @@ The `inferno` and `inferno-create-element` package should be shared with the pil
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "inferno",
-      "inferno-create-element"
-    ]
+  "importmap": {
+    "imports": {
+      "inferno": "",
+      "inferno-create-element": ""
+    }
   }
 }
 ```

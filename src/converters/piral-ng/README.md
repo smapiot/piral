@@ -317,17 +317,17 @@ The related packages should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "@angular/common",
-      "@angular/compiler",
-      "@angular/core",
-      "@angular/platform-browser",
-      "@angular/platform-browser-dynamic",
-      "piral-ng/common",
-      "rxjs",
-      "zone.js"
-    ]
+  "importmap": {
+    "imports": {
+      "@angular/common": "",
+      "@angular/compiler": "",
+      "@angular/core": "",
+      "@angular/platform-browser": "",
+      "@angular/platform-browser-dynamic": "",
+      "piral-ng/common": "",
+      "rxjs": "",
+      "zone.js": ""
+    }
   }
 }
 ```

@@ -79,11 +79,11 @@ The `solid-js` and `solid-js/dom` packages should be shared with the pilets via 
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "solid-js",
-      "solid-js/dom"
-    ]
+  "importmap": {
+    "imports": {
+      "solid-js": "",
+      "solid-js/dom": ""
+    }
   }
 }
 ```

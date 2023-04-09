@@ -79,11 +79,11 @@ The `lit-element` and `@webcomponents/webcomponentsjs` packages should be shared
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "@webcomponents/webcomponentsjs",
-      "lit-element"
-    ]
+  "importmap": {
+    "imports": {
+      "@webcomponents/webcomponentsjs": "",
+      "lit-element": ""
+    }
   }
 }
 ```
