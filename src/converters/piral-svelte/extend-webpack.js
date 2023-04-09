@@ -18,7 +18,7 @@ module.exports =
     }
 
     if (!config.resolve.conditionNames) {
-      config.resolve.conditionNames = [];
+      config.resolve.conditionNames = ['import', 'module', 'require', 'node'];
     }
 
     config.resolve.alias.svelte = resolve('node_modules', 'svelte');
