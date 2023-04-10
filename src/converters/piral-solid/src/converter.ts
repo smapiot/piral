@@ -1,6 +1,6 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
 import { Component, onCleanup } from 'solid-js';
-import { render, createComponent } from 'solid-js/dom';
+import { render, createComponent } from 'solid-js/web';
 import { createExtension } from './extension';
 
 export interface SolidConverterOptions {

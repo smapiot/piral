@@ -14063,6 +14063,11 @@ serialize-javascript@^6.0.0:
   dependencies:
     randombytes "^2.1.0"
 
+seroval@^0.5.0:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/seroval/-/seroval-0.5.1.tgz#e6d17365cdaaae7e50815c7e0bcd7102facdadf3"
+  integrity sha512-ZfhQVB59hmIauJG5Ydynupy8KHyr5imGNtdDhbZG68Ufh1Ynkv9KOYOAABf71oVbQxJ8VkWnMHAjEHE7fWkH5g==
+
 serve-static@1.15.0, serve-static@^1.13.1:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.15.0.tgz#faaef08cffe0a1a62f60cad0c4e513cff0ac9540"
@@ -14281,10 +14286,13 @@ socks@^2.6.2:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-solid-js@^0.18.7:
-  version "0.18.14"
-  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-0.18.14.tgz#2d86c0581a425abac14da4d32e6710ebfa9d8c14"
-  integrity sha512-XAmsf4WP16aQ0RJMNk50Xi0OD0QQK/OAA0aFnT2/7OsLzdjJVohrTf58fE7B7Zhk0CiEdCtkktX7MaxOvfY3RQ==
+solid-js@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.7.3.tgz#3e2e2ce7f2415336f5c96668f9524ad51f6a718b"
+  integrity sha512-4hwaF/zV/xbNeBBIYDyu3dcReOZBECbO//mrra6GqOrKy4Soyo+fnKjpZSa0nODm6j1aL0iQRh/7ofYowH+jzw==
+  dependencies:
+    csstype "^3.1.0"
+    seroval "^0.5.0"
 
 sort-keys@^2.0.0:
   version "2.0.0"
