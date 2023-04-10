@@ -167,6 +167,7 @@ export interface SharedDependency {
   type: 'local' | 'remote';
   entry: string;
   parents?: Array<string>;
+  alias?: string;
 }
 
 export interface RuleRunner<T extends RuleContext> {

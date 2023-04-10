@@ -9,25 +9,13 @@ import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage } from './npm';
-import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
+import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
 import { getModulePath } from '../external';
-import {
-  getDependencies,
-  getDependencyPackages,
-  getDevDependencies,
-  getDevDependencyPackages,
-  getFrameworkDependencies,
-} from './language';
-import {
-  filesTar,
-  filesOnceTar,
-  declarationEntryExtensions,
-  bundlerNames,
-  piralJsonSchemaUrl,
-  piletJsonSchemaUrl,
-  frameworkLibs,
-} from './constants';
+import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
+import { getDevDependencyPackages, getFrameworkDependencies } from './language';
+import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames, frameworkLibs } from './constants';
+import { piralJsonSchemaUrl, piletJsonSchemaUrl } from './constants';
 import {
   SourceLanguage,
   Framework,
@@ -498,21 +486,23 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   return undefined;
 }
 
-export function findDependencyVersion(
+export async function findDependencyVersion(
   pckg: Record<string, any>,
   rootPath: string,
-  packageName: string,
-  parents: Array<string> = [],
+  dependency: SharedDependency,
 ): Promise<string> {
   const { devDependencies = {}, dependencies = {} } = pckg;
+  const packageName = dependency.name;
   const desiredVersion = dependencies[packageName] ?? devDependencies[packageName];
-  const [parent] = parents;
+  const [parent] = dependency.parents || [];
 
   if (desiredVersion) {
-    if (isGitPackage(desiredVersion)) {
-      return Promise.resolve(makeGitUrl(desiredVersion));
+    if (isNpmPackage(desiredVersion)) {
+      return desiredVersion;
+    } else if (isGitPackage(desiredVersion)) {
+      return makeGitUrl(desiredVersion);
     } else if (isLocalPackage(rootPath, desiredVersion)) {
-      return Promise.resolve(makeFilePath(rootPath, desiredVersion));
+      return makeFilePath(rootPath, desiredVersion);
     }
   }
 
@@ -526,7 +516,13 @@ export function findDependencyVersion(
     }
   }
 
-  return findPackageVersion(rootPath, packageName);
+  const version = await findPackageVersion(rootPath, packageName);
+
+  if (dependency.alias) {
+    return makeNpmAlias(dependency.alias, version);
+  }
+
+  return version;
 }
 
 export async function findPackageVersion(rootPath: string, packageName: string | Array<string>): Promise<string> {

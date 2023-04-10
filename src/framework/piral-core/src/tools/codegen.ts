@@ -17,17 +17,22 @@ function getRouterVersion(root: string) {
 
 function getIdentifiers(root: string, packageName: string) {
   const packageJson = `${packageName}/package.json`;
+  const identifiers = [packageName];
 
   try {
     const modulePath = getModulePath(root, packageJson);
     const details = require(modulePath);
 
     if (details.version) {
-      return [packageName, `${packageName}@${details.version}`];
+      identifiers.push(`${packageName}@${details.version}`);
+
+      if (details.name !== packageName) {
+        identifiers.push(`${details.name}@${details.version}`);
+      }
     }
   } catch {}
 
-  return [packageName];
+  return identifiers;
 }
 
 function getModulePathOrDefault(root: string, name: string) {

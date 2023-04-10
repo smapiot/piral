@@ -1,4 +1,3 @@
-import { findDependencyVersion } from '../common';
 import { PiralRuleContext } from '../types';
 
 export type Options = void;
