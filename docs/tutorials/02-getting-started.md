@@ -185,7 +185,7 @@ export function setup(app: PiletApi) {
 }
 ```
 
-The `PiralApi` provides a series of useful methods for setting up and configuring a pilet. For example, the scaffolding registers with the method `registerTile` a tile for the dashboard and a menu entry with the method `registerMenu`. Subsequent tutorials will guide us through the usage of the most important `PiletApi` methods.
+The `PiletApi` provides a series of useful methods for setting up and configuring a pilet. For example, the scaffolding registers with the method `registerTile` a tile for the dashboard and a menu entry with the method `registerMenu`. Subsequent tutorials will guide us through the usage of the most important `PiletApi` methods.
 
 ### Start the Pilet
 
