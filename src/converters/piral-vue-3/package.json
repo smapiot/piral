@@ -49,7 +49,8 @@
     "lib",
     "src",
     "convert.d.ts",
-    "convert.js"
+    "convert.js",
+    "extend-webpack.js"
   ],
   "repository": {
     "type": "git",
