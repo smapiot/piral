@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.9 (tbd)
+## 0.15.9 (April 11, 2023)
 
 - Fixed transport of `state` in routes with `piral-blazor`
 - Fixed issue with `piral-svelte/extend-webpack` helper
