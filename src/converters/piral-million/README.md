@@ -79,11 +79,11 @@ The `million` package and its `million/react` module should be shared with the p
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "million",
-      "million/react"
-    ]
+  "importmap": {
+    "imports": {
+      "million": "",
+      "million/react": ""
+    }
   }
 }
 ```

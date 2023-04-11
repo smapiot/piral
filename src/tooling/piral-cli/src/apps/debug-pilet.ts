@@ -1,5 +1,4 @@
 import { join, dirname, resolve, relative, basename } from 'path';
-import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
 import { AppDefinition, LogLevels, PiletSchemaVersion } from '../types';
 import {
@@ -7,8 +6,6 @@ import {
   retrievePiletData,
   retrievePiletsInfo,
   config,
-  openBrowser,
-  notifyServerOnline,
   setLogLevel,
   progress,
   matchAnyPilet,
@@ -19,11 +16,11 @@ import {
   concurrentWorkers,
   normalizePublicUrl,
   findFile,
-  createInitialKrasConfig,
-  getAvailablePort,
   combinePiletExternals,
   watcherTask,
   flattenExternals,
+  validateSharedDependencies,
+  configurePlatform,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -235,9 +232,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.onBegin?.({ options, fullBase });
 
-  await watcherTask(async (watcherContext) => {
+  const watcherRef = await watcherTask(async (watcherContext) => {
     progress('Reading configuration ...');
-    const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
     const entryList = Array.isArray(entry) ? entry : [entry];
     const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
     log(
@@ -269,7 +265,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       const outFile = basename(dest);
       const mocksExists = await checkExistingDirectory(mocks);
 
+      validateSharedDependencies(importmap);
+
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
+
+      watcherContext.watch(join(root, 'package.json'));
+      watcherContext.watch(join(root, 'pilet.json'));
 
       const bundler = await callPiletDebug(
         {
@@ -330,55 +331,34 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await Promise.all(
       appInstances.sort(byPort).map(async ([appDir, appPort], i) => {
         const appRoot = dirname(await findFile(appDir, 'package.json'));
+        const platform = configurePlatform();
         await hooks.afterApp?.({ appInstanceDir, pilets });
         const suggestedPort = appPort || originalPort + i;
-        const port = await getAvailablePort(suggestedPort);
 
-        const sources = pilets.map((m) => m.mocks).filter(Boolean);
-        const baseMocks = resolve(fullBase, 'mocks');
-        const krasBaseConfig = resolve(fullBase, krasrc);
-        const krasRootConfig = resolve(appRoot, krasrc);
-        const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
-        const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
-        const required = {
-          injectors: {
-            piral: {
-              active: false,
-            },
-            pilet: {
-              active: true,
-              pilets,
-              app: appDir,
-              publicUrl,
-              handle: ['/', api],
-              api,
-            },
+        await platform.startModule({
+          appRoot,
+          appDir,
+          pilets,
+          customkrasrc,
+          feed,
+          fullBase,
+          hooks,
+          open,
+          originalPort: suggestedPort,
+          publicUrl,
+          maxListeners,
+          registerEnd(cb) {
+            return watcherContext.onClean(cb);
           },
-        };
-
-        if (customkrasrc) {
-          configs.push(resolve(fullBase, customkrasrc));
-        }
-
-        configs.forEach(cfg => watcherContext.watch(cfg));
-
-        const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
-
-        log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
-
-        const krasServer = buildKrasWithCli(krasConfig);
-        krasServer.setMaxListeners(maxListeners);
-        krasServer.removeAllListeners('open');
-        krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
-
-        await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-        await krasServer.start();
-        openBrowser(open, port, publicUrl, !!krasConfig.ssl);
-        await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
-        await new Promise((resolve) => krasServer.on('close', resolve));
+          registerWatcher(file) {
+            return watcherContext.watch(file);
+          }
+        });
       }),
     );
   });
+
+  await Promise.all([watcherRef.end]);
 
   await hooks.onEnd?.({});
 }

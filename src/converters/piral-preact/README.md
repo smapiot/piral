@@ -79,10 +79,10 @@ The `preact` package should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "preact"
-    ]
+  "importmap": {
+    "imports": {
+      "preact": ""
+    }
   }
 }
 ```

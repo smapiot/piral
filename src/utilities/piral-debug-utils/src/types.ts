@@ -5,6 +5,15 @@ export interface RouteHandler {
   (paths: Array<RouteRegistration>): Array<RouteRegistration>;
 }
 
+export interface DefaultDebugSettings {
+  viewState?: boolean;
+  loadPilets?: boolean;
+  hardRefresh?: boolean;
+  viewOrigins?: boolean;
+  extensionCatalogue?: boolean;
+  clearConsole?: boolean;
+}
+
 export interface EmulatorConnectorOptions {
   addPilet(pilet: PiletEntry): Promise<void>;
   removePilet(name: string): Promise<void>;
@@ -61,6 +70,7 @@ export type DebugCustomSetting = (DebugCustomBooleanSetting | DebugCustomNumberS
 
 export interface DebuggerExtensionOptions {
   customSettings?: Record<string, DebugCustomSetting>;
+  defaultSettings?: DefaultDebugSettings;
 }
 
 export interface DebuggerOptions extends DebuggerExtensionOptions {

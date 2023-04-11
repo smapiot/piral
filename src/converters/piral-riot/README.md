@@ -82,10 +82,10 @@ The `riot` package should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "riot"
-    ]
+  "importmap": {
+    "imports": {
+      "riot": ""
+    }
   }
 }
 ```

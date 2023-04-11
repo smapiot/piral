@@ -1,7 +1,7 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
-import { filesTar, filesOnceTar } from './constants';
+import { filesTar, filesOnceTar, packageJson } from './constants';
 import { cliVersion } from './info';
 import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
@@ -16,8 +16,6 @@ import {
   getFileNames,
   removeAny,
 } from './io';
-
-const packageJson = 'package.json';
 
 export async function createEmulatorSources(
   sourceDir: string,
@@ -38,7 +36,7 @@ export async function createEmulatorSources(
       .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
       .map(async (external) => ({
         name: external.name,
-        version: await findDependencyVersion(piralPkg, sourceDir, external.name, external.parents),
+        version: await findDependencyVersion(piralPkg, sourceDir, external),
       })),
   );
   const externalDependencies = externalPackages.reduce((deps, dep) => {

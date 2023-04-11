@@ -30,7 +30,7 @@
       "mithril": ".",
       "lit-element": ".",
       "solid-js": ".",
-      "solid-js/dom": ".",
+      "solid-js/web": ".",
       "piral-ng/common": ".",
       "preact": ".",
       "riot": ".",
@@ -108,7 +108,7 @@
     "react-router-dom": "^5.2.0",
     "riot": "^4.7.2",
     "rxjs": "^7.3.0",
-    "solid-js": "^0.18.7",
+    "solid-js": "^1.7.3",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3",
     "zone.js": "~0.9"

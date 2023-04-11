@@ -79,15 +79,74 @@ The `vue` package should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "vue"
-    ]
+  "importmap": {
+    "imports": {
+      "vue": ""
+    }
   }
 }
 ```
 
 :::
+
+## Development Setup
+
+For your bundler additional packages may be necessary. For instance, for Webpack the following setup is required:
+
+First, install the additional dev dependencies
+
+```sh
+npm i vue-loader@^15 @vue/compiler-sfc@^2 --save-dev
+```
+
+then add a *webpack.config.js* to use them
+
+```js
+const { VueLoaderPlugin } = require('vue-loader');
+
+module.exports = function (config) {
+  config.module.rules.unshift({
+    test: /\.vue$/,
+    use: 'vue-loader'
+  });
+  config.plugins.push(new VueLoaderPlugin());
+  return config;
+};
+```
+
+Now, *.vue* files are correctly picked up and handled.
+
+Alternatively, the Webpack configuration can be rather simplistic. In many cases you can use the convenience `extend-webpack` module.
+
+This is how your *webpack.config.js* can look like with the convenience module:
+
+```js
+const extendWebpack = require('piral-vue/extend-webpack');
+
+module.exports = extendWebpack({});
+```
+
+For using `piral-vue/extend-webpack` you must have installed:
+
+- `vue-loader` (at version 15)
+- `@vue/compiler-sfc^2`
+- `webpack`, e.g., via `piral-cli-webpack5`
+
+You can do that via:
+
+```sh
+npm i vue-loader@^15 @vue/compiler-sfc^2 piral-cli-webpack5 --save-dev
+```
+
+The available options for `piral-vue/extend-webpack` are the same as for the options of the `vue-loader`, e.g.:
+
+```js
+const extendWebpack = require('piral-vue/extend-webpack');
+
+module.exports = extendWebpack({
+  customElement: /\.ce\.vue$/,
+});
+```
 
 ## License
 

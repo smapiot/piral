@@ -17,17 +17,22 @@ function getRouterVersion(root: string) {
 
 function getIdentifiers(root: string, packageName: string) {
   const packageJson = `${packageName}/package.json`;
+  const identifiers = [packageName];
 
   try {
     const modulePath = getModulePath(root, packageJson);
     const details = require(modulePath);
 
     if (details.version) {
-      return [packageName, `${packageName}@${details.version}`];
+      identifiers.push(`${packageName}@${details.version}`);
+
+      if (details.name !== packageName) {
+        identifiers.push(`${details.name}@${details.version}`);
+      }
     }
   } catch {}
 
-  return [packageName];
+  return identifiers;
 }
 
 function getModulePathOrDefault(root: string, name: string) {
@@ -44,7 +49,14 @@ interface CodegenOptions {
   appName: string;
   externals: Array<string>;
   publicPath: string;
-  debug: boolean;
+  debug?: {
+    viewState?: boolean;
+    loadPilets?: boolean;
+    hardRefresh?: boolean;
+    viewOrigins?: boolean;
+    extensionCatalogue?: boolean;
+    clearConsole?: boolean;
+  };
   emulator: boolean;
 }
 
@@ -140,8 +152,9 @@ export function createDebugHandler(imports: Array<string>, exports: Array<string
 
   // if we build the debug version of piral (debug and emulator build)
   if (debug) {
-    imports.push(`import { integrateDebugger } from "piral-core/${cat}/tools/debugger"`);
-    exports.push(`export { integrateDebugger }`);
+    const originalCall = `originalDebugger(context, options, { defaultSettings: ${JSON.stringify(debug)}, ...debug })`;
+    imports.push(`import { integrateDebugger as originalDebugger } from "piral-core/${cat}/tools/debugger"`);
+    exports.push(`export function integrateDebugger(context, options, debug) { return ${originalCall}; }`);
   } else {
     exports.push(`export function integrateDebugger() {}`);
   }

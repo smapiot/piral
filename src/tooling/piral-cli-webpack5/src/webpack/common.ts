@@ -108,7 +108,7 @@ export function getRules(production: boolean): Array<RuleSetRule> {
           // its runtime that would otherwise be processed through "file" loader.
           // Also exclude `html` and `json` extensions so they get processed
           // by webpacks internal loaders.
-          exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/i, /\.html$/i, /\.json$/i],
+          exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx|vue|svelte|elm)$/i, /\.html$/i, /\.json$/i],
           type: 'asset/resource',
         },
         // Don't add new loaders here -> should be added before the last (catch-all) handler

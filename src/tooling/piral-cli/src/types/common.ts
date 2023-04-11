@@ -92,6 +92,38 @@ export interface Bundler {
   ready(): Promise<void>;
 }
 
+export interface PlatformStartModuleOptions {
+  appRoot: string;
+  appDir: string;
+  open: boolean;
+  fullBase: string;
+  feed: string | Array<string>;
+  publicUrl: string;
+  customkrasrc: string;
+  originalPort: number;
+  hooks: Record<string, Function>;
+  registerWatcher(file: string): void;
+  registerEnd(cb: () => void): void;
+
+  maxListeners: number;
+  pilets: Array<any>;
+}
+
+export interface PlatformStartShellOptions {
+  open: boolean;
+  fullBase: string;
+  root: string;
+  feed: string | Array<string>;
+  targetDir: string;
+  publicUrl: string;
+  bundler: Bundler;
+  customkrasrc: string;
+  originalPort: number;
+  hooks: Record<string, Function>;
+  registerWatcher(file: string): void;
+  registerEnd(cb: () => void): void;
+}
+
 export interface ReleaseProvider {
   (directory: string, files: Array<string>, args: Record<string, string>, interactive: boolean): Promise<void>;
 }
@@ -135,6 +167,7 @@ export interface SharedDependency {
   type: 'local' | 'remote';
   entry: string;
   parents?: Array<string>;
+  alias?: string;
 }
 
 export interface RuleRunner<T extends RuleContext> {

@@ -79,10 +79,10 @@ The `hyperapp` package should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "hyperapp"
-    ]
+  "importmap": {
+    "imports": {
+      "hyperapp": ""
+    }
   }
 }
 ```

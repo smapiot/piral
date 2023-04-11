@@ -17,9 +17,14 @@ module.exports =
       config.resolve.mainFields = ['browser', 'module', 'main'];
     }
 
+    if (!config.resolve.conditionNames) {
+      config.resolve.conditionNames = ['import', 'module', 'require', 'node'];
+    }
+
     config.resolve.alias.svelte = resolve('node_modules', 'svelte');
     config.resolve.extensions.push('.svelte');
     config.resolve.mainFields.unshift('svelte');
+    config.resolve.conditionNames.push('svelte');
 
     function findRule(tester, changer) {
       config.module.rules.forEach((rule) => {
@@ -45,10 +50,12 @@ module.exports =
           0,
           {
             test: /\.(html|svelte)$/,
-            use: svelteLoader,
-            options: {
-              emitCss: true,
-              ...options,
+            use: {
+              loader: svelteLoader,
+              options: {
+                emitCss: true,
+                ...options,
+              },
             },
           },
           {

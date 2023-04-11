@@ -6,7 +6,7 @@ This is a plugin that only has a peer dependency to `piral-core`. What `piral-me
 
 ## Why and When
 
-If you have navigation items on your page that `piral-menu` gives you a nice abstraction over registering components for them. These items will be stored in the global state container and will be filtered on a given menu type. Thus the plugin makes only sense if you have any global menu.
+If you are using one or many global menu(s) on your page, `piral-menu` allows you to register menu item components for those global menus from your pilets. Menu items are registered in the application's global state and can be rendered by an app shell via a `Menu` component. `piral-menu` supports multiple menu types via a `type` attribute, for example for a `general` menu or a `user` menu. Using this plugin only makes sense if your page uses a global menu.
 
 Alternative: You could simply use dedicated extension slots for each navigation items. The downside of this approach is the discoverability and the type safety.
 
@@ -24,7 +24,7 @@ The following functions are brought to the Pilet API.
 
 Adds the definition of a menu item to the app shell. Optionally specifies the type of menu where the item should be shown.
 
-If the first argument is a string a named menu item is registered. A named menu item can also be removed.
+If the first argument is a string, a named menu item is registered. A named menu item can also be removed.
 
 ### `unregisterMenu()`
 
@@ -36,16 +36,20 @@ Removes a menu item from the app shell. This requires a named menu item.
 
 You can use the `registerMenu` function from the Pilet API to add a new menu item in the app shell.
 
-**Note**: When the first argument is a string we call it a *named* menu item.
+**Note**: If the first argument is a string, we call it a *named* menu item.
 
 Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { MyTile } from './MyTile';
+import { MyMenuItem } from './MyMenuItem';
 
 export function setup(piral: PiletApi) {
-  piral.registerMenu(MyTile);
+  // Register the `MyMenuItem` component for the default menu:
+  piral.registerMenu(MyMenuItem);
+
+  // Register the `MyMenuItem` component for the special 'user' menu:
+  piral.registerMenu(MyMenuItem, { type: 'user' });
 }
 ```
 
@@ -57,12 +61,13 @@ Example use:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
-import { MyTile } from './MyTile';
+import { MyTile } from './MyMenuItem';
 
 export function setup(piral: PiletApi) {
-  // register with a name
-  piral.registerMenu('first', MyTile);
-  // and unregister; maybe some time later?
+  // Register the menu item with a unique name:
+  piral.registerMenu('first', MyMenuItem);
+
+  // And, at some later time, unregister it via that name:
   piral.unregisterMenu('first');
 }
 ```
@@ -73,7 +78,7 @@ export function setup(piral: PiletApi) {
 
 The provided library only brings API extensions for pilets to a Piral instance.
 
-For the setup of the library itself you'll need to import `createMenuApi` from the `piral-menu` package.
+For the setup of the library itself, you'll need to import `createMenuApi` from the `piral-menu` package.
 
 ```ts
 import { createMenuApi } from 'piral-menu';
@@ -89,7 +94,7 @@ const instance = createInstance({
 });
 ```
 
-Via the options the `defaultSettings` and the global/initially available menu `items` can be defined.
+Via the options, `defaultSettings` and the global/initially available menu `items` can be defined.
 
 For example:
 
@@ -112,7 +117,7 @@ const instance = createInstance({
 
 ### Customizing
 
-You can customize the available dialogs and their options.
+You can customize the available menu settings.
 
 ```ts
 import type {} from 'piral-menu';
@@ -126,7 +131,7 @@ declare module 'piral-menu/lib/types' {
 // now registerMenu(() => null, { category: 'general' }) is strongly typed in pilets
 ```
 
-You can also add new types to the `type` selection.
+You can also add new menu types to the `type` selection.
 
 ```ts
 import 'piral-menu';

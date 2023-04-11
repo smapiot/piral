@@ -45,6 +45,7 @@ describe('Rule pilet-has-externals-as-peers', () => {
           },
         },
       }],
+      piletPackage: {},
       peerDependencies,
       peerModules,
       entry: 'test-entry',

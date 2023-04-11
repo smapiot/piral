@@ -79,15 +79,15 @@ The `aurelia` related packages should be shared with the pilets via the *package
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "aurelia-framework",
-      "aurelia-templating-binding",
-      "aurelia-templating-resources",
-      "aurelia-pal-browser",
-      "aurelia-event-aggregator",
-      "aurelia-history-browser"
-    ]
+  "importmap": {
+    "imports": {
+      "aurelia-framework": "",
+      "aurelia-templating-binding": "",
+      "aurelia-templating-resources": "",
+      "aurelia-pal-browser": "",
+      "aurelia-event-aggregator": "",
+      "aurelia-history-browser": ""
+    }
   }
 }
 ```

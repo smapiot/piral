@@ -84,10 +84,10 @@ The `angular` package should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "angular"
-    ]
+  "importmap": {
+    "imports": {
+      "angular": ""
+    }
   }
 }
 ```

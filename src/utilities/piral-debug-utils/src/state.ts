@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { DefaultDebugSettings } from './types';
 
 export const settingsKeys = {
   viewState: 'dbg:view-state',
@@ -23,6 +24,18 @@ const persistentSetter = (name: string, value: string) => {
   data[name] = value;
   localStorage.setItem(persistKey, JSON.stringify(data));
 };
+
+function getValue(key: string, defaultValue: boolean, fallbackValue: boolean) {
+  const value = sessionStorage.getItem(key);
+
+  if (['on', 'off'].includes(value)) {
+    return value === 'on';
+  } else if (typeof defaultValue === 'boolean') {
+    return defaultValue;
+  } else {
+    return fallbackValue;
+  }
+}
 
 if (persistSettings) {
   try {
@@ -62,16 +75,18 @@ export function disablePersistance() {
 
 export const initialSetter = persistSettings ? persistentSetter : defaultSetter;
 
-export const initialSettings = {
-  viewState: sessionStorage.getItem(settingsKeys.viewState) !== 'off',
-  loadPilets: sessionStorage.getItem(settingsKeys.loadPilets) === 'on',
-  hardRefresh: sessionStorage.getItem(settingsKeys.hardRefresh) === 'on',
-  viewOrigins: sessionStorage.getItem(settingsKeys.viewOrigins) === 'on',
-  extensionCatalogue: sessionStorage.getItem(settingsKeys.extensionCatalogue) !== 'off',
-  clearConsole: sessionStorage.getItem(settingsKeys.clearConsole) === 'on',
-  persistSettings,
-  cataloguePath: '/$debug-extension-catalogue',
-};
+export function getInitialSettings(defaultValues: DefaultDebugSettings) {
+  return {
+    viewState: getValue(settingsKeys.viewState, defaultValues.viewState, true),
+    loadPilets: getValue(settingsKeys.loadPilets, defaultValues.loadPilets, false),
+    hardRefresh: getValue(settingsKeys.hardRefresh, defaultValues.hardRefresh, false),
+    viewOrigins: getValue(settingsKeys.viewOrigins, defaultValues.viewOrigins, false),
+    extensionCatalogue:  getValue(settingsKeys.extensionCatalogue, defaultValues.extensionCatalogue, true),
+    clearConsole: getValue(settingsKeys.clearConsole, defaultValues.clearConsole, false),
+    persistSettings,
+    cataloguePath: '/$debug-extension-catalogue',
+  };
+}
 
 export interface PiralDebugState {
   visualize: {
@@ -108,15 +123,21 @@ export function navigate(path: string, state?: any) {
 
 let state: PiralDebugState = {
   visualize: {
-    active: initialSettings.viewOrigins,
+    active: false,
     force: false,
   },
   catalogue: {
-    active: initialSettings.extensionCatalogue,
-    path: initialSettings.cataloguePath,
+    active: false,
+    path: '',
   },
   route: undefined,
 };
+
+export function setInitialState(initialSettings: ReturnType<typeof getInitialSettings>) {
+  state.visualize.active = initialSettings.viewOrigins;
+  state.catalogue.active = initialSettings.extensionCatalogue;
+  state.catalogue.path = initialSettings.cataloguePath;
+}
 
 export function setState(dispatch: (arg: PiralDebugState) => PiralDebugState) {
   const newState = dispatch(state);

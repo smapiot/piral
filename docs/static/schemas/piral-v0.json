@@ -11,6 +11,57 @@
       "description": "Always includes the debug tools - not only in the emulator. By default, debug tools are not included.",
       "default": false
     },
+    "debugSettings": {
+      "type": "object",
+      "description": "The initial settings for the debug tools. Can still be overridden by some user settings.",
+      "properties": {
+        "viewState": {
+          "description": "Defines the initial state of the view state debug option.",
+          "default": true,
+          "type": "boolean"
+        },
+        "loadPilets": {
+          "description": "Defines the initial state of the load pilets debug option.",
+          "default": false,
+          "type": "boolean"
+        },
+        "hardRefresh": {
+          "description": "Defines the initial state of the hard refresh debug option.",
+          "default": false,
+          "type": "boolean"
+        },
+        "viewOrigins": {
+          "description": "Defines the initial state of the view origin debug option.",
+          "default": false,
+          "type": "boolean"
+        },
+        "extensionCatalogue": {
+          "description": "Defines the initial state of the extension catalogue debug option.",
+          "default": true,
+          "type": "boolean"
+        },
+        "clearConsole": {
+          "description": "Defines the initial state of the clear console debug option.",
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "description": "Defines the target platform of the Piral instance. By default, 'web' is used resolving to a website with debugging via kras.",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "The platform where the Piral instance is to be run.",
+          "enum": ["web", "node"]
+        },
+        "options": {
+          "type": "object",
+          "description": "Further platform-specific options to use."
+        }
+      }
+    },
     "emulatorStartup": {
       "type": "string",
       "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."

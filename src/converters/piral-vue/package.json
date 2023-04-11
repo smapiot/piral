@@ -28,6 +28,9 @@
     "./convert": {
       "import": "./convert.js"
     },
+    "./extend-webpack": {
+      "require": "./extend-webpack.js"
+    },
     "./esm/*": {
       "import": "./esm/*"
     },
@@ -46,7 +49,8 @@
     "lib",
     "src",
     "convert.d.ts",
-    "convert.js"
+    "convert.js",
+    "extend-webpack.js"
   ],
   "repository": {
     "type": "git",

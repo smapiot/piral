@@ -20,7 +20,8 @@ Received: Missing "${missingNames.join('", "')}".
  * Checks that "externals" dependencies have been specified in "peerDependencies".
  */
 export default async function (context: PiletRuleContext, options: Options = 'ignore') {
-  if (options !== 'ignore') {
+  // only check if options are not set to ignore and if importmap feature is not used
+  if (options !== 'ignore' && !context.piletPackage.importmap) {
     const [app] = context.apps;
     const externals = await retrieveExternals(app.appRoot, app.appPackage);
     const markedPeerDependencies = Object.keys(context.peerDependencies);

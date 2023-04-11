@@ -79,10 +79,10 @@ The `react-15` package (or whatever alias you've chosen) should be shared with t
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "react-15"
-    ]
+  "importmap": {
+    "imports": {
+      "react-15": ""
+    }
   }
 }
 ```

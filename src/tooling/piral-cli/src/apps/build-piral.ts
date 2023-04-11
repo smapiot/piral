@@ -17,6 +17,7 @@ import {
   packageEmulator,
   normalizePublicUrl,
   getDestination,
+  validateSharedDependencies,
 } from '../common';
 
 const releaseName = 'release';
@@ -167,6 +168,8 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   const dest = getDestination(entryFiles, resolve(fullBase, target));
 
   await checkCliCompatibility(root);
+
+  validateSharedDependencies(externals);
 
   if (fresh) {
     progress('Removing output directory ...');

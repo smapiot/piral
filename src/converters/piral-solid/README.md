@@ -75,15 +75,15 @@ const instance = createInstance({
 });
 ```
 
-The `solid-js` and `solid-js/dom` packages should be shared with the pilets via the *package.json*:
+The `solid-js` and `solid-js/web` packages should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "solid-js",
-      "solid-js/dom"
-    ]
+  "importmap": {
+    "imports": {
+      "solid-js": "",
+      "solid-js/web": ""
+    }
   }
 }
 ```

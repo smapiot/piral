@@ -362,8 +362,8 @@ export async function getHash(targetFile: string) {
 
 export async function mergeWithJson<T>(targetDir: string, fileName: string, newContent: T) {
   const targetFile = join(targetDir, fileName);
-  const content = await new Promise<string>((resolve, reject) => {
-    readFile(targetFile, 'utf8', (err, c) => (err ? reject(err) : resolve(c)));
+  const content = await new Promise<string>((resolve) => {
+    readFile(targetFile, 'utf8', (err, c) => (err ? resolve('{}') : resolve(c)));
   });
   const originalContent = JSON.parse(content);
   return deepMerge(originalContent, newContent);

@@ -317,17 +317,17 @@ The related packages should be shared with the pilets via the *package.json*:
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "@angular/common",
-      "@angular/compiler",
-      "@angular/core",
-      "@angular/platform-browser",
-      "@angular/platform-browser-dynamic",
-      "piral-ng/common",
-      "rxjs",
-      "zone.js"
-    ]
+  "importmap": {
+    "imports": {
+      "@angular/common": "",
+      "@angular/compiler": "",
+      "@angular/core": "",
+      "@angular/platform-browser": "",
+      "@angular/platform-browser-dynamic": "",
+      "piral-ng/common": "",
+      "rxjs": "",
+      "zone.js": ""
+    }
   }
 }
 ```
@@ -710,6 +710,35 @@ The basic dependencies look as follows:
   "core-js": "^3.19.0",
   "rxjs": "~7.4",
   "zone.js": "~0.9"
+}
+```
+
+Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary.
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 14
+
+In general, Angular 14 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^14",
+  "@angular/compiler": "^14",
+  "@angular/core": "^14",
+  "@angular/router": "^14",
+  "@angular/platform-browser": "^14",
+  "@angular/platform-browser-dynamic": "^14",
+  "core-js": "^3.19.0",
+  "rxjs": "~7.4",
+  "zone.js": "~0.11"
 }
 ```
 

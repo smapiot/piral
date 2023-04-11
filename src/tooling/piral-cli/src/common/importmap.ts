@@ -8,6 +8,28 @@ import { SharedDependency, Importmap } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 
+function addLocalDependencies(
+  dependencies: Array<SharedDependency>,
+  realIdentifier: string,
+  identifier: string,
+  version: string,
+  requireVersion: string,
+  entry: string,
+  assetName: string,
+) {
+  const alias = realIdentifier !== identifier ? realIdentifier : undefined;
+
+  dependencies.push({
+    id: `${identifier}@${version}`,
+    requireId: `${identifier}@${requireVersion}`,
+    entry,
+    name: identifier,
+    ref: `${assetName}.js`,
+    type: 'local',
+    alias,
+  });
+}
+
 function getDependencyDetails(depName: string): [assetName: string, identifier: string, versionSpec: string] {
   const sep = depName.indexOf('@', 1);
   const version = sep > 0 ? depName.substring(sep + 1) : '';
@@ -20,7 +42,7 @@ async function getLocalDependencyVersion(
   packageJson: string,
   depName: string,
   versionSpec: string,
-): Promise<[offeredVersion: string, requiredVersion: string]> {
+): Promise<[realIdentifier: string, offeredVersion: string, requiredVersion: string]> {
   const packageDir = dirname(packageJson);
   const packageFile = basename(packageJson);
   const details = await readJson(packageDir, packageFile);
@@ -34,10 +56,10 @@ async function getLocalDependencyVersion(
       fail('importMapVersionSpecNotSatisfied_0025', depName, details.version);
     }
 
-    return [details.version, versionSpec];
+    return [details.name, details.version, versionSpec];
   }
 
-  return [details.version, details.version];
+  return [details.name, details.version, details.version];
 }
 
 async function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
@@ -88,16 +110,13 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
 
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
-          const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
+          const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
+            packageJson,
+            depName,
+            versionSpec,
+          );
 
-          dependencies.push({
-            id: `${identifier}@${version}`,
-            requireId: `${identifier}@${requireVersion}`,
-            entry,
-            name: identifier,
-            ref: `${assetName}.js`,
-            type: 'local',
-          });
+          addLocalDependencies(dependencies, realIdentifier, identifier, version, requireVersion, entry, assetName);
         } else {
           fail('importMapReferenceNotFound_0027', dir, identifier);
         }
@@ -106,16 +125,13 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
 
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
-          const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
+          const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
+            packageJson,
+            depName,
+            versionSpec,
+          );
 
-          dependencies.push({
-            id: `${identifier}@${version}`,
-            requireId: `${identifier}@${requireVersion}`,
-            entry,
-            name: identifier,
-            ref: `${assetName}.js`,
-            type: 'local',
-          });
+          addLocalDependencies(dependencies, realIdentifier, identifier, version, requireVersion, entry, assetName);
         } else {
           fail('importMapReferenceNotFound_0027', dir, url);
         }
@@ -131,16 +147,21 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
           const packageJsonExists = await checkExists(packageJson);
 
           if (packageJsonExists) {
-            const [version, requireVersion] = await getLocalDependencyVersion(packageJson, depName, versionSpec);
+            const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
+              packageJson,
+              depName,
+              versionSpec,
+            );
 
-            dependencies.push({
-              id: `${identifier}@${version}`,
-              requireId: `${identifier}@${requireVersion}`,
-              entry: isDirectory ? tryResolvePackage(entry, dir) : entry,
-              name: identifier,
-              ref: `${assetName}.js`,
-              type: 'local',
-            });
+            addLocalDependencies(
+              dependencies,
+              realIdentifier,
+              identifier,
+              version,
+              requireVersion,
+              isDirectory ? tryResolvePackage(entry, dir) : entry,
+              assetName,
+            );
           } else if (isDirectory) {
             fail('importMapReferenceNotFound_0027', entry, 'package.json');
           } else {

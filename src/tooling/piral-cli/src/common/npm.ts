@@ -3,7 +3,7 @@ import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
 import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
-import { legacyCoreExternals, frameworkLibs, defaultRegistry } from './constants';
+import { legacyCoreExternals, frameworkLibs, defaultRegistry, packageJson } from './constants';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clientTypeKeys } from '../helpers';
@@ -12,10 +12,11 @@ import { PackageType, NpmClientType } from '../types';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
+const npmPrefix = 'npm:';
 const pathPrefixes = ['/', './', '../', '.\\', '..\\', '~/', '~\\', filePrefix];
 
 function isProjectReference(name: string) {
-  const target = resolve(name, 'package.json');
+  const target = resolve(name, packageJson);
   return checkExists(target);
 }
 
@@ -41,9 +42,9 @@ async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClient
       return [root, 'pnpm'];
     }
 
-    const packageJson = await readJson(root, 'package.json');
+    const pj = await readJson(root, packageJson);
 
-    if (Array.isArray(packageJson?.workspaces)) {
+    if (Array.isArray(pj?.workspaces)) {
       if (await checkExists(resolve(root, '.pnp.cjs'))) {
         return [root, 'pnp'];
       }
@@ -245,6 +246,25 @@ export function isLocalPackage(baseDir: string, fullName: string) {
   return false;
 }
 
+export function isNpmPackage(fullName: string) {
+  log('generalDebug_0003', 'Checking if its an npm alias ...');
+
+  if (fullName) {
+    const npmed = fullName.startsWith(npmPrefix);
+
+    if (npmed && fullName.substring(npmPrefix.length + 1).indexOf('@') !== -1) {
+      log('generalDebug_0003', 'Found an npm package alias by name.');
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function makeNpmAlias(name: string, version: string) {
+  return `${npmPrefix}${name}@${version}`;
+}
+
 export function isGitPackage(fullName: string) {
   log('generalDebug_0003', 'Checking if its a Git package ...');
 
@@ -391,7 +411,7 @@ export function tryResolvePackage(name: string, baseDir: string = undefined) {
 }
 
 export function findPackageRoot(pck: string, baseDir: string) {
-  return tryResolvePackage(`${pck}/package.json`, baseDir);
+  return tryResolvePackage(`${pck}/${packageJson}`, baseDir);
 }
 
 export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean, target: string) {
@@ -415,7 +435,7 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
 export async function getPackageName(root: string, name: string, type: PackageType): Promise<string> {
   switch (type) {
     case 'file':
-      const originalPackageJson = await readJson(name, 'package.json');
+      const originalPackageJson = await readJson(name, packageJson);
 
       if (!originalPackageJson.name) {
         const p = resolve(process.cwd(), name);
@@ -432,7 +452,7 @@ export async function getPackageName(root: string, name: string, type: PackageTy
 
       return originalPackageJson.name;
     case 'git':
-      const pj = await readJson(root, 'package.json');
+      const pj = await readJson(root, packageJson);
       const dd = pj.devDependencies || {};
       return Object.keys(dd).filter((dep) => dd[dep] === name)[0];
     case 'registry':
@@ -468,9 +488,9 @@ export function getPackageVersion(
 
 async function getExternalsFrom(root: string, packageName: string): Promise<Array<string> | undefined> {
   try {
-    const target = getModulePath(root, `${packageName}/package.json`);
+    const target = getModulePath(root, `${packageName}/${packageJson}`);
     const dir = dirname(target);
-    const { sharedDependencies } = await readJson(dir, 'package.json');
+    const { sharedDependencies } = await readJson(dir, packageJson);
     return sharedDependencies;
   } catch (err) {
     log('generalError_0002', `Could not get externals from "${packageName}": "${err}`);

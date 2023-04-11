@@ -94,12 +94,12 @@ The `@cycle/run`, `@cycle/dom` and `xstream` packages should be shared with the 
 
 ```json
 {
-  "pilets": {
-    "externals": [
-      "@cycle/run",
-      "@cycle/dom",
-      "xstream"
-    ]
+  "importmap": {
+    "imports": {
+      "@cycle/run": "",
+      "@cycle/dom": "",
+      "xstream": ""
+    }
   }
 }
 ```

@@ -24,6 +24,7 @@ import {
   normalizePublicUrl,
   combinePiletExternals,
   retrievePiletsInfo,
+  validateSharedDependencies,
 } from '../common';
 
 interface PiletData {
@@ -225,6 +226,8 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const dest = resolve(root, target);
     const outDir = dirname(dest);
     const outFile = basename(dest);
+
+    validateSharedDependencies(importmap);
 
     if (fresh) {
       progress('Removing output directory ...');

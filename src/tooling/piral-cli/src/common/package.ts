@@ -5,28 +5,17 @@ import { unpackTarball } from './archive';
 import { ForceOverwrite } from './enums';
 import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
+import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
-import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage } from './npm';
-import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion } from './npm';
+import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
+import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
 import { getModulePath } from '../external';
-import {
-  getDependencies,
-  getDependencyPackages,
-  getDevDependencies,
-  getDevDependencyPackages,
-  getFrameworkDependencies,
-} from './language';
-import {
-  filesTar,
-  filesOnceTar,
-  declarationEntryExtensions,
-  bundlerNames,
-  piralJsonSchemaUrl,
-  piletJsonSchemaUrl,
-  frameworkLibs,
-} from './constants';
+import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
+import { getDevDependencyPackages, getFrameworkDependencies } from './language';
+import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames, frameworkLibs } from './constants';
+import { piralJsonSchemaUrl, piletJsonSchemaUrl } from './constants';
 import {
   SourceLanguage,
   Framework,
@@ -497,21 +486,23 @@ function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
   return undefined;
 }
 
-export function findDependencyVersion(
+export async function findDependencyVersion(
   pckg: Record<string, any>,
   rootPath: string,
-  packageName: string,
-  parents: Array<string> = [],
+  dependency: SharedDependency,
 ): Promise<string> {
   const { devDependencies = {}, dependencies = {} } = pckg;
+  const packageName = dependency.name;
   const desiredVersion = dependencies[packageName] ?? devDependencies[packageName];
-  const [parent] = parents;
+  const [parent] = dependency.parents || [];
 
   if (desiredVersion) {
-    if (isGitPackage(desiredVersion)) {
-      return Promise.resolve(makeGitUrl(desiredVersion));
+    if (isNpmPackage(desiredVersion)) {
+      return desiredVersion;
+    } else if (isGitPackage(desiredVersion)) {
+      return makeGitUrl(desiredVersion);
     } else if (isLocalPackage(rootPath, desiredVersion)) {
-      return Promise.resolve(makeFilePath(rootPath, desiredVersion));
+      return makeFilePath(rootPath, desiredVersion);
     }
   }
 
@@ -525,7 +516,13 @@ export function findDependencyVersion(
     }
   }
 
-  return findPackageVersion(rootPath, packageName);
+  const version = await findPackageVersion(rootPath, packageName);
+
+  if (dependency.alias) {
+    return makeNpmAlias(dependency.alias, version);
+  }
+
+  return version;
 }
 
 export async function findPackageVersion(rootPath: string, packageName: string | Array<string>): Promise<string> {
@@ -544,10 +541,6 @@ export async function findPackageVersion(rootPath: string, packageName: string |
 
   log('cannotResolveDependency_0053', packages, rootPath);
   return 'latest';
-}
-
-function onlyUnique<T>(value: T, index: number, self: Array<T>) {
-  return self.indexOf(value) === index;
 }
 
 export function flattenExternals(dependencies: Array<SharedDependency>) {
@@ -612,6 +605,17 @@ export async function retrievePiletsInfo(entryFile: string) {
     ignored: checkArrayOrUndefined(packageInfo, 'preservedDependencies'),
     root,
   };
+}
+
+export function validateSharedDependencies(externals: Array<SharedDependency>) {
+  // See #591 - we should warn in case somebody shared piral packages
+  for (const external of externals) {
+    const name = external.name;
+
+    if (external.type === 'local' && name.startsWith('piral-') && name.indexOf('/') === -1) {
+      log('invalidSharedDependency_0029', name);
+    }
+  }
 }
 
 export function isValidDependency(name: string) {
@@ -766,7 +770,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const proposedRoot = piletJson ? dirname(piletJson) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, 'package.json');
-  const piletDefinition: PiletDefinition = piletJson && await readJson(proposedRoot, 'pilet.json');
+  const piletDefinition: PiletDefinition = piletJson && (await readJson(proposedRoot, 'pilet.json'));
   const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 

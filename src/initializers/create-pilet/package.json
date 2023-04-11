@@ -15,7 +15,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "engines": {
-    "node": ">=12.0"
+    "node": ">=14.18.0"
   },
   "files": [
     "lib",
