@@ -87,12 +87,16 @@ The `vue` package should be shared with the pilets via the *package.json*:
 }
 ```
 
+:::
+
+## Development Setup
+
 For your bundler additional packages may be necessary. For instance, for Webpack the following setup is required:
 
 First, install the additional dev dependencies
 
 ```sh
-npm i vue-loader @vue/compiler-sfc --save-dev
+npm i vue-loader @vue/compiler-sfc@^3 --save-dev
 ```
 
 then add a *webpack.config.js* to use them
@@ -122,16 +126,16 @@ const extendWebpack = require('piral-vue-3/extend-webpack');
 module.exports = extendWebpack({});
 ```
 
-For using `piral-vue/extend-webpack` you must have installed:
+For using `piral-vue-3/extend-webpack` you must have installed:
 
-- `vue-loader`
-- `@vue/compiler-sfc`
+- `vue-loader` (at least version 16)
+- `@vue/compiler-sfc^3`
 - `webpack`, e.g., via `piral-cli-webpack5`
 
 You can do that via:
 
 ```sh
-npm i vue-loader @vue/compiler-sfc piral-cli-webpack5 --save-dev
+npm i vue-loader @vue/compiler-sfc^3 piral-cli-webpack5 --save-dev
 ```
 
 The available options for `piral-vue-3/extend-webpack` are the same as for the options of the `vue-loader`, e.g.:
@@ -144,8 +148,6 @@ module.exports = extendWebpack({
   customElement: /\.ce\.vue$/,
 });
 ```
-
-:::
 
 ## License
 
