@@ -105,7 +105,7 @@ then add a *webpack.config.js* to use them
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = function (config) {
-  config.module.rules.push({
+  config.module.rules.unshift({
     test: /\.vue$/,
     use: 'vue-loader'
   });
