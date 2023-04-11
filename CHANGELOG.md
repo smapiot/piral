@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.10 (tbd)
+
+- (tbd)
+
 ## 0.15.9 (April 11, 2023)
 
 - Fixed transport of `state` in routes with `piral-blazor`
