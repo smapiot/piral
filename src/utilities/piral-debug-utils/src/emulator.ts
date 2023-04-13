@@ -1,18 +1,15 @@
-import { freezeRouteRefresh, useDebugRouteHandling } from './DebugRouteSwitch';
+import { freezeRouteRefresh } from './routeRefresh';
 import type { PiletRequester } from 'piral-base';
 import type { EmulatorConnectorOptions } from './types';
-
-export const debugRouteFilter = useDebugRouteHandling;
 
 export function installPiletEmulator(requestPilets: PiletRequester, options: EmulatorConnectorOptions) {
   const { addPilet, removePilet, integrate, piletApiFallback = '/$pilet-api' } = options;
 
-  // check if pilets should be loaded
-  const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
-  const noPilets: PiletRequester = () => Promise.resolve([]);
-  const requester = loadPilets ? requestPilets : noPilets;
-
   integrate(() => {
+    // check if pilets should be loaded
+    const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
+    const noPilets: PiletRequester = () => Promise.resolve([]);
+    const requester = loadPilets ? requestPilets : noPilets;
     const promise = requester();
 
     // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable

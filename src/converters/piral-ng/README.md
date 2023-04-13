@@ -588,7 +588,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^7",
   "@angular/platform-browser-dynamic": "^7",
   "core-js": "^3.15.2",
-  "rxjs": "^6.0.0",
+  "rxjs": "^6.4",
   "zone.js": "~0.9"
 }
 ```
@@ -608,7 +608,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^8",
   "@angular/platform-browser-dynamic": "^8",
   "core-js": "^3.15.2",
-  "rxjs": "^6.0.0",
+  "rxjs": "^6.4",
   "zone.js": "~0.9"
 }
 ```
@@ -628,7 +628,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^9",
   "@angular/platform-browser-dynamic": "^9",
   "core-js": "^3.15.2",
-  "rxjs": "~6.4",
+  "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
 ```
@@ -648,7 +648,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^10",
   "@angular/platform-browser-dynamic": "^10",
   "core-js": "^3.15.2",
-  "rxjs": "~6.4",
+  "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
 ```
@@ -668,7 +668,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^11",
   "@angular/platform-browser-dynamic": "^11",
   "core-js": "^3.15.2",
-  "rxjs": "~6.4",
+  "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
 ```
@@ -689,7 +689,7 @@ The basic dependencies look as follows:
   "@angular/platform-browser-dynamic": "^12",
   "core-js": "^3.15.2",
   "rxjs": "~6.4",
-  "zone.js": "~0.9"
+  "zone.js": "0.11.4"
 }
 ```
 
@@ -708,8 +708,8 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^13",
   "@angular/platform-browser-dynamic": "^13",
   "core-js": "^3.19.0",
-  "rxjs": "~7.4",
-  "zone.js": "~0.9"
+  "rxjs": "^7.4",
+  "zone.js": "0.11.4"
 }
 ```
 
@@ -737,8 +737,37 @@ The basic dependencies look as follows:
   "@angular/platform-browser": "^14",
   "@angular/platform-browser-dynamic": "^14",
   "core-js": "^3.19.0",
-  "rxjs": "~7.4",
-  "zone.js": "~0.11"
+  "rxjs": "^7.4",
+  "zone.js": "~0.12.0"
+}
+```
+
+Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary.
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 15
+
+In general, Angular 15 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^15",
+  "@angular/compiler": "^15",
+  "@angular/core": "^15",
+  "@angular/router": "^15",
+  "@angular/platform-browser": "^15",
+  "@angular/platform-browser-dynamic": "^15",
+  "core-js": "^3.19.0",
+  "rxjs": "^7.4",
+  "zone.js": "~0.13.0"
 }
 ```
 

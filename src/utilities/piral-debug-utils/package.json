@@ -28,6 +28,14 @@
     "./lib/*": {
       "require": "./lib/*"
     },
+    "./debug": {
+      "import": "./esm/debug.js",
+      "require": "./lib/debug.js"
+    },
+    "./emulator": {
+      "import": "./esm/emulator.js",
+      "require": "./lib/emulator.js"
+    },
     "./_/*": {
       "import": "./esm/*.js",
       "require": "./lib/*.js"

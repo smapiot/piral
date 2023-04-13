@@ -2,7 +2,8 @@
 
 ## 0.15.10 (tbd)
 
-- (tbd)
+- Updated documentation of `piral-ng` with support of Angular 15
+- Updated `piral-debug-utils` to also work more seamlessly with `piral-base`
 
 ## 0.15.9 (April 11, 2023)
 
