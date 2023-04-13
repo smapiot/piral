@@ -203,6 +203,12 @@ always-auth=true`,
     progress(`Taking care of templating ...`);
 
     const data = getPiletScaffoldData(language, root, packageName, variables);
+
+    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
+      language,
+      bundler: bundlerName,
+    });
+    
     const chosenTemplate = template || preSelectedTemplate || 'default';
     await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
 
@@ -215,11 +221,6 @@ always-auth=true`,
       const packageRoot = getPiralPath(root, packageName);
       await copyScaffoldingFiles(packageRoot, root, files, piralInfo, data);
     }
-
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
-      language,
-      bundler: bundlerName,
-    });
 
     if (install) {
       progress(`Installing dependencies ...`);
