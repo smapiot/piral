@@ -1,3 +1,6 @@
+import 'systemjs';
+import 'systemjs/dist/extras/named-register.js';
+
 export * from './aggregate';
 export * from './api';
 export * from './create';

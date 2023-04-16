@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "react",
     "lib": ["dom", "es2015", "es2018"],
+    "module": "ESNext",
+    "outDir": "lib",
+    "emitDeclarationOnly": true,
     "importHelpers": true
   },
   "include": [

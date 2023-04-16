@@ -4,6 +4,7 @@
 
 - Updated documentation of `piral-ng` with support of Angular 15
 - Updated `piral-debug-utils` to also work more seamlessly with `piral-base`
+- Added variants of `piral-base` (minimal, Node.js, full)
 
 ## 0.15.9 (April 11, 2023)
 

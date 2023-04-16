@@ -1,6 +1,3 @@
-// this file is bundled, so the references here will not be at runtime (i.e., for a user)
-import 'systemjs/dist/system.js';
-import 'systemjs/dist/extras/named-register.js';
 import { satisfies, validate } from 'piral-cli/src/common/version';
 
 const systemResolve = System.constructor.prototype.resolve;
