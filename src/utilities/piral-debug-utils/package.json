@@ -30,11 +30,13 @@
     },
     "./debug": {
       "import": "./esm/debug.js",
-      "require": "./lib/debug.js"
+      "require": "./lib/debug.js",
+      "types": "./lib/debug.d.ts"
     },
     "./emulator": {
       "import": "./esm/emulator.js",
-      "require": "./lib/emulator.js"
+      "require": "./lib/emulator.js",
+      "types": "./lib/emulator.d.ts"
     },
     "./_/*": {
       "import": "./esm/*.js",
@@ -46,7 +48,9 @@
   "files": [
     "esm",
     "lib",
-    "src"
+    "src",
+    "debug.d.ts",
+    "emulator.d.ts"
   ],
   "repository": {
     "type": "git",
