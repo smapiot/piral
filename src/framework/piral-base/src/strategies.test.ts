@@ -1,3 +1,6 @@
+import 'systemjs/dist/system.js';
+import 'systemjs/dist/extras/named-register.js';
+
 import {
   asyncStrategy,
   blazingStrategy,
@@ -192,7 +195,7 @@ describe('Piral-Base strategies module', () => {
     };
 
     // Act
-    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrow();
+    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrowError();
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(0);
@@ -263,7 +266,7 @@ describe('Piral-Base strategies module', () => {
     };
 
     // Act
-    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrow();
+    await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrowError();
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(0);

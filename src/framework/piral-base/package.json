@@ -62,7 +62,7 @@
     "build:node": "esbuild src/index.node.ts --bundle --outfile=dist/piral-base-node.js --platform=node --format=cjs --external:tslib --target=es2020",
     "build:full": "esbuild src/index.full.ts --bundle --outfile=dist/piral-base-full.mjs --platform=browser --format=esm --external:tslib --target=es2020",
     "build:minimal": "esbuild src/index.minimal.ts --bundle --outfile=dist/piral-base-minimal.mjs --platform=browser --format=esm --external:tslib --target=es2020",
-    "typedoc": "typedoc --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\"",
+    "typedoc": "typedoc src/index.full.ts --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
