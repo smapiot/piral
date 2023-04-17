@@ -1,3 +1,4 @@
+import { emptyApp } from './empty';
 import { requireModule } from './system';
 import { getBasePath, isfunc, promisify } from './helpers';
 import type { Pilet, PiletApiCreator, PiletApp, PiletMetadata } from '../types';
@@ -7,10 +8,6 @@ declare global {
     app?: PiletApp;
   }
 }
-
-export const emptyApp = {
-  setup() {},
-};
 
 export function createEvaluatedPilet(meta: Omit<PiletMetadata, "basePath">, mod: any): Pilet {
   const basePath = getBasePath(meta.link);

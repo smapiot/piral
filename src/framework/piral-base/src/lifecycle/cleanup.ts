@@ -12,10 +12,12 @@ const evtName = 'unload-pilet';
  * @param hooks The hooks to use in the cleanup process.
  */
 export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycleHooks) {
-  const css = document.querySelector(`link[data-origin=${JSON.stringify(app.name)}]`);
-  const url = app.basePath;
+  if (typeof document !== 'undefined') {
+    const css = document.querySelector(`link[data-origin=${JSON.stringify(app.name)}]`);
+    css?.remove();
+  }
 
-  css?.remove();
+  const url = app.basePath;
 
   callfunc(app.teardown, api);
   callfunc(hooks.cleanupPilet, app);
@@ -23,13 +25,12 @@ export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycl
   // check if this was actually set up using a require reference
   if ('requireRef' in app) {
     const depName = app.requireRef;
-    delete window[depName];
+    delete globalThis[depName];
   }
 
   // remove the pilet's evaluated modules from SystemJS (except the shared dependencies)
   if (url) {
-    const dependencies = Object.keys(app.dependencies || {}).map((m) => app.dependencies[m]);
-    unregisterModules(url, dependencies);
+    unregisterModules(url, Object.values(app.dependencies));
   }
 }
 

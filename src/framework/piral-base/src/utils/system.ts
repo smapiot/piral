@@ -1,4 +1,5 @@
 import { satisfies, validate } from 'piral-cli/src/common/version';
+import { emptyApp } from './empty';
 
 const systemResolve = System.constructor.prototype.resolve;
 const systemRegister = System.constructor.prototype.register;
@@ -105,6 +106,20 @@ function tryResolve(name: string, parent: string) {
   }
 }
 
+function handleFailure(error: Error, link: string) {
+  console.error('Failed to load SystemJS module', link, error);
+  return emptyApp;
+}
+
+/**
+ * Imports a pilet via SystemJS.
+ * @param link The link to the pilet's root module.
+ * @returns The evaluated pilet or an empty pilet in case of an error.
+ */
+export function loadSystemPilet(link: string) {
+  return System.import(link).catch((error) => handleFailure(error, link));
+}
+
 export interface ModuleResolver {
   (): any;
 }
@@ -137,6 +152,19 @@ export function registerModule(name: string, resolve: ModuleResolver) {
       }
     },
   }));
+}
+
+/**
+ * Registers the given dependency URLs in SystemJS.
+ * @param dependencies The dependencies to resolve later.
+ */
+export function registerDependencyUrls(dependencies: Record<string, string>) {
+  for (const name of Object.keys(dependencies)) {
+    if (!System.has(name)) {
+      const dependency = dependencies[name];
+      registerModule(name, () => System.import(dependency));
+    }
+  }
 }
 
 /**

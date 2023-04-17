@@ -1,5 +1,5 @@
 import { registerDependencyUrls, loadSystemPilet, createEvaluatedPilet } from '../../utils';
-import type { DefaultLoaderConfig, PiletV2Entry, Pilet } from '../../types';
+import type { DefaultLoaderConfig, PiletV3Entry, Pilet } from '../../types';
 
 /**
  * Loads the provided SystemJS-powered pilet.
@@ -7,7 +7,7 @@ import type { DefaultLoaderConfig, PiletV2Entry, Pilet } from '../../types';
  * @param _config The loader configuration.
  * @returns The evaluated pilet that can now be integrated.
  */
-export default function loader(entry: PiletV2Entry, _config: DefaultLoaderConfig): Promise<Pilet> {
+export default function loader(entry: PiletV3Entry, _config: DefaultLoaderConfig): Promise<Pilet> {
   const { dependencies = {}, config = {}, link, ...rest } = entry;
   const meta = {
     dependencies,

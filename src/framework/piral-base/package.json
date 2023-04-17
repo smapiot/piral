@@ -26,16 +26,20 @@
   "exports": {
     ".": {
       "node": "./dist/piral-base-node.js",
-      "import": "./dist/piral-base-full.mjs"
+      "import": "./dist/piral-base-full.mjs",
+      "types": "./lib/index.full.d.ts"
     },
     "./minimal": {
-      "import": "./dist/piral-base-minimal.mjs"
+      "import": "./dist/piral-base-minimal.mjs",
+      "types": "./lib/index.minimal.d.ts"
     },
     "./node": {
-      "require": "./dist/piral-base-node.js"
+      "require": "./dist/piral-base-node.js",
+      "types": "./lib/index.node.d.ts"
     },
     "./full": {
-      "import": "./dist/piral-base-full.mjs"
+      "import": "./dist/piral-base-full.mjs",
+      "types": "./lib/index.full.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -43,7 +47,10 @@
   "files": [
     "dist",
     "lib",
-    "src"
+    "src",
+    "full.d.ts",
+    "minimal.d.ts",
+    "node.d.ts"
   ],
   "funding": {
     "type": "github",
