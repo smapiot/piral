@@ -1,12 +1,12 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { emptyApp } from './empty';
 import {
   checkPiletApp,
   checkPiletAppAsync,
   includeScript,
   includeScriptDependency,
-  emptyApp,
   createEvaluatedPilet,
   checkCreateApi,
 } from './dependency';
