@@ -1,5 +1,6 @@
+import { emptyApp } from './empty';
 import { promisify } from './helpers';
-import { includeScriptDependency, emptyApp, createEvaluatedPilet } from './dependency';
+import { includeScriptDependency, createEvaluatedPilet } from './dependency';
 import type { PiletApp, PiletMetadata } from '../types';
 
 const depContext = {};
