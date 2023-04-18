@@ -295,6 +295,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     const outDir = resolve(distDir, 'standalone');
     const { apps, root } = pilets[0];
 
+    if (apps.length === 0) {
+      fail('appInstancesNotGiven_0012');
+    }
+
     const { appPackage, appFile } = apps[0];
     const piralInstances = [appPackage.name];
     const isEmulator = checkAppShellPackage(appPackage);

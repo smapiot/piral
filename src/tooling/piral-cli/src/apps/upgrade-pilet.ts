@@ -102,6 +102,10 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   const { apps, piletPackage } = await retrievePiletData(root);
   const { devDependencies = {}, dependencies = {}, source } = piletPackage;
 
+  if (apps.length === 0) {
+    fail('appInstancesNotGiven_0012');
+  }
+
   for (const { appPackage } of apps) {
     const sourceName = appPackage.name;
     const language = /\.jsx?$/.test(source) ? 'js' : 'ts';

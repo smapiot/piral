@@ -4,7 +4,6 @@ import {
   progress,
   log,
   matchAnyPilet,
-  retrievePiletData,
   findFile,
   readJson,
   writeJson,

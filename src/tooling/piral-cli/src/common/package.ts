@@ -774,10 +774,6 @@ export async function retrievePiletData(target: string, app?: string) {
   const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 
-  if (appPackages.length === 0) {
-    fail('appInstancesNotGiven_0012');
-  }
-
   for (const appPackage of appPackages) {
     const appFile: string = appPackage?.app;
     const appRoot: string = appPackage?.root;
