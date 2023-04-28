@@ -184,12 +184,14 @@ function piletV3WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
       include: file,
       raw: true,
     }),
-    new SystemJSPublicPathWebpackPlugin(),
   );
 
+  compiler.output.publicPath = '';
+  compiler.output.chunkFormat = 'module';
   compiler.plugins = [...compiler.plugins, ...plugins];
   compiler.output.uniqueName = `${jsonpFunction}`;
   compiler.output.library = { type: 'system' };
+  compiler.target = 'node';
 
   return compiler;
 }

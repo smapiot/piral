@@ -3,16 +3,17 @@ import { Compilation } from 'webpack';
 import { RawSource } from 'webpack-sources';
 
 export default class StylesPlugin {
-  private loaderPath: string;
-
-  constructor(private cssName: string, private entryName: string) {
-    this.loaderPath = resolve(__dirname, `StylesLoader?cssName=${cssName}!`);
-  }
+  constructor(private cssName: string, private entryName: string) {}
 
   apply(compiler) {
     const { entry } = compiler.options;
 
-    entry[this.entryName].import = [this.loaderPath, ...entry[this.entryName].import];
+    const entries = entry[this.entryName].import;
+    const query = `cssName=${this.cssName}&entries=${entries.join(',')}!`;
+    const setPath = resolve(__dirname, '..', 'set-path');
+    const loaderPath = resolve(__dirname, `StylesLoader?${query}`);
+
+    entry[this.entryName].import = [setPath, loaderPath];
 
     compiler.hooks.compilation.tap('StylesPlugin', (compilation: Compilation) => {
       if (!compilation.compiler.parentCompilation) {
