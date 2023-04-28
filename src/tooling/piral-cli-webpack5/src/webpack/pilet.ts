@@ -2,7 +2,7 @@ import type { PiletBuildHandler } from 'piral-cli';
 import * as TerserPlugin from 'terser-webpack-plugin';
 import * as CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import type { PiletSchemaVersion, SharedDependency } from 'piral-cli';
-import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
+import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration, getStyleLoaders } from './common';
 import { piletWebpackConfigEnhancer } from '../enhancers/pilet-webpack-config-enhancer';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
@@ -39,6 +39,8 @@ async function getConfig(
     variables: getVariables(),
   });
 
+  const styleLoaders = getStyleLoaders(true);
+
   return [
     {
       devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
@@ -63,7 +65,7 @@ async function getConfig(
       },
 
       module: {
-        rules: getRules(production),
+        rules: getRules(styleLoaders),
       },
 
       optimization: {
@@ -85,7 +87,7 @@ async function getConfig(
         ],
       },
 
-      plugins: getPlugins([], production, entry),
+      plugins: getPlugins([], entry),
     },
     enhance,
   ];

@@ -9,6 +9,10 @@ import {
   withExternals,
   getDependencies,
 } from './helpers';
+import StylesPlugin from '../../plugins/StylesPlugin';
+import SheetPlugin from '../../plugins/SheetPlugin';
+
+const piletCss = 'main.css';
 
 export interface PiletWebpackConfigEnhancerOptions {
   /**
@@ -34,7 +38,7 @@ export interface PiletWebpackConfigEnhancerOptions {
   /**
    * The schema version. By default, v1 is used.
    */
-  schema?: 'v0' | 'v1' | 'v2' | 'none';
+  schema?: 'v0' | 'v1' | 'v2' | 'v3' | 'none';
   /**
    * The shared dependencies. By default, these are read from the
    * Piral instance.
@@ -72,7 +76,7 @@ function piletVxWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
-  const { name, variables, externals, file } = options;
+  const { name, variables, externals, file, entry } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
   const banner = `//@pilet v:0`;
@@ -82,6 +86,7 @@ function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   withExternals(compiler, externals);
 
   compiler.plugins.push(
+    new SheetPlugin(piletCss, name, entry),
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
       banner,
@@ -98,7 +103,7 @@ function piletV0WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
-  const { name, variables, externals, file } = options;
+  const { name, variables, externals, file, entry } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
   const banner = `//@pilet v:1(${jsonpFunction})`;
@@ -108,6 +113,7 @@ function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   withExternals(compiler, externals);
 
   compiler.plugins.push(
+    new SheetPlugin(piletCss, name, entry),
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
       banner,
@@ -127,7 +133,7 @@ function piletV1WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
 }
 
 function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
-  const { name, variables, externals, file, importmap } = options;
+  const { name, variables, externals, file, importmap, entry } = options;
   const shortName = name.replace(/\W/gi, '');
   const jsonpFunction = `pr_${shortName}`;
   const plugins = [];
@@ -139,6 +145,38 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   const banner = `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`;
 
   plugins.push(
+    new SheetPlugin(piletCss, name, entry),
+    new DefinePlugin(getDefineVariables(variables)),
+    new BannerPlugin({
+      banner,
+      entryOnly: true,
+      include: file,
+      raw: true,
+    }),
+    new SystemJSPublicPathWebpackPlugin(),
+  );
+
+  compiler.plugins = [...compiler.plugins, ...plugins];
+  compiler.output.uniqueName = `${jsonpFunction}`;
+  compiler.output.library = { type: 'system' };
+
+  return compiler;
+}
+
+function piletV3WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file, importmap, entry } = options;
+  const shortName = name.replace(/\W/gi, '');
+  const jsonpFunction = `pr_${shortName}`;
+  const plugins = [];
+
+  withExternals(compiler, externals);
+  setEnvironment(variables);
+
+  const dependencies = getDependencies(importmap, compiler);
+  const banner = `//@pilet v:3(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`;
+
+  plugins.push(
+    new StylesPlugin(piletCss, entry),
     new DefinePlugin(getDefineVariables(variables)),
     new BannerPlugin({
       banner,
@@ -178,6 +216,8 @@ export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOp
       return piletV1WebpackConfigEnhancer(options, compiler);
     case 'v2':
       return piletV2WebpackConfigEnhancer(options, compiler);
+    case 'v3':
+      return piletV3WebpackConfigEnhancer(options, compiler);
     case 'none':
     default:
       return piletVxWebpackConfigEnhancer(options, compiler);
