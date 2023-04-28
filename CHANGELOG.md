@@ -2,6 +2,7 @@
 
 ## 0.15.10 (tbd)
 
+- Fixed issue with numeric custom fields supplied to `pilet publish`
 - Updated documentation of `piral-ng` with support of Angular 15
 - Updated `piral-debug-utils` to also work more seamlessly with `piral-base`
 - Updated `piral-cli` to have `pilet build` working without any Piral instances
