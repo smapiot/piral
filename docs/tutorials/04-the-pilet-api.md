@@ -141,7 +141,7 @@ const MyExtension: React.FC<ExtensionComponentProps<MyExtensionParams>> = ({ par
     return null;
   }
 
-  if (!Array.isArray(items) || items.some(m => typeof m !== 'number')) {
+  if (!Array.isArray(params.items) || params.items.some(m => typeof m !== 'number')) {
     return null;
   }
 
