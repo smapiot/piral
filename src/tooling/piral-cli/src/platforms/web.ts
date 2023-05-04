@@ -27,9 +27,8 @@ async function startModule(options: PlatformStartModuleOptions) {
   const sources = pilets.map((m) => m.mocks).filter(Boolean);
   const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
   const baseMocks = resolve(fullBase, 'mocks');
-  const krasBaseConfig = resolve(fullBase, krasrc);
   const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
-  const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc))];
+  const configs = [...pilets.map((p) => resolve(p.root, krasrc))];
 
   const required = {
     injectors: {
@@ -51,7 +50,7 @@ async function startModule(options: PlatformStartModuleOptions) {
     const appPackageJson = await findFile(appDir, 'package.json');
 
     if (appPackageJson) {
-      configs.push(resolve(dirname(appPackageJson), krasrc));
+      configs.unshift(resolve(dirname(appPackageJson), krasrc));
     }
   }
 
