@@ -25,6 +25,7 @@ import {
   initNpmProject,
   cliVersion,
   installPiralInstance,
+  piletJson,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -172,7 +173,7 @@ always-auth=true`,
 
     await createFileIfNotExists(
       root,
-      'pilet.json',
+      piletJson,
       JSON.stringify(
         {
           schemaVersion: 'v2',
@@ -208,7 +209,7 @@ always-auth=true`,
       language,
       bundler: bundlerName,
     });
-    
+
     const chosenTemplate = template || preSelectedTemplate || 'default';
     await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
 

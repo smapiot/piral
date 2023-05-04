@@ -3,6 +3,7 @@
 ## 0.15.10 (tbd)
 
 - Fixed `.krasrc` files in pilets to take precendence over emulator
+- Fixed support for `pilets` section in `piral.json` of Piral instance
 - Updated documentation of `piral-ng` with support of Angular 15
 - Updated `piral-debug-utils` to also work more seamlessly with `piral-base`
 - Updated `piral-cli` to have `pilet build` working without any Piral instances

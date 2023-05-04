@@ -19,6 +19,7 @@ import {
   getPiralScaffoldData,
   config,
   initNpmProject,
+  piralJson,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -177,7 +178,7 @@ always-auth=true`,
       );
     }
 
-    await createFileIfNotExists(root, 'piral.json', JSON.stringify({}, undefined, 2));
+    await createFileIfNotExists(root, piralJson, JSON.stringify({}, undefined, 2));
 
     progress(`Installing npm package ${packageRef} ...`);
 

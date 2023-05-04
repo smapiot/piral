@@ -15,12 +15,13 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
-  findFile,
   combinePiletExternals,
   watcherTask,
   flattenExternals,
   validateSharedDependencies,
   configurePlatform,
+  packageJson,
+  piletJson,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -272,8 +273,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
-      watcherContext.watch(join(root, 'package.json'));
-      watcherContext.watch(join(root, 'pilet.json'));
+      watcherContext.watch(join(root, packageJson));
+      watcherContext.watch(join(root, piletJson));
 
       const bundler = await callPiletDebug(
         {
@@ -323,7 +324,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     checkSanity(pilets);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
-    
+
     const appInstances: Array<PiralInstanceInfo> = appInstanceDir
       ? [[appInstanceDir, 0]]
       : await getOrMakeApps(pilets[0], logLevel);

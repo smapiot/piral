@@ -14,8 +14,18 @@ import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion
 import { getModulePath } from '../external';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
-import { filesTar, filesOnceTar, declarationEntryExtensions, bundlerNames, frameworkLibs } from './constants';
-import { piralJsonSchemaUrl, piletJsonSchemaUrl } from './constants';
+import {
+  declarationEntryExtensions,
+  piralJsonSchemaUrl,
+  piletJsonSchemaUrl,
+  filesTar,
+  filesOnceTar,
+  bundlerNames,
+  frameworkLibs,
+  piralJson,
+  piletJson,
+  packageJson,
+} from './constants';
 import {
   SourceLanguage,
   Framework,
@@ -226,7 +236,7 @@ export async function patchPiralPackage(
   await updateExistingJson(root, 'package.json', pkg);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 
-  await updateExistingJson(root, 'piral.json', {
+  await updateExistingJson(root, piralJson, {
     $schema: piralJsonSchemaUrl,
     pilets: getPiletsInfo({}),
   });
@@ -635,10 +645,10 @@ export async function patchPiletPackage(
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const pkg = await getPiletPackage(root, name, version, piralInfo, fromEmulator, newInfo);
 
-  await updateExistingJson(root, 'package.json', pkg);
+  await updateExistingJson(root, packageJson, pkg);
   log('generalDebug_0003', `Succesfully patched the package.json.`);
 
-  await updateExistingJson(root, 'pilet.json', {
+  await updateExistingJson(root, piletJson, {
     $schema: piletJsonSchemaUrl,
     piralInstances: {
       [name]: {},
@@ -766,11 +776,11 @@ export async function findPiletRoot(proposedRoot: string) {
 }
 
 export async function retrievePiletData(target: string, app?: string) {
-  const piletJson = await findFile(target, 'pilet.json');
-  const proposedRoot = piletJson ? dirname(piletJson) : target;
+  const piletJsonPath = await findFile(target, piletJson);
+  const proposedRoot = piletJsonPath ? dirname(piletJsonPath) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, 'package.json');
-  const piletDefinition: PiletDefinition = piletJson && (await readJson(proposedRoot, 'pilet.json'));
+  const piletDefinition: PiletDefinition = piletJsonPath && (await readJson(proposedRoot, piletJson));
   const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
   const apps: Array<AppDefinition> = [];
 

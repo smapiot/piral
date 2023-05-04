@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path';
+import { LogLevels, NpmClientType } from '../types';
 import {
   setLogLevel,
   progress,
@@ -11,8 +12,8 @@ import {
   installPiralInstance,
   determineNpmClient,
   findPiletRoot,
+  piletJson,
 } from '../common';
-import { LogLevels, NpmClientType } from '../types';
 
 export interface AddPiralInstancePiletOptions {
   /**
@@ -67,7 +68,6 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
 
   const tasks = allEntries.map(async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const piletJson = 'pilet.json';
     const piletJsonPath = await findFile(targetDir, piletJson);
 
     if (piletJsonPath) {

@@ -4,6 +4,7 @@ import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';
 import { mkdtemp, mkdir, constants } from 'fs';
 import { writeFile, readFile, readdir, copyFile } from 'fs';
+import { packageJson, piletJson } from './constants';
 import { log } from './log';
 import { deepMerge } from './merge';
 import { computeHash } from './hash';
@@ -208,18 +209,16 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
     pilets.push(name);
     matches.push(path);
   };
-  const nameOfPackageJson = 'package.json';
-  const nameOfPiletJson = 'pilet.json';
   const exts = preferences.map((s) => s.substring(1)).join(',');
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
     const patterns = [];
 
     if (/[a-zA-Z0-9\-\*]$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
-      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${nameOfPackageJson}`, `${curr}/${nameOfPiletJson}`);
+      patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${packageJson}`, `${curr}/${piletJson}`);
     } else if (curr.endsWith('/')) {
-      patterns.push(`${curr}index.{${exts}}`, `${curr}${nameOfPackageJson}`, `${curr}${nameOfPiletJson}`);
+      patterns.push(`${curr}index.{${exts}}`, `${curr}${packageJson}`, `${curr}${piletJson}`);
     } else if (curr === '.' || curr === '..') {
-      patterns.push(`${curr}/index.{${exts}}`, `${curr}/${nameOfPackageJson}`, `${curr}/${nameOfPiletJson}`);
+      patterns.push(`${curr}/index.{${exts}}`, `${curr}/${packageJson}`, `${curr}/${piletJson}`);
     } else {
       patterns.push(curr);
     }
@@ -242,8 +241,8 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
           for (const result of results) {
             const fileName = basename(result);
 
-            if (fileName === nameOfPackageJson) {
-              log('generalDebug_0003', `Entry point is a "${nameOfPackageJson}" and needs further inspection.`);
+            if (fileName === packageJson) {
+              log('generalDebug_0003', `Entry point is a "${packageJson}" and needs further inspection.`);
               const targetDir = dirname(result);
               const { source, name } = await readJson(targetDir, fileName);
 
@@ -272,18 +271,18 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
                 }
               }
             } else {
-              const packageJson = await findFile(result, nameOfPackageJson);
+              const packageJsonPath = await findFile(result, packageJson);
 
-              if (packageJson) {
-                const targetDir = dirname(packageJson);
-                const { name } = await readJson(targetDir, nameOfPackageJson);
+              if (packageJsonPath) {
+                const targetDir = dirname(packageJsonPath);
+                const { name } = await readJson(targetDir, packageJson);
 
                 if (!pilets.includes(name)) {
                   log('generalDebug_0003', `Entry point result is "${result}".`);
                   matched(name, result);
                 }
               } else {
-                log('generalDebug_0003', `Could not find "${nameOfPackageJson}" for entry "${result}". Skipping.`);
+                log('generalDebug_0003', `Could not find "${packageJson}" for entry "${result}". Skipping.`);
               }
             }
           }
