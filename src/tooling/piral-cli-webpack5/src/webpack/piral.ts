@@ -5,7 +5,7 @@ import * as CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { getFreePort } from 'piral-cli/utils';
 import { resolve } from 'path';
 import { runWebpack } from './bundler-run';
-import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration } from './common';
+import { getRules, getPlugins, extensions, getVariables, DefaultConfiguration, getStyleLoaders } from './common';
 import { html5EntryWebpackConfigEnhancer } from '../enhancers/html5-entry-webpack-config-enhancer';
 import { piralInstanceWebpackConfigEnhancer } from '../enhancers/piral-instance-webpack-config-enhancer';
 import { hmrWebpackConfigEnhancer } from '../enhancers/hmr-webpack-config-enhancer';
@@ -39,6 +39,8 @@ async function getConfig(
       }),
     ].reduceRight((acc, val) => val(acc), options);
 
+  const styleLoaders = getStyleLoaders(production);
+
   return [
     {
       devtool: sourceMaps ? (develop ? 'cheap-module-source-map' : 'source-map') : false,
@@ -59,7 +61,7 @@ async function getConfig(
       },
 
       module: {
-        rules: getRules(production),
+        rules: getRules(styleLoaders),
       },
 
       optimization: {
@@ -75,7 +77,7 @@ async function getConfig(
         ],
       },
 
-      plugins: getPlugins([], production),
+      plugins: getPlugins([]),
     },
     enhance,
   ];

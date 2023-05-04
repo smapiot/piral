@@ -1,12 +1,11 @@
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { progress, logReset, log } from 'piral-cli/utils';
 import { RuleSetRule, ProgressPlugin, WebpackPluginInstance, Configuration } from 'webpack';
-import SheetPlugin from '../plugins/SheetPlugin';
 
 const piletCss = 'main.css';
 
-function getStyleLoaders(production: boolean) {
-  if (production) {
+export function getStyleLoaders(useExtractLoader: boolean) {
+  if (useExtractLoader) {
     return [MiniCssExtractPlugin.loader];
   } else {
     return [require.resolve('style-loader')];
@@ -26,12 +25,12 @@ export function getVariables(): Record<string, string> {
   }, {});
 }
 
-export function getPlugins(plugins: Array<any>, production: boolean, pilet?: string) {
+export function getPlugins(plugins: Array<WebpackPluginInstance>, pilet?: string) {
   const otherPlugins: Array<WebpackPluginInstance> = [
     new MiniCssExtractPlugin({
       filename: pilet ? piletCss : '[name].[fullhash:6].css',
       chunkFilename: '[id].[chunkhash:6].css',
-    }) as any,
+    }),
   ];
 
   if (process.env.WEBPACK_PROGRESS) {
@@ -49,16 +48,10 @@ export function getPlugins(plugins: Array<any>, production: boolean, pilet?: str
     );
   }
 
-  if (production && pilet) {
-    const name = process.env.BUILD_PCKG_NAME;
-    otherPlugins.push(new SheetPlugin(piletCss, name, pilet) as any);
-  }
-
   return plugins.concat(otherPlugins);
 }
 
-export function getRules(production: boolean): Array<RuleSetRule> {
-  const styleLoaders = getStyleLoaders(production);
+export function getRules(styleLoaders: Array<string>): Array<RuleSetRule> {
   const nodeModules = /node_modules/;
   const babelLoader = {
     loader: require.resolve('babel-loader'),

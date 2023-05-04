@@ -63,7 +63,7 @@ export interface PostFormResult {
   response?: object;
 }
 
-export type FormDataObj = Record<string, string | [Buffer, string]>;
+export type FormDataObj = Record<string, string | number | boolean | [Buffer, string]>;
 
 export function postForm(
   target: string,
@@ -80,10 +80,12 @@ export function postForm(
   Object.keys(formData).forEach((key) => {
     const value = formData[key];
 
-    if (typeof value === 'string') {
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
       form.append(key, value);
-    } else {
+    } else if (Array.isArray(value)) {
       form.append(key, value[0], value[1]);
+    } else {
+      // unknown value - skip for now
     }
   });
 
