@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.10 (tbd)
+## 0.15.10 (May 8, 2023)
 
 - Fixed `.krasrc` files in pilets to take precendence over emulator
 - Fixed support for `pilets` section in `piral.json` of Piral instance
