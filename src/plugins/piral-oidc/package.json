@@ -1,6 +1,6 @@
 {
   "name": "piral-oidc",
-  "version": "0.15.9",
+  "version": "0.15.10",
   "description": "Plugin to integrate authentication using OpenID connect in Piral.",
   "keywords": [
     "piral",
@@ -66,7 +66,7 @@
     "oidc-client": "^1.10.1"
   },
   "devDependencies": {
-    "piral-core": "^0.15.9"
+    "piral-core": "^0.15.10"
   },
   "peerDependencies": {
     "piral-core": "0.14.x || 0.15.x"
