@@ -15,12 +15,13 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
-  findFile,
   combinePiletExternals,
   watcherTask,
   flattenExternals,
   validateSharedDependencies,
   configurePlatform,
+  packageJson,
+  piletJson,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -255,7 +256,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
     const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
       const targetDir = dirname(entryModule);
-      const { peerDependencies, peerModules, root, apps, ignored, importmap, schema } = await retrievePiletData(targetDir, app);
+      const { peerDependencies, peerModules, root, apps, ignored, importmap, schema } = await retrievePiletData(
+        targetDir,
+        app,
+      );
       const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || 'v2';
       const piralInstances = apps.map((m) => m.appPackage.name);
       const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
@@ -269,8 +273,8 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
-      watcherContext.watch(join(root, 'package.json'));
-      watcherContext.watch(join(root, 'pilet.json'));
+      watcherContext.watch(join(root, packageJson));
+      watcherContext.watch(join(root, piletJson));
 
       const bundler = await callPiletDebug(
         {
@@ -320,6 +324,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     checkSanity(pilets);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
+
     const appInstances: Array<PiralInstanceInfo> = appInstanceDir
       ? [[appInstanceDir, 0]]
       : await getOrMakeApps(pilets[0], logLevel);
@@ -328,15 +333,16 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
     pilets.forEach((p) => p.bundler.start());
 
+    if (appInstances.length === 0) {
+      appInstances.push([undefined, originalPort]);
+    }
+
     await Promise.all(
       appInstances.sort(byPort).map(async ([appDir, appPort], i) => {
-        const appRoot = dirname(await findFile(appDir, 'package.json'));
         const platform = configurePlatform();
-        await hooks.afterApp?.({ appInstanceDir, pilets });
         const suggestedPort = appPort || originalPort + i;
 
         await platform.startModule({
-          appRoot,
           appDir,
           pilets,
           customkrasrc,
@@ -352,10 +358,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           },
           registerWatcher(file) {
             return watcherContext.watch(file);
-          }
+          },
         });
       }),
     );
+
+    await hooks.afterApp?.({ appInstanceDir, pilets });
   });
 
   await Promise.all([watcherRef.end]);

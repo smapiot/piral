@@ -50,29 +50,33 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     piletPackage,
     ignored: _0,
   } = await retrievePiletData(target, app);
-  const { validators } = getPiletsInfo(apps[0].appPackage);
+
   const errors: Array<string> = [];
   const warnings: Array<string> = [];
-  const context: PiletRuleContext = {
-    error(message) {
-      errors.push(log('generalError_0002', message));
-    },
-    warning(message) {
-      warnings.push(log('generalWarning_0001', message));
-    },
-    logLevel,
-    entry: entryFile,
-    dependencies,
-    devDependencies,
-    peerDependencies,
-    importmap,
-    peerModules,
-    root,
-    apps,
-    piletPackage,
-  };
 
-  await runRules(rules, context, validators);
+  for (const { appPackage } of apps) {
+    const { validators } = getPiletsInfo(appPackage);
+    const context: PiletRuleContext = {
+      error(message) {
+        errors.push(log('generalError_0002', message));
+      },
+      warning(message) {
+        warnings.push(log('generalWarning_0001', message));
+      },
+      logLevel,
+      entry: entryFile,
+      dependencies,
+      devDependencies,
+      peerDependencies,
+      importmap,
+      peerModules,
+      root,
+      apps,
+      piletPackage,
+    };
+
+    await runRules(rules, context, validators);
+  }
 
   ruleSummary(errors, warnings);
 }

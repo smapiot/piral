@@ -1,3 +1,6 @@
+import 'systemjs/dist/system.js';
+import 'systemjs/dist/extras/named-register.js';
+
 import { getDefaultLoader, extendLoader } from './loader';
 
 describe('Standard Module Loader', () => {

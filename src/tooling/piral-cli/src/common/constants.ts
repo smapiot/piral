@@ -1,6 +1,8 @@
 export const defaultRegistry = 'https://registry.npmjs.org/';
 export const filesTar = 'files';
 export const packageJson = 'package.json';
+export const piralJson = 'piral.json';
+export const piletJson = 'pilet.json';
 export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/package.json';
 export const frameworkLibs = ['piral-native' as const, 'piral' as const, 'piral-core' as const, 'piral-base' as const];

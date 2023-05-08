@@ -1,17 +1,16 @@
 import { readKrasConfig, krasrc, buildKrasWithCli } from 'kras';
-import { join, resolve } from 'path';
+import { dirname, join, resolve } from 'path';
 import { createInitialKrasConfig, notifyServerOnline } from '../common/injectors';
 import { log } from '../common/log';
 import { config } from '../common/config';
 import { openBrowser } from '../common/browser';
-import { checkExistingDirectory } from '../common/io';
+import { checkExistingDirectory, findFile } from '../common/io';
 import { getAvailablePort } from '../common/port';
 import { PlatformStartShellOptions, PlatformStartModuleOptions } from '../types';
 
 async function startModule(options: PlatformStartModuleOptions) {
   const {
     appDir,
-    appRoot,
     fullBase,
     open,
     feed,
@@ -28,10 +27,9 @@ async function startModule(options: PlatformStartModuleOptions) {
   const sources = pilets.map((m) => m.mocks).filter(Boolean);
   const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
   const baseMocks = resolve(fullBase, 'mocks');
-  const krasBaseConfig = resolve(fullBase, krasrc);
-  const krasRootConfig = resolve(appRoot, krasrc);
   const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
-  const configs = [krasBaseConfig, ...pilets.map((p) => resolve(p.root, krasrc)), krasRootConfig];
+  const configs = [...pilets.map((p) => resolve(p.root, krasrc))];
+
   const required = {
     injectors: {
       piral: {
@@ -47,6 +45,14 @@ async function startModule(options: PlatformStartModuleOptions) {
       },
     },
   };
+
+  if (appDir) {
+    const appPackageJson = await findFile(appDir, 'package.json');
+
+    if (appPackageJson) {
+      configs.unshift(resolve(dirname(appPackageJson), krasrc));
+    }
+  }
 
   if (customkrasrc) {
     configs.push(resolve(fullBase, customkrasrc));

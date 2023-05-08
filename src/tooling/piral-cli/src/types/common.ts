@@ -93,8 +93,7 @@ export interface Bundler {
 }
 
 export interface PlatformStartModuleOptions {
-  appRoot: string;
-  appDir: string;
+  appDir?: string;
   open: boolean;
   fullBase: string;
   feed: string | Array<string>;

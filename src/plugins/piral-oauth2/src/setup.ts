@@ -1,4 +1,4 @@
-import * as ClientOAuth2 from 'client-oauth2';
+import ClientOAuth2 from 'client-oauth2';
 import { createOAuth2MemoryPersistence } from './utils';
 import { OAuth2Config, OAuth2Client } from './types';
 

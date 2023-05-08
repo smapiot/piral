@@ -1,6 +1,19 @@
 import { dirname, resolve } from 'path';
-import { setLogLevel, progress, log, matchAnyPilet, findFile, readJson, writeJson, logDone, findPiletRoot, determineNpmClient, uninstallNpmPackage } from '../common';
 import { LogLevels, NpmClientType } from '../types';
+import {
+  setLogLevel,
+  progress,
+  log,
+  matchAnyPilet,
+  findFile,
+  readJson,
+  writeJson,
+  logDone,
+  findPiletRoot,
+  determineNpmClient,
+  uninstallNpmPackage,
+  piletJson,
+} from '../common';
 
 export interface RemovePiralInstancePiletOptions {
   /**
@@ -48,7 +61,6 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
 
   const tasks = allEntries.map(async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const piletJson = 'pilet.json';
     const piletJsonPath = await findFile(targetDir, piletJson);
 
     if (piletJsonPath) {

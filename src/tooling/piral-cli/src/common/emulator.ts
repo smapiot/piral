@@ -1,13 +1,13 @@
 import { join, resolve, relative } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
-import { filesTar, filesOnceTar, packageJson } from './constants';
+import { filesTar, filesOnceTar, packageJson, piralJson } from './constants';
 import { cliVersion } from './info';
 import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
-import { LogLevels, SharedDependency, TemplateFileLocation } from '../types';
+import { LogLevels, SharedDependency, PiletsInfo, TemplateFileLocation } from '../types';
 import {
   createDirectory,
   removeDirectory,
@@ -15,6 +15,7 @@ import {
   updateExistingJson,
   getFileNames,
   removeAny,
+  readJson,
 } from './io';
 
 export async function createEmulatorSources(
@@ -24,8 +25,13 @@ export async function createEmulatorSources(
   targetFile: string,
   logLevel: LogLevels,
 ) {
-  const piralPkg = require(resolve(sourceDir, packageJson));
-  const files: Array<string | TemplateFileLocation> = piralPkg.pilets?.files ?? [];
+  const piralPkg = await readJson(sourceDir, packageJson);
+  const piralJsonPkg = await readJson(sourceDir, piralJson);
+  const pilets: PiletsInfo = {
+    ...piralPkg.pilets,
+    ...piralJsonPkg.pilets,
+  };
+  const files: Array<string | TemplateFileLocation> = pilets.files ?? [];
   const allDeps = {
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
@@ -79,7 +85,7 @@ export async function createEmulatorSources(
       imports: importmapEntries,
     },
     pilets: {
-      ...piralPkg.pilets,
+      ...pilets,
       files: filesMap,
     },
     piralCLI: {

@@ -36,28 +36,34 @@ if (process.env.DEBUG_PIRAL) {
   const { installPiralDebug } = require('piral-debug-utils');
 
   installPiralDebug({
-    context,
-    createApi,
     getDependencies,
-    loadPilet,
-    requestPilets,
+    fireEvent,
+    getGlobalState,
+    getPilets,
+    getExtensions,
+    getRoutes,
+    integrate,
+    addPilet,
+    removePilet,
+    updatePilet,
+    navigate,
   });
 }
 ```
 
-We can use the `withEmulatorPilets` function to modify (or not) the provided `PiletRequester`, which will be handed over later to the `createInstance` options or `piral-base` directly.
+We can use the `installPiletEmulator` function to modify (or not) the provided `PiletRequester`, which will be handed over later to the `createInstance` options or `piral-base` directly.
 
 Usually, we'd guard it to make it only accessible under emulator conditions.
 
 ```js
-// if we want to change `fetchPilets` (for an emulator) of the LoadPiletsOptions
+// if we want to change `requestPilets` (for an emulator) of the LoadPiletsOptions
 if (process.env.DEBUG_PILET) {
-  const { withEmulatorPilets } = require('piral-debug-utils');
+  const { installPiletEmulator } = require('piral-debug-utils');
 
-  fetchPilets = withEmulatorPilets(fetchPilets, {
-    inject: context.injectPilet,
-    createApi,
-    loadPilet,
+  installPiletEmulator(requestPilets, {
+    addPilet,
+    removePilet,
+    integrate,
   });
 }
 ```

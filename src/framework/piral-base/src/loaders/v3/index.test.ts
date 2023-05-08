@@ -3,7 +3,7 @@ import 'systemjs/dist/extras/named-register.js';
 
 import loader from './index';
 
-describe('v2 loader module', () => {
+describe('v3 loader module', () => {
   it('creates a new pilet with an empty setup function', async () => {
     const app = {
       setup: jest.fn(),

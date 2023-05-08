@@ -1,11 +1,21 @@
 import { setupSinglePilet, setupPiletBundle } from './lifecycle';
-import type { PiletEntry, PiletV0Entry, PiletV1Entry, PiletV2Entry, PiletBundleEntry, PiletRunner } from './types';
+import type {
+  PiletEntry,
+  PiletV0Entry,
+  PiletV1Entry,
+  PiletV2Entry,
+  PiletV3Entry,
+  PiletBundleEntry,
+  PiletRunner,
+} from './types';
 
 export type InspectPiletV0 = ['v0', PiletV0Entry, PiletRunner];
 
 export type InspectPiletV1 = ['v1', PiletV1Entry, PiletRunner];
 
 export type InspectPiletV2 = ['v2', PiletV2Entry, PiletRunner];
+
+export type InspectPiletV3 = ['v3', PiletV3Entry, PiletRunner];
 
 export type InspectPiletBundle = ['bundle', PiletBundleEntry, PiletRunner];
 
@@ -15,13 +25,16 @@ export type InspectPiletResult =
   | InspectPiletV0
   | InspectPiletV1
   | InspectPiletV2
+  | InspectPiletV3
   | InspectPiletUnknown
   | InspectPiletBundle;
 
 export function inspectPilet(meta: PiletEntry): InspectPiletResult {
   const inBrowser = typeof document !== 'undefined';
 
-  if (inBrowser && 'link' in meta && meta.spec === 'v2') {
+  if ('link' in meta && meta.spec === 'v3') {
+    return ['v3', meta, setupSinglePilet];
+  } else if (inBrowser && 'link' in meta && meta.spec === 'v2') {
     return ['v2', meta, setupSinglePilet];
   } else if (inBrowser && 'requireRef' in meta && meta.spec !== 'v2') {
     return ['v1', meta, setupSinglePilet];

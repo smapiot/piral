@@ -79,6 +79,16 @@ export interface SinglePiletApp {
    * @param api The API to access the application.
    */
   teardown?(api: PiletApi): void;
+  /**
+   * The referenced stylesheets to load / integrate.
+   * This would only be used by v3 pilets.
+   */
+  styles?: Array<string>;
+  /**
+   * The referenced WebAssembly binaries to load / integrate.
+   * This would only be used by v3 pilets.
+   */
+  assemblies?: Array<string>;
 }
 
 /**

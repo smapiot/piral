@@ -16,6 +16,9 @@ interface Pilet {
 }
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
+  /**
+   * The pilets to serve.
+   */
   pilets: Array<Pilet>;
   /**
    * The base URL for the app shell / portal to be used.
@@ -29,10 +32,25 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
    * Defines if properties from the feed (if given) meta response should be taken over to local pilets.
    */
   mergeConfig?: boolean;
+  /**
+   * The additional metadata file to consider for the pilets.
+   */
   meta: string;
+  /**
+   * The API path - usually somethin like `/$pilet-api`.
+   */
   api: string;
-  app: string;
+  /**
+   * The directory of the app (usually Piral instance emulator) to serve.
+   */
+  app?: string;
+  /**
+   * The remote feed to merge into.
+   */
   feed?: string;
+  /**
+   * The additional headers to include.
+   */
   headers?: Record<string, string>;
 }
 
@@ -42,14 +60,25 @@ interface PiletMetadata {
   [key: string]: unknown;
 }
 
+function getMetaOverride(root: string, metaFile: string) {
+  if (metaFile) {
+    const metaPath = join(root, metaFile);
+
+    if (existsSync(metaPath)) {
+      return jju.parse(readFileSync(metaPath, 'utf8'));
+    }
+  }
+
+  return undefined;
+}
+
 function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
   const { root, bundler } = pilet;
-  const metaPath = join(root, metaFile);
   const packagePath = join(root, 'package.json');
   const def = jju.parse(readFileSync(packagePath, 'utf8'));
-  const metaOverride = existsSync(metaPath) ? jju.parse(readFileSync(metaPath, 'utf8')) : undefined;
   const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
+  const metaOverride = getMetaOverride(root, metaFile);
 
   pilet.getMeta = (parentPath) => {
     const basePath = `${parentPath}${subPath}`;
@@ -198,12 +227,12 @@ export default class PiletInjector implements KrasInjector {
         if (!pilet || typeof pilet !== 'object') {
           return false;
         }
-        
+
         const name = pilet.name;
         const isNew = name !== undefined && !names.includes(name);
 
         if (!isNew && mergeConfig) {
-          const existing = merged.find(m => m.name === name);
+          const existing = merged.find((m) => m.name === name);
 
           if (existing.config === undefined) {
             existing.config = pilet.config;
@@ -281,20 +310,26 @@ export default class PiletInjector implements KrasInjector {
 
   handle(req: KrasRequest): KrasResponse {
     const { app, api, publicUrl, assetUrl } = this.config;
-    const baseUrl = assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined);
+    const baseUrl =
+      assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined);
 
     if (!req.target) {
       if (req.url.startsWith(publicUrl)) {
         const path = req.url.substring(publicUrl.length).split('?')[0];
-        const target = join(app, path);
 
-        if (existsSync(target) && statSync(target).isFile()) {
-          if (req.url === this.indexPath) {
-            return this.sendIndexFile(target, req.url, baseUrl);
-          } else {
+        if (app) {
+          const target = join(app, path);
+
+          if (existsSync(target) && statSync(target).isFile()) {
+            if (req.url === this.indexPath) {
+              return this.sendIndexFile(target, req.url, baseUrl);
+            }
+
             return this.sendFile(target, req.url);
           }
-        } else if (req.url !== this.indexPath) {
+        }
+
+        if (req.url !== this.indexPath) {
           return this.handle({
             ...req,
             url: this.indexPath,

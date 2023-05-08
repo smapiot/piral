@@ -8,8 +8,11 @@ function getOutput(stats: webpack.Stats) {
 
   for (const name of Object.keys(entrypoints)) {
     const assets = entrypoints[name].assets;
-    const firstAsset = assets[0];
-    return resolve(outputPath, firstAsset.name);
+    const firstAsset = assets.find((m) => m.name.endsWith('.js') || m.name.endsWith('.mjs'));
+
+    if (firstAsset) {
+      return resolve(outputPath, firstAsset.name);
+    }
   }
 }
 

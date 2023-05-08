@@ -19,32 +19,38 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "esm/index.js",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "module": "dist/dist/piral-base-full.js",
+  "main": "dist/piral-base-node.js",
+  "typings": "lib/index.full.d.ts",
   "piletApiTypings": "lib/types/runtime.d.ts",
   "exports": {
     ".": {
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
+      "node": "./dist/piral-base-node.js",
+      "import": "./dist/piral-base-full.mjs",
+      "types": "./lib/index.full.d.ts"
     },
-    "./esm/*": {
-      "import": "./esm/*"
+    "./minimal": {
+      "import": "./dist/piral-base-minimal.mjs",
+      "types": "./lib/index.minimal.d.ts"
     },
-    "./lib/*": {
-      "require": "./lib/*"
+    "./node": {
+      "require": "./dist/piral-base-node.js",
+      "types": "./lib/index.node.d.ts"
     },
-    "./_/*": {
-      "import": "./esm/*.js",
-      "require": "./lib/*.js"
+    "./full": {
+      "import": "./dist/piral-base-full.mjs",
+      "types": "./lib/index.full.d.ts"
     },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "esm",
+    "dist",
     "lib",
-    "src"
+    "src",
+    "full.d.ts",
+    "minimal.d.ts",
+    "node.d.ts"
   ],
   "funding": {
     "type": "github",
@@ -58,15 +64,12 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib",
-    "build": "yarn build:commonjs && yarn build:esnext",
-    "build:commonjs": "yarn build:commonjs:tsc && rimraf lib/utils/system.js && yarn build:commonjs:system",
-    "build:commonjs:tsc": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:commonjs:system": "esbuild src/utils/system.ts --bundle --outfile=lib/utils/system.js --format=cjs",
-    "build:esnext": "yarn build:esnext:tsc && rimraf esm/utils/system.js && yarn build:esnext:system",
-    "build:esnext:tsc": "tsc --project tsconfig.json --outDir esm --module esnext",
-    "build:esnext:system": "esbuild src/utils/system.ts --bundle --outfile=esm/utils/system.js --format=esm",
-    "typedoc": "typedoc --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\"",
+    "cleanup": "rimraf dist esm lib",
+    "build": "yarn build:node && yarn build:full && yarn build:minimal && tsc --project tsconfig.json",
+    "build:node": "esbuild src/index.node.ts --bundle --outfile=dist/piral-base-node.js --platform=node --format=cjs --external:tslib --target=es2020",
+    "build:full": "esbuild src/index.full.ts --bundle --outfile=dist/piral-base-full.mjs --platform=browser --format=esm --external:tslib --target=es2020",
+    "build:minimal": "esbuild src/index.minimal.ts --bundle --outfile=dist/piral-base-minimal.mjs --platform=browser --format=esm --external:tslib --target=es2020",
+    "typedoc": "typedoc src/index.full.ts --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {

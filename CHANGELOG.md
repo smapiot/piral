@@ -1,5 +1,16 @@
 # Piral Changelog
 
+## 0.15.10 (tbd)
+
+- Fixed `.krasrc` files in pilets to take precendence over emulator
+- Fixed support for `pilets` section in `piral.json` of Piral instance
+- Fixed issue with numeric custom fields supplied to `pilet publish`
+- Updated documentation of `piral-ng` with support of Angular 15
+- Updated `piral-debug-utils` to also work more seamlessly with `piral-base`
+- Updated `piral-cli` to have `pilet build` working without any Piral instances
+- Added variants of `piral-base` (minimal, Node.js, full)
+- Added support for new pilet schema `v3` (default remains at `v2`)
+
 ## 0.15.9 (April 11, 2023)
 
 - Fixed transport of `state` in routes with `piral-blazor`

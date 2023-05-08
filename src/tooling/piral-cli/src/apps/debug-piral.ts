@@ -14,6 +14,8 @@ import {
   getDestination,
   watcherTask,
   validateSharedDependencies,
+  piralJson,
+  packageJson,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -139,8 +141,8 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 
-    watcherContext.watch(join(root, 'package.json'));
-    watcherContext.watch(join(root, 'piral.json'));
+    watcherContext.watch(join(root, packageJson));
+    watcherContext.watch(join(root, piralJson));
 
     const bundler = await callPiralDebug(
       {
