@@ -19,7 +19,7 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "dist/dist/piral-base-full.js",
+  "module": "dist/piral-base-full.mjs",
   "main": "dist/piral-base-node.js",
   "typings": "lib/index.full.d.ts",
   "piletApiTypings": "lib/types/runtime.d.ts",

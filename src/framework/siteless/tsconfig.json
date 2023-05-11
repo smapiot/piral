@@ -4,6 +4,7 @@
     "outDir": "./lib",
     "skipLibCheck": true,
     "target": "es2015",
+    "module": "ESNext",
     "lib": ["dom", "es2015", "es2018"],
     "jsx": "react",
     "importHelpers": true
