@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 0.15.11 (tbd)
+
+- Fixed `empty-skips-render` attribute in `piral-extension`
+- Fixed unnecessary re-renders in `piral-extension`
+
 ## 0.15.10 (May 8, 2023)
 
 - Fixed `.krasrc` files in pilets to take precendence over emulator

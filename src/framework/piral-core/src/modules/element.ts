@@ -9,6 +9,7 @@ import {
   portalName,
   extensionName,
   slotName,
+  isSame,
 } from '../utils';
 
 export interface Updatable {
@@ -45,8 +46,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set params(value) {
-      this.props.params = value;
-      this.update(this.props);
+      if (!isSame(this.props.params, value)) {
+        this.props.params = value;
+        this.update(this.props);
+      }
     }
 
     get name() {
@@ -54,8 +57,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set name(value) {
-      this.props.name = value;
-      this.update(this.props);
+      if (this.props.name !== value) {
+        this.props.name = value;
+        this.update(this.props);
+      }
     }
 
     get order() {
@@ -63,8 +68,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set order(value) {
-      this.props.order = value;
-      this.update(this.props);
+      if (this.props.order !== value) {
+        this.props.order = value;
+        this.update(this.props);
+      }
     }
 
     get render() {
@@ -72,8 +79,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set render(value) {
-      this.props.render = value;
-      this.update(this.props);
+      if (this.props.render !== value) {
+        this.props.render = value;
+        this.update(this.props);
+      }
     }
 
     get empty() {
@@ -81,8 +90,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set empty(value) {
-      this.props.empty = value;
-      this.update(this.props);
+      if (this.props.empty !== value) {
+        this.props.empty = value;
+        this.update(this.props);
+      }
     }
 
     get emptySkipsRender() {
@@ -90,8 +101,10 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     set emptySkipsRender(value) {
-      this.props.emptySkipsRender = value;
-      this.update(this.props);
+      if (this.props.emptySkipsRender !== value) {
+        this.props.emptySkipsRender = value;
+        this.update(this.props);
+      }
     }
 
     connectedCallback() {
@@ -125,7 +138,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
           this.params = tryParseJson(newValue);
           break;
         case 'empty-skips-render':
-          this.params = typeof newValue === 'string';
+          this.emptySkipsRender = typeof newValue === 'string';
           break;
       }
     }
