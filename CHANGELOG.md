@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 0.15.12 (tbd)
+
+- Updated documentation of `piral-ng` with support of Angular 16
+
 ## 0.15.11 (May 15, 2023)
 
 - Fixed `empty-skips-render` attribute in `piral-extension`
