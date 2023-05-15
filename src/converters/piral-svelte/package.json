@@ -1,6 +1,6 @@
 {
   "name": "piral-svelte",
-  "version": "0.15.10",
+  "version": "0.15.11",
   "description": "Plugin for integrating Svelte components in Piral.",
   "keywords": [
     "piral",
@@ -68,6 +68,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^0.15.10"
+    "piral-core": "^0.15.11"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "piral-translate",
-  "version": "0.15.10",
+  "version": "0.15.11",
   "description": "Plugin for providing translated messages in Piral.",
   "keywords": [
     "piral",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@types/deepmerge": "^2.2.0",
     "@types/react": "^18.0.0",
-    "piral-core": "^0.15.10",
+    "piral-core": "^0.15.11",
     "react": "^18.0.0"
   },
   "peerDependencies": {
