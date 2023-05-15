@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 0.15.11 (tbd)
+## 0.15.11 (May 15, 2023)
 
 - Fixed `empty-skips-render` attribute in `piral-extension`
 - Fixed unnecessary re-renders in `piral-extension`
