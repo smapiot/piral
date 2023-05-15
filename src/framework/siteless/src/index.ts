@@ -1,3 +1,5 @@
+import * as piralBase from 'piral-base';
+import * as piralCore from 'piral-core';
 import { createElement, ComponentType } from 'react';
 import { render } from 'react-dom';
 import { createLazyApi } from 'piral-lazy';
@@ -191,7 +193,8 @@ window.initializePiral = (requestPilets, selector = document.querySelector('#app
       shareDependencies(deps) {
         return {
           ...deps,
-          'piral-core': require('piral-core'),
+          'piral-base': piralBase,
+          'piral-core': piralCore,
         };
       },
       plugins,
