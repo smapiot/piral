@@ -27,6 +27,7 @@
     ".": {
       "node": "./dist/piral-base-node.js",
       "import": "./dist/piral-base-full.mjs",
+      "require": "./dist/piral-base-node.js",
       "types": "./lib/index.full.d.ts"
     },
     "./minimal": {
