@@ -49,7 +49,7 @@ function run(
   });
 }
 
-process.on('message', async (msg) => {
+process.on('message', async (msg: any) => {
   const root = process.cwd();
 
   try {
