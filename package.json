@@ -34,7 +34,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "cleanup": "lerna run cleanup",
-    "test": "jest --forceExit",
+    "test": "jest --forceExit --runInBand",
     "prepublish": "yarn build",
     "release": "lerna publish",
     "docgen:codes": "node tools/generate-message-docs.js",
