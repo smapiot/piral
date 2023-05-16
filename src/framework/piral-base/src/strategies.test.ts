@@ -196,6 +196,7 @@ describe('Piral-Base strategies module', () => {
 
     // Act
     await expect(blazingStrategy(invalidLoadPiletOptions, callbackMock)).rejects.toThrowError();
+    // expect(failed).toBeTruthy();
 
     // Assert
     expect(setupMock).toHaveBeenCalledTimes(0);

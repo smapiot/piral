@@ -98,7 +98,12 @@ export function createProgressiveStrategy(async: boolean): PiletLoadingStrategy 
           });
         });
 
-        return async ? loadingAll.then() : followUp.then();
+        if (async) {
+          followUp.catch(() => {});
+          return loadingAll.then();
+        } else {
+          return followUp.then();
+        }
       });
     });
   };
