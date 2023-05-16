@@ -15,6 +15,7 @@ jest.mock('../common/clients/npm', () => {
     installPackage: (...args) => {
       return original.installPackage(
         ...args,
+        '--legacy-peer-deps',
         '--no-package-lock',
         '--no-save',
         '--registry=https://registry.npmjs.org/',
