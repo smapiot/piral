@@ -13,7 +13,7 @@ function defaultFallback(key: string, language: string): string {
   }
 }
 
-function formatMessage<T>(message: string, variables: T): string {
+function formatMessage<T extends object>(message: string, variables: T): string {
   return message.replace(/{{\s*([A-Za-z0-9_.]+)\s*}}/g, (_match: string, p1: string) => {
     return p1 in variables ? variables[p1] || '' : `{{${p1}}}`;
   });
@@ -35,7 +35,7 @@ export class Localizer implements Localizable {
    * @param key The key of the translation snippet.
    * @param variables The optional variables to use.
    */
-  public localizeGlobal<T>(key: string, variables?: T) {
+  public localizeGlobal<T extends object>(key: string, variables?: T) {
     return this.localizeBase(key, variables);
   }
 
@@ -46,7 +46,7 @@ export class Localizer implements Localizable {
    * @param key The key of the translation snippet.
    * @param variables The optional variables to use.
    */
-  public localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T) {
+  public localizeLocal<T extends object>(localMessages: LocalizationMessages, key: string, variables?: T) {
     const message = this.translateMessage(localMessages, key, variables);
 
     if (message === undefined) {
@@ -56,7 +56,7 @@ export class Localizer implements Localizable {
     return message;
   }
 
-  private localizeBase<T>(key: string, variables?: T) {
+  private localizeBase<T extends object>(key: string, variables?: T) {
     const message = this.translateMessage(this.messages, key, variables);
 
     if (message === undefined) {
@@ -66,7 +66,7 @@ export class Localizer implements Localizable {
     return message;
   }
 
-  private translateMessage<T>(messages: LocalizationMessages, key: string, variables?: T) {
+  private translateMessage<T extends object>(messages: LocalizationMessages, key: string, variables?: T) {
     const language = this.language;
     const translations = language && messages[language];
     const translation = translations && translations[key];

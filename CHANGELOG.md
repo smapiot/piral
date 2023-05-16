@@ -2,7 +2,9 @@
 
 ## 0.15.12 (tbd)
 
+- Updated peer dependencies of `piral-ng` supporting Angular 15
 - Updated documentation of `piral-ng` with support of Angular 16
+- Updated dependencies of `piral-cli-webpack5`
 
 ## 0.15.11 (May 15, 2023)
 

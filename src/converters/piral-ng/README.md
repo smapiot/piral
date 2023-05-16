@@ -780,6 +780,35 @@ import 'core-js/proposals/reflect-metadata';
 import '@angular/compiler';
 ```
 
+### Angular 16
+
+In general, Angular 16 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^16",
+  "@angular/compiler": "^16",
+  "@angular/core": "^16",
+  "@angular/router": "^16",
+  "@angular/platform-browser": "^16",
+  "@angular/platform-browser-dynamic": "^16",
+  "core-js": "^3.19.0",
+  "rxjs": "^7.4",
+  "zone.js": "~0.13.0"
+}
+```
+
+Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (4.9 or later).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
