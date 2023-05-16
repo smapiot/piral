@@ -41,10 +41,12 @@ stages:
       displayName: Install Yarn
       inputs:
         checkLatest: true
-    - task: Yarn@2
+    - task: Bash@3
       displayName: Install Dependencies
       inputs:
-        Arguments: install
+        targetType: inline
+        script: >-
+          npx lerna bootstrap
     - task: Yarn@2
       displayName: Build Core Demo
       condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
@@ -113,10 +115,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -165,10 +169,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -210,10 +216,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -259,10 +267,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -308,10 +318,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -357,10 +369,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -413,10 +427,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -477,10 +493,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -526,10 +544,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -575,10 +595,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -624,10 +646,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -673,10 +697,12 @@ stages:
             displayName: Install Yarn
             inputs:
               checkLatest: true
-          - task: Yarn@2
+          - task: Bash@3
             displayName: Install Dependencies
             inputs:
-              Arguments: install
+              targetType: inline
+              script: >-
+                npx lerna bootstrap
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
