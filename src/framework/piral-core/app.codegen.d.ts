@@ -1,4 +1,4 @@
-import type { LoadPiletsOptions } from 'prial-base';
+import type { LoadPiletsOptions } from 'piral-base';
 import type { DebuggerExtensionOptions } from 'piral-debug-utils';
 import type { ComponentType } from 'react';
 import type { RouteComponentProps } from 'react-router';
