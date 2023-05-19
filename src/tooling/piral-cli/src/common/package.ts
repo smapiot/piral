@@ -587,15 +587,19 @@ export async function retrievePiletsInfo(entryFile: string) {
     fail('entryPointDoesNotExist_0073', entryFile);
   }
 
-  const packageJson = await findFile(entryFile, 'package.json');
+  const packageJsonPath = await findFile(entryFile, packageJson);
 
-  if (!packageJson) {
+  if (!packageJsonPath) {
     fail('packageJsonMissing_0074');
   }
 
-  const root = dirname(packageJson);
-  const packageInfo = await readJson(root, 'package.json');
-  const info = getPiletsInfo(packageInfo);
+  const root = dirname(packageJsonPath);
+  const packageInfo = await readJson(root, packageJson);
+  const piralJsonPkg = await readJson(root, piralJson);
+  const pilets: PiletsInfo = {
+    ...getPiletsInfo(packageInfo),
+    ...piralJsonPkg.pilets,
+  };
   const externals = await retrieveExternals(root, packageInfo);
   const dependencies = {
     std: packageInfo.dependencies || {},
@@ -605,7 +609,7 @@ export async function retrievePiletsInfo(entryFile: string) {
   const framework = frameworkLibs.find((lib) => lib in dependencies.std || lib in dependencies.dev);
 
   return {
-    ...info,
+    ...pilets,
     externals,
     name: packageInfo.name,
     version: packageInfo.version,
