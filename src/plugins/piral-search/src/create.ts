@@ -98,7 +98,7 @@ function getSearchProviders(providers: Array<InitialSearchProvider>) {
 }
 
 function toChild(content: SearchResultType, api: PiletApi, context: GlobalStateContext): ReactChild {
-  if (typeof content === 'string' || isValidElement(content)) {
+  if (typeof content === 'string' || isValidElement<any>(content)) {
     return content;
   } else {
     const component = withApi(context, content, api, 'extension');
