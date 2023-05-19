@@ -800,7 +800,7 @@ The basic dependencies look as follows:
 }
 ```
 
-Besides the usual imports the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (4.9 or later).
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (4.9 or later).
 
 So include in your app shell as preamble:
 
