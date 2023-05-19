@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 0.15.12 (tbd)
+
+- Fixed the `piral-cli` generating wrong d.ts files for TypeScript 5
+- Updated peer dependencies of `piral-ng` supporting Angular 15
+- Updated documentation of `piral-ng` with support of Angular 16
+- Updated dependencies of `piral-cli-webpack5`
+- Updated used version of TypeScript to 5.x
+
 ## 0.15.11 (May 15, 2023)
 
 - Fixed `empty-skips-render` attribute in `piral-extension`

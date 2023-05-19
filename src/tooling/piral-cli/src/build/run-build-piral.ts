@@ -48,7 +48,7 @@ function run(
   });
 }
 
-process.on('message', async (msg) => {
+process.on('message', async (msg: any) => {
   try {
     switch (msg.type) {
       case 'init':

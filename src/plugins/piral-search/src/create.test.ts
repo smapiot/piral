@@ -4,6 +4,7 @@ import { createSearchApi } from './create';
 function createMockContainer() {
   const state = create(() => ({
     registry: {
+      wrappers: {},
       extensions: {},
     },
   }));
@@ -14,11 +15,18 @@ function createMockContainer() {
       emit: jest.fn(),
       defineActions() {},
       state,
+      readState(cb) {
+        return cb(state.getState());
+      },
       dispatch(update) {
         state.setState(update(state.getState()));
       },
     } as any,
-    api: {} as any,
+    api: {
+      meta: {
+        name: '',
+      },
+    } as any,
   };
 }
 

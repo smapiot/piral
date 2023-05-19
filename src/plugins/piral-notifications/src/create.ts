@@ -51,11 +51,11 @@ function isElement(element: any): element is ReactElement<any, any> {
   return isValidElement(element);
 }
 
-function toComponent(component: NotificationContent) {
+function toComponent(component: NotificationContent): ComponentType<BareNotificationProps> {
   if (typeof component === 'string') {
     const text = component;
     return () => defaultRender(text);
-  } else if (isValidElement(component)) {
+  } else if (isValidElement<any>(component)) {
     const element = component;
     return () => element;
   }

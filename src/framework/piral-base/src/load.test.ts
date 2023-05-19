@@ -53,11 +53,9 @@ describe('Loading Modules', () => {
     const data: any = {
       foo: 'bar',
     };
-    const promise = loadMetadata(() =>
+    const result = await loadMetadata(() =>
       Promise.resolve([data]),
     );
-    expect(promise).rejects.toBeNull();
-    const result = await promise;
     expect(result).toEqual([{
       foo: 'bar',
     }]);
@@ -68,11 +66,9 @@ describe('Loading Modules', () => {
       foo: 'bar',
     };
     Object.preventExtensions(data);
-    const promise = loadMetadata(() =>
+    const result = await loadMetadata(() =>
       Promise.resolve([data]),
     );
-    expect(promise).rejects.toBeNull();
-    const result = await promise;
     // @ts-ignore
     result[0].bar = 'qxz'
     expect(result).toEqual([{

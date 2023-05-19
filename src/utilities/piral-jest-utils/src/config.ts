@@ -8,7 +8,28 @@ const config: Config.InitialOptions = {
   roots: ['src/'],
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: {
+          ignoreCodes: [
+            'TS151001',
+            'TS2786',
+            'TS2345',
+            'TS2322',
+            'TS2554',
+            'TS2717',
+            'TS2488',
+            'TS2739',
+            'TS2339',
+            'TS2741',
+            'TS2532',
+            'TS1117',
+            'TS2740',
+          ],
+        },
+      },
+    ],
     '^.+\\.jsx?$': 'babel-jest',
     '^.+\\.codegen$': resolve(__dirname, 'codegen.js'),
   },
@@ -20,25 +41,6 @@ const config: Config.InitialOptions = {
   },
   globals: {
     NODE_ENV: 'test',
-    'ts-jest': {
-      diagnostics: {
-        ignoreCodes: [
-          'TS151001',
-          'TS2786',
-          'TS2345',
-          'TS2322',
-          'TS2554',
-          'TS2717',
-          'TS2488',
-          'TS2739',
-          'TS2339',
-          'TS2741',
-          'TS2532',
-          'TS1117',
-          'TS2740',
-        ],
-      },
-    },
   },
   verbose: true,
 };

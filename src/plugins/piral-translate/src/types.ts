@@ -108,8 +108,8 @@ export interface Localizable {
   messages: LocalizationMessages;
   language: string;
   languages: Array<string>;
-  localizeGlobal<T>(key: string, variables?: T): string;
-  localizeLocal<T>(localMessages: LocalizationMessages, key: string, variables?: T): string;
+  localizeGlobal<T extends object>(key: string, variables?: T): string;
+  localizeLocal<T extends object>(localMessages: LocalizationMessages, key: string, variables?: T): string;
 }
 
 export interface LocalizationMessages {
@@ -145,7 +145,7 @@ export interface PiletLocaleApi {
    * @param tag The tag to translate.
    * @param variables The optional variables to fill into the temnplate.
    */
-  translate<T = Record<string, string>>(tag: string, variables?: T): string;
+  translate<T extends object = Record<string, string>>(tag: string, variables?: T): string;
   /**
    * Provides translations to the application.
    * The translations will be exclusively used for retrieving translations for the pilet.

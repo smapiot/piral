@@ -115,7 +115,7 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
   writeFileSync(resolve(dir, 'src/index.html'), defaultIndexHtml, 'utf8');
   writeFileSync(resolve(dir, 'src/index.tsx'), defaultIndexTsx, 'utf8');
 
-  execSync('npm i', {
+  execSync('npm i --legacy-peer-deps', {
     cwd: dir,
   });
 

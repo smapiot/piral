@@ -2,7 +2,7 @@ import type { Subscription } from 'rxjs';
 import type { ComponentContext, Disposable } from 'piral-core';
 import { Inject, Injectable, NgZone, OnDestroy, Optional } from '@angular/core';
 import { NavigationError, NavigationStart, Router, Scroll } from '@angular/router';
-import { ɵBrowserPlatformLocation } from '@angular/common';
+import { BrowserPlatformLocation as ɵBrowserPlatformLocation } from '@angular/common';
 
 let skipNavigation = false;
 const noop = function () {};

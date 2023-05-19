@@ -38,9 +38,7 @@
     "piral": "^0.15.11",
     "piral-lazy": "^0.15.11"
   },
-  "devDependencies": {
-    "piral-cli": "^0.15.11"
-  },
+  "devDependencies": {},
   "pilets": {
     "externals": [],
     "files": [],

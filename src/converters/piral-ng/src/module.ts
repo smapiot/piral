@@ -37,6 +37,7 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
 
   @NgModule({
     imports,
+    // @ts-ignore
     entryComponents: components,
     providers,
   })
