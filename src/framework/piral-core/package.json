@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "0.15.11",
+  "version": "0.15.12",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -72,8 +72,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "piral-base": "^0.15.11",
-    "piral-debug-utils": "^0.15.11",
+    "piral-base": "^0.15.12",
+    "piral-debug-utils": "^0.15.12",
     "zustand": "^3.0.0"
   },
   "peerDependencies": {
