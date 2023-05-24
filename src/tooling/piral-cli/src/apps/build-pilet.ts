@@ -25,6 +25,7 @@ import {
   combinePiletExternals,
   retrievePiletsInfo,
   validateSharedDependencies,
+  defaultSchemaVersion,
 } from '../common';
 
 interface PiletData {
@@ -220,7 +221,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       targetDir,
       app,
     );
-    const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || 'v2';
+    const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
     const piralInstances = apps.map(m => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);

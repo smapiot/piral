@@ -26,6 +26,7 @@ import {
   cliVersion,
   installPiralInstance,
   piletJson,
+  defaultSchemaVersion,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -176,7 +177,7 @@ always-auth=true`,
       piletJson,
       JSON.stringify(
         {
-          schemaVersion: 'v2',
+          schemaVersion: defaultSchemaVersion,
         },
         undefined,
         2,
