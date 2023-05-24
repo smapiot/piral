@@ -2,7 +2,7 @@
 
 ## 0.15.13 (tbd)
 
-- (tbd)
+- Fixed `pilet publish --fresh` with schema defined by the "pilet.json"
 
 ## 0.15.12 (May 19, 2023)
 
