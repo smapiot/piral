@@ -140,9 +140,14 @@ export function createConverter(
       locals.next = noop;
       locals.dispose = attachEvents(
         el,
-        (ev) => piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-        (ev) =>
-          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.state) : nav.push(ev.detail.to, ev.detail.state),
+        (ev) => {
+          ev.stopPropagation();
+          piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+        },
+        (ev) => {
+          ev.stopPropagation();
+          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.state) : nav.push(ev.detail.to, ev.detail.state);
+        },
       );
 
       function mountClassic(config: BlazorRootConfig) {

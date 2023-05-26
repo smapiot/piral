@@ -3,6 +3,7 @@
 ## 0.15.13 (tbd)
 
 - Fixed `pilet publish --fresh` with schema defined by the "pilet.json"
+- Fixed duplicated rendering with nested extensions in `piral-blazor` (#602)
 
 ## 0.15.12 (May 19, 2023)
 
