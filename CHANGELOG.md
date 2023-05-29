@@ -4,6 +4,7 @@
 
 - Fixed `pilet publish --fresh` with schema defined by the "pilet.json"
 - Fixed duplicated rendering with nested extensions in `piral-blazor` (#602)
+- Added support for `events` capability in `piral-blazor`
 
 ## 0.15.12 (May 19, 2023)
 

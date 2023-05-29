@@ -32,6 +32,7 @@ const globalEventNames = [
 const eventNames = {
   render: 'render-blazor-extension',
   navigate: 'navigate-blazor',
+  piral: 'piral-blazor',
 };
 
 function isRooted(target: HTMLElement) {
@@ -114,6 +115,18 @@ export function emitRenderEvent(
   delayEmit();
 }
 
+export function emitPiralEvent(type: string, args: any) {
+  document.body.dispatchEvent(
+    new CustomEvent(eventNames.piral, {
+      bubbles: false,
+      detail: {
+        type,
+        args,
+      },
+    }),
+  );
+}
+
 export function emitNavigateEvent(source: HTMLElement, to: string, replace = false, state?: any) {
   findTarget(source).dispatchEvent(
     new CustomEvent(eventNames.navigate, {
@@ -131,14 +144,24 @@ export function attachEvents(
   host: HTMLElement,
   render: (ev: CustomEvent) => void,
   navigate: (ev: CustomEvent) => void,
+  forward: (ev: CustomEvent) => void,
 ) {
   eventParents.push(host);
   host.addEventListener(eventNames.render, render, false);
   host.addEventListener(eventNames.navigate, navigate, false);
+
+  if (eventParents.length === 1) {
+    document.body.addEventListener(eventNames.piral, forward, false);
+  }
+
   return () => {
     eventParents.splice(eventParents.indexOf(host), 1);
     host.removeEventListener(eventNames.render, render, false);
     host.removeEventListener(eventNames.navigate, navigate, false);
+
+    if (eventParents.length === 0) {
+      document.body.removeEventListener(eventNames.piral, forward, false);
+    }
   };
 }
 

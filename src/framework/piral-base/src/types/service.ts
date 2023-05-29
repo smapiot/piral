@@ -176,9 +176,13 @@ export interface PiletV3Entry {
    */
   integrity?: string;
   /**
-   * The link for retrieving the content of the pilet.
+   * The fallback link for retrieving the content of the pilet.
    */
   link: string;
+  /**
+   * The links for specific variations of the pilet, e.g., "client", "server", ...
+   */
+  variations?: Record<string, string>;
   /**
    * Optionally provides some custom metadata for the pilet.
    */

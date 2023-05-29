@@ -1,9 +1,9 @@
-import type { ForeignComponent, PiletMetadata } from 'piral-core';
+import type { ForeignComponent, PiletApi } from 'piral-core';
 
 export type BlazorRootConfig = [
   root: HTMLDivElement,
   capabilities: Array<string>,
-  applyChanges: (pilet: PiletMetadata) => void,
+  applyChanges: (pilet: PiletApi) => void,
 ];
 
 export interface BlazorDependencyLoader {
@@ -42,6 +42,14 @@ declare global {
   interface Window {
     Blazor: {
       start(options?: Partial<WebAssemblyStartOptions>): Promise<void>;
+      emitPiralEvent(type: string, args: any): void;
+      emitRenderEvent(
+        source: HTMLElement,
+        name: string,
+        params: any,
+        sourceRef: any,
+        fallbackComponent: string | null,
+      ): void;
       emitNavigateEvent(target: Element, path: string, replace?: boolean, state?: any): void;
       _internal: {
         navigationManager: any;
