@@ -19,7 +19,7 @@
     "./src/styles.scss"
   ],
   "pages": {
-    "/reference/codes/search": "./src/SearchPage.tsx"
+    "/code/search": "./src/SearchPage.tsx"
   },
   "redirects": {
     "/": "/guidelines",
