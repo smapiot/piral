@@ -19,7 +19,7 @@
     "./src/styles.scss"
   ],
   "pages": {
-    "/reference/codes/search": "./src/SearchPage.tsx"
+    "/code/search": "./src/SearchPage.tsx"
   },
   "redirects": {
     "/": "/guidelines",
@@ -29,6 +29,7 @@
     "/reference/tooling/piral": "/tooling/build-piral",
     "/reference/extensions/:id?": "/plugins/:id",
     "/reference/plugins/:id?": "/plugins/:id",
+    "/reference/codes/search": "/code/search",
     "/reference/codes/:id": "/code/:id"
   },
   "sitemap": {
