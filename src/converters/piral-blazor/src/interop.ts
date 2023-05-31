@@ -1,5 +1,5 @@
-import { PiletMetadata } from 'piral-core';
-import { emitRenderEvent, emitNavigateEvent } from './events';
+import { PiletApi } from 'piral-core';
+import { emitRenderEvent, emitNavigateEvent, emitPiralEvent } from './events';
 import type { BlazorLogLevel, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
@@ -39,7 +39,10 @@ function createBase() {
 function prepareForStartup() {
   const originalApplyHotReload = window.Blazor._internal.applyHotReload;
   const queue = [];
-  const applyChanges = (pilet: PiletMetadata) => {
+
+  const applyChanges = (api: PiletApi) => {
+    const pilet = api.meta;
+
     if (pilet.config && pilet.config.blazorHotReload) {
       for (const item of queue.splice(0, queue.length)) {
         item();
@@ -133,6 +136,10 @@ function addScript(url: string) {
     script.onload = () => resolve();
     document.body.appendChild(script);
   });
+}
+
+export function processEvent(type: string, args: any) {
+  return window.DotNet.invokeMethodAsync(coreLib, 'ProcessEvent', type, args);
 }
 
 export function setLogLevel(logLevel: BlazorLogLevel) {
@@ -238,6 +245,7 @@ export function initialize(scriptUrl: string, publicPath: string, opts: WebAssem
       Object.assign(window.Blazor, {
         emitRenderEvent,
         emitNavigateEvent,
+        emitPiralEvent,
       });
 
       startBlazor(opts).then(resolve);

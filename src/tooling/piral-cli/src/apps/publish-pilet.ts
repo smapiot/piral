@@ -20,6 +20,7 @@ import {
   removeDirectory,
   logInfo,
   combinePiletExternals,
+  defaultSchemaVersion,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -105,7 +106,7 @@ export const publishPiletDefaults: PublishPiletOptions = {
   fresh: false,
   cert: undefined,
   logLevel: LogLevels.info,
-  schemaVersion: config.schemaVersion,
+  schemaVersion: undefined,
   mode: 'basic',
   from: 'local',
   fields: {},
@@ -123,7 +124,7 @@ async function getFiles(
   sources: Array<string>,
   from: PiletPublishSource,
   fresh: boolean,
-  schemaVersion: PiletSchemaVersion,
+  originalSchemaVersion: PiletSchemaVersion,
   logLevel: LogLevels,
   bundlerName: string,
   _?: Record<string, any>,
@@ -142,9 +143,10 @@ async function getFiles(
         const targetDir = dirname(entryModule);
 
         progress('Triggering pilet build ...');
-        const { root, piletPackage, importmap, peerDependencies, peerModules, apps } = await retrievePiletData(
+        const { root, piletPackage, importmap, peerDependencies, peerModules, apps, schema } = await retrievePiletData(
           targetDir,
         );
+        const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
         const piralInstances = apps.map((m) => m.appPackage.name);
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
         const propDest = resolve(root, main);

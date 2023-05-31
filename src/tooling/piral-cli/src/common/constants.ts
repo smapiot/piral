@@ -5,6 +5,7 @@ export const piralJson = 'piral.json';
 export const piletJson = 'pilet.json';
 export const filesOnceTar = 'files_once';
 export const piralBaseRoot = 'piral-base/package.json';
+export const defaultSchemaVersion = 'v2';
 export const frameworkLibs = ['piral-native' as const, 'piral' as const, 'piral-core' as const, 'piral-base' as const];
 export const piletJsonSchemaUrl = 'https://docs.piral.io/schemas/pilet-v0.json';
 export const piralJsonSchemaUrl = 'https://docs.piral.io/schemas/piral-v0.json';

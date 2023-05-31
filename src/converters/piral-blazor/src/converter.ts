@@ -11,6 +11,7 @@ import {
   destroyElement,
   updateElement,
   setLogLevel,
+  processEvent,
 } from './interop';
 import {
   BlazorDependencyLoader,
@@ -91,6 +92,21 @@ export function createConverter(
           await setLanguage(language.current);
         }
 
+        if (capabilities.includes('events')) {
+          const eventDispatcher = document.body.dispatchEvent;
+
+          // listen to all events for forwarding them
+          document.body.dispatchEvent = function (ev: CustomEvent) {
+            if (ev.type.startsWith('piral-')) {
+              const type = ev.type.replace('piral-', '');
+              const args = ev.detail.arg;
+              processEvent(type, args);
+            }
+
+            return eventDispatcher.call(this, ev);
+          };
+        }
+
         if (typeof language.onChange === 'function') {
           language.onChange(setLanguage);
         }
@@ -140,9 +156,21 @@ export function createConverter(
       locals.next = noop;
       locals.dispose = attachEvents(
         el,
-        (ev) => piral.renderHtmlExtension(ev.detail.target, ev.detail.props),
-        (ev) =>
-          ev.detail.replace ? nav.replace(ev.detail.to, ev.detail.state) : nav.push(ev.detail.to, ev.detail.state),
+        (ev) => {
+          ev.stopPropagation();
+          const { target, props } = ev.detail;
+          piral.renderHtmlExtension(target, props);
+        },
+        (ev) => {
+          ev.stopPropagation();
+          const { to, state, replace } = ev.detail;
+          replace ? nav.replace(to, state) : nav.push(to, state);
+        },
+        (ev) => {
+          ev.stopPropagation();
+          const { type, args } = ev.detail;
+          piral.emit(type, args);
+        },
       );
 
       function mountClassic(config: BlazorRootConfig) {
@@ -182,13 +210,13 @@ export function createConverter(
         });
       }
 
-      (loader || (convert.loader = loader = boot()))
+      (loader || (convert.loader = loader = boot(opts)))
         .then((config) =>
           dependency(config).then(() => {
             if (locals.state === 'fresh') {
               const [_, capabilities, applyChanges] = config;
               const fn = capabilities.includes('custom-element') ? mountModern : mountClassic;
-              applyChanges(piral.meta);
+              applyChanges(piral);
 
               return fn(config).then(() => {
                 locals.state = 'mounted';

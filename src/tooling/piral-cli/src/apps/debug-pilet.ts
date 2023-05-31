@@ -22,6 +22,7 @@ import {
   configurePlatform,
   packageJson,
   piletJson,
+  defaultSchemaVersion,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -260,7 +261,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         targetDir,
         app,
       );
-      const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || 'v2';
+      const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
       const piralInstances = apps.map((m) => m.appPackage.name);
       const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
       const mocks = join(targetDir, 'mocks');
