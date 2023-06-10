@@ -50,7 +50,7 @@ Sets the framework/library level to use.
 
 
 - Type: `string`
-- Choices: `"piral-native"`, `"piral"`, `"piral-core"`, `"piral-base"`
+- Choices: `"piral"`, `"piral-core"`, `"piral-base"`
 - Default: `"piral"`
 
 ### `--install`

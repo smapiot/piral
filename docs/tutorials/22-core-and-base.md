@@ -14,7 +14,7 @@ Following this guideline, you have most likely chosen `piral` as your most funda
 
 ## Piral Framework Packages
 
-The core Piral framework is represented by self-contained packages such as `siteless`, `piral`, or `piral-native`. These packages bring everything with them to be run without any other dependencies. They are also opinionated, i.e., they come with some dependencies (or versions of dependencies) that you may disagree with.
+The core Piral framework is represented by self-contained packages such as `siteless` or `piral`. These packages bring everything with them to be run without any other dependencies. They are also opinionated, i.e., they come with some dependencies (or versions of dependencies) that you may disagree with.
 
 Taking `piral` as the framework of choice we can draw the following package hierarchy diagram.
 

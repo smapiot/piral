@@ -28,7 +28,7 @@ Piral is developed as a monorepo.
 - [piral-lazy](./piral-lazy/README.md) provides generic lazy loading for all components
 - [piral-oauth2](./piral-oauth2/README.md) integrates generic OAuth 2 for authentication with a fetch middleware
 - [piral-oidc](./piral-oidc/README.md) integrates OpenID Connect for authentication with a fetch middleware
-- [piral-pwa](./piral-pwa/README.md) enables out-of-the-box PWA support with benefits
+- [piral-page-layouts](./piral-page-layouts/README.md) integrates different page layout styles
 - [piral-redux](./piral-redux/README.md) provides bindings for using a distributed Redux-based state container
 - [piral-search](./piral-search/README.md) provides enhanced search capability
 - [piral-tracking](./piral-tracking/README.md) provides the tracking API
