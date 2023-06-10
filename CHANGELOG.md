@@ -3,7 +3,8 @@
 ## 1.0.0 (tbd)
 
 - First LTS release
-- Removed `piral-native`
+- Removed `piral-native` package
+- Removed `piral-ssr-utils` package
 
 ## 0.15.13 (May 31, 2023)
 

@@ -12,8 +12,6 @@ Piral makes the development of highly interactive distributed frontend applicati
 
 Naturally, performance implications apply. While pilets should be cached indefinitely (i.e., they will only require a download if never downloaded or if they have been updated), the responses from the feed service can never be cached. The additional round-trip time (RTT) to retrieve the pilet feed will add to the JavaScript evaluation and execution time.
 
-For server-side rendering (SSR) the `piral-ssr-utils` package can be quite helpful. It is a small library that comes with two parts. First, it will reduce the RTT by embedding the responses from the public feed. Second, it can also include (all) the pilets for a request. Consequently, while the page request grows, subsequent requests are essentially eliminated.
-
 ## CSR vs SSR
 
 In CSR the client needs to do the work of requesting the info from the feed service, then getting the pilets. All *after* the website with the script has been fully loaded and evaluated.
@@ -63,18 +61,15 @@ Everything that deals with the setup of the Piral instance is done in the `creat
 
 ```jsx
 import { createInstance } from 'piral-core';
-import { configForServerRendering } from 'piral-ssr-utils/runtime';
 
 export function createAppInstance() {
-  return createInstance(
-    configForServerRendering({
-      // your config here
-    }),
-  );
+  return createInstance({
+    // your config here
+  });
 }
 ```
 
-We use the `configForServerRendering` helper from `piral-ssr-utils/runtime` to wrap our usual configuration. The wrapper will introduce a custom version of the `requestPilets` function, which already works with SSR, as well as standalone.
+This call could wrap the usual configuration. The wrapper will introduce a custom version of the `requestPilets` function, which already works with SSR, as well as standalone.
 
 Now we only need to define the server part. We start with the following code.
 
@@ -123,7 +118,6 @@ We need to render the app from the server. For this, we should make use of the p
 
 ```ts
 import axios from 'axios';
-import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
@@ -186,7 +180,6 @@ The only thing to add is the `getPilet` function in the provided options. This w
 
 ```ts
 import axios from 'axios';
-import { renderFromServer } from 'piral-ssr-utils';
 import { createApp } from '../common/app';
 
 const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
