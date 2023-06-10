@@ -273,7 +273,6 @@ export async function getPiralPackage(app: string, data: PiralInstanceData, vers
         'piral-base', // this we take in any case
         framework !== 'piral-base' && 'piral-core', // this we take unless we selected piral-base, then obviously core is not invited to the party
         framework === 'piral' && 'piral', // this we take only if we selected piral
-        framework === 'piral-native' && 'piral-native', // this we also only take if we selected piral-native
       ].filter(Boolean),
     },
     dependencies,

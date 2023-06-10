@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+- First LTS release
+- Removed `piral-native`
+
 ## 0.15.13 (May 31, 2023)
 
 - Fixed `pilet publish --fresh` with schema defined by the "pilet.json"

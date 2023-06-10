@@ -95,7 +95,7 @@
             "generator": "types",
             "segment": "types",
             "dir": "types",
-            "include": "^(piral-base|piral-core|piral-native|piral)$"
+            "include": "^(piral-base|piral-core|piral)$"
           }
         },
         {
