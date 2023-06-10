@@ -28,7 +28,7 @@ Instead of `pack-pilet` you can also use:
 
 ### `source`
 
-Sets the source package.json file for creating the package.
+Sets the source pilet path for creating the package.
 
 
 - Type: `string`

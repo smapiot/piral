@@ -28,7 +28,7 @@ Instead of `build-piral` you can also use:
 
 ### `source`
 
-Sets the source root directory or index.html file for collecting all the information.
+Sets the source Piral instance path for collecting all the information.
 
 
 - Type: `string`
@@ -110,6 +110,23 @@ Create associated source maps for the bundles.
 
 - Type: `boolean`
 - Default: `false`
+
+### `--watch`
+
+Continuously re-builds while watching the source files.
+
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-watch`
+
+Opposite of:
+Continuously re-builds while watching the source files.
+
+
+- Type: `boolean`
+- Default: `true`
 
 ### `--subdir`
 

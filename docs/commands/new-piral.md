@@ -92,7 +92,7 @@ Sets the tag or version of the package to install. By default, this uses the ver
 
 - Aliases: `--piral-version`
 - Type: `string`
-- Default: `"0.14.32"`
+- Default: `"0.15.13"`
 
 ### `--force-overwrite`
 
@@ -135,7 +135,7 @@ Sets the default bundler to install.
 
 
 - Type: `string`
-- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
+- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
 - Default: `"none"`
 
 ### `--vars`

@@ -28,7 +28,7 @@ Instead of `build-pilet` you can also use:
 
 ### `source`
 
-Sets the source index.tsx file for collecting all the information.
+Sets the source pilet path for collecting all the information.
 
 
 - Type: `string`
@@ -84,6 +84,23 @@ Creates source maps for the bundles.
 
 - Type: `boolean`
 - Default: `false`
+
+### `--watch`
+
+Continuously re-builds while watching the source files.
+
+
+- Type: `boolean`
+- Default: `false`
+
+### `--no-watch`
+
+Opposite of:
+Continuously re-builds while watching the source files.
+
+
+- Type: `boolean`
+- Default: `true`
 
 ### `--fresh`
 
@@ -177,7 +194,7 @@ Sets the schema to be used when bundling the pilets.
 
 - Type: `string`
 - Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
-- Default: `"v2"`
+- Default: `undefined`
 
 ### `--bundler`
 

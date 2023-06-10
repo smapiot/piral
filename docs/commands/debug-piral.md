@@ -28,7 +28,7 @@ Instead of `debug-piral` you can also use:
 
 ### `source`
 
-Sets the source root directory or index.html file for collecting all the information.
+Sets the source Piral instance path for collecting all the information.
 
 
 - Type: `string`
@@ -101,6 +101,14 @@ Activates Hot Module Reloading (HMR).
 
 - Type: `boolean`
 - Default: `false`
+
+### `--krasrc`
+
+Sets a config file for overwriting the default kras options.
+
+
+- Type: `string`
+- Default: `undefined`
 
 ### `--optimize-modules`
 

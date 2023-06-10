@@ -91,7 +91,7 @@ Sets the schema to be used when making a fresh build of the pilet.
 
 - Type: `string`
 - Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
-- Default: `"v2"`
+- Default: `undefined`
 
 ### `--mode`
 
