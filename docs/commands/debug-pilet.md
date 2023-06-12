@@ -110,6 +110,14 @@ Activates Hot Module Reloading (HMR).
 - Type: `boolean`
 - Default: `false`
 
+### `--krasrc`
+
+Sets a config file for overwriting the default kras options.
+
+
+- Type: `string`
+- Default: `undefined`
+
 ### `--optimize-modules`
 
 Also includes the node modules for target transpilation.
@@ -134,7 +142,7 @@ Sets the schema to be used when bundling the pilets.
 
 - Type: `string`
 - Choices: `"v0"`, `"v1"`, `"v2"`, `"none"`
-- Default: `"v2"`
+- Default: `undefined`
 
 ### `--bundler`
 

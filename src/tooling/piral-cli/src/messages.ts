@@ -2723,7 +2723,9 @@ export function bundlerNotInstalled_0176(): QuickMessage {
  * By default, the following content can be used for an empty file:
  *
  * ```json
- *
+ * {
+ *   "$schema": "https://docs.piral.io/schemas/pilet-v0.json"
+ * }
  * ```
  */
 export function piletJsonNotAvailable_0180(root: string): QuickMessage {

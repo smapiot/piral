@@ -34,7 +34,7 @@ Sets the source package (potentially incl. its tag/version) containing a Piral i
 
 
 - Type: `string`
-- Default: `piral`
+- Default: `undefined`
 
 ## Flags
 
@@ -120,7 +120,7 @@ Sets the default bundler to install.
 
 
 - Type: `string`
-- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
+- Choices: `"none"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"xbuild"`
 - Default: `"none"`
 
 ### `--vars`

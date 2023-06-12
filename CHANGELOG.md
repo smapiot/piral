@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 1.0.0 (tbd)
+
+- First LTS release
+- Removed `piral-native` framework package
+- Removed `piral-ssr-utils` utils package
+- Removed `piral-systemjs-utils` utils package
+- Removed `piral-pwa` plugin package
+
 ## 0.15.13 (May 31, 2023)
 
 - Fixed `pilet publish --fresh` with schema defined by the "pilet.json"

@@ -27,7 +27,7 @@ Instead of `validate-piral` you can also use:
 
 ### `source`
 
-Sets the source root directory or index.html file for collecting all the information.
+Sets the source Piral instance path for collecting all the information.
 
 
 - Type: `string`

@@ -10,6 +10,17 @@ Starting with the release of 0.11 we encourage everyone to read this before migr
 
 > In general we will never break your Pilet API. Therefore, all of these changes below refer to the use of the Piral CLI for non-essential tasks or your Piral instance.
 
+## 0.15 to 1.0
+
+### Breaking Changes in 0.15
+
+1. Removed some utils packages
+2. Removed some plugin packages
+
+#### 1) and 2) Removed Packages
+
+The old packages (version 0.15.x) should still work. Either reference them or clone / copy the code. In most cases these packages have either been unused or unmaintained anyway. Getting rid of these in your code base would actually be a benefit.
+
 ## 0.14 to 0.15
 
 ### Breaking Changes in 0.15
