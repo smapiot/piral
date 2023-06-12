@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.0.0 (tbd)
+## 1.0.0 (June 12, 2023)
 
 - First LTS release
 - Removed `piral-native` framework package
