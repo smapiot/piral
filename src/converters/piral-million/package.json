@@ -66,8 +66,5 @@
   "devDependencies": {
     "million": "^1.12.0",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "million": "^1.0.0"
   }
 }

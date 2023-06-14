@@ -55,7 +55,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Ember.js with Piral is as simple as installing `piral-ember` and `ember-source`.
+Using Ember.js with Piral is as simple as installing `piral-ember` and `ember-source@^3`.
 
 ```ts
 import { createEmberApi } from 'piral-ember';

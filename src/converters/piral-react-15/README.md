@@ -59,7 +59,18 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using React v15 with Piral is as simple as installing `piral-react-15` and `react-15`.
+Using React v15 with Piral is as simple as installing `piral-react-15` and `react-15`. For `react-15` add the following two packages to your project's dependencies:
+
+```json
+{
+  "dependencies": {
+    "react-15`": "npm:react@^15",
+    "react-dom-15": "npm:react@^15"
+  }
+}
+```
+
+Now you are ready to use the `piral-react-15` converter:
 
 ```ts
 import { createReact15Api } from 'piral-react-15';

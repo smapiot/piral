@@ -59,7 +59,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Million with Piral is as simple as installing `piral-million` and `million`.
+Using Million with Piral is as simple as installing `piral-million` and `million@^1`.
 
 ```ts
 import { createMillionApi } from 'piral-million';

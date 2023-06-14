@@ -18,6 +18,14 @@ npm i piral-core
 
 **Remark**: This package already includes TypeScript declarations. No need to install other packages.
 
+You'll also need to install React and React Router, if that did not happen already:
+
+```sh
+npm i react@^18 react-dom@^18 react-router@^6 react-router-dom@^6
+```
+
+The `piral-core` package is compatible with `react@>=16.8.0`, `react-dom@>=16.8.0`, `react-router@>=5.0.0`, and `react-router-dom@>=5.0.0`.
+
 Now you can create a new Piral instance in your code:
 
 ```jsx

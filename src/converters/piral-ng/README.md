@@ -288,6 +288,15 @@ module.exports = (config) => {
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
 
+The following (Angular) packages should be installed:
+
+- `@angular/common`
+- `@angular/core`
+- `@angular/platform-browser`
+- `@angular/platform-browser-dynamic`
+- `@angular/router`
+- `rxjs`
+
 The following polyfills/vendor libs should be imported *before* any other package.
 
 ```ts

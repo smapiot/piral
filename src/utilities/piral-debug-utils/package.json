@@ -69,9 +69,5 @@
   },
   "devDependencies": {
     "piral-base": "^1.0.0"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-router": ">=5.0.0"
   }
 }

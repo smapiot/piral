@@ -67,8 +67,5 @@
     "@types/angular": "^1.6.45",
     "angular": "^1.7.9",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "angular": "^1.7.0"
   }
 }

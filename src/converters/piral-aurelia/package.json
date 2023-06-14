@@ -71,13 +71,5 @@
     "aurelia-templating-binding": "1.5.3",
     "aurelia-templating-resources": "1.13.1",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "aurelia-event-aggregator": "^1.0.0",
-    "aurelia-framework": "^1.0.0",
-    "aurelia-history-browser": "^1.0.0",
-    "aurelia-pal-browser": "^1.0.0",
-    "aurelia-templating-binding": "^1.0.0",
-    "aurelia-templating-resources": "^1.0.0"
   }
 }

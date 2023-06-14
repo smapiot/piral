@@ -66,8 +66,5 @@
   "devDependencies": {
     "hyperapp": "^1.2.10",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "hyperapp": "^1.0.0"
   }
 }

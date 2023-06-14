@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.0.1 (tbd)
+
+- Removed the outdated `peerDependencies` sections from the packages
+
 ## 1.0.0 (June 12, 2023)
 
 - First LTS release
