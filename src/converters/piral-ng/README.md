@@ -243,6 +243,20 @@ module.exports = (config) => {
     m.exclude = /\.component.s[ac]ss$/i;
   });
 
+  const cssLoaderNoModule = {
+    loader: require.resolve('css-loader'),
+    options: {
+      esModule: false,
+    },
+  };
+
+  const htmlLoaderNoModule = {
+    loader: require.resolve('html-loader'),
+    options: {
+      esModule: false,
+    },
+  };
+  
   const ruleIndex = config.module.rules.findIndex(m => m.test.toString() === /\.tsx?$/i.toString());
 
   config.module.rules.splice(ruleIndex, 1,
@@ -252,15 +266,15 @@ module.exports = (config) => {
     },
     {
       test: /\.component.html$/i,
-      use: ["to-string-loader", "html-loader?esModule=false"],
+      use: ["to-string-loader", htmlLoaderNoModule],
     },
     {
       test: /\.component.css$/i,
-      use: ["to-string-loader", "css-loader?esModule=false"],
+      use: ["to-string-loader", cssLoaderNoModule],
     },
     {
       test: /\.component.s[ac]ss$/i,
-      use: ["to-string-loader", "css-loader?esModule=false", "sass-loader"],
+      use: ["to-string-loader", cssLoaderNoModule, "sass-loader"],
     });
 
   config.plugins.push(
