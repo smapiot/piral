@@ -62,7 +62,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular.js 1.x.
+The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular.js 1.x. For this you'll need to install the `angular@^1.7` package.
 
 For the setup itself you'll need to import `createNgjsApi` from the `piral-ngjs` package.
 

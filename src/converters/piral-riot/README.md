@@ -62,7 +62,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Riot.js with Piral is as simple as installing `piral-riot` and `riot`.
+Using Riot.js with Piral is as simple as installing `piral-riot` and `riot@^4`.
 
 ```ts
 import { createRiotApi } from 'piral-riot';
