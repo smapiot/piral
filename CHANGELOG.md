@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.0.1 (tbd)
+## 1.0.1 (June 16, 2023)
 
 - Fixed the declaration of the `css-loader` with no modules in `piral-ng`
 - Removed the outdated `peerDependencies` sections from the packages
