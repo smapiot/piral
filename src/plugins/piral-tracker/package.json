@@ -1,6 +1,6 @@
 {
   "name": "piral-tracker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin for registering always-on components in Piral.",
   "keywords": [
     "piral",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "piral-core": "^1.0.0",
+    "piral-core": "^1.0.1",
     "react": "^18.0.0"
   }
 }
