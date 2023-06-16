@@ -66,8 +66,5 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "piral-core": "0.14.x || 0.15.x"
   }
 }

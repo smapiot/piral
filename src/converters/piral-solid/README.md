@@ -59,7 +59,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Solid with Piral is as simple as installing `piral-solid` and `solid-js`.
+Using Solid with Piral is as simple as installing `piral-solid` and `solid-js@^1`.
 
 ```ts
 import { createSolidApi } from 'piral-solid';

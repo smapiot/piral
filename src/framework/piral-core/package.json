@@ -76,12 +76,6 @@
     "piral-debug-utils": "^1.0.0",
     "zustand": "^3.0.0"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "react-router": "5.x",
-    "react-router-dom": "5.x"
-  },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",

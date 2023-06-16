@@ -71,8 +71,5 @@
   "devDependencies": {
     "piral-core": "^1.0.0",
     "vue": "^2.6.10"
-  },
-  "peerDependencies": {
-    "vue": "^2.0.0"
   }
 }

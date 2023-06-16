@@ -66,8 +66,5 @@
   "devDependencies": {
     "piral-core": "^1.0.0",
     "preact": "^10.5.13"
-  },
-  "peerDependencies": {
-    "preact": "^10.0.0"
   }
 }

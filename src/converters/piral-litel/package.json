@@ -67,8 +67,5 @@
   "devDependencies": {
     "lit-element": "^2.2.1",
     "piral-core": "^1.0.0"
-  },
-  "peerDependencies": {
-    "lit-element": "^2.0.0"
   }
 }

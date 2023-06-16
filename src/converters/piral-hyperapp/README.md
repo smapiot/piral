@@ -59,7 +59,7 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp`.
+Using Hyperapp with Piral is as simple as installing `piral-hyperapp` and `hyperapp@^1`.
 
 ```ts
 import { createHyperappApi } from 'piral-hyperapp';

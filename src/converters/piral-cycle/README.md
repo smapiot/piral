@@ -74,7 +74,11 @@ export function setup(piral: PiletApi) {
 
 ::: summary: For Piral instance developers
 
-Using Cycle.js with Piral is as simple as installing `piral-cycle` and Cycle.js.
+Using Cycle.js with Piral is as simple as installing `piral-cycle` and Cycle.js:
+
+- `@cycle/dom`: 22.x
+- `@cycle/run`: 5.x
+- `xstream`: 11.x
 
 ```ts
 import { createCycleApi } from 'piral-cycle';

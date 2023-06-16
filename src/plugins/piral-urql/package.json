@@ -73,10 +73,5 @@
     "graphql": "14.6.0",
     "piral-core": "^1.0.0",
     "react": "^18.0.0"
-  },
-  "peerDependencies": {
-    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
-    "piral-core": "0.14.x || 0.15.x",
-    "react": ">=16.8.0"
   }
 }

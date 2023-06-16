@@ -70,7 +70,6 @@
     "glob-parent": "5.1.2",
     "hermes-engine": "0.10.0",
     "highlight.js": "10.7.1",
-    "is-svg": "4.3.1",
     "jsdom": "^20.0.0",
     "json-schema": "0.4.0",
     "node-fetch": "2.6.7",

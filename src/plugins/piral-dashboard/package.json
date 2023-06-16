@@ -65,9 +65,5 @@
     "@types/react-router-dom": "^5.1.6",
     "piral-core": "^1.0.0",
     "react": "^18.0.0"
-  },
-  "peerDependencies": {
-    "piral-core": "0.14.x || 0.15.x",
-    "react": ">=16.8.0"
   }
 }

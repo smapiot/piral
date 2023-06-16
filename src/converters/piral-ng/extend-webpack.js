@@ -17,7 +17,12 @@ module.exports =
       ngOptions = {},
       compilerOptions = {},
     } = options;
-    const cssLoaderNoModule = `${cssLoader}?esModule=false`;
+    const cssLoaderNoModule = {
+      loader: cssLoader,
+      options: {
+        esModule: false,
+      },
+    };
     const htmlLoaderNoModule = {
       loader: htmlLoader,
       options: {
