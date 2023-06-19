@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.0.2 (tbd)
+
+- Fixed support for `piral-extension` inside shadow DOM
+
 ## 1.0.1 (June 16, 2023)
 
 - Fixed the declaration of the `css-loader` with no modules in `piral-ng`
