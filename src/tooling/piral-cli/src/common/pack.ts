@@ -62,9 +62,10 @@ export async function createPiletPackage(baseDir: string, source: string, target
 
   const prefix = join(tmpdir(), `${id}-`);
   const cwd = await makeTempDir(prefix);
+  const uniqueFiles = files.filter(onlyUnique);
   log('generalDebug_0003', `Creating package with content from "${content}" ...`);
 
-  await Promise.all(files.filter(onlyUnique).map((file) => copy(file, resolve(cwd, relative(root, file)))));
+  await Promise.all(uniqueFiles.map((file) => copy(file, resolve(cwd, relative(root, file)))));
 
   log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
 
@@ -75,7 +76,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
   await createTgz(
     file,
     cwd,
-    files.map((f) => relative(root, f)),
+    uniqueFiles.map((file) => relative(root, file)),
   );
 
   log('generalDebug_0003', `Successfully created package from "${cwd}".`);

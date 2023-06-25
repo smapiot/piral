@@ -3,6 +3,7 @@
 ## 1.0.2 (tbd)
 
 - Fixed support for `piral-extension` inside shadow DOM
+- Fixed issue resulting in duplicated files in packed pilets (#608)
 
 ## 1.0.1 (June 16, 2023)
 
