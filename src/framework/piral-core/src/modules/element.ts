@@ -114,6 +114,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         this.dispatchEvent(
           new CustomEvent('render-html', {
             bubbles: true,
+            composed: true,
             detail: {
               target: this,
               props: this.props,

@@ -75,8 +75,14 @@ export const MyPage: React.FC = () => (
 );
 ```
 
+In general the provided path in the `registerPage` API is exact. Therefore, if you plan to have some sub-routing on the provided page you'd need to match more than one URL. The syntax follows the [path-to-regexp](https://github.com/pillarjs/path-to-regexp) way. As an example, you could go for `/my-pilet/:path*` to match all paths prefixed with `/my-pilet`.
+
+::: tip: Testing paths
+The path supplied to the `registerPage` API can be tested with [Express Route Tester](http://forbeslindesay.github.io/express-route-tester/) utility. Importantly, you'd need to set the version to "2.0.0" to mimic the behavior of the `path-to-regexp` package in Piral.
+:::
+
 <!-- markdown-link-check-disable-next-line -->
-Running this code will not result in anything fancy. We can now go to http://localhost:1234/my-page for seeing the page. On the landing page (dashboard) or in the menu we do not see any entry. We may want to link the page somehow.
+Running the code above will not result in anything fancy. We can now go to http://localhost:1234/my-page for seeing the page. On the landing page (dashboard) or in the menu we do not see any entry. We may want to link the page somehow.
 
 ## Linking the Page
 

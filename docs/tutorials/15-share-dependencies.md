@@ -138,7 +138,7 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 
 ## Sharing from Pilets
 
-The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to becoming [an official](https://wicg.github.io/import-maps/) standard](https://wicg.github.io/import-maps/).
+The mechanism to share dependencies used in pilets is called "import maps". Import maps are also on the way to becoming [an official standard](https://wicg.github.io/import-maps/).
 
 The diagram below shows how this works. Every pilet that uses import maps talks to a central location that is not managed by the Piral instance. The central location manages the dependencies such that if a dependency was already requested, it will not load again. Otherwise, it will load the different resources.
 
