@@ -4,6 +4,7 @@
 
 - Fixed support for `piral-extension` inside shadow DOM
 - Fixed issue resulting in duplicated files in packed pilets (#608)
+- Fixed issue in the public path of pilets with schema `v1` using `piral-cli-webpack5`
 
 ## 1.0.1 (June 16, 2023)
 

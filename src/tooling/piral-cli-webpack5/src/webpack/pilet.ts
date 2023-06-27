@@ -54,7 +54,7 @@ async function getConfig(
       },
 
       output: {
-        publicPath: './',
+        publicPath: undefined,
         path: dist,
         filename: '[name].js',
         chunkFilename: contentHash ? '[chunkhash:8].js' : undefined,
