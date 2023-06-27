@@ -1,6 +1,6 @@
 {
   "name": "piral-adal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Plugin to integrate AAD authentication in Piral.",
   "keywords": [
     "piral",
@@ -67,6 +67,6 @@
     "msal": "^1.1.1"
   },
   "devDependencies": {
-    "piral-core": "^1.0.1"
+    "piral-core": "^1.0.2"
   }
 }

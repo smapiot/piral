@@ -1,6 +1,6 @@
 {
   "name": "piral-menu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Plugin for the integration of menu items in Piral.",
   "keywords": [
     "piral",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^1.0.1",
+    "piral-core": "^1.0.2",
     "react": "^18.0.0"
   }
 }
