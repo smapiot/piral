@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.1.0 (tbd)
+
+- Fixed calling custom Webpack config throwing an exception
+
 ## 1.0.2 (June 27, 2023)
 
 - Fixed support for `piral-extension` inside shadow DOM
