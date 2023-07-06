@@ -1,12 +1,42 @@
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve';
+import { readFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+
+function findPackagePath(moduleDir: string) {
+  const packageJson = 'package.json';
+  const packagePath = resolve(moduleDir, packageJson);
+
+  if (existsSync(packagePath)) {
+    return packagePath;
+  }
+
+  const newDir = resolve(moduleDir, '..');
+
+  if (newDir !== moduleDir) {
+    return findPackagePath(newDir);
+  }
+
+  return undefined;
+}
+
+function getPackageJson(root: string, packageName: string) {
+  const moduleDir = dirname(getModulePath(root, packageName));
+
+  try {
+    const packagePath = findPackagePath(moduleDir);
+    const content = readFileSync(packagePath, 'utf8');
+    return JSON.parse(content) || {};
+  } catch {
+    return {};
+  }
+}
 
 function getRouterVersion(root: string) {
   const router = 'react-router';
 
   try {
-    const modulePath = getModulePath(root, `${router}/package.json`);
-    const { version } = require(modulePath);
+    const { version } = getPackageJson(root, router);
     const [major] = version.split('.');
     return parseInt(major, 10);
   } catch {
@@ -16,17 +46,15 @@ function getRouterVersion(root: string) {
 }
 
 function getIdentifiers(root: string, packageName: string) {
-  const packageJson = `${packageName}/package.json`;
   const identifiers = [packageName];
 
   try {
-    const modulePath = getModulePath(root, packageJson);
-    const details = require(modulePath);
+    const details = getPackageJson(root, packageName);
 
     if (details.version) {
       identifiers.push(`${packageName}@${details.version}`);
 
-      if (details.name !== packageName) {
+      if (details.name && details.name !== packageName) {
         identifiers.push(`${details.name}@${details.version}`);
       }
     }

@@ -2,6 +2,7 @@
 
 ## 1.1.0 (tbd)
 
+- Fixed retrieval of dep versions not exporting their *package.json*
 - Fixed calling custom Webpack config throwing an exception
 
 ## 1.0.2 (June 27, 2023)
