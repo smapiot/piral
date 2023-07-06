@@ -16,6 +16,7 @@ function addLocalDependencies(
   requireVersion: string,
   entry: string,
   assetName: string,
+  isAsync: boolean,
 ) {
   const alias = realIdentifier !== identifier ? realIdentifier : undefined;
 
@@ -27,15 +28,20 @@ function addLocalDependencies(
     ref: `${assetName}.js`,
     type: 'local',
     alias,
+    isAsync,
   });
 }
 
-function getDependencyDetails(depName: string): [assetName: string, identifier: string, versionSpec: string] {
-  const sep = depName.indexOf('@', 1);
-  const version = sep > 0 ? depName.substring(sep + 1) : '';
-  const id = sep > 0 ? depName.substring(0, sep) : depName;
+function getDependencyDetails(
+  depName: string,
+): [assetName: string, identifier: string, versionSpec: string, isAsync: boolean] {
+  const name = depName.replace(/\?+$/, '');
+  const isAsync = depName.endsWith('?');
+  const sep = name.indexOf('@', 1);
+  const version = sep > 0 ? name.substring(sep + 1) : '';
+  const id = sep > 0 ? name.substring(0, sep) : name;
   const assetName = (id.startsWith('@') ? id.substring(1) : id).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
-  return [assetName, id, version];
+  return [assetName, id, version, isAsync];
 }
 
 async function getLocalDependencyVersion(
@@ -90,7 +96,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
       const url = sharedImports[depName];
-      const [assetName, identifier, versionSpec] = getDependencyDetails(depName);
+      const [assetName, identifier, versionSpec, isAsync] = getDependencyDetails(depName);
 
       if (typeof url !== 'string') {
         log('generalInfo_0000', `The value of "${depName}" in the importmap is not a string and will be ignored.`);
@@ -104,6 +110,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
           name: identifier,
           ref: url,
           type: 'remote',
+          isAsync,
         });
       } else if (url === identifier || shorthandsUrls.includes(url)) {
         const entry = tryResolvePackage(identifier, dir);
@@ -116,7 +123,16 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
             versionSpec,
           );
 
-          addLocalDependencies(dependencies, realIdentifier, identifier, version, requireVersion, entry, assetName);
+          addLocalDependencies(
+            dependencies,
+            realIdentifier,
+            identifier,
+            version,
+            requireVersion,
+            entry,
+            assetName,
+            isAsync,
+          );
         } else {
           fail('importMapReferenceNotFound_0027', dir, identifier);
         }
@@ -131,7 +147,16 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
             versionSpec,
           );
 
-          addLocalDependencies(dependencies, realIdentifier, identifier, version, requireVersion, entry, assetName);
+          addLocalDependencies(
+            dependencies,
+            realIdentifier,
+            identifier,
+            version,
+            requireVersion,
+            entry,
+            assetName,
+            isAsync,
+          );
         } else {
           fail('importMapReferenceNotFound_0027', dir, url);
         }
@@ -161,6 +186,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
               requireVersion,
               isDirectory ? tryResolvePackage(entry, dir) : entry,
               assetName,
+              isAsync,
             );
           } else if (isDirectory) {
             fail('importMapReferenceNotFound_0027', entry, 'package.json');
@@ -174,6 +200,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
               name: identifier,
               ref: `${assetName}.js`,
               type: 'local',
+              isAsync,
             });
           }
         } else {

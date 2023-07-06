@@ -91,20 +91,38 @@ interface CodegenOptions {
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { root, appName, externals } = opts;
   const assignments: Array<string> = [];
+  const asyncAssignments: Array<string> = [];
 
   if (appName) {
     assignments.push(`deps['${appName}']={}`);
   }
 
-  for (const name of externals) {
-    const identifiers = getIdentifiers(root, name);
-    const path = getModulePathOrDefault(root, name);
-    const ref = `_${imports.length}`;
-    imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
+  for (const external of externals) {
+    if (external.endsWith('?')) {
+      const name = external.replace(/\?+$/, '');
+      const identifiers = getIdentifiers(root, name);
+      const path = getModulePathOrDefault(root, name);
 
-    for (const id of identifiers) {
-      assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
+      for (const id of identifiers) {
+        asyncAssignments.push(`registerModule(${JSON.stringify(id)}, () => import(${JSON.stringify(path)}))`);
+      }
+    } else {
+      const name = external;
+      const identifiers = getIdentifiers(root, name);
+      const path = getModulePathOrDefault(root, name);
+      const ref = `_${imports.length}`;
+      imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
+
+      for (const id of identifiers) {
+        assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
+      }
     }
+  }
+
+  if (asyncAssignments.length) {
+    imports.push(`import { registerModule } from 'piral-base'`);
+    assignments.push(...asyncAssignments);
+
   }
 
   exports.push(`

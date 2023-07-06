@@ -4,6 +4,7 @@
 
 - Fixed retrieval of dep versions not exporting their *package.json*
 - Fixed calling custom Webpack config throwing an exception
+- Added support for optionally centrally shared dependencies
 
 ## 1.0.2 (June 27, 2023)
 

@@ -100,7 +100,7 @@ export async function createEmulatorSources(
       ...allDeps,
       ...externalDependencies,
     },
-    sharedDependencies: flattenExternals(externals),
+    sharedDependencies: flattenExternals(externals, true),
     repository: piralPkg.repository,
     bugs: piralPkg.bugs,
     author: piralPkg.author,

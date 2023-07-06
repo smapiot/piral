@@ -18,6 +18,7 @@ import {
   normalizePublicUrl,
   getDestination,
   validateSharedDependencies,
+  flattenExternals,
 } from '../common';
 
 const releaseName = 'release';
@@ -203,7 +204,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         watch,
         contentHash,
         minify: false,
-        externals: externals.map(m => m.name),
+        externals: flattenExternals(externals),
         publicUrl: emulatorPublicUrl,
         entryFiles,
         logLevel,
@@ -275,7 +276,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         watch,
         contentHash,
         minify,
-        externals: externals.map(m => m.name),
+        externals: flattenExternals(externals),
         publicUrl,
         outFile: dest.outFile,
         outDir: targetDir,
@@ -287,7 +288,17 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       bundlerName,
     );
 
-    await hooks.afterBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances, outDir, outFile, hash });
+    await hooks.afterBuild?.({
+      root,
+      publicUrl,
+      externals,
+      entryFiles,
+      targetDir,
+      piralInstances,
+      outDir,
+      outFile,
+      hash,
+    });
 
     await runLifecycle(root, scripts, 'piral:postbuild');
     await runLifecycle(root, scripts, `piral:postbuild-${releaseName}`);
