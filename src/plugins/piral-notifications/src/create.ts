@@ -23,7 +23,7 @@ export interface InitialNotification {
   /**
    * The optional options for the notification.
    */
-  options?: NotificationOptions;
+  options?: NotificationOptions<any>;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface NotificationsConfig {
    * Describes the default notification options to use.
    * @default {}
    */
-  defaultOptions?: NotificationOptions;
+  defaultOptions?: NotificationOptions<any>;
   /**
    * Defines how the next ID for the key is selected.
    * By default a random number is used.
@@ -67,8 +67,8 @@ function createNotification(
   context: GlobalStateContext,
   id: string,
   content: NotificationContent,
-  defaultOptions: NotificationOptions,
-  customOptions: NotificationOptions = {},
+  defaultOptions: NotificationOptions<any>,
+  customOptions: NotificationOptions<any> = {},
 ) {
   const options = {
     ...defaultOptions,
@@ -94,7 +94,7 @@ function createNotification(
 function getNotifications(
   context: GlobalStateContext,
   messages: Array<InitialNotification>,
-  defaultOptions: NotificationOptions,
+  defaultOptions: NotificationOptions<any>,
 ) {
   const notifications: Array<OpenNotification> = [];
   let i = 0;
