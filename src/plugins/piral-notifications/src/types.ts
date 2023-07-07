@@ -1,5 +1,5 @@
 import type { ReactElement, ComponentType, ReactNode } from 'react';
-import type { Disposable, BaseComponentProps, AnyComponent } from 'piral-core';
+import type { Disposable, BaseComponentProps, AnyComponent, UnionOf } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNotificationsApi {}
@@ -45,7 +45,7 @@ export interface NotificationsHostProps {
   children?: ReactNode;
 }
 
-export interface NotificationsToastProps extends BareNotificationProps<any> {
+export interface NotificationsToastProps extends BareNotificationProps {
   /**
    * The content of the toast to display.
    */
@@ -60,22 +60,32 @@ export interface PiralNotificationTypes extends PiralCustomNotificationTypes {
   /**
    * The info type. No extra options.
    */
-  info: void;
+  info: {};
   /**
    * The success type. No extra options.
    */
-  success: void;
+  success: {};
   /**
    * The warning type. No extra options.
    */
-  warning: void;
+  warning: {};
   /**
    * The error type. No extra options.
    */
-  error: void;
+  error: {};
 }
 
-export interface NotificationOptions<TType extends keyof PiralNotificationTypes> extends PiralCustomNotificationOptions {
+export type PiralSpecificNotificationOptions = UnionOf<{
+  [P in keyof PiralNotificationTypes]: Partial<PiralNotificationTypes[P]> & {
+    /**
+     * The type of the notification used when displaying the message.
+     * By default info is used.
+     */
+    type?: P;
+  };
+}>;
+
+export interface PiralStandardNotificationOptions {
   /**
    * The title of the notification, if any.
    */
@@ -85,18 +95,13 @@ export interface NotificationOptions<TType extends keyof PiralNotificationTypes>
    * A value of 0 or undefined forces the user to close the notification.
    */
   autoClose?: number;
-  /**
-   * The type of the notification used when displaying the message.
-   * By default info is used.
-   */
-  type?: TType;
-  /**
-   * The extra options to specify, if any.
-   */
-  extra?: PiralNotificationTypes[TType];
 }
 
-export interface BareNotificationProps<TType extends keyof PiralNotificationTypes = any> {
+export type NotificationOptions = PiralCustomNotificationOptions &
+  PiralStandardNotificationOptions &
+  PiralSpecificNotificationOptions;
+
+export interface BareNotificationProps {
   /**
    * Callback for closing the notification programmatically.
    */
@@ -104,15 +109,15 @@ export interface BareNotificationProps<TType extends keyof PiralNotificationType
   /**
    * Provides the passed in options for this particular notification.
    */
-  options: NotificationOptions<TType>;
+  options: NotificationOptions;
 }
 
-export type NotificationComponentProps<TType extends keyof PiralNotificationTypes> = BaseComponentProps & BareNotificationProps<TType>;
+export type NotificationComponentProps = BaseComponentProps & BareNotificationProps;
 
 export interface OpenNotification {
   id: string;
   component: ComponentType<BareNotificationProps>;
-  options: NotificationOptions<any>;
+  options: NotificationOptions;
   close(): void;
 }
 
@@ -123,8 +128,8 @@ export interface PiletNotificationsApi {
    * @param options The options to consider for showing the notification.
    * @returns A callback to trigger closing the notification.
    */
-  showNotification<TType extends keyof PiralNotificationTypes = 'info'>(
-    content: string | ReactElement<any, any> | AnyComponent<NotificationComponentProps<TType>>,
-    options?: NotificationOptions<TType>,
+  showNotification(
+    content: string | ReactElement<any, any> | AnyComponent<NotificationComponentProps>,
+    options?: NotificationOptions,
   ): Disposable;
 }
