@@ -56,10 +56,6 @@ export interface MenuProps {
    * The type of the menu.
    */
   type: MenuType;
-  /**
-   * The settings of the menu.
-   */
-  settings: MenuSettings;
 }
 
 export interface MenuContainerProps {

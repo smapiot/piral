@@ -12,7 +12,7 @@ export function createRedirect() {
   return () => null;
 }
 
-export function createNavigation(): NavigationApi {
+export function createNavigation(publicPath: string): NavigationApi {
   return {
     get path() {
       return location.pathname;
@@ -31,5 +31,6 @@ export function createNavigation(): NavigationApi {
       return _noop;
     },
     router: undefined,
+    publicPath,
   };
 }

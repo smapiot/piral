@@ -1,7 +1,19 @@
 import * as React from 'react';
 import { RouteComponentProps, SwitchProps } from 'react-router';
-import { useRoutes } from '../hooks';
-import { RouteSwitchProps } from '../types';
+import { useGlobalState } from '../hooks';
+import { RouteSwitchProps, AppPath } from '../types';
+import { useRouteFilter } from '../../app.codegen';
+
+function useRoutes() {
+  const routes = useGlobalState((s) => s.routes);
+  const pages = useGlobalState((s) => s.registry.pages);
+  const paths: Array<AppPath> = [];
+
+  Object.keys(routes).map((path) => paths.push({ path, Component: routes[path] }));
+  Object.keys(pages).map((path) => paths.push({ path, Component: pages[path].component }));
+
+  return useRouteFilter(paths);
+}
 
 /**
  * The props used by the PiralRoutes component.

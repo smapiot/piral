@@ -1,6 +1,6 @@
 import * as actions from '../actions';
 import { UseBoundStore } from 'zustand';
-import { createNavigation } from '../../app.codegen';
+import { createNavigation, publicPath } from '../../app.codegen';
 import { EventEmitter, GlobalState, GlobalStateContext, PiralDefineActions } from '../types';
 
 function createContext(state: UseBoundStore<GlobalState>, events: EventEmitter) {
@@ -10,7 +10,7 @@ function createContext(state: UseBoundStore<GlobalState>, events: EventEmitter) 
     converters: {
       html: ({ component }) => component,
     },
-    navigation: createNavigation(),
+    navigation: createNavigation(publicPath),
     state,
   } as GlobalStateContext;
   return ctx;
