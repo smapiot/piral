@@ -1,5 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
+import type { Location } from 'history';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBreadcrumbsApi {}
@@ -12,6 +13,7 @@ declare module 'piral-core/lib/types/custom' {
      * @param values The breadcrumbs to register.
      */
     registerBreadcrumbs(values: Dict<BreadcrumbRegistration>): void;
+
     /**
      * Unregisters an existing breadcrumb.
      * @param name The name of the breadcrumb to be removed.
@@ -58,6 +60,12 @@ export interface BreadcrumbItemProps extends Omit<BreadcrumbSettings, 'title'> {
 
 export interface PiralCustomBreadcrumbSettings {}
 
+export interface BreadcrumbTitleParams {
+  location: Location;
+  path: string;
+  params: Record<string, string>;
+}
+
 export interface BreadcrumbSettings extends PiralCustomBreadcrumbSettings {
   /**
    * Gets the path of breadcrumb for navigation purposes.
@@ -83,7 +91,7 @@ export interface BreadcrumbSettings extends PiralCustomBreadcrumbSettings {
   /**
    * The title of the breadcrumb.
    */
-  title: ReactNode;
+  title: ReactNode | ((params: BreadcrumbTitleParams) => ReactNode);
 }
 
 export interface BreadcrumbRegistration extends BaseRegistration {
@@ -96,12 +104,14 @@ export interface PiletBreadcrumbsApi {
    * Registers a set of breadcrumbs.
    * @param values The different breadcrumb settings.
    */
-  registerBreadcrumbs(values: Array<{ name?: string; } & BreadcrumbSettings>): RegistrationDisposer;
+  registerBreadcrumbs(values: Array<{ name?: string } & BreadcrumbSettings>): RegistrationDisposer;
+
   /**
    * Registers a breadcrumb with the provided settings.
    * @param settings The settings for configuring the breadcrumb.
    */
   registerBreadcrumb(settings: BreadcrumbSettings): RegistrationDisposer;
+
   /**
    * Registers a named breadcrumb with the provided settings.
    * The name has to be unique within the current pilet.
@@ -109,6 +119,7 @@ export interface PiletBreadcrumbsApi {
    * @param settings The settings for configuring the breadcrumb.
    */
   registerBreadcrumb(name: string, settings: BreadcrumbSettings): RegistrationDisposer;
+
   /**
    * Unregisters a breadcrumb known by the given name.
    * Only previously registered tiles can be unregistered.

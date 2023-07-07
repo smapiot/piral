@@ -57,8 +57,8 @@ describe('Piral-Breadcrumb Container component', () => {
         <Breadcrumbs />
       </StateContext.Provider>,
     );
-    expect(node.getAllByRole("container").length).toBe(1);
-    expect(node.queryByRole("dialog")).toBe(null);
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.queryByRole('dialog')).toBe(null);
   });
 
   it('uses container and item for each breadcrumb', () => {
@@ -92,7 +92,7 @@ describe('Piral-Breadcrumb Container component', () => {
         <Breadcrumbs />
       </StateContext.Provider>,
     );
-    expect(node.getAllByRole("container").length).toBe(1);
-    expect(node.getAllByRole("dialog").length).toBe(2);
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('dialog').length).toBe(2);
   });
 });
