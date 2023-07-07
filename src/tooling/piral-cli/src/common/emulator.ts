@@ -43,15 +43,30 @@ export async function createEmulatorSources(
       .map(async (external) => ({
         name: external.name,
         version: await findDependencyVersion(piralPkg, sourceDir, external),
+        optional: external.isAsync,
       })),
   );
   const externalDependencies = externalPackages.reduce((deps, dep) => {
-    deps[dep.name] = dep.version;
+    if (!dep.optional) {
+      deps[dep.name] = dep.version;
+    }
+
     return deps;
   }, {} as Record<string, string>);
 
   const importmapEntries = externalPackages.reduce((deps, dep) => {
-    deps[dep.name] = dep.name;
+    if (!dep.optional) {
+      deps[dep.name] = dep.name;
+    }
+
+    return deps;
+  }, {} as Record<string, string>);
+
+  const optionalDependencies = externalPackages.reduce((deps, dep) => {
+    if (dep.optional) {
+      deps[dep.name] = dep.name;
+    }
+
     return deps;
   }, {} as Record<string, string>);
 
@@ -73,7 +88,7 @@ export async function createEmulatorSources(
   // do not modify an existing JSON
   await createFileIfNotExists(rootDir, packageJson, '{}');
 
-  // patch the JSON relevant for th eproject
+  // patch the JSON relevant for the project
   await updateExistingJson(rootDir, packageJson, {
     name: piralPkg.name,
     description: piralPkg.description,
@@ -96,6 +111,7 @@ export async function createEmulatorSources(
     typings: `./${appDir}/index.d.ts`,
     app: `./${appDir}/index.html`,
     peerDependencies: {},
+    optionalDependencies,
     devDependencies: {
       ...allDeps,
       ...externalDependencies,
