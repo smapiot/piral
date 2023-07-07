@@ -6,6 +6,7 @@ import type {
   AnyComponent,
   BaseRegistration,
   RegistrationDisposer,
+  UnionOf,
 } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -55,6 +56,10 @@ export interface MenuProps {
    * The type of the menu.
    */
   type: MenuType;
+  /**
+   * The settings of the menu.
+   */
+  settings: MenuSettings;
 }
 
 export interface MenuContainerProps {
@@ -111,17 +116,41 @@ export interface PiralCustomMenuSettings {}
 
 export interface PiralCustomMenuTypes {}
 
-export interface MenuSettings extends PiralCustomMenuSettings {
+export type MenuSettings = PiralCustomMenuSettings & PiralSpecificMenuSettings;
+
+export interface PiralMenuType extends PiralCustomMenuTypes {
   /**
-   * Sets the type of the menu to attach to.
-   * @default "general"
+   * The general type. No extra options.
    */
-  type?: MenuType;
+  general: {};
+  /**
+   * The admin type. No extra options.
+   */
+  admin: {};
+  /**
+   * The user type. No extra options.
+   */
+  user: {};
+  /**
+   * The header type. No extra options.
+   */
+  header: {};
+  /**
+   * The footer type. No extra options.
+   */
+  footer: {};
 }
 
-export type StandardMenuType = 'general' | 'admin' | 'user' | 'header' | 'footer';
+export type PiralSpecificMenuSettings = UnionOf<{
+  [P in keyof PiralMenuType]: Partial<PiralMenuType[P]> & {
+    /**
+     * The type of the menu used.
+     */
+    type?: P;
+  };
+}>;
 
-export type MenuType = StandardMenuType | keyof PiralCustomMenuTypes;
+export type MenuType = PiralSpecificMenuSettings['type'];
 
 export interface MenuItemRegistration extends BaseRegistration {
   component: WrappedComponent<MenuComponentProps>;

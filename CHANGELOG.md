@@ -6,6 +6,7 @@
 - Fixed calling custom Webpack config throwing an exception
 - Added support for optionally centrally shared dependencies
 - Added possibility to extend notification types to `piral-notifications`
+- Added possibility to further extend options w.r.t. menu type in `piral-menu`
 
 ## 1.0.2 (June 27, 2023)
 
