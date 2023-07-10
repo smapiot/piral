@@ -37,3 +37,5 @@ const instance = createInstance({
 
 const root = createRoot(document.querySelector('#app'));
 root.render(<Piral instance={instance} />);
+
+

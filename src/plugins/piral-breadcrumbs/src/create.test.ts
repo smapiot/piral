@@ -86,4 +86,21 @@ describe('Create Breadcrumb API Extensions', () => {
     const ids = Object.keys(container.context.registerBreadcrumbs.mock.calls[0][0]);
     expect(container.context.unregisterBreadcrumbs.mock.calls[0][0]).toEqual(ids);
   });
+
+  it('createBreadcrumsApi can use dynamic function as breadcrumb title', () => {
+    const container = createMockContainer();
+    container.context.registerBreadcrumbs = jest.fn();
+    container.context.unregisterBreadcrumbs = jest.fn();
+    const api = createApi(container);
+    const dispose = api.registerBreadcrumb({
+      title: ({ path }) => path,
+      path: '/example',
+    });
+    expect(container.context.registerBreadcrumbs).toHaveBeenCalledTimes(1);
+    expect(container.context.unregisterBreadcrumbs).toHaveBeenCalledTimes(0);
+    dispose();
+    expect(container.context.registerBreadcrumbs).toHaveBeenCalledTimes(1);
+    const ids = Object.keys(container.context.registerBreadcrumbs.mock.calls[0][0]);
+    expect(container.context.unregisterBreadcrumbs.mock.calls[0][0]).toEqual(ids);
+  });
 });
