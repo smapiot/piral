@@ -3,7 +3,6 @@ import { LayoutProps, Menu, Notifications, Modals, Languages } from 'piral';
 import { Search } from 'piral-search';
 import { MenuToggle } from './MenuToggle';
 import { User } from './User';
-import { Breadcrumbs } from 'piral-breadcrumbs';
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => (
   <div className="app-container">
@@ -26,7 +25,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => (
       <User />
     </div>
     <div className="app-content">
-      <Breadcrumbs />
       {children}
     </div>
     <div className="app-footer">
