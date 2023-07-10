@@ -25,7 +25,6 @@ export const Breadcrumbs: React.FC = () => {
   const current = breadcrumbs[currentIndex];
   const { params } = useRouteMatch(current?.settings.path ?? '/');
 
-
   const children = breadcrumbs.map(({ settings }, i) => {
     const { title, path, ...props } = settings;
     const key = `bc_${i}_${settings.path}`;

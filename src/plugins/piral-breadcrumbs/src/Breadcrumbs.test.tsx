@@ -121,7 +121,6 @@ describe('Piral-Breadcrumb Container component', () => {
     expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/replacedWildcard</div>');
   });
 
-
   it('dynamic title function no match in params', () => {
     (useRouteMatch as any).mockReturnValueOnce({ params: { imNotHere: 'replacedWildcard' } });
 
@@ -174,7 +173,6 @@ describe('Piral-Breadcrumb Container component', () => {
     expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/</div>');
   });
 
-
   it('dynamic title function with static title', () => {
     (useRouteMatch as any).mockReturnValueOnce({ params: { imNotHere: 'replacedWildcard' } });
 
@@ -202,7 +200,7 @@ describe('Piral-Breadcrumb Container component', () => {
   });
 
   it('static title', () => {
-    (useRouteMatch as any).mockReturnValueOnce({ params: { } });
+    (useRouteMatch as any).mockReturnValueOnce({ params: {} });
 
     const { context } = createMockContainer({
       example: {
