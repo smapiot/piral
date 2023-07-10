@@ -49,7 +49,7 @@ function createMockContainer(breadcrumbs = {}) {
 }
 
 describe('Piral-Breadcrumb Container component', () => {
-  it('uses container for a breadcrumbs', () => {
+  it('breadcrumbs empty', () => {
     const { context } = createMockContainer();
     const node = render(
       <StateContext.Provider value={context}>
@@ -60,7 +60,7 @@ describe('Piral-Breadcrumb Container component', () => {
     expect(node.queryByRole('dialog')).toBe(null);
   });
 
-  it('uses container and item for each breadcrumb', () => {
+  it('breadcrumbs are created successfully', () => {
     const { context } = createMockContainer({
       home: {
         matcher: /^\/$/,
@@ -95,7 +95,7 @@ describe('Piral-Breadcrumb Container component', () => {
     expect(node.getAllByRole('dialog').length).toBe(2);
   });
 
-  it('uses container and dynamic title function and computes path without wildcards', () => {
+  it('dynamic title function replaces wildcard with route param', () => {
     (useRouteMatch as any).mockReturnValueOnce({ params: { example: 'replacedWildcard' } });
 
     const { context } = createMockContainer({
@@ -119,5 +119,108 @@ describe('Piral-Breadcrumb Container component', () => {
     expect(node.getAllByRole('container').length).toBe(1);
     expect(node.getAllByRole('dialog').length).toBe(1);
     expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/replacedWildcard</div>');
+  });
+
+
+  it('dynamic title function no match in params', () => {
+    (useRouteMatch as any).mockReturnValueOnce({ params: { imNotHere: 'replacedWildcard' } });
+
+    const { context } = createMockContainer({
+      example: {
+        matcher: /^\/example$/,
+        settings: {
+          path: '/:example*',
+          title: ({ path }) => {
+            return path;
+          },
+          parent: '/',
+        },
+      },
+    });
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Breadcrumbs />
+      </StateContext.Provider>,
+    );
+
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('dialog').length).toBe(1);
+    expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/:example*</div>');
+  });
+
+  it('dynamic title function with falsely route param', () => {
+    (useRouteMatch as any).mockReturnValueOnce({ params: { example: false } });
+
+    const { context } = createMockContainer({
+      example: {
+        matcher: /^\/example$/,
+        settings: {
+          path: '/:example*',
+          title: ({ path }) => {
+            return path;
+          },
+          parent: '/',
+        },
+      },
+    });
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Breadcrumbs />
+      </StateContext.Provider>,
+    );
+
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('dialog').length).toBe(1);
+    expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/</div>');
+  });
+
+
+  it('dynamic title function with static title', () => {
+    (useRouteMatch as any).mockReturnValueOnce({ params: { imNotHere: 'replacedWildcard' } });
+
+    const { context } = createMockContainer({
+      example: {
+        matcher: /^\/example$/,
+        settings: {
+          path: '/example',
+          title: ({ path }) => {
+            return 'My Path';
+          },
+          parent: '/',
+        },
+      },
+    });
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Breadcrumbs />
+      </StateContext.Provider>,
+    );
+
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('dialog').length).toBe(1);
+    expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">My Path</div>');
+  });
+
+  it('static title', () => {
+    (useRouteMatch as any).mockReturnValueOnce({ params: { } });
+
+    const { context } = createMockContainer({
+      example: {
+        matcher: /^\/example$/,
+        settings: {
+          path: '/:example*',
+          title: 'My Path',
+          parent: '/',
+        },
+      },
+    });
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Breadcrumbs />
+      </StateContext.Provider>,
+    );
+
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">My Path</div>');
   });
 });
