@@ -40,11 +40,4 @@ const instance = createInstance({
 const root = createRoot(document.querySelector('#app'));
 root.render(<Piral instance={instance} />);
 
-instance.root.registerBreadcrumb({
-  path: '/:path*',
-  title: ({path, location}) => {
-    return path
-  }
-})
-
 
