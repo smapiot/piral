@@ -3,6 +3,7 @@ import create from 'zustand';
 import { render } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Breadcrumbs } from './Breadcrumbs';
+import { useRouteMatch } from 'react-router';
 
 const MockBcContainer: React.FC<any> = ({ children }) => <div role="container">{children}</div>;
 MockBcContainer.displayName = 'MockBcContainer';
@@ -16,9 +17,7 @@ jest.mock('react-router', () => ({
       pathname: '/example',
     };
   },
-  useRouteMatch() {
-    return {};
-  },
+  useRouteMatch: jest.fn(() => ({})),
 }));
 
 function createMockContainer(breadcrumbs = {}) {
@@ -94,5 +93,31 @@ describe('Piral-Breadcrumb Container component', () => {
     );
     expect(node.getAllByRole('container').length).toBe(1);
     expect(node.getAllByRole('dialog').length).toBe(2);
+  });
+
+  it('uses container and dynamic title function and computes path without wildcards', () => {
+    (useRouteMatch as any).mockReturnValueOnce({ params: { example: 'replacedWildcard' } });
+
+    const { context } = createMockContainer({
+      example: {
+        matcher: /^\/example$/,
+        settings: {
+          path: '/:example*',
+          title: ({ path }) => {
+            return path;
+          },
+          parent: '/',
+        },
+      },
+    });
+    const node = render(
+      <StateContext.Provider value={context}>
+        <Breadcrumbs />
+      </StateContext.Provider>,
+    );
+
+    expect(node.getAllByRole('container').length).toBe(1);
+    expect(node.getAllByRole('dialog').length).toBe(1);
+    expect(node.getAllByRole('container')[0].innerHTML).toBe('<div role="dialog">/replacedWildcard</div>');
   });
 });
