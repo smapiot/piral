@@ -1,7 +1,7 @@
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve';
 import { readFileSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve, relative, dirname } from 'path';
 
 function findPackagePath(moduleDir: string) {
   const packageJson = 'package.json';
@@ -63,9 +63,11 @@ function getIdentifiers(root: string, packageName: string) {
   return identifiers;
 }
 
-function getModulePathOrDefault(root: string, name: string) {
+function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
-    return getModulePath(root, name);
+    const absPath = getModulePath(root, name);
+    const path = relative(origin, absPath);
+    return path;
   } catch {
     return name;
   }
@@ -73,6 +75,7 @@ function getModulePathOrDefault(root: string, name: string) {
 
 interface CodegenOptions {
   root: string;
+  origin: string;
   cat: string;
   appName: string;
   externals: Array<string>;
@@ -89,7 +92,7 @@ interface CodegenOptions {
 }
 
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
-  const { root, appName, externals } = opts;
+  const { root, appName, externals, origin } = opts;
   const assignments: Array<string> = [];
   const asyncAssignments: Array<string> = [];
 
@@ -101,7 +104,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
     if (external.endsWith('?')) {
       const name = external.replace(/\?+$/, '');
       const identifiers = getIdentifiers(root, name);
-      const path = getModulePathOrDefault(root, name);
+      const path = getModulePathOrDefault(root, origin, name);
 
       for (const id of identifiers) {
         asyncAssignments.push(`registerModule(${JSON.stringify(id)}, () => import(${JSON.stringify(path)}))`);
@@ -109,7 +112,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
     } else {
       const name = external;
       const identifiers = getIdentifiers(root, name);
-      const path = getModulePathOrDefault(root, name);
+      const path = getModulePathOrDefault(root, origin, name);
       const ref = `_${imports.length}`;
       imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
 
