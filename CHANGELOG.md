@@ -5,6 +5,7 @@
 - Fixed retrieval of dep versions not exporting their *package.json*
 - Fixed calling custom Webpack config throwing an exception
 - Fixed absolute to a relative path for shared dependencies
+- Updated dependencies of `piral-cli-webpack5`
 - Added support for optionally centrally shared dependencies
 - Added possibility to extend notification types to `piral-notifications`
 - Added possibility to further extend options w.r.t. menu type in `piral-menu`
