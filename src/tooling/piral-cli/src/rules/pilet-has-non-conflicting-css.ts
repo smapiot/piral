@@ -1,4 +1,4 @@
-import { isMonorepoPackageRef, findLatestVersion } from '../common';
+import { analyzeCss } from 'css-conflict-inspector';
 import { PiletRuleContext } from '../types';
 
 export type Options = 'suggest' | 'required' | 'ignore';
@@ -9,5 +9,6 @@ export type Options = 'suggest' | 'required' | 'ignore';
 export default async function (context: PiletRuleContext, options: Options = 'suggest') {
   if (options !== 'ignore') {
     //TODO
+    const result = analyzeCss('');
   }
 }
