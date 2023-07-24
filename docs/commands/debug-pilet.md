@@ -74,7 +74,7 @@ Sets the maximum number of concurrent build jobs.
 
 
 - Type: `number`
-- Default: `16`
+- Default: `12`
 
 ### `--open`
 
