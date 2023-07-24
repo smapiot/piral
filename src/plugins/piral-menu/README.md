@@ -138,11 +138,27 @@ import 'piral-menu';
 
 declare module 'piral-menu/lib/types' {
   interface PiralCustomMenuTypes {
-    'left-footer': 'left-footer';
+    'left-footer': {};
   }
 }
 
 // now registerMenu(() => null, { type: 'left-footer' }) is strongly typed in pilets
+```
+
+This also allows you to add further settings, which you'll find nice to have:
+
+```ts
+import 'piral-menu';
+
+declare module 'piral-menu/lib/types' {
+  interface PiralCustomMenuTypes {
+    'left-footer': {
+      caption: string;
+    };
+  }
+}
+
+// now registerMenu(() => null, { type: 'left-footer', caption: 'Foo' }) is strongly typed in pilets
 ```
 
 :::

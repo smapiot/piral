@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createInstance } from './createInstance';
 import { PiralView, RegisteredRouter } from './components';
 import { PiralContext } from './PiralContext';
-import { publicPath } from '../app.codegen';
 import type { PiralProps } from './types';
 
 /**
@@ -22,7 +21,7 @@ const app = (
  */
 export const Piral: React.FC<PiralProps> = ({ instance = createInstance(), breakpoints, children }) => (
   <PiralContext instance={instance}>
-    <RegisteredRouter publicPath={publicPath}>
+    <RegisteredRouter publicPath={instance.context.navigation.publicPath}>
       <PiralView breakpoints={breakpoints}>{children}</PiralView>
     </RegisteredRouter>
   </PiralContext>

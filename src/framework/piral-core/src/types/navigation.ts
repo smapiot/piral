@@ -98,4 +98,8 @@ export interface NavigationApi {
    * as the implementation is router specific and may change over time.
    */
   router: any;
+  /**
+   * Gets the public path of the application.
+   */
+  publicPath: string;
 }

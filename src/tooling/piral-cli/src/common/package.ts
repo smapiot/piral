@@ -552,8 +552,9 @@ export async function findPackageVersion(rootPath: string, packageName: string |
   return 'latest';
 }
 
-export function flattenExternals(dependencies: Array<SharedDependency>) {
-  return dependencies.map((m) => m.name).filter(onlyUnique);
+export function flattenExternals(dependencies: Array<SharedDependency>, disableAsync = false) {
+  const getName = (dep: SharedDependency) => `${dep.name}${dep.isAsync && !disableAsync ? '?' : ''}`;
+  return dependencies.map(getName).filter(onlyUnique);
 }
 
 export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {

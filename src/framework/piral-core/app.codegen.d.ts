@@ -6,7 +6,7 @@ import type { AppPath, GlobalState, GlobalStateContext, NavigationApi } from './
 
 export const publicPath: string;
 
-export function createNavigation(): NavigationApi;
+export function createNavigation(publicPath: string): NavigationApi;
 
 export function createDefaultState(): GlobalState;
 

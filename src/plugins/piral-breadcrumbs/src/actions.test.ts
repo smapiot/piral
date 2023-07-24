@@ -16,7 +16,7 @@ describe('Breadcrumbs Actions Module', () => {
     registerBreadcrumbs(ctx, {
       foo: 10 as any,
     });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -26,7 +26,7 @@ describe('Breadcrumbs Actions Module', () => {
       },
     });
     unregisterBreadcrumbs(ctx, ['foo']);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,

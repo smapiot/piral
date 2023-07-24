@@ -10,17 +10,21 @@ export function extendConfig(
   const original = webPackConfig;
 
   if (existsSync(otherConfigPath)) {
-    const otherConfig = require(otherConfigPath);
+    try {
+      const otherConfig = require(otherConfigPath);
 
-    if (typeof otherConfig === 'function') {
-      webPackConfig = otherConfig(webPackConfig);
-    } else if (typeof otherConfig === 'object') {
-      webPackConfig = {
-        ...webPackConfig,
-        ...otherConfig,
-      };
-    } else {
-      console.warn(`Did not recognize the export from "${otherConfigPath}". Skipping.`);
+      if (typeof otherConfig === 'function') {
+        webPackConfig = otherConfig(webPackConfig);
+      } else if (typeof otherConfig === 'object') {
+        webPackConfig = {
+          ...webPackConfig,
+          ...otherConfig,
+        };
+      } else {
+        console.warn(`Did not recognize the export from "${otherConfigPath}". Skipping.`);
+      }
+    } catch (ex) {
+      console.error(`Error while using the config from "${otherConfigPath}": ${ex}`);
     }
   }
 

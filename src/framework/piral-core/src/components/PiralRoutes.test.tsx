@@ -14,28 +14,19 @@ const mountWithRouter = (node, url = '/') =>
 
 jest.mock('../hooks');
 
-(hooks as any).useRoutes = () => [
-  {
-    path: '/',
-    Component: StubHome,
-  },
-  {
-    path: '/custom',
-    Component: StubCustomPage,
-  },
-  {
-    path: '/foo',
-    Component: StubFooPage,
-  },
-  {
-    path: '/foo/bar',
-    Component: StubFooBarPage,
-  },
-  {
-    path: '/bar',
-    Component: StubBarPage,
-  },
-];
+(hooks as any).useGlobalState = (cb) =>
+  cb({
+    routes: {
+      '/': StubHome,
+      '/custom': StubCustomPage,
+      '/foo': StubFooPage,
+      '/foo/bar': StubFooBarPage,
+      '/bar': StubBarPage,
+    },
+    registry: {
+      pages: {},
+    },
+  });
 
 const StubHome: React.FC = (props) => <div role="home" />;
 StubHome.displayName = 'StubHome';

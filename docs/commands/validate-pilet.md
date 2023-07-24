@@ -81,6 +81,12 @@ Checks that no other (third-party) dependencies are bundled in.
 
 **Options**: `'ignore' | 'active'`
 
+### `has-non-conflicting-css`
+
+Checks if a pilet might cause a CSS conflict. A score of 100 means that there is the least chance of a CSS conflict, while a score of 0 means that a CSS conflict is most likely. Negative values yield a warning if the CSS score is below the given number. Positive values yield an error if the CSS score is below the given number. A value of 0 turns this validation off. By default, a pilet's stylesheet having a CSS score of below 50 will result in a warning.
+
+**Options**: `number`
+
 ### `stays-small`
 
 Checks if the main bundle of the pilet is not exceeding a given threshold. The pilet must have been built beforehand for this validation to be conclusive. Negative values yield a warning if the absolute size in kB is exceeded. Positive values yield an error if the absolute size in kB is exceeded. A value of 0 turns this validation off. By default, a pilet's main bundle exceeding 50 kB will result in a warning.
