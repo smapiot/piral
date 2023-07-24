@@ -1,10 +1,6 @@
 name: check-documentation
 
 on:
-  push:
-    branches: [documentation, develop]
-  pull_request:
-    branches: [documentation, develop]
   schedule:
     - cron: "0 9 * * *"
 
