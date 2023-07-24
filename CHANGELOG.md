@@ -9,6 +9,7 @@
 - Added support for optionally centrally shared dependencies
 - Added possibility to extend notification types to `piral-notifications`
 - Added possibility to further extend options w.r.t. menu type in `piral-menu`
+- Added lint rule for detecting potential CSS conflicts in pilets (#611)
 
 ## 1.0.2 (June 27, 2023)
 
