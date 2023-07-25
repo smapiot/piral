@@ -134,7 +134,7 @@ import type {} from 'piral-notifications';
 declare module 'piral-notifications/lib/types' {
   interface PiralCustomNotificationTypes {
     question: {
-      answers: ['Yes', 'No'],
+      answers: Array<string>;
     };
   }
 }
