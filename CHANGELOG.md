@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.1.0 (tbd)
+## 1.1.0 (July 25, 2023)
 
 - Fixed retrieval of dep versions not exporting their *package.json*
 - Fixed calling custom Webpack config throwing an exception
