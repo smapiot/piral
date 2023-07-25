@@ -74,7 +74,7 @@
     "tar": "^4.4.8"
   },
   "dependencies": {
-    "css-conflict-inspector": "^0.2.0",
+    "css-conflict-inspector": "^0.2.1",
     "dets": "^0.13.0",
     "kras": "^0.15.4",
     "rimraf": "^3.0.0",

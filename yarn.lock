@@ -6298,10 +6298,10 @@ crypto-js@^4.0.0:
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"
   integrity sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==
 
-css-conflict-inspector@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/css-conflict-inspector/-/css-conflict-inspector-0.1.1.tgz#02251c0d482049c87bfdd725404ad23f2097954d"
-  integrity sha512-BUYakTsu7eLAlZYQrcGM67xxpKRhMX0tvtyCgDFuZ+Q186QC8tREu1FSRO98HND+XG6n2y+qUrrkzchm1lmqlw==
+css-conflict-inspector@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/css-conflict-inspector/-/css-conflict-inspector-0.2.1.tgz#ebd555026ecbd8222036fe74bc08374170c54484"
+  integrity sha512-7KGcDC+rq9g0P3YPFDVP9HJBnPERqUgbnWoRM+d6SahFtxs75e/V728IbE37vqMKxd0Qi4iNjy/YBi0GHqRI2w==
   dependencies:
     lightningcss "^1.21.1"
 
