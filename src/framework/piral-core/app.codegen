@@ -16,6 +16,7 @@ module.exports = function () {
   const debug = typeof cfg.debugTools === 'boolean' ? cfg.debugTools : !!process.env.DEBUG_PIRAL;
   const opts = {
     root,
+    origin: __dirname,
     cat: process.env.NODE_ENV === 'test' ? 'src' : '_',
     appName: process.env.BUILD_PCKG_NAME || '',
     externals: (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean),

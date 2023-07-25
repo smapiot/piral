@@ -1,5 +1,5 @@
 import type { ReactElement, ComponentType, ReactNode } from 'react';
-import type { Disposable, BaseComponentProps, AnyComponent } from 'piral-core';
+import type { Disposable, BaseComponentProps, AnyComponent, UnionOf } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNotificationsApi {}
@@ -54,7 +54,38 @@ export interface NotificationsToastProps extends BareNotificationProps {
 
 export interface PiralCustomNotificationOptions {}
 
-export interface NotificationOptions extends PiralCustomNotificationOptions {
+export interface PiralCustomNotificationTypes {}
+
+export interface PiralNotificationTypes extends PiralCustomNotificationTypes {
+  /**
+   * The info type. No extra options.
+   */
+  info: {};
+  /**
+   * The success type. No extra options.
+   */
+  success: {};
+  /**
+   * The warning type. No extra options.
+   */
+  warning: {};
+  /**
+   * The error type. No extra options.
+   */
+  error: {};
+}
+
+export type PiralSpecificNotificationOptions = UnionOf<{
+  [P in keyof PiralNotificationTypes]: Partial<PiralNotificationTypes[P]> & {
+    /**
+     * The type of the notification used when displaying the message.
+     * By default info is used.
+     */
+    type?: P;
+  };
+}>;
+
+export interface PiralStandardNotificationOptions {
   /**
    * The title of the notification, if any.
    */
@@ -64,12 +95,11 @@ export interface NotificationOptions extends PiralCustomNotificationOptions {
    * A value of 0 or undefined forces the user to close the notification.
    */
   autoClose?: number;
-  /**
-   * The type of the notification used when displaying the message.
-   * By default info is used.
-   */
-  type?: 'info' | 'success' | 'warning' | 'error';
 }
+
+export type NotificationOptions = PiralCustomNotificationOptions &
+  PiralStandardNotificationOptions &
+  PiralSpecificNotificationOptions;
 
 export interface BareNotificationProps {
   /**

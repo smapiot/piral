@@ -39,7 +39,7 @@ export function createRedirect(to: string) {
   return () => <Navigate to={to} />;
 }
 
-export function createNavigation(): NavigationApi {
+export function createNavigation(publicPath: string): NavigationApi {
   const enhance = (info) => ({
     ...info,
     location: {
@@ -92,5 +92,6 @@ export function createNavigation(): NavigationApi {
     get router() {
       return _nav;
     },
+    publicPath,
   };
 }

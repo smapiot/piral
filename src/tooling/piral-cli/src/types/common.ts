@@ -167,6 +167,7 @@ export interface SharedDependency {
   entry: string;
   parents?: Array<string>;
   alias?: string;
+  isAsync?: boolean;
 }
 
 export interface RuleRunner<T extends RuleContext> {

@@ -26,6 +26,7 @@ import {
   retrievePiletsInfo,
   validateSharedDependencies,
   defaultSchemaVersion,
+  flattenExternals,
 } from '../common';
 
 interface PiletData {
@@ -217,12 +218,10 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
     const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } = await retrievePiletData(
-      targetDir,
-      app,
-    );
+    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } =
+      await retrievePiletData(targetDir, app);
     const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
-    const piralInstances = apps.map(m => m.appPackage.name);
+    const piralInstances = apps.map((m) => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
     const outDir = dirname(dest);
@@ -359,7 +358,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           watch: false,
           contentHash,
           minify,
-          externals: externals.map(m => m.name),
+          externals: flattenExternals(externals),
           publicUrl,
           outFile: 'index.html',
           outDir,

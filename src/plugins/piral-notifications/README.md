@@ -110,6 +110,8 @@ If you want to customize the styling (which you should) make sure to register co
 
 You can customize the options available when showing another notification.
 
+One way is to extend the standard set of options by interface merging the `PiralCustomNotificationOptions` interface:
+
 ```ts
 import type {} from 'piral-notifications';
 
@@ -121,6 +123,26 @@ declare module 'piral-notifications/lib/types' {
 
 // now showNotification("...", { actions: [] }) works, too
 ```
+
+Another way is to extend the `PiralCustomNotificationTypes` interface. This allows you to bring in new types - incl. options that only apply for these types.
+
+Example:
+
+```ts
+import type {} from 'piral-notifications';
+
+declare module 'piral-notifications/lib/types' {
+  interface PiralCustomNotificationTypes {
+    question: {
+      answers: Array<string>;
+    };
+  }
+}
+
+// now showNotification("...", { type: 'question', answers: ['Maybe', 'Definitely'] }) works, too
+```
+
+The notification types contain the available types as properties. Each property can have specific options set by their interface.
 
 :::
 

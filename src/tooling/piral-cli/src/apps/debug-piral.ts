@@ -16,6 +16,7 @@ import {
   validateSharedDependencies,
   piralJson,
   packageJson,
+  flattenExternals,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -150,7 +151,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         piralInstances,
         optimizeModules,
         hmr,
-        externals: externals.map((m) => m.name),
+        externals: flattenExternals(externals),
         publicUrl,
         entryFiles,
         logLevel,
@@ -194,7 +195,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       },
       registerWatcher(file) {
         return watcherContext.watch(file);
-      }
+      },
     });
   });
 

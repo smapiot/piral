@@ -15,7 +15,7 @@ title: Articles About Piral
 - [Microfrontends on Azure](https://www.youtube.com/watch?v=_q4JDrIMvlA)
 - [Microfrontends with Blazor](https://www.youtube.com/watch?v=npff2NjVXEE)
 - [Microfrontends with React](https://www.youtube.com/watch?v=kG7gIF16cOk)
-- [Axiom on Microfrontends](https://www.youtube.com/watch?v=u6v8wSzifPc)
+- [Axinom on Microfrontends](https://www.youtube.com/watch?v=u6v8wSzifPc)
 - [Introduction to Piral Inspector](https://www.youtube.com/watch?v=8CE7_X01NmM)
 - [Piral Community Standup](https://www.youtube.com/watch?v=ZzqnE7XO6Tk&list=PLQ9i8GS-LNXkG1bDpT54XxOTisyRh3Rin)
 

@@ -1,12 +1,42 @@
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve';
+import { readFileSync, existsSync } from 'fs';
+import { resolve, relative, dirname } from 'path';
+
+function findPackagePath(moduleDir: string) {
+  const packageJson = 'package.json';
+  const packagePath = resolve(moduleDir, packageJson);
+
+  if (existsSync(packagePath)) {
+    return packagePath;
+  }
+
+  const newDir = resolve(moduleDir, '..');
+
+  if (newDir !== moduleDir) {
+    return findPackagePath(newDir);
+  }
+
+  return undefined;
+}
+
+function getPackageJson(root: string, packageName: string) {
+  const moduleDir = dirname(getModulePath(root, packageName));
+
+  try {
+    const packagePath = findPackagePath(moduleDir);
+    const content = readFileSync(packagePath, 'utf8');
+    return JSON.parse(content) || {};
+  } catch {
+    return {};
+  }
+}
 
 function getRouterVersion(root: string) {
   const router = 'react-router';
 
   try {
-    const modulePath = getModulePath(root, `${router}/package.json`);
-    const { version } = require(modulePath);
+    const { version } = getPackageJson(root, router);
     const [major] = version.split('.');
     return parseInt(major, 10);
   } catch {
@@ -16,17 +46,15 @@ function getRouterVersion(root: string) {
 }
 
 function getIdentifiers(root: string, packageName: string) {
-  const packageJson = `${packageName}/package.json`;
   const identifiers = [packageName];
 
   try {
-    const modulePath = getModulePath(root, packageJson);
-    const details = require(modulePath);
+    const details = getPackageJson(root, packageName);
 
     if (details.version) {
       identifiers.push(`${packageName}@${details.version}`);
 
-      if (details.name !== packageName) {
+      if (details.name && details.name !== packageName) {
         identifiers.push(`${details.name}@${details.version}`);
       }
     }
@@ -35,9 +63,11 @@ function getIdentifiers(root: string, packageName: string) {
   return identifiers;
 }
 
-function getModulePathOrDefault(root: string, name: string) {
+function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
-    return getModulePath(root, name);
+    const absPath = getModulePath(root, name);
+    const path = relative(origin, absPath);
+    return path;
   } catch {
     return name;
   }
@@ -45,6 +75,7 @@ function getModulePathOrDefault(root: string, name: string) {
 
 interface CodegenOptions {
   root: string;
+  origin: string;
   cat: string;
   appName: string;
   externals: Array<string>;
@@ -61,22 +92,40 @@ interface CodegenOptions {
 }
 
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
-  const { root, appName, externals } = opts;
+  const { root, appName, externals, origin } = opts;
   const assignments: Array<string> = [];
+  const asyncAssignments: Array<string> = [];
 
   if (appName) {
     assignments.push(`deps['${appName}']={}`);
   }
 
-  for (const name of externals) {
-    const identifiers = getIdentifiers(root, name);
-    const path = getModulePathOrDefault(root, name);
-    const ref = `_${imports.length}`;
-    imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
+  for (const external of externals) {
+    if (external.endsWith('?')) {
+      const name = external.replace(/\?+$/, '');
+      const identifiers = getIdentifiers(root, name);
+      const path = getModulePathOrDefault(root, origin, name);
 
-    for (const id of identifiers) {
-      assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
+      for (const id of identifiers) {
+        asyncAssignments.push(`registerModule(${JSON.stringify(id)}, () => import(${JSON.stringify(path)}))`);
+      }
+    } else {
+      const name = external;
+      const identifiers = getIdentifiers(root, name);
+      const path = getModulePathOrDefault(root, origin, name);
+      const ref = `_${imports.length}`;
+      imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
+
+      for (const id of identifiers) {
+        assignments.push(`deps[${JSON.stringify(id)}]=${ref}`);
+      }
     }
+  }
+
+  if (asyncAssignments.length) {
+    imports.push(`import { registerModule } from 'piral-base'`);
+    assignments.push(...asyncAssignments);
+
   }
 
   exports.push(`

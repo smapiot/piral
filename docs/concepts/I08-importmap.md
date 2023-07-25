@@ -98,6 +98,17 @@ This way, you can either create reusable packages containing importmaps or easil
 }
 ```
 
+Classically, all centrally shared dependencies are delivered with the app shell ("single bundle"). In some case it might make sense to load a shared dependency only when needed. To enable this behavior you can suffix the dependency with the `?` character - indicating that the shared dependency is optional:
+
+```json
+{
+  "imports": {
+    "lodash?": ""
+  },
+  "inherit": []
+}
+```
+
 ## Pilet Importmaps
 
 For pilets the story is similar, but not exactly the same. As with a Piral instance you can define a key `importmap` in the *package.json* of the pilet. Likewise, you can either have an importmap definition in there, such as
@@ -220,6 +231,16 @@ Another possibility is that remote packages can be added:
 ```
 
 In the case of remote packages, no side-bundle is created. Instead, the given URL will be used as a side-bundle. Remote packages will give you a neat way to restrict shared dependencies to a pre-defined pool, which is then re-used consistently.
+
+To make a shared dependency optional (this is the default for pilets anyway, but needs to be done explicitly in the app shell) you need to suffix it with a question mark.
+
+```json
+{
+  "imports": {
+    "emojis-list@2.x?": "."
+  }
+}
+```
 
 ## Inheritance
 

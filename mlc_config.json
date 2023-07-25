@@ -14,6 +14,12 @@
     },
     {
       "pattern": "^https://unpkg.com/"
+    },
+    {
+      "pattern": "^https://aka.ms/"
+    },
+    {
+      "pattern": "^https://azure.microsoft.com/free"
     }
   ],
   "aliveStatusCodes": [429, 200]

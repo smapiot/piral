@@ -167,7 +167,7 @@ export async function createPiralDeclaration(
     types: findDeclaredTypings(root),
     apis: findPiralBaseApi(root, framework),
     noModuleDeclaration: true,
-    imports: flattenExternals(externals),
+    imports: flattenExternals(externals, true),
     logLevel,
     logger: createLogger(),
   };

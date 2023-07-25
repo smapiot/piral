@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ExtensionSlot, SwitchErrorInfo } from '../components';
+import { ExtensionSlot } from '../components/ExtensionSlot';
+import { SwitchErrorInfo } from '../components/SwitchErrorInfo';
 import { ErrorInfoProps } from '../types';
 
 /**
