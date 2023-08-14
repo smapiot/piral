@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.2.0 (tbd)
+
+- Updated `importmap` with `exclude` key allowing exclusions
+
 ## 1.1.0 (July 25, 2023)
 
 - Fixed retrieval of dep versions not exporting their *package.json*
