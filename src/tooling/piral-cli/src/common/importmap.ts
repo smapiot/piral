@@ -92,6 +92,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
+  const excludedImports = importmap?.exclude;
 
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
@@ -215,6 +216,10 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
       const otherDependencies = await getInheritedDependencies(inheritedImport, dir);
 
       for (const dependency of otherDependencies) {
+        if (Array.isArray(excludedImports) && excludedImports.includes(dependency.name)) {
+          continue;
+        }
+
         const entry = dependencies.find((dep) => dep.name === dependency.name);
 
         if (!entry) {

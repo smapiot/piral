@@ -14,7 +14,7 @@ In general, Piral distinguishes between three types of dependencies:
 - centrally shared dependencies, i.e., dependencies that are already bundled with an app shell, but otherwise not optimized
 - distributed shared dependencies, i.e., dependencies that are shipped (not bundled) unoptimized with a pilet - such that other pilets can use them, too
 
-Besides the standard `imports` key of the importmaps specification, the `piral-cli` also allows a new key called `inherit`. This one can be used to specify packages coming with an importmap.
+Besides the standard `imports` key of the importmaps specification, the `piral-cli` also allows new keys called `inherit` and `exclude`. While `inherit` can be used to specify packages coming with an importmap the `exclude` property can be used to exclude dependencies from inherited importmaps.
 
 ## Piral Instance Importmaps
 
@@ -98,6 +98,16 @@ This way, you can either create reusable packages containing importmaps or easil
 }
 ```
 
+Alternatively, you can still inherit from a package but exclude certain packages using the `exclude` keyword. For instance, using the following notation `piral-base` and `piral-core` are still inherited (importing, among other things, `react`, `react-dom`, `react-router`, and `react-router-dom`), however, `react-dom` is being excluded from these imports.
+
+```json
+{
+  "imports": {},
+  "inherit": ["piral-base", "piral-core"],
+  "exclude": "react-dom"
+}
+```
+
 Classically, all centrally shared dependencies are delivered with the app shell ("single bundle"). In some case it might make sense to load a shared dependency only when needed. To enable this behavior you can suffix the dependency with the `?` character - indicating that the shared dependency is optional:
 
 ```json
@@ -175,6 +185,18 @@ Consequently, the following
 ```
 
 will add `emojis-list` as a distributed dependency (adding a side-bundle for the dependency to the assets) and treat any dependency exposed by the `my-app-shell` as a centrally shared dependency.
+
+If you want to bundle in a dependency that is already declared as a centrally shared dependency in the app shell you can use the `exclude` keyword. For instance, the following call declares the packages shared from `my-app-shell` as external with exception of the `react` package:
+
+```json
+{
+  "imports": {},
+  "inherit": ["my-app-shell"],
+  "exclude": ["react"]
+}
+```
+
+If a dependency is both, excluded and marked as distributed dependenc in the `imports` section then the latter wins - explicit imports are always more relevant than exclusions from the inheritance chain.
 
 ## Importmap Notation
 
@@ -277,3 +299,7 @@ The precedence of the lookup is:
 
 1. See if `<inherited-name>/package.json` exists. Follow up on any `importmap` property from the file if exists.
 2. See if `<inherited-name>` exists. Take it if it exists. **Note**: This has to be an importmap (JSON) then.
+
+## Exclusions
+
+Exlusions work across all inherited packages - directly and indirectly. This way, you can also make general statements about bundling. For instance, you might want to put a dependency in `exclude` that you *want* to see bundled - independent if it appears (right now) in the inherited importmaps or not.
