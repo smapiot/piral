@@ -66,7 +66,9 @@ function getIdentifiers(root: string, packageName: string) {
 function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
     const absPath = getModulePath(root, name);
-    const path = relative(origin, absPath);
+    const relPath = relative(origin, absPath);
+    // fixes relative paths on Windows OS - should use forward slash
+    const path = relPath.split('\\').join('/');
     return path;
   } catch {
     return name;
