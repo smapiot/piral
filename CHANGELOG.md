@@ -4,6 +4,7 @@
 
 - Fixed issue with `loader-utils` version
 - Updated `importmap` with `exclude` key allowing exclusions
+- Fixed paths in codegen'd `import` statements when building in Windows environments
 
 ## 1.1.0 (July 25, 2023)
 
