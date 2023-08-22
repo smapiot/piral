@@ -6,6 +6,11 @@ import type { BlazorDependencyLoader, BlazorRootConfig } from './types';
 const loadedDependencies = (window.$blazorDependencies ??= []);
 const depsWithPrios = (window.$blazorDependencyPrios ??= []);
 
+function toPdb(url: string) {
+  const front = url.substring(0, url.length - 4);
+  return `${front}.pdb`;
+}
+
 export function createDependencyLoader(convert: ReturnType<typeof createConverter>) {
   const definedBlazorReferences: Array<string> = [];
   const loadedBlazorPilets: Array<string> = [];
@@ -41,9 +46,8 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
 
           const dependencies = references.filter((m) => m.endsWith('.dll'));
           const dllUrl = dependencies.pop();
-          const piletName = dllUrl.substring(0, dllUrl.length - 4);
-          const piletPdb = `${piletName}.pdb`;
-          const pdbUrl = references.find((m) => m === piletPdb);
+          const pdbUrl = toPdb(dllUrl);
+          const dependencySymbols = dependencies.map(toPdb).filter(dep => references.includes(dep));
           const id = Math.random().toString(26).substring(2);
 
           await loadBlazorPilet(id, {
@@ -52,9 +56,10 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             config: JSON.stringify(meta.config || {}),
             baseUrl: meta.basePath || dllUrl.substring(0, dllUrl.lastIndexOf('/')).replace('/_framework/', '/'),
             dependencies,
+            dependencySymbols: capabilities.includes('dependency-symbols') ? dependencySymbols : undefined,
             satellites,
             dllUrl,
-            pdbUrl,
+            pdbUrl: references.includes(pdbUrl) ? pdbUrl : undefined,
           });
 
           loadedBlazorPilets.push(id);

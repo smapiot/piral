@@ -218,6 +218,7 @@ export interface PiletData {
   baseUrl: string;
   satellites?: Record<string, Array<string>>;
   dependencies: Array<string>;
+  dependencySymbols?: Array<string>;
 }
 
 export function loadBlazorPilet(id: string, data: PiletData) {
