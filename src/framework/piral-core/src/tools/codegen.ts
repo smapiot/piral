@@ -1,7 +1,7 @@
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve';
 import { readFileSync, existsSync } from 'fs';
-import { resolve, relative, dirname } from 'path';
+import { resolve, relative, dirname, sep, posix } from 'path';
 
 function findPackagePath(moduleDir: string) {
   const packageJson = 'package.json';
@@ -67,7 +67,11 @@ function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
     const absPath = getModulePath(root, name);
     const path = relative(origin, absPath);
-    return path;
+
+    // The relative path is to be used in an import statement,
+    // so it should be normalized back to use posix path separators.
+    const posixPath = path.split(sep).join(posix.sep);
+    return posixPath;
   } catch {
     return name;
   }
