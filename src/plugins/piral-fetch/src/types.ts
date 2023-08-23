@@ -33,6 +33,10 @@ export interface FetchOptions {
    * @default 'auto'
    */
   result?: 'auto' | 'json' | 'text';
+  /**
+   * Sets the Abort Signal to cancel the request.
+   */
+  signal?: AbortSignal;
 }
 
 export interface FetchResponse<T> {

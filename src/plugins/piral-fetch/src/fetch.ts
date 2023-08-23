@@ -9,7 +9,7 @@ export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOp
   const baseInit = config.default || {};
   const baseHeaders = baseInit.headers || {};
   const baseUrl = config.base || location.origin;
-  const { method = 'get', body, headers = {}, cache = baseInit.cache, mode = baseInit.mode, result = 'auto' } = options;
+  const { method = 'get', body, headers = {}, cache = baseInit.cache, mode = baseInit.mode, result = 'auto', signal } = options;
   const json =
     Array.isArray(body) ||
     typeof body === 'number' ||
@@ -25,6 +25,7 @@ export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOp
     },
     cache,
     mode,
+    signal,
   };
 
   if (json) {
