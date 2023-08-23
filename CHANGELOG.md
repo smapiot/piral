@@ -6,7 +6,6 @@
 - Fixed build issue in codegen of `piral-core` on Windows (#619)
 - Updated `importmap` with `exclude` key allowing exclusions
 - Added support for `dependencySymbols` in `piral-blazor`
-- Fixed paths in codegen'd `import` statements when building in Windows environments
 
 ## 1.1.0 (July 25, 2023)
 
