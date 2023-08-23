@@ -66,12 +66,12 @@ function getIdentifiers(root: string, packageName: string) {
 function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
     const absPath = getModulePath(root, name);
-    const path = relative(origin, absPath);
-
+    const relPath = relative(origin, absPath);
+    
     // The relative path is to be used in an import statement,
     // so it should be normalized back to use posix path separators.
-    const posixPath = path.split(sep).join(posix.sep);
-    return posixPath;
+    const path = relPath.split(sep).join(posix.sep);
+    return path;
   } catch {
     return name;
   }
