@@ -6,6 +6,7 @@
 - Fixed build issue in codegen of `piral-core` on Windows (#619)
 - Updated `importmap` with `exclude` key allowing exclusions
 - Added support for `dependencySymbols` in `piral-blazor`
+- Added option to stop module teardown via `flags` parameter in `piral-ng`
 - Added abort `signal` to `piral-fetch` options (#621)
 
 ## 1.1.0 (July 25, 2023)

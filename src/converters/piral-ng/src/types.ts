@@ -10,6 +10,13 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+export interface NgModuleFlags {
+  /**
+   * If set to true prevents the module from being disposed.
+   */
+  keepAlive?: boolean;
+}
+
 /**
  * Options passed through to Angular `bootstrapModule`.
  *
@@ -18,7 +25,7 @@ declare module 'piral-core/lib/types/custom' {
  */
 export type NgOptions = Parameters<PlatformRef['bootstrapModule']>[1];
 
-export type ModuleInstanceResult = [any, NgOptions];
+export type ModuleInstanceResult = [any, NgOptions, NgModuleFlags];
 
 export type PrepareBootstrapResult = [...ModuleInstanceResult, any];
 
@@ -39,6 +46,7 @@ export interface NgLazyType {
   selector: string;
   module: () => Promise<{ default: Type<any> }>;
   opts: NgOptions;
+  flags: NgModuleFlags;
   state: any;
 }
 
@@ -60,15 +68,17 @@ export interface NgModuleDefiner {
    * Defines the module to use when bootstrapping the Angular pilet.
    * @param ngModule The module to use for running Angular.
    * @param opts The options to pass when bootstrapping.
+   * @param flags The flags to use when dealing with the module.
    */
-  <T>(module: Type<T>, opts?: NgOptions): void;
+  <T>(module: Type<T>, opts?: NgOptions, flags?: NgModuleFlags): void;
   /**
    * Defines the module to lazy load for bootstrapping the Angular pilet.
    * @param getModule The module lazy loader to use for running Angular.
    * @param opts The options to pass when bootstrapping.
+   * @param flags The flags to use when dealing with the module.
    * @returns The module ID to be used to reference components.
    */
-  <T>(getModule: LazyType<T>, opts?: NgOptions): NgComponentLoader;
+  <T>(getModule: LazyType<T>, opts?: NgOptions, flags?: NgModuleFlags): NgComponentLoader;
 }
 
 export interface NgComponent {

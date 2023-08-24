@@ -1,5 +1,5 @@
 import type { ComponentContext } from 'piral-core';
-import type { NgOptions } from './types';
+import type { NgModuleFlags, NgOptions } from './types';
 import {
   createPlatformFactory,
   enableProdMode,
@@ -31,11 +31,12 @@ const customPlatformDynamicFactory = createPlatformFactory(platformCoreDynamic, 
 ]);
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
-function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions) {
+function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
   const path = context.publicPath || '/';
   const platform = customPlatformDynamicFactory([
     { provide: 'Context', useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
+    { provide: 'NgFlags', useValue: ngFlags },
   ]);
   const id = getId();
   const zoneIdentifier = `piral-ng:${id}`;
@@ -87,6 +88,7 @@ export function startup(
   BootstrapModule: any,
   context: ComponentContext,
   ngOptions?: NgOptions,
+  ngFlags?: NgModuleFlags,
 ): Promise<void | NgModuleInt> {
   const runningModule = runningModules.find(([ref]) => ref === BootstrapModule);
 
@@ -100,7 +102,7 @@ export function startup(
     }
   }
 
-  return startNew(BootstrapModule, context, ngOptions);
+  return startNew(BootstrapModule, context, ngOptions, ngFlags);
 }
 
 if (process.env.NODE_ENV === 'development') {
