@@ -64,6 +64,10 @@ export class RoutingService implements OnDestroy {
       const skipIds: Array<number> = [];
       const nav = this.context.navigation;
 
+      const queueNavigation = (url: string) => {
+        window.requestAnimationFrame(() => nav.push(url));
+      };
+
       this.dispose = nav.listen(({ location }) => {
         const path = location.pathname;
 
@@ -84,7 +88,7 @@ export class RoutingService implements OnDestroy {
           }
 
           if (routerUrl !== locationUrl) {
-            nav.push(routerUrl);
+            queueNavigation(routerUrl);
           }
         } else if (e.type === 0 && skipNavigation) {
           skipIds.push(e.id);
@@ -97,7 +101,7 @@ export class RoutingService implements OnDestroy {
             const routerUrl = e.routerEvent.url;
 
             if (routerUrl !== locationUrl) {
-              nav.push(routerUrl);
+              queueNavigation(routerUrl);
             }
           } else {
             skipIds.splice(index, 1);

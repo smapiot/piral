@@ -3,6 +3,7 @@
 ## 1.2.0 (tbd)
 
 - Fixed issue with `loader-utils` version
+- Fixed issue with potential URL flickering using `piral-ng`
 - Fixed build issue in codegen of `piral-core` on Windows (#619)
 - Updated `importmap` with `exclude` key allowing exclusions
 - Added support for `dependencySymbols` in `piral-blazor`
