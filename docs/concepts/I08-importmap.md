@@ -196,7 +196,7 @@ If you want to bundle in a dependency that is already declared as a centrally sh
 }
 ```
 
-If a dependency is both, excluded and marked as distributed dependenc in the `imports` section then the latter wins - explicit imports are always more relevant than exclusions from the inheritance chain.
+If a dependency is both excluded and marked as a distributed dependency in the `imports` section then the latter wins - explicit imports are always more relevant than exclusions from the inheritance chain.
 
 ## Importmap Notation
 
