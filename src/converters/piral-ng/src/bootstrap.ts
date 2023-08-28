@@ -17,7 +17,7 @@ export async function prepareBootstrap(
           throw new Error('The lazy loaded module does not `default` export a NgModule class.');
         }
 
-        defineModule(result.default, moduleOrComponent.opts);
+        defineModule(result.default, moduleOrComponent.opts, moduleOrComponent.flags);
         return findModule(result.default);
       });
     }
@@ -59,8 +59,8 @@ export async function bootstrap<TProps extends BaseComponentProps>(
   props: BehaviorSubject<TProps>,
   context: ComponentContext,
 ): Promise<Disposable> {
-  const [selectedModule, ngOptions, component] = result;
-  const ref = await startup(selectedModule, context, ngOptions);
+  const [selectedModule, ngOptions, ngFlags, component] = result;
+  const ref = await startup(selectedModule, context, ngOptions, ngFlags);
 
   if (ref) {
     ref.instance.attach(component, node, props);

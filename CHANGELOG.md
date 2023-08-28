@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 1.2.0 (tbd)
+
+- Fixed issue with `loader-utils` version
+- Fixed issue with potential URL flickering using `piral-ng`
+- Fixed build issue in codegen of `piral-core` on Windows (#619)
+- Updated `importmap` with `exclude` key allowing exclusions
+- Added support for `dependencySymbols` in `piral-blazor`
+- Added option to stop module teardown via `flags` parameter in `piral-ng`
+- Added abort `signal` to `piral-fetch` options (#621)
+
 ## 1.1.0 (July 25, 2023)
 
 - Fixed retrieval of dep versions not exporting their *package.json*

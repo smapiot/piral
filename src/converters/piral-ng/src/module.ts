@@ -1,6 +1,6 @@
 import type { PiletApi } from 'piral-core';
 import type { BehaviorSubject } from 'rxjs';
-import type { NgOptions, ModuleInstanceResult } from './types';
+import type { NgOptions, ModuleInstanceResult, NgModuleFlags } from './types';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import {
@@ -8,6 +8,7 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   CUSTOM_ELEMENTS_SCHEMA,
+  Inject,
   NgModule,
   NgZone,
 } from '@angular/core';
@@ -21,6 +22,7 @@ interface ModuleDefinition {
   module: any;
   components: Array<any>;
   opts: NgOptions;
+  flags: NgModuleFlags;
 }
 
 const availableModules: Array<ModuleDefinition> = [];
@@ -45,7 +47,12 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
     private appRef: ApplicationRef;
     private refs: Array<[any, HTMLElement, ComponentRef<any>]> = [];
 
-    constructor(private resolver: ComponentFactoryResolver, private zone: NgZone, public routing: RoutingService) {}
+    constructor(
+      private resolver: ComponentFactoryResolver,
+      private zone: NgZone,
+      public routing: RoutingService,
+      @Inject('NgFlags') private flags: NgModuleFlags,
+    ) {}
 
     ngDoBootstrap(appRef: ApplicationRef) {
       this.appRef = appRef;
@@ -81,7 +88,7 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
         }
       }
 
-      if (this.refs.length === 0) {
+      if (!this.flags?.keepAlive && this.refs.length === 0) {
         teardown(BootstrapModule);
       }
     }
@@ -95,7 +102,7 @@ export function activateModuleInstance(moduleDef: ModuleDefinition, piral: Pilet
     moduleDef.active = instantiateModule(moduleDef, piral);
   }
 
-  return [moduleDef.active, moduleDef.opts];
+  return [moduleDef.active, moduleDef.opts, moduleDef.flags];
 }
 
 export function getModuleInstance(component: any, standalone: boolean, piral: PiletApi) {
@@ -140,7 +147,7 @@ export function findModule(module: any) {
   return availableModules.find((m) => m.module === module);
 }
 
-export function defineModule(module: any, opts: NgOptions = undefined) {
+export function defineModule(module: any, opts: NgOptions = undefined, flags: NgModuleFlags = undefined) {
   const [annotation] = getAnnotations(module);
 
   if (annotation) {
@@ -148,6 +155,7 @@ export function defineModule(module: any, opts: NgOptions = undefined) {
       active: undefined,
       components: findComponents(annotation.exports),
       module,
+      flags,
       opts,
     });
   } else if (typeof module === 'function') {
@@ -156,7 +164,7 @@ export function defineModule(module: any, opts: NgOptions = undefined) {
     };
 
     return (selector: string) => ({
-      component: { selector, module, opts, state },
+      component: { selector, module, opts, flags, state },
       type: 'ng' as const,
     });
   }

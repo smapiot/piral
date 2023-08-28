@@ -1,6 +1,7 @@
 export interface Importmap {
-  imports: Record<string, string>;
-  inherit: Array<string>;
+  imports?: Record<string, string>;
+  inherit?: Array<string>;
+  exclude?: Array<string>;
 }
 
 export interface PackageData {
