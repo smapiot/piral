@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.2.0 (tbd)
+## 1.2.0 (August 28, 2023)
 
 - Fixed issue with `loader-utils` version
 - Fixed issue with potential URL flickering using `piral-ng`
