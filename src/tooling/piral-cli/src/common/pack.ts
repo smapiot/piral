@@ -1,7 +1,7 @@
 import { tmpdir } from 'os';
 import { resolve, relative, join, dirname, basename } from 'path';
 import { createTgz } from './archive';
-import { onlyUnique } from './utils';
+import { onlyUniqueFiles } from './utils';
 import { log, progress, fail } from './log';
 import { readJson, copy, removeDirectory, checkExists, makeTempDir, createDirectory } from './io';
 import { getPossiblePiletMainPaths } from './inspect';
@@ -62,7 +62,7 @@ export async function createPiletPackage(baseDir: string, source: string, target
 
   const prefix = join(tmpdir(), `${id}-`);
   const cwd = await makeTempDir(prefix);
-  const uniqueFiles = files.filter(onlyUnique);
+  const uniqueFiles = files.filter(onlyUniqueFiles);
   log('generalDebug_0003', `Creating package with content from "${content}" ...`);
 
   await Promise.all(uniqueFiles.map((file) => copy(file, resolve(cwd, relative(root, file)))));
