@@ -302,4 +302,4 @@ The precedence of the lookup is:
 
 ## Exclusions
 
-Exlusions work across all inherited packages - directly and indirectly. This way, you can also make general statements about bundling. For instance, you might want to put a dependency in `exclude` that you *want* to see bundled - independent if it appears (right now) in the inherited importmaps or not.
+Exclusions work across all inherited packages - directly and indirectly. This way, you can also make general statements about bundling. For instance, you might want to put a dependency in `exclude` that you *want* to see bundled - independent if it appears (right now) in the inherited importmaps or not.
