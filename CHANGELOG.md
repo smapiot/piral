@@ -3,6 +3,7 @@
 ## 1.3.0 (tbd)
 
 - Fixed issue with global installation in pnpm (#624)
+- Fixed issue with `v.x` notation in semver comparisons
 - Added support for features of v9 of Piral.Blazor in `piral-blazor` (#626)
 
 ## 1.2.0 (August 28, 2023)
