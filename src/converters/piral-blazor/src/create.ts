@@ -65,8 +65,8 @@ export function createBlazorApi(config: BlazorConfig = {}): PiralPlugin<PiletBla
       let options: BlazorOptions;
 
       return {
-        defineBlazorReferences(references, satellites, prio) {
-          return loader.defineBlazorReferences(references, meta, satellites, prio);
+        defineBlazorReferences(references, satellites, prio, kind) {
+          return loader.defineBlazorReferences(references, meta, satellites, prio, kind);
         },
         defineBlazorOptions(blazorOptions: BlazorOptions) {
           options = blazorOptions;

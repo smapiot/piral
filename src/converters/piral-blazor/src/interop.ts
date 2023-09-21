@@ -218,6 +218,8 @@ export interface PiletData {
   baseUrl: string;
   satellites?: Record<string, Array<string>>;
   dependencies: Array<string>;
+  kind?: 'global' | 'local';
+  sharedDependencies?: Array<string>;
   dependencySymbols?: Array<string>;
 }
 

@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.3.0 (tbd)
+
+- Added support for features of v9 of Piral.Blazor in `piral-blazor` (#626)
+
 ## 1.2.0 (August 28, 2023)
 
 - Fixed issue with `loader-utils` version

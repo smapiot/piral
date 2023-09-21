@@ -20,11 +20,12 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     getDependency() {
       return dependency;
     },
-    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}, prio = 0) {
+    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}, prio = 0, kind = 'local') {
       prio = Math.max(prio, 0);
 
       const depWithPrio = {
         prio,
+        kind,
         load() {
           return Promise.resolve();
         },
@@ -32,8 +33,8 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
 
       let result: false | Promise<void> = false;
       const load = async ([_, capabilities]: BlazorRootConfig) => {
-        // let others finish first
-        await Promise.all(depsWithPrios.filter((m) => m.prio > prio).map((m) => m.load()));
+        // let others (any global, or higher prio) finish first
+        await Promise.all(depsWithPrios.filter((m) => m.prio > prio || (kind !== m.kind && m.kind === 'global')).map((m) => m.load()));
 
         window.dispatchEvent(new CustomEvent('loading-blazor-pilet', { detail: meta }));
 
@@ -57,6 +58,8 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             baseUrl: meta.basePath || dllUrl.substring(0, dllUrl.lastIndexOf('/')).replace('/_framework/', '/'),
             dependencies,
             dependencySymbols: capabilities.includes('dependency-symbols') ? dependencySymbols : undefined,
+            sharedDependencies: capabilities.includes('core-pilet') ? [] : undefined,
+            kind: capabilities.includes('core-pilet') ? 'local' : undefined,
             satellites,
             dllUrl,
             pdbUrl: references.includes(pdbUrl) ? pdbUrl : undefined,
@@ -107,7 +110,8 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
 
         return result;
       };
-      result = !convert.lazy && convert.loader.then(load);
+      const lazy = convert.lazy && kind !== 'global';
+      result = !lazy && convert.loader.then(load);
       dependency = (config) => result || (result = load(config));
 
       if (prio) {
