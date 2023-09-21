@@ -37,10 +37,12 @@ async function getLocalPackageDir() {
 }
 
 function isDirectory(dir: string) {
-  return new Promise<boolean>((resolve, reject) => {
+  return new Promise<boolean>((resolve) => {
     stat(dir, (err, stats) => {
       if (err) {
-        reject(err);
+        // this happens, e.g., when the path does not exist
+        // see: https://github.com/smapiot/piral/issues/624
+        resolve(false);
       } else {
         resolve(stats.isDirectory());
       }
