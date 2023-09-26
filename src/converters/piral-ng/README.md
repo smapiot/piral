@@ -256,7 +256,7 @@ module.exports = (config) => {
       esModule: false,
     },
   };
-  
+
   const ruleIndex = config.module.rules.findIndex(m => m.test.toString() === /\.tsx?$/i.toString());
 
   config.module.rules.splice(ruleIndex, 1,
@@ -510,131 +510,7 @@ If you still need to use `templateUrl` (or `styleUrls`) then take a look below a
 
 ## Angular Versions
 
-This plugin works with all versions of Angular (right now 2 - 12). Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
-
-### Angular 2
-
-Angular 2 works with some configuration (see below) even though the usage of annotations (internally) is slightly different in `piral-ng`.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^2",
-  "@angular/compiler": "^2",
-  "@angular/core": "^2",
-  "@angular/router": "^2",
-  "@angular/platform-browser": "^2",
-  "@angular/platform-browser-dynamic": "^2",
-  "core-js": "^3.15.2",
-  "rxjs": "^5.0",
-  "zone.js": "~0.9"
-}
-```
-
-### Angular 3
-
-Was never released. Not covered.
-
-### Angular 4
-
-Angular 4 works even though the usage of annotations (internally) is slightly different in `piral-ng`.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^4",
-  "@angular/compiler": "^4",
-  "@angular/core": "^4",
-  "@angular/router": "^4",
-  "@angular/platform-browser": "^4",
-  "@angular/platform-browser-dynamic": "^4",
-  "core-js": "^3.15.2",
-  "rxjs": "^5.0.0",
-  "zone.js": "~0.9"
-}
-```
-
-### Angular 5
-
-In general, Angular 5 seems to work.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^5",
-  "@angular/compiler": "^5",
-  "@angular/core": "^5",
-  "@angular/router": "^5",
-  "@angular/platform-browser": "^5",
-  "@angular/platform-browser-dynamic": "^5",
-  "core-js": "^3.15.2",
-  "rxjs": "^5.0.0",
-  "zone.js": "~0.9"
-}
-```
-
-### Angular 6
-
-In general, Angular 6 seems to work.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^6",
-  "@angular/compiler": "^6",
-  "@angular/core": "^6",
-  "@angular/router": "^6",
-  "@angular/platform-browser": "^6",
-  "@angular/platform-browser-dynamic": "^6",
-  "core-js": "^3.15.2",
-  "rxjs": "^6.0.0",
-  "zone.js": "~0.9"
-}
-```
-
-### Angular 7
-
-In general, Angular 7 seems to work.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^7",
-  "@angular/compiler": "^7",
-  "@angular/core": "^7",
-  "@angular/router": "^7",
-  "@angular/platform-browser": "^7",
-  "@angular/platform-browser-dynamic": "^7",
-  "core-js": "^3.15.2",
-  "rxjs": "^6.4",
-  "zone.js": "~0.9"
-}
-```
-
-### Angular 8
-
-In general, Angular 8 seems to work and is **supported**.
-
-The basic dependencies look as follows:
-
-```json
-{
-  "@angular/common": "^8",
-  "@angular/compiler": "^8",
-  "@angular/core": "^8",
-  "@angular/router": "^8",
-  "@angular/platform-browser": "^8",
-  "@angular/platform-browser-dynamic": "^8",
-  "core-js": "^3.15.2",
-  "rxjs": "^6.4",
-  "zone.js": "~0.9"
-}
-```
+This plugin works with recent versions of Angular (right now 9 - 16). Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
 
 ### Angular 9
 
