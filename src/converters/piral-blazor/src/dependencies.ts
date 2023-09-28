@@ -139,14 +139,15 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
         window.dispatchEvent(new CustomEvent('loaded-blazor-pilet', { detail: meta }));
       };
 
+      const lazy = convert.lazy && kind !== 'global';
+
       depWithPrio.load = () => {
         if (!result) {
-          result = convert.loader.then(load);
+          result = !lazy ? convert.loader.then(load) : Promise.resolve();
         }
 
         return result;
       };
-      const lazy = convert.lazy && kind !== 'global';
       result = !lazy && convert.loader.then(load);
       dependency = (config) => result || (result = load(config));
 
