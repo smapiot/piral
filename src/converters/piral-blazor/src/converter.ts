@@ -100,7 +100,13 @@ export function createConverter(
             if (ev.type.startsWith('piral-')) {
               const type = ev.type.replace('piral-', '');
               const args = ev.detail.arg;
-              processEvent(type, args);
+
+              try {
+                JSON.stringify(args);
+                processEvent(type, args);
+              } catch {
+                console.warn(`The event "${type}" could not be serialized and will not be handled by Blazor.`);
+              }
             }
 
             return eventDispatcher.call(this, ev);

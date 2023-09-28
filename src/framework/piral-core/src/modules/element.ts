@@ -10,10 +10,17 @@ import {
   extensionName,
   slotName,
   isSame,
+  contentName,
 } from '../utils';
 
 export interface Updatable {
   (newProps: any): void;
+}
+
+declare global {
+  interface Window {
+    assignContent(cid: string, content: any): void;
+  }
 }
 
 if (typeof window !== 'undefined' && 'customElements' in window) {
@@ -187,6 +194,47 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   }
 
   customElements.define(slotName, PiralSlot);
+
+  /**
+   * This is a virtual element to render children defined in React / by Piral in other
+   * frameworks.
+   *
+   * Usage:
+   *
+   * ```
+   * <piral-content cid="123"></piral-content>
+   * ```
+   */
+  class PiralContent extends HTMLElement {
+    dispose: Disposable = noop;
+
+    static contentAssignments = {};
+
+    connectedCallback() {
+      this.style.display = 'contents';
+      const cid = this.getAttribute('cid');
+      const content = PiralContent.contentAssignments[cid];
+      const portal = this.closest('piral-portal');
+
+      if (content && portal) {
+        const portalId = portal.getAttribute('pid');
+        document.body.dispatchEvent(new CustomEvent('render-content', {
+          detail: { target: this, content, portalId }
+        }));
+      }
+    }
+
+    disconnectedCallback() {
+      this.dispose();
+      this.dispose = noop;
+    }
+  }
+
+  window.assignContent = (cid, content) => {
+    PiralContent.contentAssignments[cid] = content;
+  };
+
+  customElements.define(contentName, PiralContent);
 }
 
 export function renderElement(

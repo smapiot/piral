@@ -6,6 +6,7 @@
 - Fixed issue with `v.x` notation in semver comparisons
 - Updated `piral-ng/common` to use Angular-version specific package `piral-ng-common`
 - Added support for features of v9 of Piral.Blazor in `piral-blazor` (#626)
+- Added `piral-content` custom element for rendering arbitrary children in foreign elements
 
 ## 1.2.0 (August 28, 2023)
 

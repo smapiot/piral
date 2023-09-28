@@ -33,7 +33,10 @@ function wrapForeignComponent<T>(
     const { destroyPortal, navigation } = useGlobalStateContext();
     const id = React.useMemo(() => (portalIdBase++).toString(26), none);
     // router added for backwards compatibility
-    const context = React.useMemo(() => ({ publicPath: navigation.publicPath, navigation, router: navigation.router }), []);
+    const context = React.useMemo(
+      () => ({ publicPath: navigation.publicPath, navigation, router: navigation.router }),
+      [],
+    );
     const innerProps = React.useMemo(() => ({ ...props, ...captured }), [props]);
 
     React.useEffect(() => () => destroyPortal(id), none);
@@ -41,7 +44,12 @@ function wrapForeignComponent<T>(
     return (
       <Wrapper {...props}>
         <PortalRenderer id={id} />
-        <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
+        <ForeignComponentContainer
+          innerProps={innerProps}
+          $portalId={id}
+          $component={component}
+          $context={context}
+        />
       </Wrapper>
     );
   });
