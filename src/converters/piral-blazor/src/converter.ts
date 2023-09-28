@@ -248,6 +248,7 @@ export function createConverter(
     },
   });
 
+  convert.boot = () => boot(opts);
   convert.loader = loader;
   convert.lazy = lazy;
   return convert;
