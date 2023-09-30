@@ -6,6 +6,7 @@ let json: any = {};
 jest.mock('./io', () => ({
   readJson: jest.fn(() => json),
   removeDirectory: jest.fn(() => Promise.resolve()),
+  checkIsDirectory: jest.fn(() => false),
   makeTempDir: jest.fn(() => Promise.resolve('')),
   copy: jest.fn(() => Promise.resolve()),
   checkExists: jest.fn(() => Promise.resolve(true)),
