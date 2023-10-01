@@ -4,9 +4,11 @@
 
 - Fixed issue with global installation in pnpm (#624)
 - Fixed issue with `v.x` notation in semver comparisons
+- Fixed inclusion of directory entries in the pilet tarballs (#629)
 - Updated `piral-ng/common` to use Angular-version specific package `piral-ng-common`
 - Added support for features of v9 of Piral.Blazor in `piral-blazor` (#626)
 - Added `piral-content` custom element for rendering arbitrary children in foreign elements
+- Added configuration for default behavior of implicitly defined shared dependency version constraints (#625)
 
 ## 1.2.0 (August 28, 2023)
 
