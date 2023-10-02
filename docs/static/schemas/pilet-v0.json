@@ -11,6 +11,11 @@
       "enum": ["none", "v0", "v1", "v2", "v3"],
       "description": "The default output schema to be used when building the pilet."
     },
+    "importmapVersions": {
+      "type": "string",
+      "enum": ["all", "match-major", "any-patch", "exact"],
+      "description": "The default behavior for implicitly defined versions of shared dependencies."
+    },
     "piralInstances": {
       "type": "object",
       "description": "The app shells to be used for debugging the pilet. Each key defines the name of a Piral instance to be selectable.",

@@ -219,6 +219,8 @@ export interface BundlerDefinition {
   buildPilet: BuildPiletBundlerDefinition;
 }
 
+export type ImportmapVersions = 'all' | 'match-major' | 'any-patch' | 'exact';
+
 export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3';
 
 export type SourceLanguage = 'js' | 'ts';
