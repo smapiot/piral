@@ -807,7 +807,7 @@ export async function retrievePiletData(target: string, app?: string) {
     });
   }
 
-  const importmap = await readImportmap(root, piletPackage);
+  const importmap = await readImportmap(root, piletPackage, undefined, piletDefinition?.importmapVersions);
 
   return {
     dependencies: piletPackage.dependencies || {},

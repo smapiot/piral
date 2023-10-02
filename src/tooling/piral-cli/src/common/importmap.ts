@@ -4,7 +4,7 @@ import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
 import { tryResolvePackage } from './npm';
-import { SharedDependency, Importmap } from '../types';
+import { SharedDependency, Importmap, ImportmapVersions } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 
@@ -32,6 +32,16 @@ function addLocalDependencies(
   });
 }
 
+function getAnyPatch(version: string) {
+  const [major, minor] = version.split('.');
+  return `${major}.${minor}.x`;
+}
+
+function getMatchMajor(version: string) {
+  const [major] = version.split('.');
+  return `${major}.x`;
+}
+
 function getDependencyDetails(
   depName: string,
 ): [assetName: string, identifier: string, versionSpec: string, isAsync: boolean] {
@@ -48,6 +58,7 @@ async function getLocalDependencyVersion(
   packageJson: string,
   depName: string,
   versionSpec: string,
+  versionBehavior: ImportmapVersions,
 ): Promise<[realIdentifier: string, offeredVersion: string, requiredVersion: string]> {
   const packageDir = dirname(packageJson);
   const packageFile = basename(packageJson);
@@ -65,7 +76,17 @@ async function getLocalDependencyVersion(
     return [details.name, details.version, versionSpec];
   }
 
-  return [details.name, details.version, details.version];
+  switch (versionBehavior) {
+    case 'all':
+      return [details.name, details.version, '*'];
+    case 'match-major':
+      return [details.name, details.version, getMatchMajor(details.version)];
+    case 'any-patch':
+      return [details.name, details.version, getAnyPatch(details.version)];
+    case 'exact':
+    default:
+      return [details.name, details.version, details.version];
+  }
 }
 
 async function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
@@ -74,21 +95,21 @@ async function getInheritedDependencies(inheritedImport: string, dir: string): P
   if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = await readJson(packageDir, 'package.json');
-    return readImportmap(packageDir, packageDetails, true);
+    return readImportmap(packageDir, packageDetails, true, 'exact');
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
     if (directImportmap) {
       const baseDir = dirname(directImportmap);
       const content = await readJson(baseDir, basename(directImportmap));
-      return await resolveImportmap(baseDir, content);
+      return await resolveImportmap(baseDir, content, 'exact');
     }
   }
 
   return [];
 }
 
-async function resolveImportmap(dir: string, importmap: Importmap): Promise<Array<SharedDependency>> {
+async function resolveImportmap(dir: string, importmap: Importmap, versionBehavior: ImportmapVersions): Promise<Array<SharedDependency>> {
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
@@ -122,6 +143,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
             packageJson,
             depName,
             versionSpec,
+            versionBehavior,
           );
 
           addLocalDependencies(
@@ -146,6 +168,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
             packageJson,
             depName,
             versionSpec,
+            versionBehavior,
           );
 
           addLocalDependencies(
@@ -177,6 +200,7 @@ async function resolveImportmap(dir: string, importmap: Importmap): Promise<Arra
               packageJson,
               depName,
               versionSpec,
+              versionBehavior,
             );
 
             addLocalDependencies(
@@ -241,6 +265,7 @@ export async function readImportmap(
   dir: string,
   packageDetails: any,
   inherited = false,
+  versionBehavior: ImportmapVersions = 'exact',
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
 
@@ -253,7 +278,7 @@ export async function readImportmap(
     }
 
     const baseDir = dirname(resolve(dir, importmap));
-    return await resolveImportmap(baseDir, content);
+    return await resolveImportmap(baseDir, content, versionBehavior);
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
     const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
@@ -270,5 +295,5 @@ export async function readImportmap(
     }
   }
 
-  return await resolveImportmap(dir, importmap);
+  return await resolveImportmap(dir, importmap, versionBehavior);
 }
