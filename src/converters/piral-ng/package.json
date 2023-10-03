@@ -47,10 +47,10 @@
   },
   "sideEffects": false,
   "files": [
-    "common",
     "esm",
     "lib",
     "src",
+    "common.js",
     "convert.d.ts",
     "convert.js",
     "extend-webpack.js"

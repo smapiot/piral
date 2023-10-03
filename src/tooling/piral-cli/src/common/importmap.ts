@@ -34,12 +34,12 @@ function addLocalDependencies(
 
 function getAnyPatch(version: string) {
   const [major, minor] = version.split('.');
-  return `${major}.${minor}.x`;
+  return `~${major}.${minor}.0`;
 }
 
 function getMatchMajor(version: string) {
   const [major] = version.split('.');
-  return `${major}.x`;
+  return `^${major}.0.0`;
 }
 
 function getDependencyDetails(
