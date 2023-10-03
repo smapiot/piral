@@ -50,6 +50,7 @@
     "esm",
     "lib",
     "src",
+    "common.d.ts",
     "common.js",
     "convert.d.ts",
     "convert.js",
