@@ -116,7 +116,7 @@ describe('Importmap', () => {
         isAsync: false,
         name: 'foo',
         ref: 'foo.js',
-        requireId: 'foo@1.x',
+        requireId: 'foo@^1.0.0',
         type: 'local',
       },
     ]);
@@ -143,7 +143,7 @@ describe('Importmap', () => {
         isAsync: false,
         name: 'foo',
         ref: 'foo.js',
-        requireId: 'foo@1.2.x',
+        requireId: 'foo@~1.2.0',
         type: 'local',
       },
     ]);
