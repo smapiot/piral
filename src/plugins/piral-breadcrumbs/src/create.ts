@@ -1,12 +1,8 @@
 import * as actions from './actions';
-import { buildName, PiralPlugin, Dict, withRootExtension, withAll, GlobalState } from 'piral-core';
+import { buildName, PiralPlugin, Dict, withRootExtension, withAll, GlobalState, createRouteMatcher } from 'piral-core';
 import { DefaultBreadbrumbItem, DefaultBreadcrumbsContainer } from './default';
 import { Breadcrumbs } from './Breadcrumbs';
 import { PiletBreadcrumbsApi, BreadcrumbSettings, BreadcrumbRegistration } from './types';
-
-// Unfortunately `require`d:
-// * exports are otherwise potentially converted by, e.g., Parcel (see #385)
-const ptr = require('path-to-regexp');
 
 /**
  * Available configuration options for the breadcrumbs plugin.
@@ -23,9 +19,9 @@ function getMatcher(settings: BreadcrumbSettings): RegExp {
   if (settings.matcher instanceof RegExp) {
     return settings.matcher;
   } else if (typeof settings.matcher === 'string') {
-    return ptr(settings.matcher);
+    return createRouteMatcher(settings.matcher);
   } else {
-    return ptr(settings.path);
+    return createRouteMatcher(settings.path);
   }
 }
 

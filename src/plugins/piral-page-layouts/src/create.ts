@@ -1,6 +1,7 @@
 import * as actions from './actions';
 import { ComponentType, createElement, PropsWithChildren } from 'react';
-import { PiralPlugin, PageComponentProps, Dict, GlobalState, withApi, defaultRender, useGlobalState } from 'piral-core';
+import { useLocation } from 'react-router-dom';
+import { PiralPlugin, PageComponentProps, Dict, GlobalState, withApi, defaultRender, useGlobalState, RouteSwitchProps } from 'piral-core';
 import type { PiletPageLayoutsApi, PageLayoutRegistration } from './types';
 
 /**
@@ -33,26 +34,28 @@ function getPageLayouts(items: Record<string, ComponentType<PageComponentProps>>
   return layouts;
 }
 
-const DefaultWrapper: ComponentType<PropsWithChildren<PageComponentProps>> = (props) => defaultRender(props.children);
+const DefaultLayout: React.FC<PropsWithChildren> = props => defaultRender(props.children);
 
-function createPageWrapper(Wrapper = DefaultWrapper, fallback = 'default'): ComponentType<PageComponentProps> {
+function createPageWrapper(Routes: ComponentType<RouteSwitchProps>, fallback = 'default'): ComponentType<RouteSwitchProps> {
   return (props) => {
-    const layout = props.meta?.layout || fallback;
+    const location = useLocation();
+    const data = props.paths.find(m => m.matcher.test(location.pathname));
+    const layout = data?.meta?.layout || fallback;
     const registration = useGlobalState((s) => s.registry.pageLayouts[layout] || s.registry.pageLayouts[fallback]);
-    const Layout = registration?.component || DefaultWrapper;
-    return createElement(Layout, props, createElement(Wrapper, props));
+    const Layout = registration?.component || DefaultLayout;
+    return createElement(Layout, props, createElement(Routes, props));
   };
 }
 
 function withPageLayouts(pageLayouts: Dict<PageLayoutRegistration>, fallback: string) {
   return (state: GlobalState): GlobalState => ({
     ...state,
+    components: {
+      ...state.components,
+      RouteSwitch: createPageWrapper(state.components.RouteSwitch, fallback),
+    },
     registry: {
       ...state.registry,
-      wrappers: {
-        ...state.registry.wrappers,
-        page: createPageWrapper(state.registry.wrappers.page, fallback),
-      },
       pageLayouts,
     },
   });

@@ -8,5 +8,6 @@ export * from './guid';
 export * from './helpers';
 export * from './media';
 export * from './react';
+export * from './routes';
 export * from './state';
 export * from './storage';

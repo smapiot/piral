@@ -18,10 +18,10 @@ import type {
   PageComponentProps,
   ExtensionComponentProps,
   PiletsBag,
-  PiralPageMeta,
   PiletEntry,
 } from './api';
 import type {
+  PiralPageMeta,
   ComponentConverters,
   LoadingIndicatorProps,
   ErrorInfoProps,

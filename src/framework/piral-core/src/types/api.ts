@@ -12,7 +12,7 @@ import type {
 } from 'piral-base';
 import type {} from 'piral-debug-utils';
 import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
-import type { AnyComponent } from './components';
+import type { AnyComponent, PiralPageMeta } from './components';
 import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
 import type { Disposable } from './utils';
@@ -54,11 +54,6 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
 }
 
 /**
- * The meta data registered for a page.
- */
-export interface PiralPageMeta extends PiralCustomPageMeta {}
-
-/**
  * The props that every registered page component obtains.
  */
 export interface RouteBaseProps<UrlParams extends { [K in keyof UrlParams]?: string } = {}, UrlState = any>
@@ -78,11 +73,6 @@ export interface PageComponentProps<T extends { [K in keyof T]?: string } = {}, 
    */
   children: ReactNode;
 }
-
-/**
- * The meta data registered for a page.
- */
-export interface PiralPageMeta extends PiralCustomPageMeta {}
 
 /**
  * Shorthand for the definition of an extension component.
