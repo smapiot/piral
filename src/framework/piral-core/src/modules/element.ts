@@ -19,6 +19,13 @@ export interface Updatable {
 
 declare global {
   interface Window {
+    /**
+     * Assigns content in form a ReactChild to be rendered later
+     * from a foreign container / element in an piral-content
+     * child.
+     * @param cid The ID of the piral-content node.
+     * @param content The ReactChild to be rendered.
+     */
     assignContent(cid: string, content: any): void;
   }
 }
@@ -198,12 +205,23 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   /**
    * This is a virtual element to render children defined in React / by Piral in other
    * frameworks.
+   * 
+   * Internally, you can use the assignContent function to populate the content to be
+   * rendered once the element is attached / mounted in the DOM.
    *
    * Usage:
    *
    * ```
    * <piral-content cid="123"></piral-content>
    * ```
+   * 
+   * where you'd
+   * 
+   * ```
+   * window.assignContent("123", myReactContent)
+   * ```
+   * 
+   * beforehand.
    */
   class PiralContent extends HTMLElement {
     dispose: Disposable = noop;

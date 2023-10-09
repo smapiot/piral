@@ -138,7 +138,7 @@ function addScript(url: string) {
   });
 }
 
-function sanatize(props: any) {
+function sanitize(props: any) {
   // children is a complex thing and will (in general) not be serializable
   // hence we need to make the JSObjectReference
   if ('children' in props && typeof props.children === 'object') {
@@ -161,11 +161,11 @@ export function setLogLevel(logLevel: BlazorLogLevel) {
 }
 
 export function createElement(moduleName: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, sanatize(props));
+  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, sanitize(props));
 }
 
 export function updateElement(referenceId: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, sanatize(props));
+  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, sanitize(props));
 }
 
 export function destroyElement(referenceId: string): Promise<string> {
@@ -173,11 +173,11 @@ export function destroyElement(referenceId: string): Promise<string> {
 }
 
 export function activate(moduleName: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, sanatize(props));
+  return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, sanitize(props));
 }
 
 export function reactivate(moduleName: string, referenceId: string, props: any): Promise<void> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, sanatize(props)).catch(() => {
+  return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, sanitize(props)).catch(() => {
     // Apparently an older version of Piral.Blazor, which does not support this
     // discard this error silently (in the future we may print warnings here)
   });
