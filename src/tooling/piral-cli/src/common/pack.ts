@@ -1,9 +1,8 @@
-import { tmpdir } from 'os';
-import { resolve, relative, join, dirname, basename } from 'path';
+import { resolve, relative, dirname, basename } from 'path';
 import { createTgz } from './archive';
 import { onlyUniqueFiles } from './utils';
 import { log, progress, fail } from './log';
-import { readJson, copy, removeDirectory, checkExists, makeTempDir, createDirectory } from './io';
+import { readJson, checkExists, createDirectory, checkIsDirectory, getFileNames } from './io';
 import { getPossiblePiletMainPaths } from './inspect';
 
 async function getPiletContentDir(root: string, packageData: any) {
@@ -18,6 +17,26 @@ async function getPiletContentDir(root: string, packageData: any) {
   }
 
   return root;
+}
+
+async function getUniqueFiles(files: Array<string>) {
+  const result: Array<string> = [];
+
+  for (const file of files) {
+    const isDirectory = await checkIsDirectory(file);
+
+    if (isDirectory) {
+      const names = await getFileNames(file);
+      const subFiles = names.map((name) => resolve(file, name));
+      const items = await getUniqueFiles(subFiles);
+      const unique = items.filter((m) => onlyUniqueFiles(m, result.length, result));
+      result.push(...unique);
+    } else if (onlyUniqueFiles(file, result.length, result)) {
+      result.push(file);
+    }
+  }
+
+  return result;
 }
 
 export async function createPiletPackage(baseDir: string, source: string, target: string) {
@@ -53,36 +72,29 @@ export async function createPiletPackage(baseDir: string, source: string, target
   const readme = resolve(root, 'README.md');
 
   if (Array.isArray(pckg.files)) {
-    files.push(...pckg.files.map((f) => resolve(root, f)));
+    const additionalFiles = pckg.files
+      .filter((f: string) => typeof f === 'string')
+      .map((f: string) => resolve(root, f));
+    files.push(...additionalFiles);
   }
 
   if (await checkExists(readme)) {
     files.push(readme);
   }
 
-  const prefix = join(tmpdir(), `${id}-`);
-  const cwd = await makeTempDir(prefix);
-  const uniqueFiles = files.filter(onlyUniqueFiles);
-  log('generalDebug_0003', `Creating package with content from "${content}" ...`);
-
-  await Promise.all(uniqueFiles.map((file) => copy(file, resolve(cwd, relative(root, file)))));
+  log('generalDebug_0003', `Reading out unique files from "${content}" ...`);
+  const uniqueFiles = await getUniqueFiles(files);
 
   log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
-
   await createDirectory(dirname(file));
 
   log('generalDebug_0003', `Creating compressed archive at "${file}" relative to "${root}" ...`);
-
   await createTgz(
     file,
-    cwd,
+    root,
     uniqueFiles.map((file) => relative(root, file)),
   );
 
-  log('generalDebug_0003', `Successfully created package from "${cwd}".`);
-
-  await removeDirectory(cwd);
-
-  log('generalDebug_0003', `Packed file "${file}".`);
+  log('generalDebug_0003', `Successfully created package "${file}" from "${root}".`);
   return file;
 }

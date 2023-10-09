@@ -61,6 +61,7 @@ declare global {
     $blazorLoader: Promise<BlazorRootConfig>;
     $blazorDependencyPrios: Array<{
       prio: number;
+      kind: string;
       load(): Promise<void>;
     }>;
     $blazorDependencies: Array<{
@@ -135,8 +136,16 @@ export interface PiletBlazorApi {
    * @param referenceUrls The URLs pointing to the different DLLs to include.
    * @param satellites The URLs of the potential satellite DLLs to include.
    * @param prio The loading priority of the DLLs. Higher numbers will always be loaded before lower numbers.
+   * @param kind The kind of pilet to use. Global pilets will always be loaded before local pilets.
+   * @param sharedDependencies The names of the dependencies that should be put in the global context.
    */
-  defineBlazorReferences(referenceUrls: Array<string>, satellites?: Record<string, Array<string>>, prio?: number): void;
+  defineBlazorReferences(
+    referenceUrls: Array<string>,
+    satellites?: Record<string, Array<string>>,
+    prio?: number,
+    kind?: 'global' | 'local',
+    sharedDependencies?: Array<string>,
+  ): void;
   /**
    * Wraps a Blazor module for use in Piral.
    *

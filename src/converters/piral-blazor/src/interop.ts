@@ -138,6 +138,20 @@ function addScript(url: string) {
   });
 }
 
+function sanitize(props: any) {
+  // children is a complex thing and will (in general) not be serializable
+  // hence we need to make the JSObjectReference
+  if ('children' in props && typeof props.children === 'object') {
+    const { children, ...rest } = props;
+    return {
+      children: window.DotNet.createJSObjectReference(children),
+      ...rest,
+    };
+  }
+
+  return props;
+}
+
 export function processEvent(type: string, args: any) {
   return window.DotNet.invokeMethodAsync(coreLib, 'ProcessEvent', type, args);
 }
@@ -147,11 +161,11 @@ export function setLogLevel(logLevel: BlazorLogLevel) {
 }
 
 export function createElement(moduleName: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, props);
+  return window.DotNet.invokeMethodAsync(coreLib, 'CreateElement', moduleName, sanitize(props));
 }
 
 export function updateElement(referenceId: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, props);
+  return window.DotNet.invokeMethodAsync(coreLib, 'UpdateElement', referenceId, sanitize(props));
 }
 
 export function destroyElement(referenceId: string): Promise<string> {
@@ -159,11 +173,11 @@ export function destroyElement(referenceId: string): Promise<string> {
 }
 
 export function activate(moduleName: string, props: any): Promise<string> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, props);
+  return window.DotNet.invokeMethodAsync(coreLib, 'Activate', moduleName, sanitize(props));
 }
 
 export function reactivate(moduleName: string, referenceId: string, props: any): Promise<void> {
-  return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, props).catch(() => {
+  return window.DotNet.invokeMethodAsync(coreLib, 'Reactivate', moduleName, referenceId, sanitize(props)).catch(() => {
     // Apparently an older version of Piral.Blazor, which does not support this
     // discard this error silently (in the future we may print warnings here)
   });
@@ -218,6 +232,8 @@ export interface PiletData {
   baseUrl: string;
   satellites?: Record<string, Array<string>>;
   dependencies: Array<string>;
+  kind?: string;
+  sharedDependencies?: Array<string>;
   dependencySymbols?: Array<string>;
 }
 

@@ -18,10 +18,10 @@ import type {
   PageComponentProps,
   ExtensionComponentProps,
   PiletsBag,
-  PiralPageMeta,
   PiletEntry,
 } from './api';
 import type {
+  PiralPageMeta,
   ComponentConverters,
   LoadingIndicatorProps,
   ErrorInfoProps,
@@ -182,7 +182,14 @@ export interface GlobalState extends PiralCustomState {
   /**
    * The used (exact) application routes.
    */
-  routes: Dict<ComponentType<RouteComponentProps<any>>>;
+  routes: Dict<
+    ComponentType<RouteComponentProps<any>> & {
+      /**
+       * The optional meta data registered with the page.
+       */
+      meta?: PiralPageMeta;
+    }
+  >;
   /**
    * The current provider.
    */

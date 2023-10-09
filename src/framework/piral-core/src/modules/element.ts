@@ -10,10 +10,24 @@ import {
   extensionName,
   slotName,
   isSame,
+  contentName,
 } from '../utils';
 
 export interface Updatable {
   (newProps: any): void;
+}
+
+declare global {
+  interface Window {
+    /**
+     * Assigns content in form a ReactChild to be rendered later
+     * from a foreign container / element in an piral-content
+     * child.
+     * @param cid The ID of the piral-content node.
+     * @param content The ReactChild to be rendered.
+     */
+    assignContent(cid: string, content: any): void;
+  }
 }
 
 if (typeof window !== 'undefined' && 'customElements' in window) {
@@ -187,6 +201,58 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   }
 
   customElements.define(slotName, PiralSlot);
+
+  /**
+   * This is a virtual element to render children defined in React / by Piral in other
+   * frameworks.
+   * 
+   * Internally, you can use the assignContent function to populate the content to be
+   * rendered once the element is attached / mounted in the DOM.
+   *
+   * Usage:
+   *
+   * ```
+   * <piral-content cid="123"></piral-content>
+   * ```
+   * 
+   * where you'd
+   * 
+   * ```
+   * window.assignContent("123", myReactContent)
+   * ```
+   * 
+   * beforehand.
+   */
+  class PiralContent extends HTMLElement {
+    dispose: Disposable = noop;
+
+    static contentAssignments = {};
+
+    connectedCallback() {
+      this.style.display = 'contents';
+      const cid = this.getAttribute('cid');
+      const content = PiralContent.contentAssignments[cid];
+      const portal = this.closest('piral-portal');
+
+      if (content && portal) {
+        const portalId = portal.getAttribute('pid');
+        document.body.dispatchEvent(new CustomEvent('render-content', {
+          detail: { target: this, content, portalId }
+        }));
+      }
+    }
+
+    disconnectedCallback() {
+      this.dispose();
+      this.dispose = noop;
+    }
+  }
+
+  window.assignContent = (cid, content) => {
+    PiralContent.contentAssignments[cid] = content;
+  };
+
+  customElements.define(contentName, PiralContent);
 }
 
 export function renderElement(

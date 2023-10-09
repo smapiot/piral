@@ -65,8 +65,15 @@ function compareVersions(v1: string, v2: string) {
   const len = Math.max(s1.length - 1, s2.length - 1);
 
   for (let i = 0; i < len; i++) {
-    const n1 = parseInt(s1[i] || '0', 10);
-    const n2 = parseInt(s2[i] || '0', 10);
+    const m1 = s1[i] || '0';
+    const m2 = s2[i] || '0';
+
+    if (m2 === 'x') {
+      return 0;
+    }
+
+    const n1 = parseInt(m1, 10);
+    const n2 = parseInt(m2, 10);
 
     if (n1 > n2) {
       return 1;

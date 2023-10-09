@@ -51,7 +51,7 @@ function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: N
 
   return platform
     .bootstrapModule(BootstrapModule, ngOptions)
-    .catch((err) => console.log(err))
+    .catch((err) => console.error(err))
     .then((instance: NgModuleInt) => {
       if (instance) {
         const zone = instance.injector.get(NgZone);

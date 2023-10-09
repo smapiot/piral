@@ -60,9 +60,7 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-breadcrumbs.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
-    "path-to-regexp": "^1.8.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router": "^5.1.8",

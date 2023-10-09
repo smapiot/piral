@@ -1,11 +1,12 @@
 import type { LogLevels } from './common';
-import type { PiletSchemaVersion } from './public';
+import type { ImportmapVersions, PiletSchemaVersion } from './public';
 
 /**
  * Shape of the pilet.json
  */
 export interface PiletDefinition {
   schemaVersion?: PiletSchemaVersion;
+  importmapVersions?: ImportmapVersions;
   piralInstances?: Record<
     string,
     {

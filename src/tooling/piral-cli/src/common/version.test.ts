@@ -6,6 +6,16 @@ describe('semver check module', () => {
     expect(result).toBeTruthy();
   });
 
+  it('satisfies works with x notation', () => {
+    const result = satisfies('13.0.1', '13.x');
+    expect(result).toBeTruthy();
+  });
+
+  it('satisfies works with caret notation', () => {
+    const result = satisfies('13.0.1', '^13.0.0');
+    expect(result).toBeTruthy();
+  });
+
   it('shortened publish version is valid', () => {
     const result = validate('1.2');
     expect(result).toBeTruthy();

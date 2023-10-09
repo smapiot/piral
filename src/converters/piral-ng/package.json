@@ -25,7 +25,7 @@
       "require": "./lib/index.js"
     },
     "./common": {
-      "import": "./common"
+      "import": "./common.js"
     },
     "./convert": {
       "import": "./convert.js"
@@ -47,10 +47,11 @@
   },
   "sideEffects": false,
   "files": [
-    "common",
     "esm",
     "lib",
     "src",
+    "common.d.ts",
+    "common.js",
     "convert.d.ts",
     "convert.js",
     "extend-webpack.js"
@@ -64,13 +65,15 @@
   },
   "scripts": {
     "cleanup": "rimraf common esm lib convert.d.ts convert.js",
-    "build": "yarn build:ng && yarn build:commonjs && yarn build:esnext && yarn build:convert",
-    "build:ng": "ng-packagr -p src/common/ng-package.json",
+    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-ng.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "peerDependencies": {
+    "piral-ng-common": "*"
   },
   "devDependencies": {
     "@angular/common": "^16.0.0",
@@ -80,8 +83,8 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "ng-packagr": "^16.0.0",
     "piral-core": "^1.2.0",
+    "piral-ng-common": "^16.0.0",
     "rxjs": "^7.3.0"
   }
 }

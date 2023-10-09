@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { RouteComponentProps, SwitchProps } from 'react-router';
 import type { FirstParametersOf, UnionOf } from './common';
-import type { PiralCustomErrors, PiralCustomComponentConverters } from './custom';
+import type { PiralCustomErrors, PiralCustomComponentConverters, PiralCustomPageMeta } from './custom';
 import type { NavigationApi } from './navigation';
 import type { LayoutType } from './layout';
 
@@ -225,6 +225,11 @@ export interface RouterProps {
 }
 
 /**
+ * The meta data registered for a page.
+ */
+export interface PiralPageMeta extends PiralCustomPageMeta {}
+
+/**
  * Represents a path in the app registration.
  */
  export interface AppPath {
@@ -232,6 +237,14 @@ export interface RouterProps {
    * The exact path to use.
    */
   path: string;
+  /**
+   * The associated route matcher.
+   */
+  matcher: RegExp;
+  /**
+   * The page metadata.
+   */
+  meta: PiralPageMeta;
   /**
    * The component to register for this path.
    */

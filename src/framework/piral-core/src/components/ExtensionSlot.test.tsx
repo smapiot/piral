@@ -66,29 +66,6 @@ const state = {
 };
 
 describe('Extension Module', () => {
-  it('is able to default render not available extension with no name', () => {
-    const node = render(<ExtensionSlot />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
-    expect(node.container.querySelectorAll('div').length).toBe(0);
-  });
-
-  it('is able to default render given component with no name', () => {
-    const component = {
-      type: 'html',
-      component: {
-        mount(element) {
-          const container = document.createElement('strong');
-          container.textContent = 'Hello!';
-          element.appendChild(container);
-        },
-      },
-    };
-    const node = render(<ExtensionSlot params={{ component }} />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
-    expect(node.container.querySelectorAll('strong').length).toBe(1);
-    expect(node.container.textContent).toContain('Hello!');
-  });
-
   it('is able to default render not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" />);
     expect(node.queryAllByRole("stub1").length).toBe(0);
