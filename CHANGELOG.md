@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.3.0 (tbd)
+## 1.3.0 (October 9, 2023)
 
 - Fixed issue with global installation in pnpm (#624)
 - Fixed issue with `v.x` notation in semver comparisons
