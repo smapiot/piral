@@ -3,26 +3,41 @@ import { RouteComponentProps, SwitchProps } from 'react-router';
 import { useGlobalState } from '../hooks';
 import { createRouteMatcher } from '../utils';
 import { RouteSwitchProps } from '../types';
+
 import { useRouteFilter } from '../../app.codegen';
 
-function useRoutes() {
+function useShellRoutes() {
   const routes = useGlobalState((s) => s.routes);
-  const pages = useGlobalState((s) => s.registry.pages);
+  return React.useMemo(
+    () =>
+      Object.entries(routes).map(([path, Component]) => ({
+        path,
+        Component,
+        meta: Component?.meta || {},
+        matcher: createRouteMatcher(path),
+      })),
+    [routes],
+  );
+}
 
-  return useRouteFilter([
-    ...Object.entries(routes).map(([path, Component]) => ({
-      path,
-      Component,
-      meta: {},
-      matcher: createRouteMatcher(path),
-    })),
-    ...Object.entries(pages).map(([path, entry]) => ({
-      path,
-      Component: entry.component,
-      meta: entry.meta,
-      matcher: createRouteMatcher(path),
-    })),
-  ]);
+function usePiletRoutes() {
+  const pages = useGlobalState((s) => s.registry.pages);
+  return React.useMemo(
+    () =>
+      Object.entries(pages).map(([path, entry]) => ({
+        path,
+        Component: entry.component,
+        meta: entry.meta,
+        matcher: createRouteMatcher(path),
+      })),
+    [pages],
+  );
+}
+
+function useRoutes() {
+  const shellRoutes = useShellRoutes();
+  const piletRoutes = usePiletRoutes();
+  return useRouteFilter([...shellRoutes, ...piletRoutes]);
 }
 
 /**

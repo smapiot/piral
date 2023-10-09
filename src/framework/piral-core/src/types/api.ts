@@ -11,7 +11,7 @@ import type {
   PiletLoadingStrategy,
 } from 'piral-base';
 import type {} from 'piral-debug-utils';
-import type { PiletCustomApi, PiralCustomPageMeta } from './custom';
+import type { PiletCustomApi } from './custom';
 import type { AnyComponent, PiralPageMeta } from './components';
 import type { ExtensionParams, ExtensionSlotProps, PiralExtensionSlotMap } from './extension';
 import type { SharedData, DataStoreOptions } from './data';
