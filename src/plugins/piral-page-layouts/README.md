@@ -180,6 +180,52 @@ const instance = createInstance({
 });
 ```
 
+You can also mark your app shell pages with a layout. To do that you need to provide a property called `meta` for such components:
+
+```js
+const MyPage = () => {
+  return (
+    <div>
+      My page content
+    </div>
+  );
+};
+MyPage.meta = {
+  layout: 'standard',
+};
+
+// Register page in the app state
+createInstance({
+  // ...
+  state: {
+    // ...
+    routes: {
+      '/my-page': MyPage,
+    },
+  },
+});
+```
+
+Alternatively, you could register your pages in the app shell also within the root pilet using the `registerPage` API:
+
+```js
+const MyPage = () => {
+  return (
+    <div>
+      My page content
+    </div>
+  );
+};
+
+// Register page in the app state
+const instance = createInstance({
+  // ...
+});
+instance.root.registerPage('/my-page', MyPage, {
+  layout: 'standard',
+});
+```
+
 :::
 
 ## License
