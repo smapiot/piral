@@ -2,7 +2,13 @@ import { readImportmap } from './importmap';
 
 jest.mock('./npm', () => ({
   tryResolvePackage(id, dir) {
-    return `${dir}/${id}/index.js`;
+    if (id === 'qxz') {
+      return undefined;
+    } else if (id.endsWith('package.json')) {
+      return `${dir}/${id}`;
+    } else {
+      return `${dir}/${id}/index.js`;
+    }
   },
 }));
 
@@ -14,6 +20,28 @@ const mockPackages = {
   '/data/bar': {
     name: 'bar',
     version: '1.0.0',
+  },
+  '/data/app1': {
+    name: 'app1',
+    version: '1.0.0',
+    importmap: {
+      imports: {
+        'foo@1.2.3': 'foo',
+      },
+    },
+  },
+  '/data/app1/foo': {
+    name: 'foo',
+    version: '1.2.3',
+  },
+  '/data/app2': {
+    name: 'app1',
+    version: '1.0.0',
+    importmap: {
+      imports: {
+        'qxz@1.0.0': '',
+      },
+    },
   },
 };
 
@@ -190,5 +218,61 @@ describe('Importmap', () => {
         false,
       ),
     ).rejects.toThrow();
+  });
+
+  it('fails when the explicitly shared package is not installed', async () => {
+    await expect(
+      readImportmap(
+        '/data',
+        {
+          importmap: {
+            imports: {
+              'qxz': '',
+            },
+          },
+        },
+        false,
+      ),
+    ).rejects.toThrow();
+  });
+
+  it('accepts an importmap with valid resolvable inherited deps', async () => {
+    const deps = await readImportmap(
+      '/data',
+      {
+        importmap: {
+          imports: {},
+          inherit: ['app1'],
+        },
+      },
+      false,
+    );
+    expect(deps).toEqual([
+      {
+        alias: undefined,
+        entry: '/data/app1/foo/index.js',
+        id: 'foo@1.2.3',
+        isAsync: false,
+        name: 'foo',
+        ref: 'foo.js',
+        requireId: 'foo@1.2.3',
+        type: 'local',
+        parents: ['app1'],
+      },
+    ]);
+  });
+
+  it('accepts an importmap with valid but unresolvable inherited deps', async () => {
+    const deps = await readImportmap(
+      '/data',
+      {
+        importmap: {
+          imports: {},
+          inherit: ['app2'],
+        },
+      },
+      false,
+    );
+    expect(deps).toEqual([]);
   });
 });

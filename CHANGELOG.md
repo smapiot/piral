@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.3.1 (tbd)
+
+- Updated behavior with unresolved inherited dependencies (#633)
+
 ## 1.3.0 (October 9, 2023)
 
 - Fixed issue with global installation in pnpm (#624)

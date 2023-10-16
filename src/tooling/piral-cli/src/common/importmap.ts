@@ -95,25 +95,44 @@ async function getInheritedDependencies(inheritedImport: string, dir: string): P
   if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = await readJson(packageDir, 'package.json');
-    return readImportmap(packageDir, packageDetails, true, 'exact');
+    return await readImportmap(packageDir, packageDetails, true, 'exact');
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
     if (directImportmap) {
       const baseDir = dirname(directImportmap);
       const content = await readJson(baseDir, basename(directImportmap));
-      return await resolveImportmap(baseDir, content, 'exact');
+      return await resolveImportmap(baseDir, content, {
+        ignoreFailure: true,
+        versionBehavior: 'exact',
+      });
     }
   }
 
   return [];
 }
 
-async function resolveImportmap(dir: string, importmap: Importmap, versionBehavior: ImportmapVersions): Promise<Array<SharedDependency>> {
+interface ImportmapResolutionOptions {
+  versionBehavior: ImportmapVersions;
+  ignoreFailure: boolean;
+}
+
+async function resolveImportmap(
+  dir: string,
+  importmap: Importmap,
+  options: ImportmapResolutionOptions,
+): Promise<Array<SharedDependency>> {
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
   const excludedImports = importmap?.exclude;
+  const onUnresolved = (entry: string) => {
+    if (options.ignoreFailure) {
+      log('skipUnresolvedDependency_0054', entry);
+    } else {
+      fail('importMapReferenceNotFound_0027', dir, entry);
+    }
+  };
 
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
@@ -143,7 +162,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             packageJson,
             depName,
             versionSpec,
-            versionBehavior,
+            options.versionBehavior,
           );
 
           addLocalDependencies(
@@ -157,7 +176,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             isAsync,
           );
         } else {
-          fail('importMapReferenceNotFound_0027', dir, identifier);
+          onUnresolved(identifier);
         }
       } else if (!url.startsWith('.') && !isAbsolute(url)) {
         const entry = tryResolvePackage(url, dir);
@@ -168,7 +187,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             packageJson,
             depName,
             versionSpec,
-            versionBehavior,
+            options.versionBehavior,
           );
 
           addLocalDependencies(
@@ -182,7 +201,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             isAsync,
           );
         } else {
-          fail('importMapReferenceNotFound_0027', dir, url);
+          onUnresolved(url);
         }
       } else {
         const entry = resolve(dir, url);
@@ -200,7 +219,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
               packageJson,
               depName,
               versionSpec,
-              versionBehavior,
+              options.versionBehavior,
             );
 
             addLocalDependencies(
@@ -214,7 +233,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
               isAsync,
             );
           } else if (isDirectory) {
-            fail('importMapReferenceNotFound_0027', entry, 'package.json');
+            onUnresolved(entry);
           } else {
             const hash = await getHash(entry);
 
@@ -229,7 +248,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             });
           }
         } else {
-          fail('importMapReferenceNotFound_0027', dir, url);
+          onUnresolved(url);
         }
       }
     }
@@ -278,7 +297,10 @@ export async function readImportmap(
     }
 
     const baseDir = dirname(resolve(dir, importmap));
-    return await resolveImportmap(baseDir, content, versionBehavior);
+    return await resolveImportmap(baseDir, content, {
+      ignoreFailure: inherited,
+      versionBehavior,
+    });
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
     const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
@@ -295,5 +317,8 @@ export async function readImportmap(
     }
   }
 
-  return await resolveImportmap(dir, importmap, versionBehavior);
+  return await resolveImportmap(dir, importmap, {
+    ignoreFailure: inherited,
+    versionBehavior,
+  });
 }
