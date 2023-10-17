@@ -92,7 +92,7 @@ Sets the tag or version of the package to install. By default, this uses the ver
 
 - Aliases: `--piral-version`
 - Type: `string`
-- Default: `"1.0.2"`
+- Default: `"1.3.0"`
 
 ### `--force-overwrite`
 
