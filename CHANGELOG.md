@@ -3,6 +3,7 @@
 ## 1.3.1 (tbd)
 
 - Updated behavior with unresolved inherited dependencies (#633)
+- Updated behavior to only update installed dependencies on `pilet upgrade`
 
 ## 1.3.0 (October 9, 2023)
 
