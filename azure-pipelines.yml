@@ -76,11 +76,12 @@ stages:
         Arguments: build:demo-minimal
     - task: Yarn@2
       displayName: Build Landing Page
-      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
+      condition: eq(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:page
     - task: Yarn@2
       displayName: Build Documentation
+      condition: eq(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: ci:docs
     - task: Yarn@2
@@ -758,7 +759,7 @@ stages:
 - stage: DeployHomepage
   displayName: Deploy Page
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
 
   jobs:
   - deployment: DeployLandingPage
