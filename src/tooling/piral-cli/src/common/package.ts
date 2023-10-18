@@ -558,9 +558,9 @@ export function flattenExternals(dependencies: Array<SharedDependency>, disableA
 }
 
 export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
-  const sharedDependencies = await readImportmap(root, packageInfo);
+  const importmap = await readImportmap(root, packageInfo, 'exact', 'host');
 
-  if (sharedDependencies.length === 0) {
+  if (importmap.length === 0) {
     const allDeps = {
       ...packageInfo.devDependencies,
       ...packageInfo.dependencies,
@@ -577,7 +577,7 @@ export async function retrieveExternals(root: string, packageInfo: any): Promise
     }));
   }
 
-  return sharedDependencies;
+  return importmap;
 }
 
 export async function retrievePiletsInfo(entryFile: string) {
@@ -819,7 +819,7 @@ export async function retrievePiletData(target: string, app?: string) {
     });
   }
 
-  const importmap = await readImportmap(root, piletPackage, piletDefinition?.importmapVersions);
+  const importmap = await readImportmap(root, piletPackage, piletDefinition?.importmapVersions, 'remote');
 
   return {
     dependencies: piletPackage.dependencies || {},

@@ -4,7 +4,7 @@ import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
 import { tryResolvePackage } from './npm';
-import { SharedDependency, Importmap, ImportmapVersions } from '../types';
+import { SharedDependency, Importmap, ImportmapVersions, ImportmapMode } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 
@@ -105,13 +105,14 @@ async function getInheritedDependencies(
   inheritedImport: string,
   dir: string,
   excludedDependencies: Array<string>,
+  inheritanceBehavior: ImportmapMode,
 ): Promise<Array<SharedDependency>> {
   const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
   if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = await readJson(packageDir, 'package.json');
-    return await consumeImportmap(packageDir, packageDetails, true, 'exact', excludedDependencies);
+    return await consumeImportmap(packageDir, packageDetails, true, 'exact', inheritanceBehavior, excludedDependencies);
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
@@ -120,6 +121,7 @@ async function getInheritedDependencies(
       const content = await readJson(baseDir, basename(directImportmap));
       return await resolveImportmap(baseDir, content, {
         availableSpecs: {},
+        inheritanceBehavior,
         excludedDependencies,
         ignoreFailure: true,
         versionBehavior: 'exact',
@@ -134,6 +136,7 @@ interface ImportmapResolutionOptions {
   availableSpecs: Record<string, string>;
   excludedDependencies: Array<string>;
   versionBehavior: ImportmapVersions;
+  inheritanceBehavior: ImportmapMode;
   ignoreFailure: boolean;
 }
 
@@ -283,7 +286,12 @@ async function resolveImportmap(
     const excluded = Array.isArray(excludedImports) ? [...includedImports, ...excludedImports] : includedImports;
 
     for (const inheritedImport of inheritedImports) {
-      const otherDependencies = await getInheritedDependencies(inheritedImport, dir, excluded);
+      const otherDependencies = await getInheritedDependencies(
+        inheritedImport,
+        dir,
+        excluded,
+        options.inheritanceBehavior,
+      );
 
       for (const dependency of otherDependencies) {
         const entry = dependencies.find((dep) => dep.name === dependency.name);
@@ -307,10 +315,13 @@ async function consumeImportmap(
   packageDetails: any,
   inherited: boolean,
   versionBehavior: ImportmapVersions,
+  mode: ImportmapMode,
   excludedDependencies: Array<string>,
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
-  const availableSpecs = inherited ? packageDetails.devDependencies : {};
+  const appShell = inherited && mode === 'remote';
+  const availableSpecs = appShell ? packageDetails.devDependencies : {};
+  const inheritanceBehavior = appShell ? 'host' : mode;
 
   if (typeof importmap === 'string') {
     const notFound = {};
@@ -326,6 +337,7 @@ async function consumeImportmap(
       ignoreFailure: inherited,
       excludedDependencies,
       versionBehavior,
+      inheritanceBehavior,
     });
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
@@ -348,6 +360,7 @@ async function consumeImportmap(
     excludedDependencies,
     ignoreFailure: inherited,
     versionBehavior,
+    inheritanceBehavior,
   });
 }
 
@@ -355,6 +368,7 @@ export function readImportmap(
   dir: string,
   packageDetails: any,
   versionBehavior: ImportmapVersions = 'exact',
+  inheritanceBehavior: ImportmapMode = 'remote',
 ): Promise<Array<SharedDependency>> {
-  return consumeImportmap(dir, packageDetails, false, versionBehavior, []);
+  return consumeImportmap(dir, packageDetails, false, versionBehavior, inheritanceBehavior, []);
 }
