@@ -278,9 +278,8 @@ async function resolveImportmap(
   }
 
   if (Array.isArray(inheritedImports)) {
-    const excluded = Array.isArray(excludedImports)
-      ? [...options.excludedDependencies, ...excludedImports]
-      : options.excludedDependencies;
+    const includedImports = [...options.excludedDependencies, ...dependencies.map((m) => m.name)];
+    const excluded = Array.isArray(excludedImports) ? [...includedImports, ...excludedImports] : includedImports;
 
     for (const inheritedImport of inheritedImports) {
       const otherDependencies = await getInheritedDependencies(inheritedImport, dir, excluded);
