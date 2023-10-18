@@ -147,11 +147,12 @@ async function resolveImportmap(
   const inheritedImports = importmap?.inherit;
   const excludedImports = importmap?.exclude;
 
-  const onUnresolved = (entry: string) => {
+  const onUnresolved = (name: string, version: string) => {
     if (options.ignoreFailure) {
-      log('skipUnresolvedDependency_0054', entry);
+      const id = version ? `${name}@${version}` : name;
+      log('skipUnresolvedDependency_0054', id);
     } else {
-      fail('importMapReferenceNotFound_0027', dir, entry);
+      fail('importMapReferenceNotFound_0027', dir, name);
     }
   };
 
@@ -199,7 +200,7 @@ async function resolveImportmap(
             isAsync,
           );
         } else {
-          onUnresolved(identifier);
+          onUnresolved(identifier, versionSpec);
         }
       } else if (!url.startsWith('.') && !isAbsolute(url)) {
         const entry = tryResolvePackage(url, dir);
@@ -224,7 +225,7 @@ async function resolveImportmap(
             isAsync,
           );
         } else {
-          onUnresolved(url);
+          onUnresolved(url, versionSpec);
         }
       } else {
         const entry = resolve(dir, url);
@@ -256,7 +257,7 @@ async function resolveImportmap(
               isAsync,
             );
           } else if (isDirectory) {
-            onUnresolved(entry);
+            onUnresolved(entry, versionSpec);
           } else {
             const hash = await getHash(entry);
 
@@ -271,7 +272,7 @@ async function resolveImportmap(
             });
           }
         } else {
-          onUnresolved(url);
+          onUnresolved(url, versionSpec);
         }
       }
     }
