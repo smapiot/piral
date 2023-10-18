@@ -18,6 +18,8 @@ Received: Missing "${missingNames.join('", "')}".
 
 /**
  * Checks that "externals" dependencies have been specified in "peerDependencies".
+ * This is legacy and only used if no importmap has been specified.
+ * Importmap inherited dependencies are auto-checked.
  */
 export default async function (context: PiletRuleContext, options: Options = 'ignore') {
   // only check if options are not set to ignore and if importmap feature is not used

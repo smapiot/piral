@@ -493,8 +493,16 @@ export function packageVersionInvalid_0024(version: string): QuickMessage {
  * The best way, however, is to look at the used version and adjust the specifier to be correct again.
  * Alternatively, change the used version to satisfy the constraint again.
  */
-export function importMapVersionSpecNotSatisfied_0025(depName: string, version: string): QuickMessage {
-  return [LogLevels.error, '0025', `The dependency "${depName}" in only available in version "${version}".`];
+export function importMapVersionSpecNotSatisfied_0025(
+  depName: string,
+  availableVersion: string,
+  specVersion: string,
+): QuickMessage {
+  return [
+    LogLevels.error,
+    '0025',
+    `The dependency "${depName}" is locally installed in version "${availableVersion}", but specified as "${specVersion}".`,
+  ];
 }
 
 /**
@@ -1313,8 +1321,8 @@ export function cannotResolveDependency_0053(names: Array<string>, rootDir: stri
  * When a pilet is built all the inherited (i.e., centrally shared) dependencies will be resolved. In case
  * you did not install one of these dependencies a short info will be shown. This acts as a reminder that
  * you could install more dependencies - without any runtime cost.
- * 
- * Note that even though shared dependencies are available at runtime in any case they will might be 
+ *
+ * Note that even though shared dependencies are available at runtime in any case they will might be
  * for building your pilet. Therefore, if you plan to use shared dependencies please install them in your
  * pilet's repository.
  *

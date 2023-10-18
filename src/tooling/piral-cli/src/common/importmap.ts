@@ -42,16 +42,28 @@ function getMatchMajor(version: string) {
   return `^${major}.0.0`;
 }
 
+function makeAssetName(id: string) {
+  return (id.startsWith('@') ? id.substring(1) : id).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
+}
+
 function getDependencyDetails(
   depName: string,
+  availableSpecs: Record<string, string>,
 ): [assetName: string, identifier: string, versionSpec: string, isAsync: boolean] {
   const name = depName.replace(/\?+$/, '');
   const isAsync = depName.endsWith('?');
   const sep = name.indexOf('@', 1);
-  const version = sep > 0 ? name.substring(sep + 1) : '';
-  const id = sep > 0 ? name.substring(0, sep) : name;
-  const assetName = (id.startsWith('@') ? id.substring(1) : id).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
-  return [assetName, id, version, isAsync];
+
+  if (sep > 0) {
+    const id = name.substring(0, sep);
+    const version = name.substring(sep + 1);
+    const assetName = makeAssetName(id);
+    return [assetName, id, version, isAsync];
+  } else {
+    const version = availableSpecs[name] || '';
+    const assetName = makeAssetName(name);
+    return [assetName, name, version, isAsync];
+  }
 }
 
 async function getLocalDependencyVersion(
@@ -70,7 +82,7 @@ async function getLocalDependencyVersion(
     }
 
     if (!satisfies(details.version, versionSpec)) {
-      fail('importMapVersionSpecNotSatisfied_0025', depName, details.version);
+      fail('importMapVersionSpecNotSatisfied_0025', depName, details.version, versionSpec);
     }
 
     return [details.name, details.version, versionSpec];
@@ -89,13 +101,17 @@ async function getLocalDependencyVersion(
   }
 }
 
-async function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
+async function getInheritedDependencies(
+  inheritedImport: string,
+  dir: string,
+  excludedDependencies: Array<string>,
+): Promise<Array<SharedDependency>> {
   const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
   if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = await readJson(packageDir, 'package.json');
-    return await readImportmap(packageDir, packageDetails, true, 'exact');
+    return await consumeImportmap(packageDir, packageDetails, true, 'exact', excludedDependencies);
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
@@ -103,6 +119,8 @@ async function getInheritedDependencies(inheritedImport: string, dir: string): P
       const baseDir = dirname(directImportmap);
       const content = await readJson(baseDir, basename(directImportmap));
       return await resolveImportmap(baseDir, content, {
+        availableSpecs: {},
+        excludedDependencies,
         ignoreFailure: true,
         versionBehavior: 'exact',
       });
@@ -113,6 +131,8 @@ async function getInheritedDependencies(inheritedImport: string, dir: string): P
 }
 
 interface ImportmapResolutionOptions {
+  availableSpecs: Record<string, string>;
+  excludedDependencies: Array<string>;
   versionBehavior: ImportmapVersions;
   ignoreFailure: boolean;
 }
@@ -126,6 +146,7 @@ async function resolveImportmap(
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
   const excludedImports = importmap?.exclude;
+
   const onUnresolved = (entry: string) => {
     if (options.ignoreFailure) {
       log('skipUnresolvedDependency_0054', entry);
@@ -137,9 +158,11 @@ async function resolveImportmap(
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
       const url = sharedImports[depName];
-      const [assetName, identifier, versionSpec, isAsync] = getDependencyDetails(depName);
+      const [assetName, identifier, versionSpec, isAsync] = getDependencyDetails(depName, options.availableSpecs);
 
-      if (typeof url !== 'string') {
+      if (options.excludedDependencies.includes(identifier)) {
+        continue;
+      } else if (typeof url !== 'string') {
         log('generalInfo_0000', `The value of "${depName}" in the importmap is not a string and will be ignored.`);
       } else if (/^https?:\/\//.test(url)) {
         const hash = computeHash(url).substring(0, 7);
@@ -255,14 +278,14 @@ async function resolveImportmap(
   }
 
   if (Array.isArray(inheritedImports)) {
+    const excluded = Array.isArray(excludedImports)
+      ? [...options.excludedDependencies, ...excludedImports]
+      : options.excludedDependencies;
+
     for (const inheritedImport of inheritedImports) {
-      const otherDependencies = await getInheritedDependencies(inheritedImport, dir);
+      const otherDependencies = await getInheritedDependencies(inheritedImport, dir, excluded);
 
       for (const dependency of otherDependencies) {
-        if (Array.isArray(excludedImports) && excludedImports.includes(dependency.name)) {
-          continue;
-        }
-
         const entry = dependencies.find((dep) => dep.name === dependency.name);
 
         if (!entry) {
@@ -279,14 +302,15 @@ async function resolveImportmap(
 
   return dependencies;
 }
-
-export async function readImportmap(
+async function consumeImportmap(
   dir: string,
   packageDetails: any,
-  inherited = false,
-  versionBehavior: ImportmapVersions = 'exact',
+  inherited: boolean,
+  versionBehavior: ImportmapVersions,
+  excludedDependencies: Array<string>,
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
+  const availableSpecs = inherited ? packageDetails.devDependencies : {};
 
   if (typeof importmap === 'string') {
     const notFound = {};
@@ -298,7 +322,9 @@ export async function readImportmap(
 
     const baseDir = dirname(resolve(dir, importmap));
     return await resolveImportmap(baseDir, content, {
+      availableSpecs,
       ignoreFailure: inherited,
+      excludedDependencies,
       versionBehavior,
     });
   } else if (typeof importmap === 'undefined' && inherited) {
@@ -318,7 +344,17 @@ export async function readImportmap(
   }
 
   return await resolveImportmap(dir, importmap, {
+    availableSpecs,
+    excludedDependencies,
     ignoreFailure: inherited,
     versionBehavior,
   });
+}
+
+export function readImportmap(
+  dir: string,
+  packageDetails: any,
+  versionBehavior: ImportmapVersions = 'exact',
+): Promise<Array<SharedDependency>> {
+  return consumeImportmap(dir, packageDetails, false, versionBehavior, []);
 }

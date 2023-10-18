@@ -61,28 +61,20 @@ jest.mock('./io', () => ({
 
 describe('Importmap', () => {
   it('reads empty one from package.json', async () => {
-    const deps = await readImportmap(
-      '/data',
-      {
-        importmap: {},
-      },
-      false,
-    );
+    const deps = await readImportmap('/data', {
+      importmap: {},
+    });
     expect(deps).toEqual([]);
   });
 
   it('reads fully qualified local dependency', async () => {
-    const deps = await readImportmap(
-      '/data',
-      {
-        importmap: {
-          imports: {
-            'foo@1.2.3': 'foo',
-          },
+    const deps = await readImportmap('/data', {
+      importmap: {
+        imports: {
+          'foo@1.2.3': 'foo',
         },
       },
-      false,
-    );
+    });
     expect(deps).toEqual([
       {
         alias: undefined,
@@ -98,17 +90,13 @@ describe('Importmap', () => {
   });
 
   it('reads fully qualified local dependency with implied exact version', async () => {
-    const deps = await readImportmap(
-      '/data',
-      {
-        importmap: {
-          imports: {
-            foo: 'foo',
-          },
+    const deps = await readImportmap('/data', {
+      importmap: {
+        imports: {
+          foo: 'foo',
         },
       },
-      false,
-    );
+    });
     expect(deps).toEqual([
       {
         alias: undefined,
@@ -133,7 +121,6 @@ describe('Importmap', () => {
           },
         },
       },
-      false,
       'match-major',
     );
     expect(deps).toEqual([
@@ -160,7 +147,6 @@ describe('Importmap', () => {
           },
         },
       },
-      false,
       'any-patch',
     );
     expect(deps).toEqual([
@@ -187,7 +173,6 @@ describe('Importmap', () => {
           },
         },
       },
-      false,
       'all',
     );
     expect(deps).toEqual([
@@ -206,47 +191,35 @@ describe('Importmap', () => {
 
   it('fails when the local version does not match the desired version', async () => {
     await expect(
-      readImportmap(
-        '/data',
-        {
-          importmap: {
-            imports: {
-              'bar@^2.0.0': '',
-            },
+      readImportmap('/data', {
+        importmap: {
+          imports: {
+            'bar@^2.0.0': '',
           },
         },
-        false,
-      ),
+      }),
     ).rejects.toThrow();
   });
 
   it('fails when the explicitly shared package is not installed', async () => {
     await expect(
-      readImportmap(
-        '/data',
-        {
-          importmap: {
-            imports: {
-              'qxz': '',
-            },
+      readImportmap('/data', {
+        importmap: {
+          imports: {
+            qxz: '',
           },
         },
-        false,
-      ),
+      }),
     ).rejects.toThrow();
   });
 
   it('accepts an importmap with valid resolvable inherited deps', async () => {
-    const deps = await readImportmap(
-      '/data',
-      {
-        importmap: {
-          imports: {},
-          inherit: ['app1'],
-        },
+    const deps = await readImportmap('/data', {
+      importmap: {
+        imports: {},
+        inherit: ['app1'],
       },
-      false,
-    );
+    });
     expect(deps).toEqual([
       {
         alias: undefined,
@@ -263,16 +236,12 @@ describe('Importmap', () => {
   });
 
   it('accepts an importmap with valid but unresolvable inherited deps', async () => {
-    const deps = await readImportmap(
-      '/data',
-      {
-        importmap: {
-          imports: {},
-          inherit: ['app2'],
-        },
+    const deps = await readImportmap('/data', {
+      importmap: {
+        imports: {},
+        inherit: ['app2'],
       },
-      false,
-    );
+    });
     expect(deps).toEqual([]);
   });
 });
