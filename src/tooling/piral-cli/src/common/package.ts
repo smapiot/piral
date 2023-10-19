@@ -558,9 +558,9 @@ export function flattenExternals(dependencies: Array<SharedDependency>, disableA
 }
 
 export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
-  const sharedDependencies = await readImportmap(root, packageInfo);
+  const importmap = await readImportmap(root, packageInfo, 'exact', 'host');
 
-  if (sharedDependencies.length === 0) {
+  if (importmap.length === 0) {
     const allDeps = {
       ...packageInfo.devDependencies,
       ...packageInfo.dependencies,
@@ -577,7 +577,7 @@ export async function retrieveExternals(root: string, packageInfo: any): Promise
     }));
   }
 
-  return sharedDependencies;
+  return importmap;
 }
 
 export async function retrievePiletsInfo(entryFile: string) {
@@ -680,6 +680,7 @@ async function getPiletPackage(
 ) {
   const { piralCLI = { version: cliVersion } } = piralInfo;
   const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
+  const existingData = newInfo ? {} : await readJson(root, packageJson);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
@@ -705,17 +706,21 @@ async function getPiletPackage(
       return deps;
     }, {}),
     ...allExternals.filter(isValidDependency).reduce((deps, name) => {
-      const version = piralDependencies[name] || tryFindPackageVersion(name);
+      const existingDeps = existingData.devDependencies;
+      const shouldSpecify = newInfo || (existingDeps && name in existingDeps);
 
-      if (version || newInfo) {
-        // set only if we have an explicit version or we are in the scaffolding case
-        deps[name] = version || 'latest';
+      if (shouldSpecify) {
+        deps[name] = piralDependencies[name] || tryFindPackageVersion(name) || 'latest';
       }
 
       return deps;
     }, {}),
     [name]: `${version || piralInfo.version}`,
     ['piral-cli']: toolVersion,
+  };
+  const dependencies: Record<string, string> = {
+    [name]: undefined,
+    ['piral-cli']: undefined,
   };
 
   if (newInfo) {
@@ -728,9 +733,7 @@ async function getPiletPackage(
       inherit: [name],
     },
     devDependencies,
-    dependencies: {
-      [name]: undefined,
-    },
+    dependencies,
     scripts,
   });
 }
@@ -816,7 +819,7 @@ export async function retrievePiletData(target: string, app?: string) {
     });
   }
 
-  const importmap = await readImportmap(root, piletPackage, undefined, piletDefinition?.importmapVersions);
+  const importmap = await readImportmap(root, piletPackage, piletDefinition?.importmapVersions, 'remote');
 
   return {
     dependencies: piletPackage.dependencies || {},

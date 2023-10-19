@@ -4,7 +4,7 @@ import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
 import { tryResolvePackage } from './npm';
-import { SharedDependency, Importmap, ImportmapVersions } from '../types';
+import { SharedDependency, Importmap, ImportmapVersions, ImportmapMode } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 
@@ -42,16 +42,28 @@ function getMatchMajor(version: string) {
   return `^${major}.0.0`;
 }
 
+function makeAssetName(id: string) {
+  return (id.startsWith('@') ? id.substring(1) : id).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
+}
+
 function getDependencyDetails(
   depName: string,
+  availableSpecs: Record<string, string>,
 ): [assetName: string, identifier: string, versionSpec: string, isAsync: boolean] {
   const name = depName.replace(/\?+$/, '');
   const isAsync = depName.endsWith('?');
   const sep = name.indexOf('@', 1);
-  const version = sep > 0 ? name.substring(sep + 1) : '';
-  const id = sep > 0 ? name.substring(0, sep) : name;
-  const assetName = (id.startsWith('@') ? id.substring(1) : id).replace(/[\/\.]/g, '-').replace(/(\-)+/, '-');
-  return [assetName, id, version, isAsync];
+
+  if (sep > 0) {
+    const id = name.substring(0, sep);
+    const version = name.substring(sep + 1);
+    const assetName = makeAssetName(id);
+    return [assetName, id, version, isAsync];
+  } else {
+    const version = availableSpecs[name] || '';
+    const assetName = makeAssetName(name);
+    return [assetName, name, version, isAsync];
+  }
 }
 
 async function getLocalDependencyVersion(
@@ -70,7 +82,7 @@ async function getLocalDependencyVersion(
     }
 
     if (!satisfies(details.version, versionSpec)) {
-      fail('importMapVersionSpecNotSatisfied_0025', depName, details.version);
+      fail('importMapVersionSpecNotSatisfied_0025', depName, details.version, versionSpec);
     }
 
     return [details.name, details.version, versionSpec];
@@ -89,38 +101,72 @@ async function getLocalDependencyVersion(
   }
 }
 
-async function getInheritedDependencies(inheritedImport: string, dir: string): Promise<Array<SharedDependency>> {
+async function getInheritedDependencies(
+  inheritedImport: string,
+  dir: string,
+  excludedDependencies: Array<string>,
+  inheritanceBehavior: ImportmapMode,
+): Promise<Array<SharedDependency>> {
   const packageJson = tryResolvePackage(`${inheritedImport}/package.json`, dir);
 
   if (packageJson) {
     const packageDir = dirname(packageJson);
     const packageDetails = await readJson(packageDir, 'package.json');
-    return readImportmap(packageDir, packageDetails, true, 'exact');
+    return await consumeImportmap(packageDir, packageDetails, true, 'exact', inheritanceBehavior, excludedDependencies);
   } else {
     const directImportmap = tryResolvePackage(inheritedImport, dir);
 
     if (directImportmap) {
       const baseDir = dirname(directImportmap);
       const content = await readJson(baseDir, basename(directImportmap));
-      return await resolveImportmap(baseDir, content, 'exact');
+      return await resolveImportmap(baseDir, content, {
+        availableSpecs: {},
+        inheritanceBehavior,
+        excludedDependencies,
+        ignoreFailure: true,
+        versionBehavior: 'exact',
+      });
     }
   }
 
   return [];
 }
 
-async function resolveImportmap(dir: string, importmap: Importmap, versionBehavior: ImportmapVersions): Promise<Array<SharedDependency>> {
+interface ImportmapResolutionOptions {
+  availableSpecs: Record<string, string>;
+  excludedDependencies: Array<string>;
+  versionBehavior: ImportmapVersions;
+  inheritanceBehavior: ImportmapMode;
+  ignoreFailure: boolean;
+}
+
+async function resolveImportmap(
+  dir: string,
+  importmap: Importmap,
+  options: ImportmapResolutionOptions,
+): Promise<Array<SharedDependency>> {
   const dependencies: Array<SharedDependency> = [];
   const sharedImports = importmap?.imports;
   const inheritedImports = importmap?.inherit;
   const excludedImports = importmap?.exclude;
 
+  const onUnresolved = (name: string, version: string) => {
+    if (options.ignoreFailure) {
+      const id = version ? `${name}@${version}` : name;
+      log('skipUnresolvedDependency_0054', id);
+    } else {
+      fail('importMapReferenceNotFound_0027', dir, name);
+    }
+  };
+
   if (typeof sharedImports === 'object' && sharedImports) {
     for (const depName of Object.keys(sharedImports)) {
       const url = sharedImports[depName];
-      const [assetName, identifier, versionSpec, isAsync] = getDependencyDetails(depName);
+      const [assetName, identifier, versionSpec, isAsync] = getDependencyDetails(depName, options.availableSpecs);
 
-      if (typeof url !== 'string') {
+      if (options.excludedDependencies.includes(identifier)) {
+        continue;
+      } else if (typeof url !== 'string') {
         log('generalInfo_0000', `The value of "${depName}" in the importmap is not a string and will be ignored.`);
       } else if (/^https?:\/\//.test(url)) {
         const hash = computeHash(url).substring(0, 7);
@@ -143,7 +189,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             packageJson,
             depName,
             versionSpec,
-            versionBehavior,
+            options.versionBehavior,
           );
 
           addLocalDependencies(
@@ -157,7 +203,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             isAsync,
           );
         } else {
-          fail('importMapReferenceNotFound_0027', dir, identifier);
+          onUnresolved(identifier, versionSpec);
         }
       } else if (!url.startsWith('.') && !isAbsolute(url)) {
         const entry = tryResolvePackage(url, dir);
@@ -168,7 +214,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             packageJson,
             depName,
             versionSpec,
-            versionBehavior,
+            options.versionBehavior,
           );
 
           addLocalDependencies(
@@ -182,7 +228,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             isAsync,
           );
         } else {
-          fail('importMapReferenceNotFound_0027', dir, url);
+          onUnresolved(url, versionSpec);
         }
       } else {
         const entry = resolve(dir, url);
@@ -200,7 +246,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
               packageJson,
               depName,
               versionSpec,
-              versionBehavior,
+              options.versionBehavior,
             );
 
             addLocalDependencies(
@@ -214,7 +260,7 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
               isAsync,
             );
           } else if (isDirectory) {
-            fail('importMapReferenceNotFound_0027', entry, 'package.json');
+            onUnresolved(entry, versionSpec);
           } else {
             const hash = await getHash(entry);
 
@@ -229,21 +275,25 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
             });
           }
         } else {
-          fail('importMapReferenceNotFound_0027', dir, url);
+          onUnresolved(url, versionSpec);
         }
       }
     }
   }
 
   if (Array.isArray(inheritedImports)) {
+    const includedImports = [...options.excludedDependencies, ...dependencies.map((m) => m.name)];
+    const excluded = Array.isArray(excludedImports) ? [...includedImports, ...excludedImports] : includedImports;
+
     for (const inheritedImport of inheritedImports) {
-      const otherDependencies = await getInheritedDependencies(inheritedImport, dir);
+      const otherDependencies = await getInheritedDependencies(
+        inheritedImport,
+        dir,
+        excluded,
+        options.inheritanceBehavior,
+      );
 
       for (const dependency of otherDependencies) {
-        if (Array.isArray(excludedImports) && excludedImports.includes(dependency.name)) {
-          continue;
-        }
-
         const entry = dependencies.find((dep) => dep.name === dependency.name);
 
         if (!entry) {
@@ -260,14 +310,18 @@ async function resolveImportmap(dir: string, importmap: Importmap, versionBehavi
 
   return dependencies;
 }
-
-export async function readImportmap(
+async function consumeImportmap(
   dir: string,
   packageDetails: any,
-  inherited = false,
-  versionBehavior: ImportmapVersions = 'exact',
+  inherited: boolean,
+  versionBehavior: ImportmapVersions,
+  mode: ImportmapMode,
+  excludedDependencies: Array<string>,
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
+  const appShell = inherited && mode === 'remote';
+  const availableSpecs = appShell ? packageDetails.devDependencies : {};
+  const inheritanceBehavior = appShell ? 'host' : mode;
 
   if (typeof importmap === 'string') {
     const notFound = {};
@@ -278,7 +332,13 @@ export async function readImportmap(
     }
 
     const baseDir = dirname(resolve(dir, importmap));
-    return await resolveImportmap(baseDir, content, versionBehavior);
+    return await resolveImportmap(baseDir, content, {
+      availableSpecs,
+      ignoreFailure: inherited,
+      excludedDependencies,
+      versionBehavior,
+      inheritanceBehavior,
+    });
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
     const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
@@ -295,5 +355,20 @@ export async function readImportmap(
     }
   }
 
-  return await resolveImportmap(dir, importmap, versionBehavior);
+  return await resolveImportmap(dir, importmap, {
+    availableSpecs,
+    excludedDependencies,
+    ignoreFailure: inherited,
+    versionBehavior,
+    inheritanceBehavior,
+  });
+}
+
+export function readImportmap(
+  dir: string,
+  packageDetails: any,
+  versionBehavior: ImportmapVersions = 'exact',
+  inheritanceBehavior: ImportmapMode = 'remote',
+): Promise<Array<SharedDependency>> {
+  return consumeImportmap(dir, packageDetails, false, versionBehavior, inheritanceBehavior, []);
 }

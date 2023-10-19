@@ -300,6 +300,8 @@ The precedence of the lookup is:
 1. See if `<inherited-name>/package.json` exists. Follow up on any `importmap` property from the file if exists.
 2. See if `<inherited-name>` exists. Take it if it exists. **Note**: This has to be an importmap (JSON) then.
 
+Dependencies that are inherited by an importmap, but not installed in the pilet will be remarked during execution of the `pilet` command of the `piral-cli` tool.
+
 ## Exclusions
 
 Exclusions work across all inherited packages - directly and indirectly. This way, you can also make general statements about bundling. For instance, you might want to put a dependency in `exclude` that you *want* to see bundled - independent if it appears (right now) in the inherited importmaps or not.
