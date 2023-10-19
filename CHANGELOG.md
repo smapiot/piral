@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.3.1 (tbd)
+## 1.3.1 (October 19, 2023)
 
 - Updated behavior with unresolved inherited dependencies (#633)
 - Updated behavior to only update installed dependencies on `pilet upgrade`
