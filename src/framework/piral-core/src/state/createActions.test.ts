@@ -14,7 +14,7 @@ describe('Create Actions Module', () => {
   it('createActions works with all actions', () => {
     const events = createListener(undefined);
     const actions = createActions('abc' as any, events);
-    expect(Object.keys(actions)).toEqual(['on', 'off', 'emit', 'apis', 'converters', 'navigation', 'state', 'a', 'b']);
+    expect(Object.keys(actions)).toEqual(['on', 'once', 'off', 'emit', 'apis', 'converters', 'navigation', 'state', 'a', 'b']);
   });
 
   it('createActions binds against given context', () => {
