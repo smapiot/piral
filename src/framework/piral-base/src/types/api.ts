@@ -37,6 +37,12 @@ export interface EventEmitter {
    */
   on<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
   /**
+   * Attaches a new event listener that is removed once the event fired.
+   * @param type The type of the event to listen for.
+   * @param callback The callback to trigger.
+   */
+  once<K extends keyof PiralEventMap>(type: K, callback: Listener<PiralEventMap[K]>): EventEmitter;
+  /**
    * Detaches an existing event listener.
    * @param type The type of the event to listen for.
    * @param callback The callback to trigger.

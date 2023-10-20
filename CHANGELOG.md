@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.3.2 (tbd)
+
+- Added `once` as convenience methods to `EventEmitter`
+
 ## 1.3.1 (October 19, 2023)
 
 - Updated behavior with unresolved inherited dependencies (#633)
