@@ -41,9 +41,17 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     getDependency() {
       return dependency;
     },
-    defineBlazorReferences(references: Array<string>, meta: Partial<PiletMetadata> = {}, satellites = {}, prio = 0, kind = 'local', sharedDependencies = []) {
+    defineBlazorReferences(
+      references: Array<string>,
+      meta: Partial<PiletMetadata> = {},
+      satellites = {},
+      prio = 0,
+      kind = 'local',
+      sharedDependencies = [],
+    ) {
       prio = Math.max(prio, 0);
 
+      const isGlobal = kind === 'global';
       const depWithPrio = {
         prio,
         kind,
@@ -55,7 +63,13 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       let result: false | Promise<void> = false;
       const load = async ([_, capabilities]: BlazorRootConfig) => {
         // let others (any global, or higher prio) finish first
-        await Promise.all(depsWithPrios.filter((m) => m.prio > prio || (kind !== m.kind && m.kind === 'global')).map((m) => m.load()));
+        await Promise.all(
+          depsWithPrios
+            .filter((m) => m !== depWithPrio)
+            // prefer (any) global pilets before non-global ones and otherwise prefer higher prio than lower ones
+            .filter((m) => m.prio > prio || (m.kind === 'global' && !isGlobal))
+            .map((m) => m.load()),
+        );
 
         window.dispatchEvent(new CustomEvent('loading-blazor-pilet', { detail: meta }));
 
@@ -70,7 +84,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
           const dependencies = references.filter((m) => m.endsWith('.dll'));
           const dllUrl = dependencies.pop();
           const pdbUrl = toPdb(dllUrl);
-          const dependencySymbols = dependencies.map(toPdb).filter(dep => references.includes(dep));
+          const dependencySymbols = dependencies.map(toPdb).filter((dep) => references.includes(dep));
           const id = Math.random().toString(26).substring(2);
 
           if (supportsCore) {
@@ -147,15 +161,15 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
         return result;
       };
 
-      if (kind === 'global' && !convert.loader) {
+      if (isGlobal && !convert.loader) {
         result = convert.boot().then(load);
-      } else if (!convert.lazy || kind === 'global') {
+      } else if (!convert.lazy || isGlobal) {
         result = convert.loader.then(load);
       }
 
       dependency = (config) => result || (result = load(config));
 
-      if (prio) {
+      if (prio || isGlobal) {
         depsWithPrios.push(depWithPrio);
       }
     },

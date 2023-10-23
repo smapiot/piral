@@ -11,6 +11,7 @@ export const piletJsonSchemaUrl = 'https://docs.piral.io/schemas/pilet-v0.json';
 export const piralJsonSchemaUrl = 'https://docs.piral.io/schemas/piral-v0.json';
 export const entryModuleExtensions = ['.ts', '.tsx', '.js', '.jsx'];
 export const bundlerNames = [
+  'bun' as const,
   'esbuild' as const,
   'parcel' as const,
   'parcel2' as const,

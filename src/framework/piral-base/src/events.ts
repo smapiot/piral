@@ -22,6 +22,13 @@ export function createListener(state: any = {}): EventEmitter {
       eventListeners.push([callback, listener]);
       return this;
     },
+    once(type, callback) {
+      const cb = (ev: any) => {
+        this.off(type, cb);
+        callback(ev);
+      };
+      return this.on(type, cb);
+    },
     off(type, callback) {
       const [listener] = eventListeners.filter((m) => m[0] === callback);
 
@@ -33,12 +40,16 @@ export function createListener(state: any = {}): EventEmitter {
       return this;
     },
     emit(type, arg) {
-      const ce = document.createEvent('CustomEvent');
-      ce.initCustomEvent(nameOf(type), false, false, {
-        arg,
-        state,
-      });
-      document.body.dispatchEvent(ce);
+      document.body.dispatchEvent(
+        new CustomEvent(nameOf(type), {
+          bubbles: false,
+          cancelable: false,
+          detail: {
+            arg,
+            state,
+          },
+        }),
+      );
       return this;
     },
   };

@@ -4,6 +4,7 @@ import type { PiletMetadata, EventEmitter, PiletApi, PiletApiExtender } from './
 export function initializeApi(target: PiletMetadata, events: EventEmitter): PiletApi {
   return {
     on: events.on,
+    once: events.once,
     off: events.off,
     emit: events.emit,
     meta: __assign({}, target),

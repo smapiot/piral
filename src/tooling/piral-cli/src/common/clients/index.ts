@@ -7,6 +7,7 @@ import * as pnp from './pnp';
 import * as pnpm from './pnpm';
 import * as rush from './rush';
 import * as yarn from './yarn';
+import * as bun from './bun';
 
 export const clients = {
   lerna,
@@ -15,11 +16,12 @@ export const clients = {
   pnpm,
   rush,
   yarn,
+  bun,
 };
 
 type ClientName = keyof typeof clients;
 
-const directClients = ['npm', 'pnp', 'yarn', 'pnpm'];
+const directClients = ['npm', 'pnp', 'yarn', 'pnpm', 'bun'];
 
 export function isWrapperClient(client: ClientName) {
   return !directClients.includes(client);
