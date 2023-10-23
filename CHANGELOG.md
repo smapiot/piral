@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.3.2 (tbd)
+## 1.3.2 (October 23, 2023)
 
 - Fixed issue with loading order for global Blazor pilets in `piral-blazor`
 - Added `once` as a convenience method to `EventEmitter`
