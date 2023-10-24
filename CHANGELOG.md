@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.3.3 (tbd)
+
+- Added implementation for the `FallbackComponent` attribute in `piral-blazor`
+
 ## 1.3.2 (October 23, 2023)
 
 - Fixed issue with loading order for global Blazor pilets in `piral-blazor`
