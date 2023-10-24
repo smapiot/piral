@@ -2,6 +2,7 @@
 
 ## 1.3.3 (tbd)
 
+- Fixed inlined source maps for CSS files of Angular components
 - Added implementation for the `FallbackComponent` attribute in `piral-blazor`
 
 ## 1.3.2 (October 23, 2023)
