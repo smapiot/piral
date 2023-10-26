@@ -320,7 +320,7 @@ async function consumeImportmap(
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
   const appShell = inherited && mode === 'remote';
-  const availableSpecs = appShell ? packageDetails.devDependencies : {};
+  const availableSpecs = appShell ? packageDetails.devDependencies ?? {} : {};
   const inheritanceBehavior = appShell ? 'host' : mode;
 
   if (typeof importmap === 'string') {
