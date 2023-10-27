@@ -1,9 +1,9 @@
 import { dirname, relative, resolve } from 'path';
-import { log } from '../log';
-import { findFile, readText, writeText } from '../io';
-import { jju } from '../../external';
-import { runCommand } from '../scripts';
-import { MemoryStream } from '../MemoryStream';
+import { log } from '../common/log';
+import { findFile, readText, writeText } from '../common/io';
+import { runCommand } from '../common/scripts';
+import { MemoryStream } from '../common/MemoryStream';
+import { jju } from '../external';
 
 // Helpers:
 const rushJson = 'rush.json';

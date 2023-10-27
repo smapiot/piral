@@ -1,11 +1,11 @@
 import { resolve, relative, dirname } from 'path';
 import { createReadStream, existsSync } from 'fs';
 import { log, fail } from './log';
-import { clients, detectClients, isWrapperClient } from './clients';
 import { config } from './config';
 import { legacyCoreExternals, frameworkLibs, defaultRegistry, packageJson } from './constants';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
+import { clients, detectClients, isWrapperClient } from '../npm-clients';
 import { clientTypeKeys } from '../helpers';
 import { getModulePath } from '../external';
 import { PackageType, NpmClientType } from '../types';
