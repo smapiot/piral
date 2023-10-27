@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { clients } from './clients';
+import { clients } from '../npm-clients';
 import {
   dissectPackageName,
   installNpmPackage,

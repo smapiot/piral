@@ -7,8 +7,8 @@ function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-piral-'));
 }
 
-jest.mock('../common/clients/npm', () => {
-  const original = jest.requireActual('../common/clients/npm');
+jest.mock('../npm-clients/npm', () => {
+  const original = jest.requireActual('../npm-clients/npm');
 
   return {
     ...original,
