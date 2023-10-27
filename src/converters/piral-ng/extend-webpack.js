@@ -21,6 +21,7 @@ module.exports =
       loader: cssLoader,
       options: {
         esModule: false,
+        sourceMap: false,
       },
     };
     const htmlLoaderNoModule = {

@@ -1,4 +1,5 @@
 import type { ExtensionRegistration } from 'piral-core';
+import { createElement } from 'react';
 import { isInternalNavigation, performInternalNavigation } from './navigation';
 
 const blazorRootId = 'blazor-root';
@@ -79,7 +80,10 @@ export function emitRenderEvent(
   fallbackComponent: string | null,
 ) {
   const target = findTarget(source);
-  const empty = typeof fallbackComponent === 'string' ? () => {} : undefined;
+  const empty =
+    typeof fallbackComponent === 'string'
+      ? () => createElement('piral-extension', { name: fallbackComponent, params })
+      : undefined;
   const order =
     typeof sourceRef !== 'undefined'
       ? (elements: Array<ExtensionRegistration>) => {
