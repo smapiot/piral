@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import * as hooks from '../hooks';
+import { describe, it, expect, vitest } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import { PiralRoutes } from './PiralRoutes';
@@ -12,7 +16,7 @@ const mountWithRouter = (node, url = '/') =>
     </MemoryRouter>,
   );
 
-jest.mock('../hooks');
+vitest.mock('../hooks');
 
 (hooks as any).useGlobalState = (cb) =>
   cb({

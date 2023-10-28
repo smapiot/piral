@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { createListener } from 'piral-base';
 import { registerExtension, registerPage, unregisterExtension, unregisterPage } from './components';
 import { createActions } from '../state';

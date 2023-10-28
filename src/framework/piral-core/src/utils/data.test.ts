@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect } from 'vitest';
 import { getDataExpiration, createDataOptions, createDataView } from './data';
 import { Dict, SharedDataItem } from '../types';
 
@@ -69,6 +73,7 @@ describe('Data Module', () => {
   it('createDataView returns undefined if not supported', () => {
     const proxyName = 'Proxy';
     const Proxy = window[proxyName];
+    // @ts-ignore
     window[proxyName] = undefined;
     const view = createDataView({});
     window[proxyName] = Proxy;

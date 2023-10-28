@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { Mediator } from './Mediator';
 import { StateContext } from '../state';
@@ -15,9 +19,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       dispatch(update) {
         state.setState(update(state.getState()));
@@ -44,7 +48,7 @@ function createMockContainer() {
 describe('Component Mediator', () => {
   it('Create mediator component.', () => {
     const options = {
-      createApi: jest.fn(),
+      createApi: vitest.fn(),
       fetchPilets: () => {
         return new Promise<Array<PiletMetadata>>((resolve) => resolve([]));
       },

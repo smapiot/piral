@@ -1,7 +1,8 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { createElement, FC } from 'react';
 import { createCoreApi } from './core';
 
-jest.mock('../hooks');
+vitest.mock('../hooks');
 
 const StubComponent: FC = (props) => createElement('div', props);
 StubComponent.displayName = 'StubComponent';
@@ -17,9 +18,9 @@ const moduleMetadata = {
 function createMockContainer() {
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       converters: {},
       readState() {
         return undefined;
@@ -37,8 +38,8 @@ function createApi(container) {
 describe('Core API Module', () => {
   it('createCoreApi can register and unregister a page', () => {
     const container = createMockContainer();
-    container.context.registerPage = jest.fn();
-    container.context.unregisterPage = jest.fn();
+    container.context.registerPage = vitest.fn();
+    container.context.unregisterPage = vitest.fn();
     const api = createApi(container);
     api.registerPage('/route', StubComponent);
     expect(container.context.registerPage).toHaveBeenCalledTimes(1);
@@ -50,8 +51,8 @@ describe('Core API Module', () => {
 
   it('createCoreApi can dispose a registered page', () => {
     const container = createMockContainer();
-    container.context.registerPage = jest.fn();
-    container.context.unregisterPage = jest.fn();
+    container.context.registerPage = vitest.fn();
+    container.context.unregisterPage = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerPage('/route', StubComponent);
     expect(container.context.registerPage).toHaveBeenCalledTimes(1);
@@ -63,8 +64,8 @@ describe('Core API Module', () => {
 
   it('createCoreApi can register and unregister an extension', () => {
     const container = createMockContainer();
-    container.context.registerExtension = jest.fn();
-    container.context.unregisterExtension = jest.fn();
+    container.context.registerExtension = vitest.fn();
+    container.context.unregisterExtension = vitest.fn();
     const api = createApi(container);
     api.registerExtension('ext', StubComponent);
     expect(container.context.registerExtension).toHaveBeenCalledTimes(1);
@@ -78,8 +79,8 @@ describe('Core API Module', () => {
 
   it('createCoreApi can dispose an registered extension', () => {
     const container = createMockContainer();
-    container.context.registerExtension = jest.fn();
-    container.context.unregisterExtension = jest.fn();
+    container.context.registerExtension = vitest.fn();
+    container.context.unregisterExtension = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerExtension('ext', StubComponent);
     expect(container.context.registerExtension).toHaveBeenCalledTimes(1);
@@ -93,7 +94,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi read data by its name', () => {
     const container = createMockContainer();
-    container.context.readDataValue = jest.fn((name) => name);
+    container.context.readDataValue = vitest.fn((name) => name);
     const api = createApi(container);
     const result = api.getData('foo');
     expect(result).toBe('foo');
@@ -102,7 +103,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi write data without options shall pass, but memory should not emit events', () => {
     const container = createMockContainer();
-    container.context.tryWriteDataItem = jest.fn(() => true);
+    container.context.tryWriteDataItem = vitest.fn(() => true);
     const api = createApi(container);
     api.setData('foo', 5);
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
@@ -111,7 +112,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi write data with empty options shall pass, but memory should not emit events', () => {
     const container = createMockContainer();
-    container.context.tryWriteDataItem = jest.fn(() => true);
+    container.context.tryWriteDataItem = vitest.fn(() => true);
     const api = createApi(container);
     api.setData('foo', 5, {});
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
@@ -120,7 +121,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi write data by the simple option should not pass, never emitting events', () => {
     const container = createMockContainer();
-    container.context.tryWriteDataItem = jest.fn(() => false);
+    container.context.tryWriteDataItem = vitest.fn(() => false);
     const api = createApi(container);
     api.setData('foo', 5, 'remote');
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
@@ -129,7 +130,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi write data by the simple option shall pass with remote', () => {
     const container = createMockContainer();
-    container.context.tryWriteDataItem = jest.fn(() => true);
+    container.context.tryWriteDataItem = vitest.fn(() => true);
     const api = createApi(container);
     api.setData('foo', 5, 'remote');
     expect(container.context.tryWriteDataItem).toHaveBeenCalled();
@@ -137,7 +138,7 @@ describe('Core API Module', () => {
 
   it('createCoreApi write data by the object options shall pass with remote', () => {
     const container = createMockContainer();
-    container.context.tryWriteDataItem = jest.fn(() => true);
+    container.context.tryWriteDataItem = vitest.fn(() => true);
     const api = createApi(container);
     api.setData('foo', 15, {
       expires: 10,

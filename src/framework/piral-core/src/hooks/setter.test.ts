@@ -1,10 +1,14 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { useSetter } from './setter';
 
 describe('UseSetter Hook Module', () => {
   it('UseSetter', async () => {
-    const cb = jest.fn();
+    const cb = vitest.fn();
 
     const MyComponent = () => {
       useSetter(cb);

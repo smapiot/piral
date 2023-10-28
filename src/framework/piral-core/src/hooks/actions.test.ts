@@ -1,10 +1,11 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { useActions } from './actions';
 
-const fn = jest.fn();
+const fn = vitest.fn();
 
-jest.mock('react', () => {
+vitest.mock('react', () => {
   return {
-    createContext: jest.fn(),
+    createContext: vitest.fn(),
     useContext: () => ({ foo: fn, bar: fn, state: {} }),
   };
 });

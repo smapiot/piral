@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createInstance } from './createInstance';
 import { standardStrategy, blazingStrategy } from 'piral-base';
 

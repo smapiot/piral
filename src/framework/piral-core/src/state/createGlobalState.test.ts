@@ -1,9 +1,13 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { createGlobalState } from './createGlobalState';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
 describe('Create Global State Module', () => {
-  window.matchMedia = jest.fn((q) => ({ matches: false })) as any;
+  window.matchMedia = vitest.fn((q) => ({ matches: false })) as any;
 
   it('global state works with language as empty string', () => {
     const globalState = createGlobalState({});

@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { ExtensionSlot } from './ExtensionSlot';
 
-jest.mock('../hooks/globalState', () => ({
+vitest.mock('../hooks/globalState', () => ({
   useGlobalState: (select: any) => select(state),
   useGlobalStateContext: () => ({
     converters: {
@@ -21,7 +22,7 @@ jest.mock('../hooks/globalState', () => ({
     readState() {
       return '/';
     },
-    destroyPortal: jest.fn(),
+    destroyPortal: vitest.fn(),
   }),
 }));
 

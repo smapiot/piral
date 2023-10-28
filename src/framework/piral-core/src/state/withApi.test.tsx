@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { withApi } from './withApi';
 import { StateContext } from '../state';
@@ -24,9 +28,9 @@ function createMockContainer() {
       navigation: {
         router: undefined,
       },
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       destroyPortal: (id) => {},
     } as any,
@@ -51,9 +55,9 @@ function createMockContainerWithNoWrappers() {
           },
         });
       },
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       destroyPortal: (id) => {},
     } as any,
@@ -89,7 +93,7 @@ describe('withApi Module', () => {
   });
 
   it('is protected against a component crash', () => {
-    console.error = jest.fn();
+    console.error = vitest.fn();
     const api: any = {
       meta: {
         name: 'foo',
@@ -106,7 +110,7 @@ describe('withApi Module', () => {
   });
 
   it('reports to console.error when an error is hit', () => {
-    console.error = jest.fn();
+    console.error = vitest.fn();
     const api: any = {
       meta: {
         name: 'my pilet',

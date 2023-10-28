@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { Piral } from './Piral';
 import { createInstance } from './createInstance';

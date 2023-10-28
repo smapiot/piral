@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { storage, cookie } from './storage';
 
 function mockLocalStorage<T>(mockObj: T) {
@@ -17,7 +21,7 @@ function mockCookieStorage(initialValue = '') {
 describe('Storage Module', () => {
   it('storage gets item from local storage', () => {
     const localStorage = mockLocalStorage({
-      getItem: jest.fn(() => 'bar'),
+      getItem: vitest.fn(() => 'bar'),
     });
     const result = storage.getItem('foo');
     expect(result).toBe('bar');
@@ -26,7 +30,7 @@ describe('Storage Module', () => {
 
   it('storage sets item to local storage', () => {
     const localStorage = mockLocalStorage({
-      setItem: jest.fn(),
+      setItem: vitest.fn(),
     });
     storage.setItem('foo', 'bar');
     expect(localStorage.setItem).toHaveBeenCalledWith('foo', 'bar');
@@ -34,7 +38,7 @@ describe('Storage Module', () => {
 
   it('storage removes item at local storage', () => {
     const localStorage = mockLocalStorage({
-      removeItem: jest.fn(),
+      removeItem: vitest.fn(),
     });
     storage.removeItem('foo');
     expect(localStorage.removeItem).toHaveBeenCalledWith('foo');
@@ -66,8 +70,9 @@ describe('Storage Module', () => {
 
   it('cookie sets item to cookie without domain', () => {
     const oldLocation = window.location;
+    //@ts-ignore
     delete window.location;
-
+    //@ts-ignore
     window.location = {
       host: '',
     };

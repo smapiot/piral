@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { ForeignComponentContainer } from './ForeignComponentContainer';
 
@@ -8,7 +12,7 @@ function resolveAfter(time = 5) {
 
 describe('ForeignComponentContainer component', () => {
   it('mounts an HTML component', async () => {
-    const mount = jest.fn();
+    const mount = vitest.fn();
     const component = { mount };
     const container = render(
       <ForeignComponentContainer $component={component} $context={undefined} $portalId="foo" innerProps={{}} />,
@@ -19,8 +23,8 @@ describe('ForeignComponentContainer component', () => {
   });
 
   it('unmounts an HTML component', async () => {
-    const mount = jest.fn();
-    const unmount = jest.fn();
+    const mount = vitest.fn();
+    const unmount = vitest.fn();
     const component = { mount, unmount };
     const container = render(
       <ForeignComponentContainer $component={component} $context={undefined} $portalId="foo" innerProps={{}} />,
@@ -33,8 +37,8 @@ describe('ForeignComponentContainer component', () => {
   });
 
   it('updates an HTML component', async () => {
-    const mount = jest.fn();
-    const update = jest.fn();
+    const mount = vitest.fn();
+    const update = vitest.fn();
     const component = { mount, update };
     const container = render(
       <ForeignComponentContainer
@@ -68,9 +72,9 @@ describe('ForeignComponentContainer component', () => {
         removeEventListener() {},
       };
     };
-    const mount = jest.fn();
-    const update = jest.fn();
-    const unmount = jest.fn();
+    const mount = vitest.fn();
+    const update = vitest.fn();
+    const unmount = vitest.fn();
     const component = { mount, update, unmount };
     const container = render(
       <ForeignComponentContainer

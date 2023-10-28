@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import * as hooks from '../hooks';
 import * as routes from './PiralRoutes';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { PiralView } from './PiralView';
 
@@ -19,8 +23,8 @@ StubRouter.displayName = 'StubRouter';
 const StubLayout: React.FC<any> = ({ children }) => <div role="layout">{children}</div>;
 StubLayout.displayName = 'StubLayout';
 
-jest.mock('../hooks');
-jest.mock('./PiralRoutes');
+vitest.mock('../hooks');
+vitest.mock('./PiralRoutes');
 
 const state = {
   app: {

@@ -34,7 +34,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --project tsconfig.json",
     "prettify": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "cleanup": "lerna run cleanup",
-    "test": "jest --forceExit --runInBand",
+    "test": "vitest run",
     "prepublish": "yarn build",
     "release": "lerna publish",
     "docgen:codes": "node tools/generate-message-docs.js",
@@ -51,7 +51,6 @@
   },
   "devDependencies": {
     "@jsenv/file-size-impact": "12.1.1",
-    "@types/enzyme": "^3.1.18",
     "caniuse-lite": "^1.0.30001341",
     "esbuild": "^0.13.6",
     "lerna": "^6.0.1",
@@ -61,7 +60,8 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "0.25.2",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "vitest": "^0.34.6"
   },
   "resolutions": {
     "ansi-html": "0.0.9",

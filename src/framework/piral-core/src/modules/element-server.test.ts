@@ -1,8 +1,9 @@
 /**
- * @jest-environment node
+ * @vitest-environment node
  */
 
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { createListener } from 'piral-base';
 import { createActions } from '../state';
 import { renderElement } from './element';
