@@ -1,8 +1,27 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
 import { describe, it, expect, vitest } from 'vitest';
 import { createPiletOptions, PiletOptionsConfig } from './helpers';
 import { globalDependencies } from './modules';
 import { PiletMetadata } from 'piral-base';
+
+vitest.mock('../app.codegen', () => ({
+  createNavigation: vitest.fn(() => ({
+    publicPath: '/',
+  })),
+  fillDependencies: vitest.fn(),
+  integrateDebugger: vitest.fn(),
+  integrateEmulator: vitest.fn(),
+  publicPath: '/',
+  useRouteFilter(routes) {
+    return routes;
+  },
+  createDefaultState() {
+    return {};
+  },
+}));
 
 function createMockApi(meta: PiletMetadata) {
   return {

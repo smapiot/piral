@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { callfunc, getBasePath, isfunc, promisify } from './helpers';
 
 describe('Helpers utils module', () => {
@@ -6,7 +7,7 @@ describe('Helpers utils module', () => {
   });
 
   it('callfunc works with a func given', () => {
-    const fn = jest.fn();
+    const fn = vitest.fn();
     callfunc(fn, 'a', 'b');
     expect(fn).toBeCalledWith('a', 'b');
   });
@@ -29,7 +30,7 @@ describe('Helpers utils module', () => {
   it('isfunc properly evaluates if the argument is a function', () => {
     expect(isfunc(undefined)).toBe(false);
     expect(isfunc(true)).toBe(false);
-    expect(isfunc(jest.fn())).toBe(true);
+    expect(isfunc(vitest.fn())).toBe(true);
   });
 
   it('promisify turns something into a promise', () => {

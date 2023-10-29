@@ -1,19 +1,20 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { loadFrom } from './load';
 
-jest.mock('./dependency', () => ({
-  includeScriptDependency: jest.fn(() => Promise.resolve()),
-  createEvaluatedPilet: jest.requireActual('./dependency').createEvaluatedPilet,
+vitest.mock('./dependency', async () => ({
+  includeScriptDependency: vitest.fn(() => Promise.resolve()),
+  createEvaluatedPilet: (await vitest.importActual('./dependency') as any).createEvaluatedPilet,
   emptyApp: {
-    setup: jest.fn(),
+    setup: vitest.fn(),
   },
 }));
 
 describe('Load utility module', () => {
   it('loadFrom without dependencies directly uses loader function', async () => {
-    const loader: any = jest.fn(() => ({ a: 'foo' }));
+    const loader: any = vitest.fn(() => ({ a: 'foo' }));
     const meta: any = { b: 'bar', link: 'http://foo.com/foo/bar/example.js' };
     const pilet = await loadFrom(meta, loader);
     expect(pilet).toEqual({
@@ -26,7 +27,7 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom with failing loader function', async () => {
-    const loader: any = jest.fn(() => Promise.reject('errored'));
+    const loader: any = vitest.fn(() => Promise.reject('errored'));
     const meta: any = { b: 'bar', link: 'http://foo.com/example.js' };
     const pilet: any = await loadFrom(meta, loader);
     expect(pilet).toEqual({
@@ -39,8 +40,8 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom without dependencies works with promises', async () => {
-    const setup = jest.fn();
-    const loader: any = jest.fn(() => Promise.resolve({ setup }));
+    const setup = vitest.fn();
+    const loader: any = vitest.fn(() => Promise.resolve({ setup }));
     const meta: any = { a: 'bar', link: '' };
     const pilet: any = await loadFrom(meta, loader);
     expect(pilet).toEqual({
@@ -53,7 +54,7 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom with empty dependencies works', async () => {
-    const loader: any = jest.fn(() =>({ a: 'foo' }));
+    const loader: any = vitest.fn(() =>({ a: 'foo' }));
     const meta: any = { b: 'bar', link: '', dependencies: {} };
     const pilet = await loadFrom(meta, loader);
     expect(pilet).toEqual({
@@ -66,7 +67,7 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom with non-empty dependencies works', async () => {
-    const loader: any = jest.fn(() =>({ a: 'foo' }));
+    const loader: any = vitest.fn(() =>({ a: 'foo' }));
     const dependencies = {
       a: 'foo.js',
       b: 'bar.js',

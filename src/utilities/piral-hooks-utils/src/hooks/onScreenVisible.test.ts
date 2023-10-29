@@ -1,9 +1,13 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { useOnScreenVisible } from './onScreenVisible';
 
-jest.mock('react');
+vitest.mock('react');
 
-(React as any).useState = (result) => [result, jest.fn()];
+(React as any).useState = (result) => [result, vitest.fn()];
 
 function mockIntersectionObserver() {
   const instances = [];
@@ -12,9 +16,9 @@ function mockIntersectionObserver() {
       instances.push(this);
       this.init(cb, margin);
     }
-    init = jest.fn();
-    observe = jest.fn();
-    unobserve = jest.fn();
+    init = vitest.fn();
+    observe = vitest.fn();
+    unobserve = vitest.fn();
   };
   return instances;
 }
@@ -26,7 +30,7 @@ describe('OnScreenVisible Module', () => {
   });
 
   it('creates one intersection observer with effect', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     const instances = mockIntersectionObserver();
     useOnScreenVisible({ current: undefined });
@@ -36,7 +40,7 @@ describe('OnScreenVisible Module', () => {
   });
 
   it('does not observe if no ref given', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     const instances = mockIntersectionObserver();
     useOnScreenVisible({ current: undefined });
@@ -46,7 +50,7 @@ describe('OnScreenVisible Module', () => {
   });
 
   it('does observe if valid ref given', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     const instances = mockIntersectionObserver();
     useOnScreenVisible({ current: {} as any });
@@ -56,7 +60,7 @@ describe('OnScreenVisible Module', () => {
   });
 
   it('calls setIntersecting if something changes', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     const instances = mockIntersectionObserver();
     useOnScreenVisible({ current: {} as any });

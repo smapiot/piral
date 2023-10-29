@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { emptyApp } from './empty';
 import {
   checkPiletApp,
@@ -18,7 +22,7 @@ describe('dependency utility module', () => {
   });
 
   it('checkPiletApp returns app if it contains a setup function', () => {
-    const app = { setup: jest.fn() };
+    const app = { setup: vitest.fn() };
     const result = checkPiletApp('foo', app);
     expect(result).toBe(app);
   });
@@ -43,21 +47,21 @@ describe('dependency utility module', () => {
   });
 
   it('checkPiletAppAsync returns app if it contains a setup function', async () => {
-    const app = { setup: jest.fn() };
+    const app = { setup: vitest.fn() };
     const result = await checkPiletAppAsync('foo', app);
     expect(result).toBe(app);
   });
 
   it('checkPiletAppAsync returns loading app if it contains a setup function', async () => {
-    const app = { setup: jest.fn() };
+    const app = { setup: vitest.fn() };
     const result = await checkPiletAppAsync('foo', Promise.resolve(app));
     expect(result).toBe(app);
   });
 
   it('includeScriptDependency attaches a script to the DOM that resolves', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScriptDependency('foo');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result).toBe(mockScript);
@@ -65,8 +69,8 @@ describe('dependency utility module', () => {
 
   it('includeScriptDependency attaches a script to the DOM that resolves with integrity', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScriptDependency('foo', 'sha512-...');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result).toEqual({
@@ -82,8 +86,8 @@ describe('dependency utility module', () => {
 
   it('includeScriptDependency attaches a script to the DOM that resolves with integrity and explicit cross-origin', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScriptDependency('foo', 'sha512-...', 'bar');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result).toEqual({
@@ -99,8 +103,8 @@ describe('dependency utility module', () => {
 
   it('includeScriptDependency attaches a script to the DOM that resolves with cross-origin', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScriptDependency('foo', undefined, 'bar');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result).toEqual({
@@ -115,8 +119,8 @@ describe('dependency utility module', () => {
 
   it('includeScriptDependency attaches a script to the DOM which fails', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onerror('errored'));
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onerror('errored'));
 
     const action = () => includeScriptDependency('foo');
     await expect(action()).rejects.toMatch('errored');
@@ -125,8 +129,8 @@ describe('dependency utility module', () => {
 
   it('includeScript works like includeScriptDependency but also checks the pilet app', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScript('abc', 'foo');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result).toBe(undefined);
@@ -135,11 +139,11 @@ describe('dependency utility module', () => {
   it('includeScript works like includeScriptDependency but also checks the pilet app', async () => {
     const mockScript: any = {
       app: {
-        setup: jest.fn(),
+        setup: vitest.fn(),
       },
     };
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onload());
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onload());
     const result = await includeScript('abc', 'foo');
     expect(document.body.appendChild).toHaveBeenCalledWith(mockScript);
     expect(result.setup).toBe(mockScript.app.setup);
@@ -147,8 +151,8 @@ describe('dependency utility module', () => {
 
   it('includeScript attaches a script to the DOM which fails', async () => {
     const mockScript: any = {};
-    document.createElement = jest.fn(() => mockScript);
-    document.body.appendChild = jest.fn(() => mockScript.onerror('errored'));
+    document.createElement = vitest.fn(() => mockScript);
+    document.body.appendChild = vitest.fn(() => mockScript.onerror('errored'));
 
     await expect(includeScript('abc', 'foo')).rejects.toEqual('errored');
   });
@@ -174,7 +178,7 @@ describe('dependency utility module', () => {
 
   it('createEvaluatedPilet combines empty meta and valid app', () => {
     const meta: any = {};
-    const setup = jest.fn();
+    const setup = vitest.fn();
     const result = createEvaluatedPilet(meta, { setup });
     expect(result).toEqual({
       basePath: undefined,
@@ -183,7 +187,7 @@ describe('dependency utility module', () => {
   });
 
   it('checkCreateApi does work with a provided function', () => {
-    const result = checkCreateApi(jest.fn() as any);
+    const result = checkCreateApi(vitest.fn() as any);
     expect(result).toBe(true);
   });
 

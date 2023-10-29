@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
@@ -26,7 +29,14 @@ vitest.mock('../hooks/globalState', () => ({
   }),
 }));
 
-(React as any).useMemo = (cb) => cb();
+vitest.mock('react', async () => ({
+  ...(await vitest.importActual('react') as any),
+  useMemo(cb) {
+    return cb();
+  },
+}));
+
+// (React as any).useMemo = (cb) => cb();
 
 const StubComponent1: React.FC<any> = (props) => <div role="stub1" children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';

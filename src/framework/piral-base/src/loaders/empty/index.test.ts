@@ -1,6 +1,7 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect } from 'vitest';
 import loader from './index';
 
 describe('empty loader module', () => {

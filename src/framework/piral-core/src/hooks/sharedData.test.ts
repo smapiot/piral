@@ -1,14 +1,16 @@
-import { describe, it, expect } from 'vitest';
-import * as globalState from './globalState';
+import { describe, it, expect, vitest } from 'vitest';
 import { useSharedData } from './sharedData';
 
-(globalState as any).useGlobalState = (select: any) =>
-  select({
-    data: {
-      a: 'foo',
-      b: 'bar',
-    },
-  });
+vitest.mock('./globalState', () => ({
+  useGlobalState(select) {
+    return select({
+      data: {
+        a: 'foo',
+        b: 'bar',
+      },
+    });
+  },
+}));
 
 describe('SharedData Module', () => {
   it('selects the corresponding value', () => {

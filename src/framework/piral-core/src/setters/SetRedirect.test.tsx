@@ -8,6 +8,12 @@ import { render } from '@testing-library/react';
 import { SetRedirect } from './SetRedirect';
 import { StateContext } from '../state';
 
+vitest.mock('../../app.codegen', () => ({
+  createRedirect(to) {
+    return to;
+  },
+}));
+
 function createMockContainer() {
   const state = create(() => ({
     routes: {},

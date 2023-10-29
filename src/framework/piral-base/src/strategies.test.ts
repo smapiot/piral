@@ -1,6 +1,8 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
+
 import {
   asyncStrategy,
   blazingStrategy,
@@ -13,20 +15,20 @@ import { PiletMetadata, LoadPiletsOptions, Pilet } from './types';
 function createMockApi(meta: PiletMetadata) {
   return {
     meta,
-    emit: jest.fn(),
-    off: jest.fn(),
-    on: jest.fn(),
+    emit: vitest.fn(),
+    off: vitest.fn(),
+    on: vitest.fn(),
   };
 }
 
 describe('Piral-Base strategies module', () => {
   it('syncStrategy evaluates all in one sweep', async () => {
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     await syncStrategy(
       {
         createApi: createMockApi,
-        fetchPilets: jest.fn(),
+        fetchPilets: vitest.fn(),
         pilets: [
           {
             setup: setupMock,
@@ -52,12 +54,12 @@ describe('Piral-Base strategies module', () => {
   });
 
   it('syncStrategy evaluates also with no modules', async () => {
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     await syncStrategy(
       {
         createApi: createMockApi,
-        fetchPilets: jest.fn(),
+        fetchPilets: vitest.fn(),
         pilets: [],
       },
       callbackMock,
@@ -70,12 +72,12 @@ describe('Piral-Base strategies module', () => {
   });
 
   it('syncStrategy reports error if failed due to invalid arguments', async () => {
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     await syncStrategy(
       {
         createApi: createMockApi,
-        fetchPilets: jest.fn(),
+        fetchPilets: vitest.fn(),
         pilets: true as any,
       },
       callbackMock,
@@ -89,8 +91,8 @@ describe('Piral-Base strategies module', () => {
 
   it('blazingStrategy evaluates with predefined pilets', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets: Array<Pilet> = [
       {
         setup: setupMock,
@@ -108,9 +110,9 @@ describe('Piral-Base strategies module', () => {
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
       pilets: pilets,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      dependencies: jest.fn(),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
+      loadPilet: vitest.fn((m) => Promise.resolve(m as any)),
+      dependencies: vitest.fn(),
     };
 
     // Act
@@ -126,8 +128,8 @@ describe('Piral-Base strategies module', () => {
 
   it('blazingStrategy evaluates all in one sweep', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets: Array<Pilet> = [
       {
         setup: setupMock,
@@ -144,9 +146,9 @@ describe('Piral-Base strategies module', () => {
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      dependencies: jest.fn(),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
+      loadPilet: vitest.fn((m) => Promise.resolve(m as any)),
+      dependencies: vitest.fn(),
     };
 
     // Act
@@ -164,14 +166,14 @@ describe('Piral-Base strategies module', () => {
 
   it('blazingStrategy evaluates also with no modules', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets: Array<Pilet> = [];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
-      loadPilet: jest.fn((m) => Promise.resolve(m as any)),
-      dependencies: jest.fn(),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
+      loadPilet: vitest.fn((m) => Promise.resolve(m as any)),
+      dependencies: vitest.fn(),
       pilets: pilets,
     };
 
@@ -185,12 +187,12 @@ describe('Piral-Base strategies module', () => {
 
   it('blazingStrategy reports error if failed due to invalid arguments', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets = true as any;
     const invalidLoadPiletOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
       pilets: pilets,
     };
 
@@ -204,8 +206,8 @@ describe('Piral-Base strategies module', () => {
 
   it('standardStrategy evaluates all in one sweep', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets: Array<Pilet> = [
       {
         setup: setupMock,
@@ -222,7 +224,7 @@ describe('Piral-Base strategies module', () => {
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
       pilets: pilets,
     };
 
@@ -238,10 +240,10 @@ describe('Piral-Base strategies module', () => {
 
   it('standardStrategy evaluates also with no modules', async () => {
     // Arrange
-    const callbackMock = jest.fn();
+    const callbackMock = vitest.fn();
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve([])),
+      fetchPilets: vitest.fn(() => Promise.resolve([])),
       pilets: [],
     };
 
@@ -256,12 +258,12 @@ describe('Piral-Base strategies module', () => {
 
   it('standardStrategy reports error if failed due to invalid arguments', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets = true as any;
     const invalidLoadPiletOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
       pilets: pilets,
     };
 
@@ -275,8 +277,8 @@ describe('Piral-Base strategies module', () => {
 
   it('progressiveStrategy evaluates synchronously', async () => {
     // Arrange
-    const setupMock = jest.fn();
-    const callbackMock = jest.fn();
+    const setupMock = vitest.fn();
+    const callbackMock = vitest.fn();
     const pilets: Array<Pilet> = [
       {
         setup: setupMock,
@@ -293,7 +295,7 @@ describe('Piral-Base strategies module', () => {
     ];
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve(pilets)),
+      fetchPilets: vitest.fn(() => Promise.resolve(pilets)),
       pilets: pilets,
     };
 
@@ -310,10 +312,10 @@ describe('Piral-Base strategies module', () => {
 
   it('asyncStrategy evaluates also with no modules', async () => {
     // Arrange
-    const callbackMock = jest.fn();
+    const callbackMock = vitest.fn();
     const loadingOptions: LoadPiletsOptions = {
       createApi: createMockApi,
-      fetchPilets: jest.fn(() => Promise.resolve([])),
+      fetchPilets: vitest.fn(() => Promise.resolve([])),
       pilets: [],
     };
 

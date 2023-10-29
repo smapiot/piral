@@ -1,12 +1,16 @@
+/**
+ * @vitest-environment jsdom
+ */
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { prepareCleanup, runCleanup } from './cleanup';
 
 describe('Cleaning up Modules', () => {
   it('cleans up stylesheet if available', () => {
-    const remove = jest.fn();
-    document.querySelector = jest.fn(() => ({ remove }));
+    const remove = vitest.fn();
+    document.querySelector = vitest.fn(() => ({ remove }));
     runCleanup(
       {
         name: 'my-pilet',
@@ -19,7 +23,7 @@ describe('Cleaning up Modules', () => {
   });
 
   it('discards stylesheet if not available', () => {
-    document.querySelector = jest.fn(() => null);
+    document.querySelector = vitest.fn(() => null);
     runCleanup(
       {
         name: 'my-pilet',
@@ -31,8 +35,8 @@ describe('Cleaning up Modules', () => {
   });
 
   it('runs teardown if available', () => {
-    document.querySelector = jest.fn(() => null);
-    const teardown = jest.fn();
+    document.querySelector = vitest.fn(() => null);
+    const teardown = vitest.fn();
     runCleanup(
       {
         name: 'my-pilet',
@@ -45,8 +49,8 @@ describe('Cleaning up Modules', () => {
   });
 
   it('runs cleanupPilet hook if available', () => {
-    document.querySelector = jest.fn(() => null);
-    const cleanupPilet = jest.fn();
+    document.querySelector = vitest.fn(() => null);
+    const cleanupPilet = vitest.fn();
     runCleanup(
       {
         name: 'my-pilet',
@@ -60,7 +64,7 @@ describe('Cleaning up Modules', () => {
   });
 
   it('deletes require reference if available', () => {
-    document.querySelector = jest.fn(() => null);
+    document.querySelector = vitest.fn(() => null);
     const pilet: any = {
       name: 'my-pilet',
       requireRef: 'abc',
@@ -76,23 +80,23 @@ describe('Cleaning up Modules', () => {
       requireRef: 'abc',
     };
     const api: any = {
-      on: jest.fn(),
-      off: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
     };
     prepareCleanup(pilet, api, {});
     expect(api.on).toBeCalledWith('unload-pilet', expect.anything());
   });
 
   it('prepared cleanup function has handler that is sensitive to the name', () => {
-    document.querySelector = jest.fn(() => null);
+    document.querySelector = vitest.fn(() => null);
     const pilet: any = {
       name: 'my-pilet',
       requireRef: 'abc',
     };
     let handler = undefined;
     const api: any = {
-      on: jest.fn((evtName, cb) => (handler = cb)),
-      off: jest.fn(),
+      on: vitest.fn((evtName, cb) => (handler = cb)),
+      off: vitest.fn(),
     };
     prepareCleanup(pilet, api, {});
     expect(api.on).toBeCalledWith('unload-pilet', handler);

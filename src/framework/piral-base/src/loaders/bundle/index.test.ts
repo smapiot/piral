@@ -1,14 +1,15 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import loader from './index';
 
-jest.mock('./dependency', () => ({
-  includeBundle: jest.fn((meta) =>
+vitest.mock('./dependency', () => ({
+  includeBundle: vitest.fn((meta) =>
     meta.name === 'fail'
       ? Promise.reject('errored')
       : Promise.resolve({
-          setup: jest.fn(),
+          setup: vitest.fn(),
         }),
   ),
 }));

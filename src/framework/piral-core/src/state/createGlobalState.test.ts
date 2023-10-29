@@ -6,6 +6,28 @@ import { createGlobalState } from './createGlobalState';
 
 process.env.PIRAL_PUBLIC_PATH = '/';
 
+vitest.mock('../../app.codegen', () => ({
+  createDefaultState() {
+    return {
+      app: {
+        error: undefined,
+        loading: typeof window !== 'undefined',
+      },
+      components: {},
+      errorComponents: {},
+      registry: {
+        extensions: {},
+        pages: {},
+        wrappers: {},
+      },
+      routes: {},
+      data: {},
+      portals: {},
+      modules: [],
+    };
+  },
+}));
+
 describe('Create Global State Module', () => {
   window.matchMedia = vitest.fn((q) => ({ matches: false })) as any;
 
@@ -13,21 +35,13 @@ describe('Create Global State Module', () => {
     const globalState = createGlobalState({});
     const tmp = globalState.getState();
 
-    console.log(tmp);
-
     expect(tmp).toEqual({
       app: {
         loading: true,
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       routes: {},
       registry: {
         extensions: {},
@@ -48,13 +62,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       routes: {},
       registry: {
         extensions: {},
@@ -79,13 +87,7 @@ describe('Create Global State Module', () => {
         loading: true,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       routes,
       registry: {
         extensions: {},
@@ -106,13 +108,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       registry: {
         extensions: {},
         pages: {},
@@ -135,13 +131,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       registry: {
         extensions: {},
         pages: {},
@@ -164,13 +154,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       registry: {
         extensions: {},
         pages: {},
@@ -197,13 +181,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       registry: {
         extensions: {},
         pages: {},
@@ -231,13 +209,7 @@ describe('Create Global State Module', () => {
         error: undefined,
       },
       errorComponents: {},
-      components: {
-        ErrorInfo: expect.anything(),
-        LoadingIndicator: expect.anything(),
-        Router: expect.anything(),
-        Layout: expect.anything(),
-        RouteSwitch: expect.anything(),
-      },
+      components: {},
       registry: {
         extensions: {},
         pages: {},

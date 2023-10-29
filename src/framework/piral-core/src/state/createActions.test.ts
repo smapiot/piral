@@ -15,7 +15,9 @@ vitest.mock('../actions', () => ({
 }));
 
 vitest.mock('../../app.codegen', () => ({
-  createNavigation: vitest.fn(),
+  createNavigation: vitest.fn(publicPath => ({
+    publicPath,
+  })),
   publicPath: '/',
 }));
 

@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { getAppInstance } from './app';
 
 describe('Piral app module', () => {

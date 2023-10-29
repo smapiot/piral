@@ -1,11 +1,12 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { loadPilets, loadMetadata } from './load';
 
 describe('Loading Modules', () => {
   it('Fetching from empty source without any other option works', async () => {
-    const fetcher = jest.fn(() => Promise.resolve([]));
+    const fetcher = vitest.fn(() => Promise.resolve([]));
     const result = await loadPilets(fetcher, (m) => Promise.resolve<any>(m));
     expect(result).toHaveLength(0);
     expect(fetcher).toHaveBeenCalledTimes(1);
@@ -21,7 +22,7 @@ describe('Loading Modules', () => {
         hash: '1',
       },
     ];
-    const fetcher = jest.fn(() => Promise.resolve(apiResponse));
+    const fetcher = vitest.fn(() => Promise.resolve(apiResponse));
     const result = await loadPilets(fetcher as any, (m) => Promise.resolve<any>(m));
     expect(result).toHaveLength(1);
     expect(fetcher).toHaveBeenCalledTimes(1);
@@ -38,7 +39,7 @@ describe('Loading Modules', () => {
   });
 
   it('Fetching with non-array source yields error', async () => {
-    const fetcher = jest.fn(() => Promise.resolve({} as any));
+    const fetcher = vitest.fn(() => Promise.resolve({} as any));
     await expect(loadPilets(fetcher, (m) => Promise.resolve<any>(m))).rejects.toThrowError(
       'The fetched pilets metadata is not an array.',
     );

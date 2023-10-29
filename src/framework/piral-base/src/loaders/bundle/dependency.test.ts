@@ -1,11 +1,12 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { includeBundle } from './dependency';
 
-jest.mock('../../utils', () => ({
-  includeScript: jest.fn(() => ({
-    setup: jest.fn(),
+vitest.mock('../../utils', () => ({
+  includeScript: vitest.fn(() => ({
+    setup: vitest.fn(),
   })),
 }));
 

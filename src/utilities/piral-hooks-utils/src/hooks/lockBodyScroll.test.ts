@@ -1,11 +1,15 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { useLockBodyScroll } from './lockBodyScroll';
 
-jest.mock('react');
+vitest.mock('react');
 
 describe('LockBodyScroll Hook Module', () => {
   it('sets the body overflow to hidden on being initiated', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useLayoutEffect = usedEffect;
     useLockBodyScroll();
     expect(usedEffect).toHaveBeenCalled();
@@ -14,7 +18,7 @@ describe('LockBodyScroll Hook Module', () => {
   });
 
   it('sets the body overflow to visible on cleanup', () => {
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     (React as any).useLayoutEffect = usedEffect;
     useLockBodyScroll();
     const cleanup = usedEffect.mock.calls[0][0]();

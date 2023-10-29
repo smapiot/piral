@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import create from 'zustand';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { createElement } from 'react';
 import { createListener, Pilet } from 'piral-base';
@@ -17,6 +17,14 @@ import {
 } from './app';
 import { createActions } from '../state';
 import { RootListener } from '../RootListener';
+
+vitest.mock('../../app.codegen', () => ({
+  createNavigation: vitest.fn(publicPath => ({
+    publicPath,
+  })),
+  fillDependencies: vitest.fn(),
+  publicPath: '/',
+}));
 
 const pilet: Pilet = {
   name: 'my-pilet',

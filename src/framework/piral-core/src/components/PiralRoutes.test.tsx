@@ -18,6 +18,12 @@ const mountWithRouter = (node, url = '/') =>
 
 vitest.mock('../hooks');
 
+vitest.mock('../../app.codegen', () => ({
+  useRouteFilter(routes) {
+    return routes;
+  },
+}));
+
 (hooks as any).useGlobalState = (cb) =>
   cb({
     routes: {
