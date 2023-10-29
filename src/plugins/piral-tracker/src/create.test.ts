@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createElement, FC } from 'react';
 import { createTrackerApi } from './create';
 
@@ -13,9 +17,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       converters: {},
       readState() {
@@ -46,8 +50,8 @@ const moduleMetadata = {
 describe('Create Tracker API Extensions', () => {
   it('createTrackerApi can register and unregister a tracker', () => {
     const container = createMockContainer();
-    container.context.registerTracker = jest.fn();
-    container.context.unregisterTracker = jest.fn();
+    container.context.registerTracker = vitest.fn();
+    container.context.unregisterTracker = vitest.fn();
     const api = createApi(container);
     api.registerTracker('my-tracker', StubComponent);
     expect(container.context.registerTracker).toHaveBeenCalledTimes(1);
@@ -61,8 +65,8 @@ describe('Create Tracker API Extensions', () => {
 
   it('createTrackerApi can dispose a registered tracker', () => {
     const container = createMockContainer();
-    container.context.registerTracker = jest.fn();
-    container.context.unregisterTracker = jest.fn();
+    container.context.registerTracker = vitest.fn();
+    container.context.unregisterTracker = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerTracker('my-tracker', StubComponent);
     expect(container.context.registerTracker).toHaveBeenCalledTimes(1);
@@ -76,8 +80,8 @@ describe('Create Tracker API Extensions', () => {
 
   it('createTrackerApi can dispose an anonymous tracker', () => {
     const container = createMockContainer();
-    container.context.registerTracker = jest.fn();
-    container.context.unregisterTracker = jest.fn();
+    container.context.registerTracker = vitest.fn();
+    container.context.unregisterTracker = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerTracker(StubComponent);
     expect(container.context.registerTracker).toHaveBeenCalledTimes(1);

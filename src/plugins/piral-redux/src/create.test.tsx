@@ -1,14 +1,18 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, vitest } from 'vitest';
 import { createReduxApi } from './create';
 
 function createMockContainer() {
   const state = create(() => ({}));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       includeProvider() { },
       defineActions() { },
       state,

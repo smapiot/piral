@@ -1,7 +1,36 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { createActions as createSearchActions } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  const obj = {
+    ...listener,
+    state: state.getState(),
+    defineActions(actions) {
+      Object.entries(actions).forEach(([name, cb]) => {
+        obj[name] = (cb as any).bind(obj, obj);
+      });
+    },
+    readState(select) {
+      return select(state.getState());
+    },
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+  return obj;
+}
 
 const state = {
   search: {
@@ -25,7 +54,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.appendSearchResults(['a', 'b'], false);
     expect(state.getState()).toEqual({
@@ -51,7 +80,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.appendSearchResults(['a'], true);
     expect(state.getState()).toEqual({
@@ -77,7 +106,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.prependSearchResults(['a', 'b'], false);
     expect(state.getState()).toEqual({
@@ -103,7 +132,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.prependSearchResults(['a'], true);
     expect(state.getState()).toEqual({
@@ -129,7 +158,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.resetSearchResults('yo', true);
     expect(state.getState()).toEqual({
@@ -155,7 +184,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.resetSearchResults('yo y', false);
     expect(state.getState()).toEqual({
@@ -181,7 +210,7 @@ describe('Search Action Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.setSearchInput('test input');
     expect(state.getState()).toEqual({
@@ -199,7 +228,7 @@ describe('Search Action Module', () => {
   it('immediately resets with loading false if some value is given but no provider found', () => {
     state.search.input = 'foo';
     const globalState: any = create(() => state);
-    const ctx = createActions(globalState, createListener({}));
+    const ctx = createActions(globalState, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     expect(globalState.getState().search.results.loading).toBe(false);
@@ -215,7 +244,7 @@ describe('Search Action Module', () => {
       cancel() {},
     };
     const globalState: any = create(() => state);
-    const ctx = createActions(globalState, createListener({}));
+    const ctx = createActions(globalState, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     expect(globalState.getState().search.results.loading).toBe(true);
@@ -224,7 +253,7 @@ describe('Search Action Module', () => {
   it('immediately resets with loading false if no value is given implicitly', () => {
     state.search.input = '';
     const globalState: any = create(() => state);
-    const ctx = createActions(globalState, createListener({}));
+    const ctx = createActions(globalState, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     expect(globalState.getState().search.results.loading).toBe(false);
@@ -232,7 +261,7 @@ describe('Search Action Module', () => {
 
   it('immediately resets with loading false if no value is given explicitly', () => {
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch('');
     dispose();
@@ -241,7 +270,7 @@ describe('Search Action Module', () => {
 
   it('immediately resets with loading false if no value is given explicitly though immediate', () => {
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch('', true);
     dispose();
@@ -258,23 +287,23 @@ describe('Search Action Module', () => {
       cancel() {},
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch('foo');
     expect(gs.getState().search.results.loading).toBe(true);
   });
 
   it('walks over all search providers', () => {
-    const search = jest.fn(() => Promise.resolve([]));
-    const clear = jest.fn();
-    const cancel = jest.fn();
+    const search = vitest.fn(() => Promise.resolve([]));
+    const clear = vitest.fn();
+    const cancel = vitest.fn();
     state.search.input = 'test';
     state.registry.searchProviders = {
       foo: { search, clear, cancel },
       bar: { search, clear, cancel },
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     expect(search).toHaveBeenCalledTimes(2);
@@ -292,14 +321,14 @@ describe('Search Action Module', () => {
       },
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     await (state.registry.searchProviders as any).foo.search().catch((m) => m);
   });
 
   it('stops existing search', async () => {
-    const cancel = jest.fn();
+    const cancel = vitest.fn();
     state.search.input = 'test';
     state.registry.searchProviders = {
       foo: {
@@ -311,7 +340,7 @@ describe('Search Action Module', () => {
       },
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     await (state.registry.searchProviders as any).foo.search().catch((m) => m);
@@ -319,7 +348,7 @@ describe('Search Action Module', () => {
   });
 
   it('cancels existing search', async () => {
-    const cancel = jest.fn();
+    const cancel = vitest.fn();
     state.search.input = 'test';
     state.registry.searchProviders = {
       foo: {
@@ -331,7 +360,7 @@ describe('Search Action Module', () => {
       },
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     const dispose = ctx.triggerSearch();
     dispose();
@@ -340,7 +369,7 @@ describe('Search Action Module', () => {
   });
 
   it('catches any emitted exceptions', async () => {
-    console.warn = jest.fn();
+    console.warn = vitest.fn();
     state.search.input = 'test';
     state.registry.searchProviders = {
       foo: {
@@ -352,7 +381,7 @@ describe('Search Action Module', () => {
       },
     };
     const gs: any = create(() => state);
-    const ctx = createActions(gs, createListener({}));
+    const ctx = createActions(gs, createListener());
     ctx.defineActions(createSearchActions());
     ctx.triggerSearch();
     await (state.registry.searchProviders as any).foo.search().catch((m) => m);
@@ -367,7 +396,7 @@ describe('Search Action Module', () => {
         searchProviders: {},
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     ctx.defineActions(createSearchActions());
     ctx.registerSearchProvider('foo', 10 as any);
     expect(state.getState()).toEqual({

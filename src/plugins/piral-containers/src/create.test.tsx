@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { createContainersApi } from './create';
@@ -8,9 +12,9 @@ function createMockContainer() {
   const state = create(() => ({}));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions(actions) {
         for (const actionName of Object.keys(actions)) {
           this[actionName] = actions[actionName].bind(this, this);

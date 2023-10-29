@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createNotificationsApi } from './create';
 
 function createMockContainer() {
@@ -9,9 +13,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       dispatch(update) {
@@ -25,8 +29,8 @@ function createMockContainer() {
 describe('Create Notifications API Extensions', () => {
   it('createCoreApi showNotification uses an action and leaves a disposer', async () => {
     const container = createMockContainer();
-    container.context.openNotification = jest.fn();
-    container.context.closeNotification = jest.fn();
+    container.context.openNotification = vitest.fn();
+    container.context.closeNotification = vitest.fn();
     const api = (createNotificationsApi()(container.context) as any)(container.api);
     const close = api.showNotification('my notification');
     close();
@@ -36,17 +40,17 @@ describe('Create Notifications API Extensions', () => {
   });
 
   it('createCoreApi showNotification can be auto closed', () => {
-    jest.useFakeTimers();
+    vitest.useFakeTimers();
     const container = createMockContainer();
-    container.context.openNotification = jest.fn();
-    container.context.closeNotification = jest.fn();
+    container.context.openNotification = vitest.fn();
+    container.context.closeNotification = vitest.fn();
     const api = (createNotificationsApi()(container.context) as any)(container.api);
     api.showNotification('my notification', {
       autoClose: 100,
     });
     expect(container.context.openNotification).toHaveBeenCalled();
     expect(container.context.closeNotification).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(120);
+    vitest.advanceTimersByTime(120);
     expect(container.context.closeNotification).toHaveBeenCalled();
   });
 });

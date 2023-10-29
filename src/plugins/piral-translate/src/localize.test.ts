@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect } from 'vitest';
 import { Localizer } from './localize';
 
 const messages = {

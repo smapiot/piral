@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Dashboard } from './Dashboard';
 
@@ -21,9 +25,9 @@ function createMockContainer(tiles = {}) {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       readState(read) {
@@ -38,6 +42,10 @@ function createMockContainer(tiles = {}) {
 }
 
 describe('Piral-Dashboard Dashboard component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('uses container for a connected dashboard', () => {
     const fake: any = {};
     const { context } = createMockContainer();

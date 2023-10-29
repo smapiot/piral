@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { StateContext } from 'piral-core';
 import { DefaultErrorInfo } from 'piral-core/lib/defaults/DefaultErrorInfo.js';
 import { render } from '@testing-library/react';

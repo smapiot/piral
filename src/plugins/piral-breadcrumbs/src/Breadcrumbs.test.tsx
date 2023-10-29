@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -11,13 +15,13 @@ MockBcContainer.displayName = 'MockBcContainer';
 const MockBcItem: React.FC<any> = ({ children }) => <div role="dialog">{children}</div>;
 MockBcItem.displayName = 'MockBcTile';
 
-jest.mock('react-router', () => ({
+vitest.mock('react-router', () => ({
   useLocation() {
     return {
       pathname: '/example',
     };
   },
-  useRouteMatch: jest.fn(() => ({})),
+  useRouteMatch: vitest.fn(() => ({})),
 }));
 
 function createMockContainer(breadcrumbs = {}) {
@@ -32,9 +36,9 @@ function createMockContainer(breadcrumbs = {}) {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       readState(read) {

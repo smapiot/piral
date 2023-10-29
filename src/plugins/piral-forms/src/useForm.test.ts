@@ -1,15 +1,21 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest, beforeEach } from 'vitest';
 
-(React as any).useState = jest.fn((idOrFn) => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
-(React as any).useEffect = jest.fn((cb) => cb());
+vitest.mock('react');
 
-const useGlobalState = jest.fn();
-const usePrompt = jest.fn();
-const setStateFake = jest.fn();
-const useAction = jest.fn(() => setStateFake);
+(React as any).useState = vitest.fn((idOrFn) => [typeof idOrFn === 'function' ? idOrFn() : idOrFn]);
+(React as any).useEffect = vitest.fn((cb) => cb());
 
-const piralCore = jest.mock('piral-core', () => ({
-  ...jest.requireActual('piral-core'),
+const useGlobalState = vitest.fn();
+const usePrompt = vitest.fn();
+const setStateFake = vitest.fn();
+const useAction = vitest.fn(() => setStateFake);
+
+vitest.mock('piral-core', async () => ({
+  ...(await vitest.importActual('piral-core') as any),
   useGlobalState,
   usePrompt,
   useAction,
@@ -20,8 +26,8 @@ describe('Form Hook Module', () => {
     setStateFake.mockReset();
   });
 
-  it('Returns the current data and not changed initially', () => {
-    const { useForm } = require('./useForm');
+  it('Returns the current data and not changed initially', async () => {
+    const { useForm } = await import('./useForm');
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -54,8 +60,8 @@ describe('Form Hook Module', () => {
     expect(setStateFake.mock.calls[0][0].length).toBe(3);
   });
 
-  it('Generates a new id if the old one is not provided', () => {
-    const { useForm } = require('./useForm');
+  it('Generates a new id if the old one is not provided', async () => {
+    const { useForm } = await import('./useForm');
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -79,9 +85,9 @@ describe('Form Hook Module', () => {
     expect(setStateFake.mock.calls[0][0].length).toBe(36);
   });
 
-  it('Submit with no changed data does nothing', () => {
-    const { useForm } = require('./useForm');
-    const onSubmit = jest.fn(() => Promise.resolve());
+  it('Submit with no changed data does nothing', async () => {
+    const { useForm } = await import ('./useForm');
+    const onSubmit = vitest.fn(() => Promise.resolve());
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -105,9 +111,9 @@ describe('Form Hook Module', () => {
     expect(setStateFake.mock.calls[0][0].length).toBe(36);
   });
 
-  it('Submit with changed data submits successfully', () => {
-    const { useForm } = require('./useForm');
-    const onSubmit = jest.fn(() => Promise.resolve());
+  it('Submit with changed data submits successfully', async () => {
+    const { useForm } = await import ('./useForm');
+    const onSubmit = vitest.fn(() => Promise.resolve());
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -135,7 +141,7 @@ describe('Form Hook Module', () => {
       emptyData: {},
     };
     const { changed, formData, submit } = useForm({}, undefined, options, 'foo');
-    const preventDefault = jest.fn();
+    const preventDefault = vitest.fn();
     (submit as any)({ preventDefault });
     expect(changed).toBeTruthy();
     expect(preventDefault).toBeCalled();
@@ -147,9 +153,9 @@ describe('Form Hook Module', () => {
     });
   });
 
-  it('Submit with changed data running into an error', () => {
-    const { useForm } = require('./useForm');
-    const onSubmit = jest.fn(() => Promise.reject('My error'));
+  it('Submit with changed data running into an error', async () => {
+    const { useForm } = await import('./useForm');
+    const onSubmit = vitest.fn(() => Promise.reject('My error'));
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -187,8 +193,8 @@ describe('Form Hook Module', () => {
     });
   });
 
-  it('Sets new data on changeForm', () => {
-    const { useForm } = require('./useForm');
+  it('Sets new data on changeForm', async () => {
+    const { useForm } = await import('./useForm');
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -234,8 +240,8 @@ describe('Form Hook Module', () => {
     );
   });
 
-  it('Sets new data on setFormData', () => {
-    const { useForm } = require('./useForm');
+  it('Sets new data on setFormData', async () => {
+    const { useForm } = await import('./useForm');
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -280,8 +286,8 @@ describe('Form Hook Module', () => {
     );
   });
 
-  it('Resets changes to initial data', () => {
-    const { useForm } = require('./useForm');
+  it('Resets changes to initial data', async () => {
+    const { useForm } = await import('./useForm');
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -339,9 +345,9 @@ describe('Form Hook Module', () => {
     );
   });
 
-  it('onChange should be triggered with full data set', () => {
-    const { useForm } = require('./useForm');
-    const onChange = jest.fn((data) => Promise.resolve(data));
+  it('onChange should be triggered with full data set', async () => {
+    const { useForm } = await import('./useForm');
+    const onChange = vitest.fn((data) => Promise.resolve(data));
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -376,9 +382,9 @@ describe('Form Hook Module', () => {
     expect(onChange).toHaveBeenCalledWith({ a: 'b' });
   });
 
-  it('onChange which fails should be handled gracefully', () => {
-    const { useForm } = require('./useForm');
-    const onChange = jest.fn((data) => Promise.reject('my error'));
+  it('onChange which fails should be handled gracefully', async () => {
+    const { useForm } = await import('./useForm');
+    const onChange = vitest.fn((data) => Promise.reject('my error'));
 
     useGlobalState.mockImplementation((select: any) =>
       select({
@@ -400,9 +406,9 @@ describe('Form Hook Module', () => {
     expect(onChange).toHaveBeenCalledWith({ a: 'b' });
   });
 
-  it('cleanup sets active to false', () => {
-    const { useForm } = require('./useForm');
-    (React as any).useEffect = jest.fn((cb) => cb()());
+  it('cleanup sets active to false', async () => {
+    const { useForm } = await import('./useForm');
+    (React as any).useEffect = vitest.fn((cb) => cb()());
 
     useGlobalState.mockImplementation((select: any) =>
       select({

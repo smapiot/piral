@@ -1,11 +1,15 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 
-const useGlobalState = jest.fn();
-const loadAction = jest.fn();
-const useAction = jest.fn(() => loadAction);
+const useGlobalState = vitest.fn();
+const loadAction = vitest.fn();
+const useAction = vitest.fn(() => loadAction);
 
-jest.mock('piral-core', () => ({
-  ...jest.requireActual('piral-core'),
+vitest.mock('piral-core', async () => ({
+  ...(await vitest.importActual('piral-core') as any),
   useGlobalState,
   useAction,
 }));
@@ -27,7 +31,7 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
     (React as any).useEffect = usedEffect;
@@ -53,7 +57,7 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
     (React as any).useEffect = usedEffect;
@@ -79,7 +83,7 @@ describe('Feed Hook Module', () => {
         },
       },
     };
-    const usedEffect = jest.fn();
+    const usedEffect = vitest.fn();
     useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
     (React as any).useEffect = usedEffect;

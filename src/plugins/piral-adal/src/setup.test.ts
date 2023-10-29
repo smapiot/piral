@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect } from 'vitest';
 import { setupAdalClient } from './setup';
 
 describe('Piral-Adal setup module', () => {

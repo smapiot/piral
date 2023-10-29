@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createListener } from 'piral-base';
 import { createAdalApi } from './create';
 
@@ -38,7 +42,7 @@ describe('Piral-Adal create module', () => {
       },
     });
     attachAdalApi(context);
-    const setHeaders = jest.fn();
+    const setHeaders = vitest.fn();
     context.emit('before-fetch', {
       setHeaders,
     });

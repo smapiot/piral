@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 
 const state = {
   search: {
@@ -10,62 +14,64 @@ const state = {
 };
 
 const availableActions = {
-  setSearchInput: jest.fn(),
-  triggerSearch: jest.fn(),
+  setSearchInput: vitest.fn(),
+  triggerSearch: vitest.fn(),
 };
 
-const useGlobalState = jest.fn((select: any) => select(state));
-const useActions = jest.fn(() => availableActions);
-const useDebounce = jest.fn((value) => value);
+const useGlobalState = vitest.fn((select: any) => select(state));
+const useActions = vitest.fn(() => availableActions);
+const useDebounce = vitest.fn((value) => value);
 
-jest.mock('piral-core', () => ({
-  ...jest.requireActual('piral-core'),
+vitest.mock('piral-core', async () => ({
+  ...(await vitest.importActual('piral-core') as any),
   useGlobalState,
   useActions,
 }));
 
-jest.mock('./useDebounce.ts', () => ({
+vitest.mock('./useDebounce.ts', () => ({
   useDebounce,
 }));
 
+vitest.mock('react');
+
 describe('Search Hook Module', () => {
-  it('just returns current input value', () => {
-    const { useSearch } = require('./useSearch');
-    const usedEffect = jest.fn();
+  it('just returns current input value', async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
     const [value] = useSearch();
     expect(value).toBe('abc');
   });
 
-  it('sets the value using the action', () => {
-    const { useSearch } = require('./useSearch');
-    const usedEffect = jest.fn();
+  it('sets the value using the action', async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
-    (React as any).useState = (initial) => [initial, jest.fn()];
+    (React as any).useState = (initial) => [initial, vitest.fn()];
     const [_, setValue] = useSearch();
     setValue('foo');
     expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
   });
 
-  it('triggers the search without immediate mode', () => {
-    const { useSearch } = require('./useSearch');
-    const usedEffect = jest.fn((fn) => fn());
+  it('triggers the search without immediate mode', async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn((fn) => fn());
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (current) => ({ current });
-    (React as any).useState = (initial) => [initial, jest.fn()];
+    (React as any).useState = (initial) => [initial, vitest.fn()];
     useSearch();
     expect(availableActions.triggerSearch).toHaveBeenCalledWith('abc', false);
   });
 
-  it('cancels the current search', () => {
-    const { useSearch } = require('./useSearch');
-    const usedEffect = jest.fn((fn) => fn());
-    const cancel = jest.fn();
+  it('cancels the current search', async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn((fn) => fn());
+    const cancel = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useRef = (_) => ({ current: cancel });
-    (React as any).useState = (initial) => [initial, jest.fn()];
+    (React as any).useState = (initial) => [initial, vitest.fn()];
     useSearch();
     expect(cancel).toHaveBeenCalledTimes(1);
   });

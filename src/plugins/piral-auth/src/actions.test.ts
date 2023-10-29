@@ -1,7 +1,27 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { setUser } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  return {
+    ...listener,
+    state: state.getState(),
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+}
 
 describe('Auth Actions Module', () => {
   it('Sets the new user successfully', () => {
@@ -13,7 +33,7 @@ describe('Auth Actions Module', () => {
         permissions: {},
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     const user = {
       name: 'User',
       features: { a: 'on' },
@@ -39,7 +59,7 @@ describe('Auth Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     setUser(ctx, undefined, {}, {});
     expect((state.getState())).toEqual({
       foo: 5,

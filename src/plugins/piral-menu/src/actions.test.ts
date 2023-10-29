@@ -1,7 +1,36 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { registerMenuItem, unregisterMenuItem } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  const obj = {
+    ...listener,
+    state: state.getState(),
+    defineActions(actions) {
+      Object.entries(actions).forEach(([name, cb]) => {
+        obj[name] = (cb as any).bind(obj, obj);
+      });
+    },
+    readState(select) {
+      return select(state.getState());
+    },
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+  return obj;
+}
 
 describe('Menu Actions Module', () => {
   it('registerMenuItem and unregisterMenuItem', () => {
@@ -12,7 +41,7 @@ describe('Menu Actions Module', () => {
         menuItems: {},
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     registerMenuItem(ctx, 'foo', 10);
     expect(state.getState()).toEqual({
       foo: 5,

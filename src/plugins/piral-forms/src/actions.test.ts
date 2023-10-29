@@ -1,7 +1,27 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { updateFormState } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  return {
+    ...listener,
+    state: state.getState(),
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+}
 
 describe('Forms Actions Module', () => {
   it('updateFormState works on a fresh forms collection', () => {
@@ -9,7 +29,7 @@ describe('Forms Actions Module', () => {
       foo: 5,
       forms: {},
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
     expect((state.getState())).toEqual({
       foo: 5,
@@ -31,7 +51,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, {});
     expect((state.getState())).toEqual({
       foo: 5,
@@ -53,7 +73,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
     expect((state.getState())).toEqual({
       foo: 5,
@@ -75,7 +95,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo' }, { active: false });
     expect((state.getState())).toEqual({
       foo: 5,
@@ -92,7 +112,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', submitting: true }, { active: false });
     expect((state.getState())).toEqual({
       foo: 5,
@@ -115,7 +135,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
     expect((state.getState())).toEqual({
       foo: 5,
@@ -139,7 +159,7 @@ describe('Forms Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
     expect((state.getState())).toEqual({
       foo: 5,

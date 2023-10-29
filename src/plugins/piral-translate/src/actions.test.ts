@@ -1,7 +1,27 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions as ca } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { createActions } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function ca(state, listener) {
+  return {
+    ...listener,
+    state: state.getState(),
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+}
 
 describe('Translation Action Module', () => {
   it('selectLanguage changes the current language', () => {
@@ -25,7 +45,7 @@ describe('Translation Action Module', () => {
       },
     };
     const actions = createActions(localizer);
-    const ctx = ca(state, createListener({}));
+    const ctx = ca(state, createListener());
     actions.selectLanguage(ctx, 'de');
     expect((state.getState())).toEqual({
       foo: 5,
@@ -67,7 +87,7 @@ describe('Translation Action Module', () => {
       },
     };
     const actions = createActions(localizer);
-    const ctx = ca(state, createListener({}));
+    const ctx = ca(state, createListener());
     const result = actions.translate(ctx, 'bar');
     expect(result).toEqual('bár');
   });
@@ -95,7 +115,7 @@ describe('Translation Action Module', () => {
       },
     };
     const ctx = {
-      emit: jest.fn(),
+      emit: vitest.fn(),
       state,
       dispatch(update) {
         state.setState(update(state.getState()));
@@ -148,7 +168,7 @@ describe('Translation Action Module', () => {
     };
     const actions = createActions(localizer);
     const ctx = {
-      emit: jest.fn(),
+      emit: vitest.fn(),
       state,
       dispatch(update) {
         state.setState(update(state.getState()));

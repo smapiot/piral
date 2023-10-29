@@ -1,10 +1,14 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import * as piralCore from 'piral-core';
 import * as useFeed from './useFeed';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { withFeed } from './withFeed';
 
-jest.mock('piral-core');
+vitest.mock('piral-core');
 
 const StubLoader: React.FC<any> = () => <div role="loader" />;
 StubLoader.displayName = 'StubLoader';

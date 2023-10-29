@@ -1,11 +1,15 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { createTrackingApi } from './create';
 import { PiletTrackingApi } from './types';
 
 function createMockContainer() {
   const events = {
-    on: jest.fn(),
-    off: jest.fn(),
-    emit: jest.fn(),
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
   };
   return {
     context: {

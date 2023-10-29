@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createBreadcrumbsApi } from './create';
 
 function createMockContainer() {
@@ -9,9 +13,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       dispatch(update) {
@@ -38,8 +42,8 @@ const moduleMetadata = {
 describe('Create Breadcrumb API Extensions', () => {
   it('createBreadcrumbsApi can register and unregister a breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumbs = jest.fn();
-    container.context.unregisterBreadcrumbs = jest.fn();
+    container.context.registerBreadcrumbs = vitest.fn();
+    container.context.unregisterBreadcrumbs = vitest.fn();
     const api = createApi(container);
     api.registerBreadcrumb('my-bc', {
       title: 'My breadcrumb',
@@ -55,8 +59,8 @@ describe('Create Breadcrumb API Extensions', () => {
 
   it('createBreadcrumbsApi can dispose a registered breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumbs = jest.fn();
-    container.context.unregisterBreadcrumbs = jest.fn();
+    container.context.registerBreadcrumbs = vitest.fn();
+    container.context.unregisterBreadcrumbs = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerBreadcrumb('my-bc', {
       title: 'My breadcrumb',
@@ -72,8 +76,8 @@ describe('Create Breadcrumb API Extensions', () => {
 
   it('createBreadcrumbsApi can dispose a registered anonymous breadcrumb', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumbs = jest.fn();
-    container.context.unregisterBreadcrumbs = jest.fn();
+    container.context.registerBreadcrumbs = vitest.fn();
+    container.context.unregisterBreadcrumbs = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerBreadcrumb({
       title: 'My breadcrumb',
@@ -89,8 +93,8 @@ describe('Create Breadcrumb API Extensions', () => {
 
   it('createBreadcrumsApi can use dynamic function as breadcrumb title', () => {
     const container = createMockContainer();
-    container.context.registerBreadcrumbs = jest.fn();
-    container.context.unregisterBreadcrumbs = jest.fn();
+    container.context.registerBreadcrumbs = vitest.fn();
+    container.context.unregisterBreadcrumbs = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerBreadcrumb({
       title: ({ path }) => path,

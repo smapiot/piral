@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createSearchApi } from './create';
 
 function createMockContainer() {
@@ -10,9 +14,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       readState(cb) {
@@ -41,8 +45,8 @@ const moduleMetadata = {
 describe('Create Search API Extensions', () => {
   it('createCoreApi can register and unregister a search provider', () => {
     const container = createMockContainer();
-    container.context.registerSearchProvider = jest.fn();
-    container.context.unregisterSearchProvider = jest.fn();
+    container.context.registerSearchProvider = vitest.fn();
+    container.context.unregisterSearchProvider = vitest.fn();
     const api = (createSearchApi()(container.context) as any)(container.api, moduleMetadata);
     api.registerSearchProvider('my-sp', () => Promise.resolve([]));
     expect(container.context.registerSearchProvider).toHaveBeenCalledTimes(1);
@@ -56,10 +60,10 @@ describe('Create Search API Extensions', () => {
 
   it('createCoreApi registration of a search provider wraps it', () => {
     const container = createMockContainer();
-    container.context.registerSearchProvider = jest.fn();
-    container.context.unregisterSearchProvider = jest.fn();
+    container.context.registerSearchProvider = vitest.fn();
+    container.context.unregisterSearchProvider = vitest.fn();
     const api = (createSearchApi()(container.context) as any)(container.api, moduleMetadata);
-    const search = jest.fn();
+    const search = vitest.fn();
     api.registerSearchProvider('my-sp', search);
     container.context.registerSearchProvider.mock.calls[0][1].search('foo');
     expect(search).toHaveBeenCalledWith('foo', container.api);

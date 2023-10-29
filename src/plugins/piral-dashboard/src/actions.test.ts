@@ -1,7 +1,27 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { registerTile, unregisterTile } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  return {
+    ...listener,
+    state: state.getState(),
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+}
 
 describe('Dashboard Actions Module', () => {
   it('registerTile and unregisterTile', () => {
@@ -12,7 +32,7 @@ describe('Dashboard Actions Module', () => {
         tiles: {},
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     registerTile(ctx, 'foo', 10);
     expect((state.getState())).toEqual({
       foo: 5,

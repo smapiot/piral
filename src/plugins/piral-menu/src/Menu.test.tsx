@@ -1,62 +1,57 @@
-import create from 'zustand';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
-import { render } from '@testing-library/react';
-import { StateContext } from 'piral-core';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { Menu } from './Menu';
 
-const MockMenuContainer: React.FC<any> = ({ children }) => <div role="menu">{children}</div>;
-MockMenuContainer.displayName = 'MockMenuContainer';
-const MockMenuItem: React.FC<any> = ({ children }) => <div role="item">{children}</div>;
-MockMenuItem.displayName = 'MockMenuItem';
+let menuItems: Record<string, any> = {};
 
-function createMockContainer(menuItems = {}) {
-  const state = create(() => ({
-    components: {
-      MenuContainer: MockMenuContainer,
-      MenuItem: MockMenuItem,
-    },
-    registry: {
-      menuItems,
-    },
-  }));
-  return {
-    context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
-      defineActions() {},
-      state,
-      readState(read) {
-        return read(state.getState());
+vitest.mock('piral-core', () => ({
+  getPiralComponent(name) {
+    switch (name) {
+      case 'MenuContainer':
+        const MockMenuContainer: React.FC<any> = ({ children }) => <div role="menu">{children}</div>;
+        MockMenuContainer.displayName = 'MockMenuContainer';
+        return MockMenuContainer;
+      case 'MenuItem':
+        const MockMenuItem: React.FC<any> = ({ children }) => <div role="item">{children}</div>;
+        MockMenuItem.displayName = 'MockMenuItem';
+        return MockMenuItem;
+      default:
+        return null;
+    }
+  },
+  useGlobalState(select) {
+    return select({
+      registry: {
+        menuItems,
       },
-      dispatch(update) {
-        state.setState(update(state.getState()));
-      },
-    } as any,
-    api: {} as any,
-  };
-}
+    });
+  },
+}));
 
 describe('Piral-Menu Menu component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('uses container for a connected menu', () => {
     const fake: any = {
       type: '1',
     };
-    const { context } = createMockContainer();
-    const node = render(
-      <StateContext.Provider value={context}>
-        <Menu {...fake} />
-      </StateContext.Provider>,
-    );
-    expect(node.getAllByRole("menu").length).toBe(1);
-    expect(node.queryByRole("item")).toBe(null);
+    menuItems = {};
+    const node = render(<Menu {...fake} />);
+    expect(node.getAllByRole('menu').length).toBe(1);
+    expect(node.queryByRole('item')).toBe(null);
   });
 
   it('uses container and item for each menu item of a connected menu', () => {
     const fake: any = {
       type: '1',
     };
-    const { context } = createMockContainer({
+    menuItems = {
       foo: {
         component: () => <div />,
         settings: {
@@ -75,19 +70,15 @@ describe('Piral-Menu Menu component', () => {
           type: 'general',
         },
       },
-    });
-    const node = render(
-      <StateContext.Provider value={context}>
-        <Menu {...fake} />
-      </StateContext.Provider>,
-    );
-    expect(node.getAllByRole("menu").length).toBe(1);
-    expect(node.getAllByRole("item").length).toBe(2);
+    };
+    const node = render(<Menu {...fake} />);
+    expect(node.getAllByRole('menu').length).toBe(1);
+    expect(node.getAllByRole('item').length).toBe(2);
   });
 
   it('uses container and item for general if type not specified', () => {
     const fake: any = {};
-    const { context } = createMockContainer({
+    menuItems = {
       foo: {
         component: () => <div />,
         settings: {
@@ -106,13 +97,9 @@ describe('Piral-Menu Menu component', () => {
           type: 'general',
         },
       },
-    });
-    const node = render(
-      <StateContext.Provider value={context}>
-        <Menu {...fake} />
-      </StateContext.Provider>,
-    );
-    expect(node.getAllByRole("menu").length).toBe(1);
-    expect(node.getAllByRole("item").length).toBe(1);
+    };
+    const node = render(<Menu {...fake} />);
+    expect(node.getAllByRole('menu').length).toBe(1);
+    expect(node.getAllByRole('item').length).toBe(1);
   });
 });

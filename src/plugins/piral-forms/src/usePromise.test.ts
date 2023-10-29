@@ -1,12 +1,16 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { usePromise } from './usePromise';
 
-jest.mock('react');
+vitest.mock('react');
 
 describe('Promise Module', () => {
   it('directly reports loading', () => {
-    const usedEffect = jest.fn();
-    const setState = jest.fn();
+    const usedEffect = vitest.fn();
+    const setState = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useState = (current) => [current, setState];
     const result = usePromise(() => Promise.resolve());
@@ -18,8 +22,8 @@ describe('Promise Module', () => {
   });
 
   it('reports loading after the effect is done', () => {
-    const usedEffect = jest.fn((fn) => fn());
-    const setState = jest.fn();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setState = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useState = (current) => [current, setState];
     const result = usePromise(() => Promise.resolve());
@@ -31,8 +35,8 @@ describe('Promise Module', () => {
   });
 
   it('reports done when the loading finished', async () => {
-    const usedEffect = jest.fn((fn) => fn());
-    const setState = jest.fn();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setState = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useState = (current) => [current, setState];
     usePromise(() => Promise.resolve('123'));
@@ -48,8 +52,8 @@ describe('Promise Module', () => {
   });
 
   it('reports error when the loading finished', async () => {
-    const usedEffect = jest.fn((fn) => fn());
-    const setState = jest.fn();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setState = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useState = (current) => [current, setState];
     usePromise(() => Promise.reject('123'));
@@ -65,8 +69,8 @@ describe('Promise Module', () => {
   });
 
   it('does not set the state on cancel', async () => {
-    const usedEffect = jest.fn((fn) => fn()());
-    const setState = jest.fn();
+    const usedEffect = vitest.fn((fn) => fn()());
+    const setState = vitest.fn();
     (React as any).useEffect = usedEffect;
     (React as any).useState = (current) => [current, setState];
     usePromise(() => Promise.reject('123'));

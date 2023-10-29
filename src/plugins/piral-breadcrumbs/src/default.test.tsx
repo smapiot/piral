@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { DefaultBreadcrumbsContainer } from './default';
 
-jest.mock('piral-core', () => ({
+vitest.mock('piral-core', () => ({
   useGlobalState(select: any) {
     return select(state);
   },
