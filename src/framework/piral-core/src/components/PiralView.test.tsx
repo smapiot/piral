@@ -4,8 +4,8 @@
 import * as React from 'react';
 import * as hooks from '../hooks';
 import * as routes from './PiralRoutes';
-import { describe, it, expect, vitest } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { PiralView } from './PiralView';
 
 const StubDashboard: React.FC<any> = () => <div role="dashboard" />;
@@ -51,6 +51,10 @@ const state = {
 (routes as any).PiralRoutes = ({ }) => <StubDashboard />;
 
 describe('Portal Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('renders the dashboard / content in layout if loaded without error', () => {
     state.app.loading = false;
     state.app.error = undefined;

@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import * as React from 'react';
-import { describe, it, expect, vitest } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { ExtensionSlot } from './ExtensionSlot';
 
 vitest.mock('../hooks/globalState', () => ({
@@ -77,6 +77,10 @@ const state = {
 };
 
 describe('Extension Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('is able to default render not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" />);
     expect(node.queryAllByRole("stub1").length).toBe(0);

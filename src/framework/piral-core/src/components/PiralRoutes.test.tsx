@@ -3,9 +3,9 @@
  */
 import * as React from 'react';
 import * as hooks from '../hooks';
-import { describe, it, expect, vitest } from 'vitest';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { PiralRoutes } from './PiralRoutes';
 import { DefaultRouteSwitch } from '../defaults/DefaultRouteSwitch_v5';
 
@@ -60,6 +60,10 @@ const StubBarPage: React.FC<{ data: any }> = (props) => <div role="bar-page" />;
 StubBarPage.displayName = 'StubBarPage';
 
 describe('Routes Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('always goes to the given home on "/"', () => {
     const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/');
     expect(node.queryAllByRole('home').length).toBe(1);

@@ -1,12 +1,20 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
-import { describe, it, expect, vitest } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { SwitchErrorInfo } from './SwitchErrorInfo';
 
 vitest.mock('../hooks/globalState', () => ({
   useGlobalState(select: any) {
     return select(state);
   },
+}));
+
+vitest.mock('react', async () => ({
+  ...(await vitest.importActual('react') as any),
+  useMemo: (cb) => cb(),
 }));
 
 const StubComponent1: React.FC<any> = (props) => <div role="stub" children={props.children} />;
@@ -22,9 +30,11 @@ const state = {
   },
 };
 
-(React as any).useMemo = (cb) => cb();
-
 describe('SwitchErrorInfo Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('is able to render StubComponent1 component', () => {
     const node = render(<SwitchErrorInfo type="stubComponent1" />);
     expect(node.queryAllByRole('stub').length).toBe(1);
