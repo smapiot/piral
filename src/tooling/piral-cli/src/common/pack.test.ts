@@ -1,20 +1,21 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { createPiletPackage } from './pack';
 import { resolve } from 'path';
 
 let json: any = {};
 
-jest.mock('./io', () => ({
-  readJson: jest.fn(() => json),
-  removeDirectory: jest.fn(() => Promise.resolve()),
-  checkIsDirectory: jest.fn(() => false),
-  makeTempDir: jest.fn(() => Promise.resolve('')),
-  copy: jest.fn(() => Promise.resolve()),
-  checkExists: jest.fn(() => Promise.resolve(true)),
-  createDirectory: jest.fn(() => Promise.resolve()),
+vitest.mock('./io', () => ({
+  readJson: vitest.fn(() => json),
+  removeDirectory: vitest.fn(() => Promise.resolve()),
+  checkIsDirectory: vitest.fn(() => false),
+  makeTempDir: vitest.fn(() => Promise.resolve('')),
+  copy: vitest.fn(() => Promise.resolve()),
+  checkExists: vitest.fn(() => Promise.resolve(true)),
+  createDirectory: vitest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('./archive', () => ({
-  createTgz: jest.fn(() => Promise.resolve()),
+vitest.mock('./archive', () => ({
+  createTgz: vitest.fn(() => Promise.resolve()),
 }));
 
 describe('Pack Module', () => {

@@ -1,8 +1,9 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { openBrowser } from './browser';
 
 let error = false;
 
-jest.mock('../external', () => ({
+vitest.mock('../external', () => ({
   rc(_, cfg) {
     return cfg;
   },

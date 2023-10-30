@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { findCompatVersion } from './info';
 
 describe('CLI info module', () => {

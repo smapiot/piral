@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { resolve } from 'path';
 import { clients } from '../npm-clients';
 import {
@@ -24,10 +25,10 @@ import {
   findPackageRoot,
 } from './npm';
 
-jest.mock('child_process');
+vitest.mock('child_process');
 
-jest.mock('../external', () => ({
-  ...jest.requireActual('../external'),
+vitest.mock('../external', async () => ({
+  ...((await vitest.importActual('../external')) as any),
   rc() {},
   ora() {
     return {
@@ -58,7 +59,7 @@ let wrongCase = false;
 const jsonValueString = JSON.stringify([{ name: 'npm' }]);
 const jsonValueStringWrong = JSON.stringify([]);
 
-jest.mock('./scripts', () => ({
+vitest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
     return new Promise<void>((resolve) => {
       output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
@@ -67,29 +68,34 @@ jest.mock('./scripts', () => ({
   },
 }));
 
-jest.mock('fs', () => ({
-  ...jest.requireActual('fs'),
-  exists: (file: string, cb: (status: boolean) => void) =>
-    cb(
-      shouldFind &&
-        !file.endsWith('package.json') &&
-        !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock'))),
-    ),
-  existsSync: (file: string) => {
-    return true;
-  },
-  readFile: (file: string, type: string, callback: (err: NodeJS.ErrnoException | undefined, data: string) => void) => {
-    const fs = jest.requireActual('fs');
+vitest.mock('fs', async () => {
+  const fs = (await vitest.importActual('fs')) as any;
+  return {
+    ...fs,
+    exists: (file: string, cb: (status: boolean) => void) =>
+      cb(
+        shouldFind &&
+          !file.endsWith('package.json') &&
+          !(specialCase && (file.endsWith('lerna.json') || file.endsWith('yarn.lock'))),
+      ),
+    existsSync: (file: string) => {
+      return true;
+    },
+    readFile: (
+      file: string,
+      type: string,
+      callback: (err: NodeJS.ErrnoException | undefined, data: string) => void,
+    ) => {
+      if (fs.existsSync(file)) {
+        return fs.readFile(file, type, callback);
+      }
 
-    if (fs.existsSync(file)) {
-      return fs.readFile(file, type, callback);
-    }
-
-    return callback(undefined, '');
-  },
-  realpathSync: () => ({}),
-  readFileSync: () => '',
-}));
+      return callback(undefined, '');
+    },
+    realpathSync: () => ({}),
+    readFileSync: () => '',
+  };
+});
 
 describe('npm Module', () => {
   it('findPackageRoot correctly resolves the package root of parcel-bundler', () => {
@@ -488,15 +494,7 @@ describe('npm Module', () => {
 
   it('makeExternals with externals concats coreExternals', async () => {
     const externals = await makeExternals(process.cwd(), { piral: '*' }, ['foo', 'bar']);
-    expect(externals).toEqual([
-      'foo',
-      'bar',
-      'react',
-      'react-dom',
-      'react-router',
-      'react-router-dom',
-      'tslib',
-    ]);
+    expect(externals).toEqual(['foo', 'bar', 'react', 'react-dom', 'react-router', 'react-router-dom', 'tslib']);
   });
 
   it('makeExternals with external duplicate only reflects coreExternals', async () => {

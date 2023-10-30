@@ -1,8 +1,9 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { promptConfirm, promptSelect } from './interactive';
 
 const answer = 'Yes, really';
 
-jest.mock('../external', () => ({
+vitest.mock('../external', () => ({
   rc(_, cfg) {
     return cfg;
   },

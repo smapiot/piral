@@ -1,6 +1,7 @@
+import PiletInjector from './pilet-injector';
+import { describe, it, expect } from 'vitest';
 import { EventEmitter } from 'events';
 import { KrasRequest } from 'kras';
-import PiletInjector from './pilet-injector';
 
 const optionsMock = {
   pilets: [],
@@ -96,14 +97,14 @@ describe('Piral-CLI pilet injector', () => {
 
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
-    const request: KrasRequest = {
+    const request = {
       content: 'someFakeContent',
       headers: {},
       method: 'PUT',
       query: {},
       target: optionsMock.api,
       url: 'localhost:1234',
-    };
+    } as KrasRequest;
 
     // Act
     const res = await injector.handle(request);
@@ -125,14 +126,14 @@ describe('Piral-CLI pilet injector', () => {
     };
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
-    const request: KrasRequest = {
+    const request = {
       content: 'someFakeContent',
       headers: {},
       method: 'PUT',
       query: {},
       target: '',
       url: 'localhost:1234',
-    };
+    } as KrasRequest;
 
     // Act
     const res = injector.handle(request);

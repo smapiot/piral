@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { mkdtempSync, existsSync, readFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
@@ -7,8 +8,8 @@ function createTempDir() {
   return mkdtempSync(join(tmpdir(), 'piral-tests-new-pilet-'));
 }
 
-jest.mock('../npm-clients/npm', () => {
-  const original = jest.requireActual('../npm-clients/npm');
+vitest.mock('../npm-clients/npm', async () => {
+  const original: any = await vitest.importActual('../npm-clients/npm');
 
   return {
     ...original,
@@ -23,8 +24,6 @@ jest.mock('../npm-clients/npm', () => {
     },
   };
 });
-
-jest.setTimeout(90000);
 
 describe('New Pilet Command', () => {
   it('scaffolding in an empty directory works', async () => {

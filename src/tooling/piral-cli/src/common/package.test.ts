@@ -1,9 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import { findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
 import { cliVersion } from './info';
 
 describe('CLI package module', () => {
-  jest.setTimeout(15000);
-
   it('findPackageVersion finds the current package version', async () => {
     const version = await findPackageVersion(process.cwd(), 'sample-piral');
     expect(version).toBe(cliVersion);

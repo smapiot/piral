@@ -1,9 +1,10 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { getFreePort } from './port';
 
 const defaultPort = 12345;
 const error = Error('RangeError: Port should be >= 0 and < 65536.');
 
-jest.mock('../external', () => ({
+vitest.mock('../external', () => ({
   ora() {
     return {};
   },

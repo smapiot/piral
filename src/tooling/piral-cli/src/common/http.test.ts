@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { postFile, downloadFile } from './http';
 
 const apiUrl = 'http://sample.fooo.com/api/v1/pilet';
@@ -7,7 +8,7 @@ let errorOther = false;
 let errorResponse = false;
 let errorResponse2 = false;
 
-jest.mock('../external', () => ({
+vitest.mock('../external', () => ({
   rc(_, cfg) {
     return cfg;
   },
@@ -78,7 +79,7 @@ jest.mock('../external', () => ({
       },
     },
   },
-  FormData: jest.requireActual('form-data'),
+  FormData: vitest.requireActual('form-data'),
 }));
 
 describe('HTTP Module', () => {

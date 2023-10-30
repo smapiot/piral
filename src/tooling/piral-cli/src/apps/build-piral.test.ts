@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { execSync } from 'child_process';
 import { join, resolve } from 'path';

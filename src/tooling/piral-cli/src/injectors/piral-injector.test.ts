@@ -1,4 +1,5 @@
 import PiralInjector from './piral-injector';
+import { describe, it, expect } from 'vitest';
 import { KrasRequest, KrasResult } from 'kras';
 import { EventEmitter } from 'events';
 
@@ -39,7 +40,7 @@ describe('Piral-CLI piral injector', () => {
       active: true,
       headers: {},
     };
-    const injector = new PiralInjector(config, undefined, new EventEmitter());
+    const injector = new PiralInjector(config, undefined as any, new EventEmitter());
     expect(injector.active).toBeTruthy();
   });
 
@@ -51,7 +52,7 @@ describe('Piral-CLI piral injector', () => {
       active: true,
       headers: {},
     };
-    const injector = new PiralInjector(config, undefined, new EventEmitter());
+    const injector = new PiralInjector(config, undefined as any, new EventEmitter());
 
     // Act
     injector.active = false;
@@ -71,7 +72,7 @@ describe('Piral-CLI piral injector', () => {
       active: true,
       headers: {},
     };
-    const injector = new PiralInjector(config, undefined, new EventEmitter());
+    const injector = new PiralInjector(config, undefined as any, new EventEmitter());
 
     // Act
     const res = injector.sendResponse('some/nice/invalid/path', 'sometarget.file', 'someDir', 'localhost:1234');
@@ -88,15 +89,15 @@ describe('Piral-CLI piral injector', () => {
       active: true,
       headers: {},
     };
-    const injector = new PiralInjector(config, undefined, new EventEmitter());
-    const request: KrasRequest = {
+    const injector = new PiralInjector(config, undefined as any, new EventEmitter());
+    const request = {
       content: 'someFakeContent',
       headers: {},
       method: 'PUT',
       query: {},
       target: '',
       url: 'localhost:1234',
-    };
+    } as KrasRequest;
 
     // Act
     const res = await (injector.handle(request) as Promise<KrasResult>);

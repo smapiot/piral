@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { concurrentWorkers } from './parallel';
 
 describe('Concurrent Workers', () => {

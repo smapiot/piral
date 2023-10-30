@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { mkdtempSync, existsSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
