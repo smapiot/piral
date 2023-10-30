@@ -1,4 +1,4 @@
-import * as rimraf from 'rimraf';
+import rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
 import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';

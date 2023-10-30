@@ -41,11 +41,9 @@ describe('Pack Pilet Command', () => {
       }),
       'utf8',
     );
-    process.chdir(dir);
 
-    await packPilet();
+    await packPilet(dir);
 
-    process.chdir(originalDir);
     expect(existsSync(resolve(dir, 'my-pilet-1.0.0.tgz'))).toBeTruthy();
   });
 

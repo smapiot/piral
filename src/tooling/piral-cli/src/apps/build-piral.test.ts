@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { mkdtempSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { execSync } from 'child_process';
 import { join, resolve } from 'path';
@@ -6,7 +6,9 @@ import { tmpdir } from 'os';
 import { buildPiral } from './build-piral';
 import { setBundler } from '../bundler';
 
-const twoMinutes = 2 * 60 * 1000;
+const testOptions = {
+  timeout: 2 * 60 * 1000,
+};
 
 const defaultPackageJson = (files: Array<any>) => `
   {
@@ -124,15 +126,18 @@ function scaffoldNewPiralInstance(files: Array<any> = []) {
 }
 
 describe('Build Piral Command', () => {
-  beforeEach(() => {
+  beforeAll(async () => {
+    const actions = await import(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions'));
+
     process.env.NODE_ENV = undefined;
+    
     setBundler({
       name: 'webpack5',
-      actions: require(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions')),
+      actions,
     });
   });
 
-  afterEach(() => {
+  afterAll(() => {
     process.env.NODE_ENV = 'test';
   });
 
@@ -159,7 +164,8 @@ describe('Build Piral Command', () => {
         await buildPiral(dir, {
           type: 'emulator',
         });
-      } catch {
+      } catch (err) {
+        console.log(err);
         error = true;
       }
 
@@ -169,7 +175,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -193,7 +199,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -217,7 +223,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -240,7 +246,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -264,7 +270,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -288,7 +294,7 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeFalsy();
       expect(existsSync(resolve(dir, 'dist/index.html'))).toBeTruthy();
     },
-    twoMinutes,
+    testOptions,
   );
 
   it(
@@ -315,6 +321,6 @@ describe('Build Piral Command', () => {
       expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
       expect(existsSync(resolve(dir, 'dist/release'))).toBeTruthy();
     },
-    twoMinutes,
+    testOptions,
   );
 });
