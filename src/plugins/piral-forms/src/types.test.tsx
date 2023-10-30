@@ -1,12 +1,11 @@
 /**
  * @vitest-environment jsdom
  */
-import create from 'zustand';
 import * as React from 'react';
-import { describe, it, expect, vitest } from 'vitest';
-import { StateContext } from 'piral-core';
-import { DefaultErrorInfo } from '../../../framework/piral-core/src/defaults/DefaultErrorInfo';
-import { render } from '@testing-library/react';
+import create from 'zustand';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { StateContext, SwitchErrorInfo } from 'piral-core';
+import { render, cleanup } from '@testing-library/react';
 import './types';
 
 const FormErrorInfo = () => <div role="form_error" />;
@@ -28,10 +27,14 @@ vitest.mock('react', async () => ({
 }));
 
 describe('Extended Error Info Component for Forms', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('renders the switch-case in the form error case', () => {
     const node = render(
       <StateContext.Provider value={mockState as any}>
-        <DefaultErrorInfo type="form" error="foo" />
+        <SwitchErrorInfo type="form" error="foo" />
       </StateContext.Provider>,
     );
     expect(node.getAllByRole('form_error').length).toBe(1);

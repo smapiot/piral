@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import * as React from 'react';
-import { describe, it, expect, vitest } from 'vitest';
+import { describe, it, expect, vitest, beforeEach } from 'vitest';
 
 const useGlobalState = vitest.fn();
 const loadAction = vitest.fn();
@@ -14,13 +14,15 @@ vitest.mock('piral-core', async () => ({
   useAction,
 }));
 
+vitest.mock('react');
+
 describe('Feed Hook Module', () => {
   beforeEach(() => {
     loadAction.mockReset();
   });
 
-  it('Does not load if its already loaded', () => {
-    const { useFeed } = require('./useFeed');
+  it('Does not load if its already loaded', async () => {
+    const { useFeed } = await import('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {
@@ -45,8 +47,8 @@ describe('Feed Hook Module', () => {
     expect(loadAction).not.toBeCalled();
   });
 
-  it('Does not load if its already loading', () => {
-    const { useFeed } = require('./useFeed');
+  it('Does not load if its already loading', async () => {
+    const { useFeed } = await import('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {
@@ -71,8 +73,8 @@ describe('Feed Hook Module', () => {
     expect(loadAction).not.toBeCalled();
   });
 
-  it('Triggers load if its not loading', () => {
-    const { useFeed } = require('./useFeed');
+  it('Triggers load if its not loading', async () => {
+    const { useFeed } = await import('./useFeed');
     const pseudoState = {
       feeds: {
         foo: {

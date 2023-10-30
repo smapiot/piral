@@ -35,8 +35,8 @@ describe('Piral-Oidc setup module', () => {
     vitest.spyOn(UserManager.prototype, 'getUser').mockImplementation(mockGetUser);
     vitest.spyOn(UserManager.prototype, 'signinCallback').mockImplementation(mockSigninCallback);
     vitest.spyOn(UserManager.prototype, 'signinRedirectCallback').mockImplementation(mockSigninRedirectCallback);
-    vitest.spyOn(UserManager.prototype, 'signinRedirect').mockImplementation(mockSigninSilent);
-    vitest.spyOn(UserManager.prototype, 'signinSilent').mockImplementation(mockGetUser);
+    vitest.spyOn(UserManager.prototype, 'signinRedirect').mockImplementation(mockSigninRedirect);
+    vitest.spyOn(UserManager.prototype, 'signinSilent').mockImplementation(mockSigninSilent);
     vitest.spyOn(UserManager.prototype, 'signinSilentCallback').mockImplementation(mockSigninSilentCallback);
     vitest.spyOn(UserManager.prototype, 'signoutRedirect').mockImplementation(mockSignoutRedirect);
     vitest.spyOn(UserManager.prototype, 'signoutRedirectCallback').mockImplementation(mockSignoutRedirectCallback);

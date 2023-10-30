@@ -3,8 +3,8 @@
  */
 import * as React from 'react';
 import create from 'zustand';
-import { describe, it, expect, vitest } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Breadcrumbs } from './Breadcrumbs';
 import { useRouteMatch } from 'react-router';
@@ -53,6 +53,10 @@ function createMockContainer(breadcrumbs = {}) {
 }
 
 describe('Piral-Breadcrumb Container component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('breadcrumbs empty', () => {
     const { context } = createMockContainer();
     const node = render(

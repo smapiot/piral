@@ -3,7 +3,7 @@
  */
 import 'url-polyfill';
 import 'whatwg-fetch';
-import { describe, it, expect, vitest } from 'vitest';
+import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
 import { createFetchApi } from './create';
 
 describe('Create fetch API Module', () => {

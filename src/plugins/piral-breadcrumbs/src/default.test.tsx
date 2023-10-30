@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import * as React from 'react';
-import { describe, it, expect, vitest } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { DefaultBreadcrumbsContainer } from './default';
 
 vitest.mock('piral-core', () => ({
@@ -30,14 +30,17 @@ vitest.mock('piral-core', () => ({
   },
 }));
 
+vitest.mock('react', async () => ({
+  ...(await vitest.importActual('react') as any),
+  useMemo: (cb) => cb(),
+}));
+
 const state = {
   registry: {
     tiles: {},
     extensions: {},
   },
 };
-
-(React as any).useMemo = (cb) => cb();
 
 const StubBreadcrumbsContainer: React.FC = () => <ul />;
 StubBreadcrumbsContainer.displayName = 'StubBreadcrumbsContainer';
@@ -46,6 +49,10 @@ const StubBreadcrumbItem: React.FC = () => <li />;
 StubBreadcrumbItem.displayName = 'BreadcrumbItem';
 
 describe('Default Breadcrumbs Component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('renders the react fragment in the default case', () => {
     (state.registry.tiles as any).a = {
       component: StubBreadcrumbItem,
