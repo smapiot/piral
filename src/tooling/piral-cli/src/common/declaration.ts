@@ -1,12 +1,14 @@
-import { DeclOptions, generateDeclaration, createExcludePlugin, Logger } from 'dets';
+import { DeclOptions, generateDeclaration, createDiffPlugin, Logger } from 'dets';
 import { dirname, basename, resolve, extname } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo, flattenExternals, validateSharedDependencies } from './package';
-import { entryModuleExtensions, piralBaseRoot } from './constants';
-import { readText, getEntryFiles, matchFiles, createFileIfNotExists } from './io';
+import { entryModuleExtensions, piralBaseRoot, packageJson } from './constants';
+import { readText, getEntryFiles, matchFiles, createFileIfNotExists, readJson } from './io';
 import { getModulePath } from '../external';
 import { LogLevels } from '../types';
+
+const piletApiName = 'PiletApi';
 
 function findPiralBaseRoot(root: string, framework: string) {
   const piralJson = `${framework}/package.json`;
@@ -19,6 +21,26 @@ function findPiralBaseRoot(root: string, framework: string) {
   }
 
   return root;
+}
+
+async function findPiralInstanceApi(piralInstance: string) {
+  if (piralInstance) {
+    const path = require.resolve(`${piralInstance}/${packageJson}`);
+    const root = dirname(path);
+    const data = await readJson(root, packageJson);
+    const subpath = data.types || data.typings;
+
+    if (subpath) {
+      return [
+        {
+          file: resolve(root, subpath),
+          name: piletApiName,
+        },
+      ];
+    }
+  }
+
+  return [];
 }
 
 function findPiralBaseApi(root: string, framework: string) {
@@ -36,7 +58,7 @@ function findPiralBaseApi(root: string, framework: string) {
     return [
       {
         file: resolve(projectDir, piletApiTypings),
-        name: 'PiletApi',
+        name: piletApiName,
       },
     ];
   } catch (err) {
@@ -113,7 +135,7 @@ async function createDeclarationFile(
   progress('Bundling declaration file ...');
 
   try {
-    const result = generateDeclaration(options);
+    const result = await generateDeclaration(options);
 
     progress('Writing declaration file ...');
     await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
@@ -124,6 +146,7 @@ async function createDeclarationFile(
 
 export async function createPiletDeclaration(
   name: string,
+  piralInstances: Array<string>,
   root: string,
   entry: string,
   allowedImports: Array<string>,
@@ -131,21 +154,27 @@ export async function createPiletDeclaration(
   forceOverwrite: ForceOverwrite,
   logLevel: LogLevels,
 ) {
-  const files = await getAllFiles([entry]);
-  const types = findDeclaredTypings(root);
-  const options: DeclOptions = {
-    name,
-    root,
-    files,
-    types: [...types, ...files],
-    plugins: [createExcludePlugin([name])],
-    apis: [],
-    noModuleDeclaration: true,
-    imports: allowedImports,
-    logLevel,
-    logger: createLogger(),
-  };
-  return await createDeclarationFile(options, root, target, forceOverwrite);
+  const piralInstance = piralInstances[0];
+  const apis = await findPiralInstanceApi(piralInstance);
+  const file = apis.map((m) => m.file)[0];
+
+  if (file) {
+    const files = await getAllFiles([entry]);
+    const types = findDeclaredTypings(root);
+    const options: DeclOptions = {
+      name: piralInstance,
+      root,
+      files,
+      types,
+      plugins: [createDiffPlugin(file)],
+      apis,
+      noModuleDeclaration: true,
+      imports: allowedImports,
+      logLevel,
+      logger: createLogger(),
+    };
+    return await createDeclarationFile(options, root, target, forceOverwrite);
+  }
 }
 
 export async function createPiralDeclaration(

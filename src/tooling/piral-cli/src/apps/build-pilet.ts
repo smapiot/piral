@@ -267,6 +267,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
       await createPiletDeclaration(
         piletPackage.name,
+        piralInstances,
         root,
         entryModule,
         externals,

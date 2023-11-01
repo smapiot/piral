@@ -5617,10 +5617,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-dets@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.13.0.tgz#d6a42edc845ecd9bc616961d6ea1ea45b0b271b8"
-  integrity sha512-5Dsm+lhQTfGEIgIvcRWPZ55OhPOQPrFI76QJFIIXbdvU96D7urVUUK+/1MHm1soSBaiSfk49B3wVBt5wG4RE5g==
+dets@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.14.0.tgz#6585c96d97493da52770e1039ecc51ae3ce9b3d4"
+  integrity sha512-nKrGBQRs7/tsmoMEVbFL6dmYDPRqeRupSw9Xf1zneZWydwkGrwzIPxgB/28Kxw5pe8GLJsaPG8Pnz9jOEJa1dw==
 
 diff-sequences@^29.4.3, diff-sequences@^29.6.3:
   version "29.6.3"

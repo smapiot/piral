@@ -5,6 +5,7 @@
 - Fixed inlined source maps for CSS files of Angular components
 - Fixed import in `piral-core` prevent `piral-cli-vite` to properly build
 - Updated direct usage of `tslib` in `piral-base`
+- Updated to latest version of `dets`
 - Added implementation for the `FallbackComponent` attribute in `piral-blazor`
 
 ## 1.3.2 (October 23, 2023)
