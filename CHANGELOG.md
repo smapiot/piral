@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.4.0 (tbd)
+
+- Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into separate repository
+
 ## 1.3.3 (November 2, 2023)
 
 - Fixed inlined source maps for CSS files of Angular components
