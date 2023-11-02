@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.3.3 (tbd)
+## 1.3.3 (November 2, 2023)
 
 - Fixed inlined source maps for CSS files of Angular components
 - Fixed import in `piral-core` prevent `piral-cli-vite` to properly build
