@@ -1,9 +1,9 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import type { ComponentType } from 'react-15';
+import type { ComponentType } from 'react';
 import { createExtension } from './extension';
-import { mountReact15, unmountReact15 } from './mount';
+import { mountReact, unmountReact } from './mount';
 
-export interface React15ConverterOptions {
+export interface ReactConverterOptions {
   /**
    * Defines the name of the root element.
    * @default piral-slot
@@ -11,18 +11,18 @@ export interface React15ConverterOptions {
   rootName?: string;
 }
 
-export function createConverter(config: React15ConverterOptions = {}) {
+export function createConverter(config: ReactConverterOptions = {}) {
   const { rootName = 'piral-slot' } = config;
   const Extension = createExtension(rootName);
   const convert = <TProps extends BaseComponentProps>(root: ComponentType<TProps>): ForeignComponent<TProps> => ({
     mount(el, props, ctx) {
-      mountReact15(el, root, props, ctx);
+      mountReact(el, root, props, ctx);
     },
     update(el, props, ctx) {
-      mountReact15(el, root, props, ctx);
+      mountReact(el, root, props, ctx);
     },
     unmount(el) {
-      unmountReact15(el);
+      unmountReact(el);
     },
   });
   convert.Extension = Extension;

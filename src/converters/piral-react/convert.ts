@@ -9,14 +9,14 @@ export interface HtmlComponent<TProps> {
   type: 'html';
 }
 
-export interface React15Converter {
+export interface ReactConverter {
   (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
 }
 
-export function createReact15Converter(...params: Parameters<typeof createConverter>) {
+export function createReactConverter(...params: Parameters<typeof createConverter>) {
   const convert = createConverter(...params);
   const Extension = convert.Extension;
-  const from: React15Converter = (root) => ({
+  const from: ReactConverter = (root) => ({
     type: 'html',
     component: convert(root),
   });
@@ -24,6 +24,6 @@ export function createReact15Converter(...params: Parameters<typeof createConver
   return { from, Extension };
 }
 
-const { from: fromReact15, Extension: React15Extension } = createReact15Converter();
+const { from: fromReact, Extension: ReactExtension } = createReactConverter();
 
-export { fromReact15, React15Extension };
+export { fromReact, ReactExtension };

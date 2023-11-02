@@ -3,6 +3,7 @@
 ## 1.4.0 (tbd)
 
 - Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into separate repository
+- Added `piral-react` as converter for React
 
 ## 1.3.3 (November 2, 2023)
 

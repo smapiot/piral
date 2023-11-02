@@ -1,11 +1,11 @@
 import type { BaseComponentProps } from 'piral-core';
-import { render } from 'react-dom-15';
-import { createElement, ComponentType, Component } from 'react-15';
+import { render } from 'react-dom';
+import { createElement, ComponentType, Component } from 'react';
 
 // tslint:disable-next-line:no-null-keyword
 export const anyPropType = () => null;
 
-export function mountReact15<T extends BaseComponentProps>(
+export function mountReact<T extends BaseComponentProps>(
   el: HTMLElement,
   root: ComponentType<T>,
   props: T,
@@ -35,7 +35,7 @@ export function mountReact15<T extends BaseComponentProps>(
   render(createElement(Provider, {}, createElement(root as any, props)), el);
 }
 
-export function unmountReact15(el: HTMLElement) {
+export function unmountReact(el: HTMLElement) {
   // tslint:disable-next-line:no-null-keyword
   render(null, el);
 }
