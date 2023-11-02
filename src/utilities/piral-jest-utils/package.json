@@ -1,6 +1,6 @@
 {
   "name": "piral-jest-utils",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Utilities for testing pilets with jest.",
   "keywords": [
     "piral",
@@ -70,6 +70,6 @@
   },
   "devDependencies": {
     "@types/jest": "^29",
-    "piral-core": "^1.3.2"
+    "piral-core": "^1.3.3"
   }
 }
