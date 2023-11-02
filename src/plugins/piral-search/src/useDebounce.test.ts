@@ -1,12 +1,16 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { useDebounce } from './useDebounce';
 
-jest.mock('react');
+vitest.mock('react');
 
 describe('Debounce Hook Module', () => {
   it('just returns initial value if nothing has been changed', () => {
-    const usedEffect = jest.fn();
-    const usedState = jest.fn((value) => [value]);
+    const usedEffect = vitest.fn();
+    const usedState = vitest.fn((value) => [value]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     const result = useDebounce('foo');
@@ -16,9 +20,9 @@ describe('Debounce Hook Module', () => {
   });
 
   it('invokes useEffect immediately, but does not set value immediately', () => {
-    const usedEffect = jest.fn((fn) => fn());
-    const setValue = jest.fn();
-    const usedState = jest.fn((value) => [value, setValue]);
+    const usedEffect = vitest.fn((fn) => fn());
+    const setValue = vitest.fn();
+    const usedState = vitest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     useDebounce('foo');
@@ -26,42 +30,42 @@ describe('Debounce Hook Module', () => {
   });
 
   it('invokes useEffect immediately, but sets value immediately if 0', () => {
-    jest.useFakeTimers();
-    const usedEffect = jest.fn((fn) => fn());
-    const setValue = jest.fn();
-    const usedState = jest.fn((value) => [value, setValue]);
+    vitest.useFakeTimers();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setValue = vitest.fn();
+    const usedState = vitest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     useDebounce('foo', 0);
-    jest.advanceTimersByTime(0);
+    vitest.advanceTimersByTime(0);
     expect(setValue).toHaveBeenCalled();
   });
 
   it('invokes useEffect immediately, but sets value after wait time', () => {
-    jest.useFakeTimers();
-    const usedEffect = jest.fn((fn) => fn());
-    const setValue = jest.fn();
-    const usedState = jest.fn((value) => [value, setValue]);
+    vitest.useFakeTimers();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setValue = vitest.fn();
+    const usedState = vitest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     expect(setValue).not.toHaveBeenCalled();
     useDebounce('foo', 300);
-    jest.advanceTimersByTime(300);
+    vitest.advanceTimersByTime(300);
     expect(setValue).toHaveBeenCalled();
   });
 
   it('invokes useEffect immediately and resets timer if needed', () => {
-    jest.useFakeTimers();
-    const usedEffect = jest.fn((fn) => fn());
-    const setValue = jest.fn();
-    const usedState = jest.fn((value) => [value, setValue]);
+    vitest.useFakeTimers();
+    const usedEffect = vitest.fn((fn) => fn());
+    const setValue = vitest.fn();
+    const usedState = vitest.fn((value) => [value, setValue]);
     (React as any).useState = usedState;
     (React as any).useEffect = usedEffect;
     expect(setValue).not.toHaveBeenCalled();
     useDebounce('foo', 300);
-    jest.advanceTimersByTime(250);
+    vitest.advanceTimersByTime(250);
     usedEffect.mock.results[0].value();
-    jest.advanceTimersByTime(50);
+    vitest.advanceTimersByTime(50);
     expect(setValue).not.toHaveBeenCalled();
   });
 });

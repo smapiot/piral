@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { createFeedOptions } from './utils';
 
 describe('Feed Module', () => {
   it('createFeedOptions works with a function resolver', () => {
-    const resolver = jest.fn();
+    const resolver = vitest.fn();
     const result = createFeedOptions('foo', resolver);
     result.initialize();
     result.update(undefined, undefined);
@@ -20,9 +24,9 @@ describe('Feed Module', () => {
 
   it('createFeedOptions works with a resolver object', () => {
     const options = {
-      connect: jest.fn(),
-      update: jest.fn(),
-      initialize: jest.fn(),
+      connect: vitest.fn(),
+      update: vitest.fn(),
+      initialize: vitest.fn(),
     };
     const result = createFeedOptions('foo', options);
     expect(result.immediately).toBeFalsy();
@@ -46,9 +50,9 @@ describe('Feed Module', () => {
       c() {},
     };
     const options = {
-      connect: jest.fn(),
-      update: jest.fn(),
-      initialize: jest.fn(),
+      connect: vitest.fn(),
+      update: vitest.fn(),
+      initialize: vitest.fn(),
       reducers,
     };
     const result = createFeedOptions('foo', options);
@@ -57,9 +61,9 @@ describe('Feed Module', () => {
 
   it('createFeedOptions works immediately', () => {
     const options = {
-      connect: jest.fn(),
-      update: jest.fn(),
-      initialize: jest.fn(),
+      connect: vitest.fn(),
+      update: vitest.fn(),
+      initialize: vitest.fn(),
       immediately: true,
     };
     const result = createFeedOptions('bar', options);

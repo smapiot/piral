@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { ExtensionSlot } from './ExtensionSlot';
 
-jest.mock('../hooks/globalState', () => ({
+vitest.mock('../hooks/globalState', () => ({
   useGlobalState: (select: any) => select(state),
   useGlobalStateContext: () => ({
     converters: {
@@ -21,11 +25,18 @@ jest.mock('../hooks/globalState', () => ({
     readState() {
       return '/';
     },
-    destroyPortal: jest.fn(),
+    destroyPortal: vitest.fn(),
   }),
 }));
 
-(React as any).useMemo = (cb) => cb();
+vitest.mock('react', async () => ({
+  ...(await vitest.importActual('react') as any),
+  useMemo(cb) {
+    return cb();
+  },
+}));
+
+// (React as any).useMemo = (cb) => cb();
 
 const StubComponent1: React.FC<any> = (props) => <div role="stub1" children={props.children} />;
 StubComponent1.displayName = 'StubComponent1';
@@ -66,6 +77,10 @@ const state = {
 };
 
 describe('Extension Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('is able to default render not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" />);
     expect(node.queryAllByRole("stub1").length).toBe(0);

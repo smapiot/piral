@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { DefaultContainer } from './default';
 
-jest.mock('piral-core', () => ({
+vitest.mock('piral-core', () => ({
   useGlobalState(select: any) {
     return select(state);
   },
@@ -26,14 +30,17 @@ jest.mock('piral-core', () => ({
   },
 }));
 
+vitest.mock('react', async () => ({
+  ...(await vitest.importActual('react') as any),
+  useMemo: (cb) => cb(),
+}));
+
 const state = {
   registry: {
     tiles: {},
     extensions: {},
   },
 };
-
-(React as any).useMemo = (cb) => cb();
 
 const StubDashboard: React.FC = () => <div role="dashboard" />;
 StubDashboard.displayName = 'StubDashboard';
@@ -42,6 +49,10 @@ const StubTile: React.FC = () => <div role="tile" />;
 StubTile.displayName = 'StubTile';
 
 describe('Default Dashboard Component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('renders the react fragment in the default case', () => {
     (state.registry.tiles as any).a = {
       component: StubTile,

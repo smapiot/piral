@@ -1,14 +1,18 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import * as piralCore from 'piral-core';
 import * as useForm from './useForm';
 import * as usePromise from './usePromise';
+import { describe, it, expect, vitest } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { withForm } from './withForm';
 
-jest.mock('piral-core');
-jest.mock('./useForm');
-jest.mock('./usePromise');
+vitest.mock('piral-core');
+vitest.mock('./useForm');
+vitest.mock('./usePromise');
 
 const mountWithRouter = (node, url = '/') =>
   render(
@@ -32,10 +36,10 @@ ErrorComponent.displayName = 'ErrorComponent';
 describe('withForm Module', () => {
   it('shows error component if nothing is loading and no data is available', () => {
     const options: any = { emptyData: {} };
-    const usedForm = jest.fn(() => ({
+    const usedForm = vitest.fn(() => ({
       submit() {},
     }));
-    const usedPromise = jest.fn(() => ({
+    const usedPromise = vitest.fn(() => ({
       loading: false,
       data: undefined,
       error: undefined,
@@ -49,10 +53,10 @@ describe('withForm Module', () => {
 
   it('shows data component if nothing is loading and data is available', () => {
     const options: any = { emptyData: {} };
-    const usedForm = jest.fn(() => ({
+    const usedForm = vitest.fn(() => ({
       submit() {},
     }));
-    const usedPromise = jest.fn(() => ({
+    const usedPromise = vitest.fn(() => ({
       loading: false,
       data: {},
       error: undefined,
@@ -66,10 +70,10 @@ describe('withForm Module', () => {
 
   it('shows loading component if it is loading', () => {
     const options: any = { emptyData: {} };
-    const usedForm = jest.fn(() => ({
+    const usedForm = vitest.fn(() => ({
       submit() {},
     }));
-    const usedPromise = jest.fn(() => ({
+    const usedPromise = vitest.fn(() => ({
       loading: true,
       data: undefined,
       error: undefined,
@@ -82,11 +86,11 @@ describe('withForm Module', () => {
   });
 
   it('calls load data if its there', () => {
-    const loadData = jest.fn(() => () => Promise.resolve({}));
-    const usedForm = jest.fn(() => ({
+    const loadData = vitest.fn(() => () => Promise.resolve({}));
+    const usedForm = vitest.fn(() => ({
       submit() {},
     }));
-    const usedPromise = jest.fn((fn) => {
+    const usedPromise = vitest.fn((fn) => {
       fn();
       return {
         loading: false,
@@ -105,10 +109,10 @@ describe('withForm Module', () => {
 
   it('does not call load data if its missing', () => {
     const loadData = undefined;
-    const usedForm = jest.fn(() => ({
+    const usedForm = vitest.fn(() => ({
       submit() {},
     }));
-    const usedPromise = jest.fn((fn) => {
+    const usedPromise = vitest.fn((fn) => {
       const data = fn();
       return {
         loading: false,

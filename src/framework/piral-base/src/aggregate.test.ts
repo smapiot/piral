@@ -1,12 +1,13 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { runPilet } from './aggregate';
 
 describe('Piral-Base aggregate module', () => {
   it('createPilet calls the setup method of the pilet', async () => {
-    const create: any = jest.fn(() => ({}));
-    const setup = jest.fn();
+    const create: any = vitest.fn(() => ({}));
+    const setup = vitest.fn();
     await runPilet(
       create,
       {
@@ -22,7 +23,7 @@ describe('Piral-Base aggregate module', () => {
   });
 
   it('createPilet does not call due to invalid api creator', async () => {
-    const setup = jest.fn();
+    const setup = vitest.fn();
     await runPilet(
       undefined,
       {

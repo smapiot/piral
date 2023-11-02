@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { initializeApi, mergeApis } from './api';
 
 const moduleMetadata = {
@@ -11,9 +12,9 @@ const moduleMetadata = {
 describe('API Module', () => {
   it('createCoreApi pluginMeta returns the metadata', () => {
     const container = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
     };
     const api = initializeApi(moduleMetadata, container);
     expect(api.meta).toEqual({

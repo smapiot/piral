@@ -1,13 +1,14 @@
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { defineAction, defineActions } from './define';
 
 function createMockContainer(initialState = {}) {
   const state = create(() => initialState);
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
     } as any,
   };

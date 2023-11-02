@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { Breadcrumbs } from './Breadcrumbs';
 import { useRouteMatch } from 'react-router';
@@ -11,13 +15,13 @@ MockBcContainer.displayName = 'MockBcContainer';
 const MockBcItem: React.FC<any> = ({ children }) => <div role="dialog">{children}</div>;
 MockBcItem.displayName = 'MockBcTile';
 
-jest.mock('react-router', () => ({
+vitest.mock('react-router', () => ({
   useLocation() {
     return {
       pathname: '/example',
     };
   },
-  useRouteMatch: jest.fn(() => ({})),
+  useRouteMatch: vitest.fn(() => ({})),
 }));
 
 function createMockContainer(breadcrumbs = {}) {
@@ -32,9 +36,9 @@ function createMockContainer(breadcrumbs = {}) {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       readState(read) {
@@ -49,6 +53,10 @@ function createMockContainer(breadcrumbs = {}) {
 }
 
 describe('Piral-Breadcrumb Container component', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('breadcrumbs empty', () => {
     const { context } = createMockContainer();
     const node = render(

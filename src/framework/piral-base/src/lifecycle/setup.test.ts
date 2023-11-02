@@ -1,16 +1,17 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { setupSinglePilet, setupPiletBundle } from './setup';
 
 describe('Setting up Modules', () => {
   it('works if single setup is available', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupSinglePilet(
@@ -25,12 +26,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if setup crashes for single', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupSinglePilet(
@@ -49,12 +50,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if no setup is available for single', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupSinglePilet({} as any, () => api, {});
@@ -63,12 +64,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if no module is available for single', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupSinglePilet(undefined as any, () => api, {});
@@ -77,12 +78,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if wrong type supplied for single', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupSinglePilet((() => {}) as any, () => api, {});
@@ -91,12 +92,12 @@ describe('Setting up Modules', () => {
   });
 
   it('works if multi setup is available', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     const factory = () => api;
@@ -112,12 +113,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if setup crashes for bundle', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupPiletBundle(
@@ -136,12 +137,12 @@ describe('Setting up Modules', () => {
   });
 
   it('emits error but does not crash if no setup is available for bundle', () => {
-    const setupMock = jest.fn();
-    console.error = jest.fn();
+    const setupMock = vitest.fn();
+    console.error = vitest.fn();
     const api = {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       meta: {} as any,
     };
     setupPiletBundle({} as any, () => api, {});

@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest } from 'vitest';
 import {
   setBundler,
   callPiletBuild,
@@ -13,20 +14,20 @@ const defaults = {
   bundler: false,
 };
 
-jest.mock('./build/bundler-calls.ts', () => ({
-  callDynamic: jest.fn(() =>
+vitest.mock('./build/bundler-calls.ts', () => ({
+  callDynamic: vitest.fn(() =>
     Promise.resolve({
       bundle: {},
     }),
   ),
-  callStatic: jest.fn(() =>
+  callStatic: vitest.fn(() =>
     Promise.resolve({
       bundle: {},
     }),
   ),
 }));
 
-jest.mock('./inject', () => ({
+vitest.mock('./inject', () => ({
   inject() {
     if (defaults.bundler) {
       setBundler({
@@ -43,7 +44,7 @@ jest.mock('./inject', () => ({
   },
 }));
 
-jest.mock('./common', () => ({
+vitest.mock('./common', () => ({
   config: {
     bundler: 'parcel',
   },
@@ -51,7 +52,7 @@ jest.mock('./common', () => ({
     return Promise.resolve(defval);
   },
   compatVersion: '1',
-  installNpmPackage: jest.fn(),
+  installNpmPackage: vitest.fn(),
   fail(msg) {
     throw new Error(msg);
   },
@@ -60,7 +61,7 @@ jest.mock('./common', () => ({
   determineNpmClient() {
     return 'npm';
   },
-  patchModules: jest.fn(),
+  patchModules: vitest.fn(),
   logReset() {},
 }));
 

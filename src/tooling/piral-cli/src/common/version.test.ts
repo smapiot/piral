@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { satisfies, validate } from './version';
 
 describe('semver check module', () => {

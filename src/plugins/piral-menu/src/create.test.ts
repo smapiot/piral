@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createElement, FC } from 'react';
 import { createMenuApi } from './create';
 
@@ -13,9 +17,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       converters: {},
       readState() {
@@ -46,8 +50,8 @@ const moduleMetadata = {
 describe('Create Menu API Extensions', () => {
   it('createMenuApi can register and unregister a menu', () => {
     const container = createMockContainer();
-    container.context.registerMenuItem = jest.fn();
-    container.context.unregisterMenuItem = jest.fn();
+    container.context.registerMenuItem = vitest.fn();
+    container.context.unregisterMenuItem = vitest.fn();
     const api = createApi(container);
     api.registerMenu('my-menu', StubComponent);
     expect(container.context.registerMenuItem).toHaveBeenCalledTimes(1);
@@ -61,8 +65,8 @@ describe('Create Menu API Extensions', () => {
 
   it('createMenuApi can dispose a registered menu', () => {
     const container = createMockContainer();
-    container.context.registerMenuItem = jest.fn();
-    container.context.unregisterMenuItem = jest.fn();
+    container.context.registerMenuItem = vitest.fn();
+    container.context.unregisterMenuItem = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerMenu('my-menu', StubComponent);
     expect(container.context.registerMenuItem).toHaveBeenCalledTimes(1);
@@ -76,8 +80,8 @@ describe('Create Menu API Extensions', () => {
 
   it('createMenuApi can dispose an anonymous menu', () => {
     const container = createMockContainer();
-    container.context.registerMenuItem = jest.fn();
-    container.context.unregisterMenuItem = jest.fn();
+    container.context.registerMenuItem = vitest.fn();
+    container.context.unregisterMenuItem = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerMenu(StubComponent);
     expect(container.context.registerMenuItem).toHaveBeenCalledTimes(1);

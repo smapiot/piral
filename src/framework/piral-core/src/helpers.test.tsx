@@ -1,14 +1,34 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createPiletOptions, PiletOptionsConfig } from './helpers';
 import { globalDependencies } from './modules';
 import { PiletMetadata } from 'piral-base';
 
+vitest.mock('../app.codegen', () => ({
+  createNavigation: vitest.fn(() => ({
+    publicPath: '/',
+  })),
+  fillDependencies: vitest.fn(),
+  integrateDebugger: vitest.fn(),
+  integrateEmulator: vitest.fn(),
+  publicPath: '/',
+  useRouteFilter(routes) {
+    return routes;
+  },
+  createDefaultState() {
+    return {};
+  },
+}));
+
 function createMockApi(meta: PiletMetadata) {
   return {
     meta,
-    emit: jest.fn(),
-    off: jest.fn(),
-    on: jest.fn(),
+    emit: vitest.fn(),
+    off: vitest.fn(),
+    on: vitest.fn(),
   } as any;
 }
 
@@ -25,9 +45,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       dispatch(cb) {
         state.setState(cb(state.getState()));
@@ -56,7 +76,7 @@ describe('Piral-Core helpers module', () => {
     process.env.DEBUG_PIRAL = 'true';
 
     // Arrange
-    const setupMock = jest.fn();
+    const setupMock = vitest.fn();
     const globalContext = createMockContainer().context;
     const providedPilets: Array<any> = [
       {
@@ -75,11 +95,11 @@ describe('Piral-Core helpers module', () => {
     const optionsConfig: PiletOptionsConfig = {
       createApi: createMockApi,
       availablePilets: providedPilets,
-      shareDependencies: jest.fn((deps) => deps),
+      shareDependencies: vitest.fn((deps) => deps),
       context: globalContext,
-      loadPilet: jest.fn(),
-      requestPilets: jest.fn(() => Promise.resolve(providedPilets)),
-      strategy: jest.fn(),
+      loadPilet: vitest.fn(),
+      requestPilets: vitest.fn(() => Promise.resolve(providedPilets)),
+      strategy: vitest.fn(),
     };
 
     // Act
@@ -95,7 +115,7 @@ describe('Piral-Core helpers module', () => {
 
   it('createPiletOptions creates the options exposing the global dependencies', () => {
     // Arrange
-    const setupMock = jest.fn();
+    const setupMock = vitest.fn();
     const globalContext = createMockContainer().context;
     const providedPilets: Array<any> = [
       {
@@ -115,10 +135,10 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      shareDependencies: jest.fn((deps) => deps),
-      loadPilet: jest.fn(),
-      requestPilets: jest.fn(() => Promise.resolve(providedPilets)),
-      strategy: jest.fn(),
+      shareDependencies: vitest.fn((deps) => deps),
+      loadPilet: vitest.fn(),
+      requestPilets: vitest.fn(() => Promise.resolve(providedPilets)),
+      strategy: vitest.fn(),
     };
 
     // Act
@@ -133,8 +153,8 @@ describe('Piral-Core helpers module', () => {
 
     // Arrange
     process.env.DEBUG_PIRAL = 'true';
-    const setupMock = jest.fn();
-    const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
+    const setupMock = vitest.fn();
+    const requestPilets = vitest.fn(() => Promise.resolve(providedPilets));
     const globalContext = createMockContainer().context;
     const providedPilets: Array<any> = [
       {
@@ -154,10 +174,10 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      shareDependencies: jest.fn((deps) => deps),
-      loadPilet: jest.fn(),
+      shareDependencies: vitest.fn((deps) => deps),
+      loadPilet: vitest.fn(),
       requestPilets: requestPilets,
-      strategy: jest.fn(),
+      strategy: vitest.fn(),
     };
 
     // Act
@@ -177,8 +197,8 @@ describe('Piral-Core helpers module', () => {
 
     // Arrange
     process.env.DEBUG_PILET = 'on';
-    const setupMock = jest.fn();
-    window.fetch = jest.fn((_, options) =>
+    const setupMock = vitest.fn();
+    window.fetch = vitest.fn((_, options) =>
       Promise.resolve({
         text() {
           return Promise.resolve('This is an example response');
@@ -188,7 +208,7 @@ describe('Piral-Core helpers module', () => {
         },
       }),
     ) as any;
-    const requestPilets = jest.fn(() => Promise.resolve(providedPilets));
+    const requestPilets = vitest.fn(() => Promise.resolve(providedPilets));
     const globalContext = createMockContainer().context;
     const providedPilets: Array<any> = [
       {
@@ -208,10 +228,10 @@ describe('Piral-Core helpers module', () => {
       createApi: createMockApi,
       availablePilets: providedPilets,
       context: globalContext,
-      shareDependencies: jest.fn((deps) => deps),
-      loadPilet: jest.fn(),
+      shareDependencies: vitest.fn((deps) => deps),
+      loadPilet: vitest.fn(),
       requestPilets: requestPilets,
-      strategy: jest.fn(),
+      strategy: vitest.fn(),
     };
 
     let hasFailed = false;

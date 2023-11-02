@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { SetError } from './SetError';
 import { StateContext } from '../state';
@@ -13,9 +17,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       setErrorComponent(name, comp) {
         const s = state.getState();

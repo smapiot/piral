@@ -57,7 +57,8 @@ async function installDefaultBundler(root: string) {
   await installNpmPackage(client, packageId, root, '--save-dev', '--save-exact');
   log('generalDebug_0003', `Installed bundler from "${selectedPackage}".`);
 
-  require('./inject').inject(selectedPackage);
+  const { inject } = await import('./inject');
+  inject(selectedPackage);
 }
 
 function checkDefaultBundler(bundler: QualifiedBundler) {

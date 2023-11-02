@@ -1,7 +1,11 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import * as hooks from '../hooks';
 import * as routes from './PiralRoutes';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vitest, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { PiralView } from './PiralView';
 
 const StubDashboard: React.FC<any> = () => <div role="dashboard" />;
@@ -19,8 +23,8 @@ StubRouter.displayName = 'StubRouter';
 const StubLayout: React.FC<any> = ({ children }) => <div role="layout">{children}</div>;
 StubLayout.displayName = 'StubLayout';
 
-jest.mock('../hooks');
-jest.mock('./PiralRoutes');
+vitest.mock('../hooks');
+vitest.mock('./PiralRoutes');
 
 const state = {
   app: {
@@ -47,6 +51,10 @@ const state = {
 (routes as any).PiralRoutes = ({ }) => <StubDashboard />;
 
 describe('Portal Module', () => {
+  afterEach(() => {
+    cleanup();
+  });
+  
   it('renders the dashboard / content in layout if loaded without error', () => {
     state.app.loading = false;
     state.app.error = undefined;

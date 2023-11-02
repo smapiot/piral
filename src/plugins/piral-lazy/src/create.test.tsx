@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { createLazyApi } from './create';
@@ -18,9 +22,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       converters: {
@@ -47,7 +51,7 @@ function createMockContainer() {
 
 describe('Piral-Lazy create module', () => {
   it('appends lazy loading for a DOM component', async () => {
-    const mount = jest.fn();
+    const mount = vitest.fn();
     const MyComponent = { component: { mount }, type: 'html' };
     const load = async () => await Promise.resolve(MyComponent);
     const { context, api } = createMockContainer();

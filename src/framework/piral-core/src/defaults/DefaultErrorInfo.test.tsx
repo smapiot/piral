@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { DefaultErrorInfo } from './DefaultErrorInfo';
 
-jest.mock('../hooks/globalState', () => ({
+vitest.mock('../hooks/globalState', () => ({
   useGlobalState(select: any) {
     return select(state);
   },

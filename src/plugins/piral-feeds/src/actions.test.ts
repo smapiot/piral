@@ -1,7 +1,30 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
-import { createListener } from 'piral-base';
-import { createActions } from 'piral-core';
+import { describe, it, expect, vitest } from 'vitest';
 import { destroyFeed, createFeed, loadedFeed, updateFeed, loadFeed } from './actions';
+
+function createListener() {
+  return {
+    on: vitest.fn(),
+    off: vitest.fn(),
+    emit: vitest.fn(),
+  };
+}
+
+function createActions(state, listener) {
+  return {
+    ...listener,
+    state: state.getState(),
+    readState(select) {
+      return select(state.getState());
+    },
+    dispatch(change) {
+      state.setState(change(state.getState()));
+    },
+  };
+}
 
 describe('Feeds Actions Module', () => {
   it('destroyFeed removes the feed with the given id', () => {
@@ -12,7 +35,7 @@ describe('Feeds Actions Module', () => {
         bar: 10,
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     destroyFeed(ctx, 'foo');
     expect((state.getState())).toEqual({
       foo: 5,
@@ -29,7 +52,7 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     createFeed(ctx, 'bar');
     expect((state.getState())).toEqual({
       foo: 5,
@@ -52,7 +75,7 @@ describe('Feeds Actions Module', () => {
         foo: 5,
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     loadedFeed(ctx, 'bar', 'test', 'errror');
     expect((state.getState())).toEqual({
       foo: 5,
@@ -81,7 +104,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     updateFeed(ctx, 'bar', 15, (data, item) => [...data, item]);
     expect((state.getState())).toEqual({
       foo: 5,
@@ -110,7 +133,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     await updateFeed(ctx, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
     expect((state.getState())).toEqual({
       foo: 5,
@@ -139,7 +162,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     await updateFeed(ctx, 'bar', 15, () => Promise.reject('Failed'));
     expect((state.getState())).toEqual({
       foo: 5,
@@ -169,7 +192,7 @@ describe('Feeds Actions Module', () => {
       },
     }));
     let cb = undefined;
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     const promise = loadFeed(ctx, {
       id: 'bar',
       initialize() {
@@ -235,7 +258,7 @@ describe('Feeds Actions Module', () => {
         },
       },
     }));
-    const ctx = createActions(state, createListener({}));
+    const ctx = createActions(state, createListener());
     await loadFeed(ctx, {
       id: 'bar',
       initialize() {

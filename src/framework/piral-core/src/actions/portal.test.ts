@@ -1,5 +1,6 @@
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { showPortal, destroyPortal, hidePortal, updatePortal } from './portal';
 
 describe('Piral-Core portal actions', () => {

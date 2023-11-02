@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest, beforeEach } from 'vitest';
 import { createOidcApi } from './create';
 import { PiletOidcApi } from './types';
 
@@ -19,12 +23,12 @@ describe('Piral-Oidc create module', () => {
 
   beforeEach(() => {
     context = {
-      on: jest.fn(),
+      on: vitest.fn(),
     };
 
     mock = {
-      token: jest.fn(() => mockToken),
-      account: jest.fn(() => mockProfile),
+      token: vitest.fn(() => mockToken),
+      account: vitest.fn(() => mockProfile),
     };
   });
 

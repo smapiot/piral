@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createElement, FC } from 'react';
 import { createDashboardApi } from './create';
 
@@ -13,9 +17,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       converters: {},
       readState() {
@@ -46,8 +50,8 @@ const moduleMetadata = {
 describe('Create Dashboard API Extensions', () => {
   it('createDashboardApi can register and unregister a tile', () => {
     const container = createMockContainer();
-    container.context.registerTile = jest.fn();
-    container.context.unregisterTile = jest.fn();
+    container.context.registerTile = vitest.fn();
+    container.context.unregisterTile = vitest.fn();
     const api = createApi(container);
     api.registerTile('my-tile', StubComponent);
     expect(container.context.registerTile).toHaveBeenCalledTimes(1);
@@ -59,8 +63,8 @@ describe('Create Dashboard API Extensions', () => {
 
   it('createDashboardApi can dispose a registered tile', () => {
     const container = createMockContainer();
-    container.context.registerTile = jest.fn();
-    container.context.unregisterTile = jest.fn();
+    container.context.registerTile = vitest.fn();
+    container.context.unregisterTile = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerTile('my-tile', StubComponent);
     expect(container.context.registerTile).toHaveBeenCalledTimes(1);
@@ -72,8 +76,8 @@ describe('Create Dashboard API Extensions', () => {
 
   it('createDashboardApi can dispose an anonymous tile', () => {
     const container = createMockContainer();
-    container.context.registerTile = jest.fn();
-    container.context.unregisterTile = jest.fn();
+    container.context.registerTile = vitest.fn();
+    container.context.unregisterTile = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerTile(StubComponent);
     expect(container.context.registerTile).toHaveBeenCalledTimes(1);

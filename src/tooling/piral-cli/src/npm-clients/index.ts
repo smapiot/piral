@@ -1,5 +1,5 @@
 import { dirname, resolve } from 'path';
-import { findFile } from '../io';
+import { findFile } from '../common/io';
 
 import * as lerna from './lerna';
 import * as npm from './npm';

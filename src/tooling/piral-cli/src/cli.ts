@@ -1,4 +1,4 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { detailed } from 'yargs-parser';
 import { caterpillerIcon, zapIcon, butterflyIcon, cliName, cliVersion } from './common';
 import { runQuestionnaireFor } from './questionnaire';

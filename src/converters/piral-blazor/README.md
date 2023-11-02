@@ -37,7 +37,7 @@ where `my-app-shell` should refer to the name of the NPM package of your app she
 Exposing components looks like:
 
 ```cs
-@attribute [ExposePilet("sample-page")]
+@attribute [PiralExtension("sample-page")]
 
 <div>
     <p>
@@ -58,9 +58,11 @@ Exposing components looks like:
 }
 ```
 
+For more details visit the [Piral.Blazor](https://github.com/smapiot/Piral.Blazor) repository.
+
 ## Architecture
 
-Blazor with Piral works from two sides. We have the app shell's side and the side of the microfrontends. This package allows to connect both sides, by placing a set of shared functionality in the app shell.
+Blazor with Piral works from two sides. We have the app shell's side and the side of the micro frontends. This package allows to connect both sides, by placing a set of shared functionality in the app shell.
 
 ![Architecture Diagram](https://raw.githubusercontent.com/smapiot/piral/documentation/docs/diagrams/blazor-architecture.png)
 
@@ -93,6 +95,8 @@ There is only a single argument, which refers to the name of the exposed Blazor 
 ## Usage
 
 ::: summary: For pilet authors
+
+**Note**: If you use the .NET template (and specifically the `Piral.Blazor.Tools` package) then the whole JavaScript code will be generated for you. There is nothing you will need to do - even though you can also manually extend the generated JavaScript module.
 
 You can use the `fromBlazor` function from the Pilet API to convert your Blazor components to components usable by your Piral instance.
 
@@ -133,7 +137,7 @@ export function setup(piral: PiletApi) {
 
 In this case, you'll also have to install the `blazor` package. `piral-blazor` will use this under the hood to access the Blazor libraries.
 
-To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the .NET Blazor `3.2` release train). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
+To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the outdated .NET Blazor `3.2` release train - more recent ones look like `blazor@7.0.0`). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
 :::
 

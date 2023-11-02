@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createElement, FC } from 'react';
 import { createModalsApi } from './create';
 
@@ -13,9 +17,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       converters: {},
       readState() {
@@ -46,8 +50,8 @@ const moduleMetadata = {
 describe('Create Modals API Extensions', () => {
   it('createModalsApi can register and unregister a modal', () => {
     const container = createMockContainer();
-    container.context.registerModal = jest.fn();
-    container.context.unregisterModal = jest.fn();
+    container.context.registerModal = vitest.fn();
+    container.context.unregisterModal = vitest.fn();
     const api = createApi(container);
     api.registerModal('modal', StubComponent);
     expect(container.context.registerModal).toHaveBeenCalledTimes(1);
@@ -59,8 +63,8 @@ describe('Create Modals API Extensions', () => {
 
   it('createModalsApi showModal uses an action and leaves a disposer', async () => {
     const container = createMockContainer();
-    container.context.openModal = jest.fn();
-    container.context.closeModal = jest.fn();
+    container.context.openModal = vitest.fn();
+    container.context.closeModal = vitest.fn();
     const api = createApi(container);
     const close = api.showModal('my-modal');
     close();
@@ -71,8 +75,8 @@ describe('Create Modals API Extensions', () => {
 
   it('createModalsApi can be disposed', async () => {
     const container = createMockContainer();
-    container.context.registerModal = jest.fn();
-    container.context.unregisterModal = jest.fn();
+    container.context.registerModal = vitest.fn();
+    container.context.unregisterModal = vitest.fn();
     const api = createApi(container);
     const dispose = api.registerModal('modal', StubComponent);
     expect(container.context.registerModal).toHaveBeenCalledTimes(1);

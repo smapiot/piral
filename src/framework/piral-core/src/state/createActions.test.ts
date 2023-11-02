@@ -1,13 +1,24 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { createListener } from 'piral-base';
 import { createActions, includeActions } from './createActions';
 
-jest.mock('../actions', () => ({
+vitest.mock('../actions', () => ({
   a(arg) {
     return arg.state;
   },
   b() {
     return 'foo';
   },
+}));
+
+vitest.mock('../../app.codegen', () => ({
+  createNavigation: vitest.fn(publicPath => ({
+    publicPath,
+  })),
+  publicPath: '/',
 }));
 
 describe('Create Actions Module', () => {

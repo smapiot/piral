@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import 'url-polyfill';
 import 'whatwg-fetch';
+import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
 import { createFetchApi } from './create';
 
 describe('Create fetch API Module', () => {
@@ -39,7 +43,7 @@ describe('Create fetch API Module', () => {
   afterAll(() => terminate());
 
   it('works with default options against a JSON API', async () => {
-    const context = { emit: jest.fn() } as any;
+    const context = { emit: vitest.fn() } as any;
     const { fetch } = createFetchApi({
       base: `http://localhost:${port}`,
     })(context) as any;
@@ -51,7 +55,7 @@ describe('Create fetch API Module', () => {
   });
 
   it('interprets the result as text if explicitly used despite JSON API', async () => {
-    const context = { emit: jest.fn() } as any;
+    const context = { emit: vitest.fn() } as any;
     const { fetch } = createFetchApi({
       base: `http://localhost:${port}`,
     })(context) as any;
@@ -62,7 +66,7 @@ describe('Create fetch API Module', () => {
   });
 
   it('has the correct response code', async () => {
-    const context = { emit: jest.fn() } as any;
+    const context = { emit: vitest.fn() } as any;
     const { fetch } = createFetchApi({
       base: `http://localhost:${port}`,
     })(context) as any;
@@ -72,7 +76,7 @@ describe('Create fetch API Module', () => {
   });
 
   it('works with default options against a non-JSON API', async () => {
-    const context = { emit: jest.fn() } as any;
+    const context = { emit: vitest.fn() } as any;
     const { fetch } = createFetchApi({
       base: `http://localhost:${port}`,
     })(context) as any;

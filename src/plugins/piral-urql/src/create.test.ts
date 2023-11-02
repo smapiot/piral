@@ -1,7 +1,11 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { createGqlApi } from './create';
 import { PiletGqlApi } from './types';
 
-jest.mock('./queries', () => ({
+vitest.mock('./queries', () => ({
   gqlQuery(c, q, o) {
     return Promise.resolve(o);
   },

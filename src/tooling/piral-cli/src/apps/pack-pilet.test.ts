@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { mkdtempSync, existsSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, resolve } from 'path';
@@ -40,11 +41,9 @@ describe('Pack Pilet Command', () => {
       }),
       'utf8',
     );
-    process.chdir(dir);
 
-    await packPilet();
+    await packPilet(dir);
 
-    process.chdir(originalDir);
     expect(existsSync(resolve(dir, 'my-pilet-1.0.0.tgz'))).toBeTruthy();
   });
 

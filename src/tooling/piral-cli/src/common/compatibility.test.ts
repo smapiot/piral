@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { checkAppShellCompatibility } from './compatibility';
 import { cliVersion } from './info';
 

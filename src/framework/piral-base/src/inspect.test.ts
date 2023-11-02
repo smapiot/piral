@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect } from 'vitest';
 import { inspectPilet } from './inspect';
 
 describe('inspect pilet module', () => {

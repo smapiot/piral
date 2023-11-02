@@ -1,4 +1,4 @@
-import { GlobalStateContext } from 'piral-core';
+import type { GlobalStateContext } from 'piral-core';
 import { UserInfo } from './types';
 
 export function setUser(ctx: GlobalStateContext, user: UserInfo) {

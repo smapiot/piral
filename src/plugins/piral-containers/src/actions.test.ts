@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createState, destroyState, replaceState } from './actions';
 
 function createMockContainer() {
@@ -6,9 +10,9 @@ function createMockContainer() {
   return {
     context: {
       converters: {},
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       readState(read) {

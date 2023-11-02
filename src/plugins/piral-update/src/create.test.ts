@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createUpdateApi } from './create';
 
 function createMockContainer() {
@@ -6,9 +10,9 @@ function createMockContainer() {
 
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       dispatch(update) {
@@ -30,7 +34,7 @@ const moduleMetadata = {
 describe('Create Update API Extensions', () => {
   it('createUpdateApi can set updatability', () => {
     const container = createMockContainer();
-    container.context.setUpdateMode = jest.fn();
+    container.context.setUpdateMode = vitest.fn();
     const api = (createUpdateApi()(container.context) as any)(container.api, moduleMetadata);
     api.canUpdate('allow');
     expect(container.context.setUpdateMode).toHaveBeenCalledTimes(1);

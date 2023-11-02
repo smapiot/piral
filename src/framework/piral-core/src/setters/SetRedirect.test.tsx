@@ -1,8 +1,18 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { render } from '@testing-library/react';
 import { SetRedirect } from './SetRedirect';
 import { StateContext } from '../state';
+
+vitest.mock('../../app.codegen', () => ({
+  createRedirect(to) {
+    return to;
+  },
+}));
 
 function createMockContainer() {
   const state = create(() => ({
@@ -10,9 +20,9 @@ function createMockContainer() {
   }));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       state,
       setRoute(name, comp) {
         const update = (s) => ({

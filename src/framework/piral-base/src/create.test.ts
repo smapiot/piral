@@ -1,11 +1,12 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import { startLoadingPilets } from './create';
 
 describe('Piral-Base create module', () => {
   it('startLoadingPilets triggers the selected strategy', async () => {
-    const reporter = jest.fn();
+    const reporter = vitest.fn();
     const loading = startLoadingPilets({
       createApi() {
         return undefined;
@@ -41,7 +42,7 @@ describe('Piral-Base create module', () => {
   });
 
   it('startLoadingPilets disconnects properly', async () => {
-    const reporter = jest.fn();
+    const reporter = vitest.fn();
     const loading = startLoadingPilets({
       createApi() {
         return undefined;
@@ -60,7 +61,7 @@ describe('Piral-Base create module', () => {
   });
 
   it('startLoadingPilets with a failing strategy', async () => {
-    const reporter = jest.fn();
+    const reporter = vitest.fn();
     const err = new Error('Failed to load');
     const loading = startLoadingPilets({
       createApi() {
@@ -83,7 +84,7 @@ describe('Piral-Base create module', () => {
   });
 
   it('startLoadingPilets with some delivered pilets', async () => {
-    const reporter = jest.fn();
+    const reporter = vitest.fn();
     const pilet1: any = {};
     const pilet2: any = {};
     const pilet3: any = {};
@@ -110,7 +111,7 @@ describe('Piral-Base create module', () => {
   });
 
   it('startLoadingPilets triggers the standard strategy', async () => {
-    const reporter = jest.fn();
+    const reporter = vitest.fn();
     const loading = startLoadingPilets({
       createApi() {
         return undefined;

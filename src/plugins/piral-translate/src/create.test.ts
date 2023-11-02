@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { createLocaleApi, setupLocalizer } from './create';
 
 describe('Create Localize API', () => {

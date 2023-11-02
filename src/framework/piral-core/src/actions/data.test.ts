@@ -1,4 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect } from 'vitest';
 import { createListener } from 'piral-base';
 import { readDataItem, readDataValue, resetData, tryWriteDataItem, writeDataItem } from './data';
 

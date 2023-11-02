@@ -1,11 +1,19 @@
 /**
- * @jest-environment node
+ * @vitest-environment node
  */
 
 import create from 'zustand';
+import { describe, it, expect, vitest } from 'vitest';
 import { createListener } from 'piral-base';
 import { createActions } from '../state';
 import { renderElement } from './element';
+
+vitest.mock('../../app.codegen', () => ({
+  createNavigation: vitest.fn(publicPath => ({
+    publicPath,
+  })),
+  publicPath: '/',
+}));
 
 function createMockContext(): [any, any] {
   const state: any = create(() => ({

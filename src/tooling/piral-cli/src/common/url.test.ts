@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { normalizePublicUrl } from './url';
 
 describe('Url Module', () => {

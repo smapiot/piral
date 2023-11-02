@@ -1,5 +1,19 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { createInstance } from './createInstance';
 import { standardStrategy, blazingStrategy } from 'piral-base';
+
+vitest.mock('../app.codegen', () => ({
+  createNavigation: vitest.fn(() => ({
+    publicPath: '/',
+  })),
+  fillDependencies: vitest.fn(),
+  integrateDebugger: vitest.fn(),
+  integrateEmulator: vitest.fn(),
+  publicPath: '/',
+  createDefaultState() {
+    return {};
+  },
+}));
 
 describe('Piral-Core createInstance module', () => {
   it('createInstance without arguments uses the standard strategy', () => {

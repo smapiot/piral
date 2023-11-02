@@ -1,18 +1,19 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { changeDomPortal, convertComponent, renderInDom } from './foreign';
 import { DefaultLoadingIndicator } from '../defaults/DefaultLoadingIndicator';
 import { ForeignComponent } from '../types';
 
-// const StubComponent: React.FC = (props) => <div />;
-// StubComponent.displayName = 'StubComponent';
-
 describe('Util Foreign.', () => {
   it('changeDomPortal changes dom in portal', () => {
     const children = React.createElement('div');
-    const current: React.ReactPortal = { key: 'current', children: { children }, type: 'div', props: null };
+    const current: React.ReactPortal = { key: 'current', children: { children } as any, type: 'div', props: null };
 
     const context = {
-      updatePortal: jest.fn(),
+      updatePortal: vitest.fn(),
     } as any;
     const portalId = 'pid';
     const element = document.createElement('piral-portal') as HTMLElement;
@@ -24,7 +25,7 @@ describe('Util Foreign.', () => {
 
   it('Convert component function throws error due to missing converter function.', () => {
     const t = () => {
-      convertComponent(null, React.createElement('div'));
+      convertComponent(null as any, React.createElement('div'));
     };
     expect(t).toThrow('No converter for component of type "div" registered.');
   });
@@ -41,7 +42,7 @@ describe('Util Foreign.', () => {
 
   it('Render in DOM', () => {
     const context = {
-      showPortal: jest.fn(),
+      showPortal: vitest.fn(),
     } as any;
     const portalId = 'pid';
     const element = document.createElement('piral-portal') as HTMLElement;
@@ -52,7 +53,7 @@ describe('Util Foreign.', () => {
 
   it('Render in DOM with parent node missing', () => {
     const context = {
-      showPortal: jest.fn(),
+      showPortal: vitest.fn(),
     } as any;
     const element = document.createElement('piral-portal') as HTMLElement;
     var [result] = renderInDom(context, element, DefaultLoadingIndicator, {});

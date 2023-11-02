@@ -1,14 +1,15 @@
 import 'systemjs/dist/system.js';
 import 'systemjs/dist/extras/named-register.js';
 
+import { describe, it, expect, vitest } from 'vitest';
 import loader from './index';
 
 describe('v2 loader module', () => {
   it('creates a new pilet with an empty setup function', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {};
     const pilet = await loader(meta, {});
     expect(typeof pilet.setup).toBe('function');
@@ -17,9 +18,9 @@ describe('v2 loader module', () => {
 
   it('creates a new pilet that fails loading', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.reject('errored')) as any;
+    System.import = vitest.fn(() => Promise.reject('errored')) as any;
     const meta: any = {};
     const pilet = await loader(meta, {});
     expect(typeof pilet.setup).toBe('function');
@@ -28,9 +29,9 @@ describe('v2 loader module', () => {
 
   it('creates a new pilet with empty dependencies', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {
       dependencies: {},
     };
@@ -41,9 +42,9 @@ describe('v2 loader module', () => {
 
   it('creates a new pilet with some new dependencies', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {
       dependencies: {
         a: 'foo',
@@ -57,10 +58,10 @@ describe('v2 loader module', () => {
 
   it('creates a new pilet with some existing dependencies', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.has = jest.fn(() => true);
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.has = vitest.fn(() => true);
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {
       dependencies: {
         a: 'foo',
@@ -73,9 +74,9 @@ describe('v2 loader module', () => {
 
   it('attaches new metadata that is decoupled', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {
       foo: 'a',
     };
@@ -89,9 +90,9 @@ describe('v2 loader module', () => {
 
   it('attaches new basePath based on link property', async () => {
     const app = {
-      setup: jest.fn(),
+      setup: vitest.fn(),
     };
-    System.import = jest.fn(() => Promise.resolve(app)) as any;
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
     const meta: any = {
       foo: 'a',
       link: 'https://example.com/foo/bar/index.js',

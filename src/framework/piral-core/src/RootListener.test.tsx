@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { describe, it, expect, vitest } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { RootListener } from './RootListener';
 
-jest.mock('./hooks/globalState', () => ({
+vitest.mock('./hooks/globalState', () => ({
   useGlobalStateContext: () => ({
     showPortal() {},
   }),
@@ -15,7 +19,7 @@ function resolveAfter(time = 5) {
 describe('RootListener Component', () => {
   it('renders the RootListener instance with default settings', async () => {
     const element = document.createElement('div');
-    const removed = jest.fn();
+    const removed = vitest.fn();
     document.body.appendChild(element);
     render(<RootListener />);
     document.body.removeEventListener = removed;
@@ -35,7 +39,7 @@ describe('RootListener Component', () => {
   });
 
   it('removes the RootListener successfully', async () => {
-    const removed = jest.fn();
+    const removed = vitest.fn();
     const container = render(<RootListener />);
     document.body.removeEventListener = removed;
     await act(resolveAfter);

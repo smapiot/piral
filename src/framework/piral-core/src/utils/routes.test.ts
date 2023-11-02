@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createRouteMatcher } from './routes';
 
 describe('Routes Utilities', () => {

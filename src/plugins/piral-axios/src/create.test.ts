@@ -1,13 +1,17 @@
+/**
+ * @vitest-environment jsdom
+ */
 import create from 'zustand';
+import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
 import { createAxiosApi } from './create';
 
 function createMockContainer() {
   const state = create(() => ({}));
   return {
     context: {
-      on: jest.fn(),
-      off: jest.fn(),
-      emit: jest.fn(),
+      on: vitest.fn(),
+      off: vitest.fn(),
+      emit: vitest.fn(),
       defineActions() {},
       state,
       dispatch(update) {

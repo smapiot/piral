@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import {
   appendItem,
   excludeItem,
@@ -69,7 +70,7 @@ describe('Helpers Module', () => {
   });
 
   it('prependItem works without an existing array', () => {
-    const result = prependItem(undefined, 4);
+    const result = prependItem(undefined as any, 4);
     expect(result).toEqual([4]);
   });
 
@@ -85,7 +86,7 @@ describe('Helpers Module', () => {
   });
 
   it('appendItem works without an existing array', () => {
-    const result = appendItem(undefined, 4);
+    const result = appendItem(undefined as any, 4);
     expect(result).toEqual([4]);
   });
 
@@ -111,7 +112,7 @@ describe('Helpers Module', () => {
   });
 
   it('prependItems works without an existing array', () => {
-    const result = prependItems(undefined, [4]);
+    const result = prependItems(undefined as any, [4]);
     expect(result).toEqual([4]);
   });
 
@@ -127,7 +128,7 @@ describe('Helpers Module', () => {
   });
 
   it('appendItems works without an existing array', () => {
-    const result = appendItems(undefined, [4]);
+    const result = appendItems(undefined as any, [4]);
     expect(result).toEqual([4]);
   });
 
@@ -155,7 +156,7 @@ describe('Helpers Module', () => {
   });
 
   it('excludeItem works without an existing array', () => {
-    const result = excludeItem(undefined, 2);
+    const result = excludeItem(undefined as any, 2);
     expect(result).toEqual([]);
   });
 
@@ -176,7 +177,7 @@ describe('Helpers Module', () => {
   });
 
   it('excludeOn works without an existing array', () => {
-    const result = excludeOn(undefined, (x) => x === 2);
+    const result = excludeOn(undefined as any, (x) => x === 2);
     expect(result).toEqual([]);
   });
 
@@ -193,7 +194,7 @@ describe('Helpers Module', () => {
 
   it('withKey works with an existing object', () => {
     const original = { a: 5 };
-    const result = withKey(original, 'b', 6);
+    const result = withKey(original, 'b' as any, 6);
     expect(result).toEqual({
       a: 5,
       b: 6,
@@ -202,12 +203,12 @@ describe('Helpers Module', () => {
 
   it('withKey does not modify existing object', () => {
     const original = { a: 5 };
-    const result = withKey(original, 'b', 6);
+    const result = withKey(original, 'b' as any, 6);
     expect(result).not.toBe(original);
   });
 
   it('withKey works without an existing object', () => {
-    const result = withKey(undefined, 'b', 6);
+    const result = withKey(undefined, 'b' as never, 6 as never);
     expect(result).toEqual({
       b: 6,
     });
@@ -215,7 +216,7 @@ describe('Helpers Module', () => {
 
   it('withoutKey ignores non-existing key', () => {
     const original = { a: 5 };
-    const result = withoutKey(original, 'b');
+    const result = withoutKey(original, 'b' as any);
     expect(result).toEqual({
       a: 5,
     });
@@ -246,12 +247,12 @@ describe('Helpers Module', () => {
   });
 
   it('withoutKey works without an existing object', () => {
-    const result = withoutKey(undefined, 'a');
+    const result = withoutKey(undefined, 'a' as never);
     expect(result).toEqual({});
   });
 
   it('withoutKey works without a valid key', () => {
-    const result = withoutKey({}, undefined as any);
+    const result = withoutKey({}, undefined as never);
     expect(result).toEqual({});
   });
 
@@ -261,7 +262,7 @@ describe('Helpers Module', () => {
   });
 
   it('updateKey with the removeIndicator', () => {
-    const result = updateKey({ b: '1233' }, 'b', null);
+    const result = updateKey({ b: '1233' }, 'b', null as any);
     expect(result).toEqual({});
   });
 

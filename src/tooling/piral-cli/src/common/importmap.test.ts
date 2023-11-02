@@ -1,6 +1,7 @@
+import { describe, it, expect, vitest } from 'vitest';
 import { readImportmap } from './importmap';
 
-jest.mock('./npm', () => ({
+vitest.mock('./npm', () => ({
   tryResolvePackage(id, dir) {
     if (id === 'qxz') {
       return undefined;
@@ -45,7 +46,7 @@ const mockPackages = {
   },
 };
 
-jest.mock('./io', () => ({
+vitest.mock('./io', () => ({
   checkIsDirectory() {},
   getHash() {},
   readJson(dir) {

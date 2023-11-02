@@ -1,4 +1,5 @@
-import { createTarball, unpackTarball, unpackGzTar } from './archive';
+import { describe, it, expect, vitest } from 'vitest';
+import { createTarball, unpackTarball } from './archive';
 import { Stream, Readable } from 'stream';
 
 class ReadableString extends Readable {
@@ -32,21 +33,23 @@ interface ExtractOptions {
   keep: boolean;
 }
 
-jest.mock('path', () =>
-  // extend the auto mock of path
-  Object.assign(jest.genMockFromModule('path'), {
+vitest.mock('path', async () => {
+  const original = await vitest.importActual('path') as any;
+
+  return {
+    ...original,
     relative: (from: string, to: string) => {
       return to;
     },
     resolve: (...pathSegments: string[]) => {
       return pathSegments[1];
     },
-  }),
-);
+  };
+});
 
 const fileNotFoundError = 'File not found!';
 
-jest.mock('../external', () => ({
+vitest.mock('../external', () => ({
   ora() {
     return {};
   },

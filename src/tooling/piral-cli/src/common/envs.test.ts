@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest, beforeEach, afterEach } from 'vitest';
 import { resolve } from 'path';
 import { setStandardEnvs } from './envs';
 
@@ -7,7 +8,7 @@ describe('Environment Module', () => {
   const oldEnv = process.env;
 
   beforeEach(() => {
-    jest.resetModules();
+    vitest.resetModules();
     process.env = {};
   });
 

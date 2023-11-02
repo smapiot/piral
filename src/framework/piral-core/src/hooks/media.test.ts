@@ -1,39 +1,45 @@
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
-import { useMedia } from './media';
+import { describe, it, expect, vitest } from 'vitest';
 
-jest.mock('react');
+vitest.mock('react');
 
-(React as any).useState = (v) => [v(), jest.fn()];
+(React as any).useState = (v) => [v(), vitest.fn()];
 
 describe('Media Hook Module', () => {
-  it('picks default mode if nothing else if given', () => {
-    const usedEffect = jest.fn();
+  it('picks default mode if nothing else if given', async () => {
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
-    window.matchMedia = jest.fn((q) => ({ matches: false })) as any;
+    window.matchMedia = vitest.fn((q) => ({ matches: false })) as any;
+    const { useMedia } = await import('./media');
     const layout = useMedia(['a', 'b', 'c'], ['mobile', 'tablet', 'desktop'], 'desktop');
     const cleanup = usedEffect.mock.calls[0][0]();
     expect(layout).toBe('desktop');
     cleanup();
   });
 
-  it('picks first role if already matches', () => {
-    const usedEffect = jest.fn();
+  it('picks first role if already matches', async () => {
+    const usedEffect = vitest.fn();
     (React as any).useEffect = usedEffect;
-    window.matchMedia = jest.fn((q) => ({ matches: true })) as any;
+    window.matchMedia = vitest.fn((q) => ({ matches: true })) as any;
+    const { useMedia } = await import('./media');
     const layout = useMedia(['a', 'b', 'c'], ['mobile', 'tablet', 'desktop'], 'desktop');
     const cleanup = usedEffect.mock.calls[0][0]();
     expect(layout).toBe('mobile');
     cleanup();
   });
 
-  it('adds up a resize event handler on init', () => {
-    const usedEffect = jest.fn();
+  it('adds up a resize event handler on init', async () => {
+    const usedEffect = vitest.fn();
     const originalAdd = window.addEventListener;
     const originalRemove = window.addEventListener;
     (React as any).useEffect = usedEffect;
-    window.addEventListener = jest.fn();
-    window.removeEventListener = jest.fn();
-    window.matchMedia = jest.fn((q) => ({ matches: true })) as any;
+    window.addEventListener = vitest.fn();
+    window.removeEventListener = vitest.fn();
+    window.matchMedia = vitest.fn((q) => ({ matches: true })) as any;
+    const { useMedia } = await import('./media');
     useMedia(['a', 'b', 'c'], ['mobile', 'tablet', 'desktop'], 'desktop');
     expect(window.addEventListener).toHaveBeenCalledTimes(0);
     const cleanup = usedEffect.mock.calls[0][0]();
@@ -43,14 +49,15 @@ describe('Media Hook Module', () => {
     window.removeEventListener = originalRemove;
   });
 
-  it('cleans up a resize event handler on done', () => {
-    const usedEffect = jest.fn();
+  it('cleans up a resize event handler on done', async () => {
+    const usedEffect = vitest.fn();
     const originalAdd = window.addEventListener;
     const originalRemove = window.addEventListener;
     (React as any).useEffect = usedEffect;
-    window.addEventListener = jest.fn();
-    window.removeEventListener = jest.fn();
-    window.matchMedia = jest.fn((q) => ({ matches: true })) as any;
+    window.addEventListener = vitest.fn();
+    window.removeEventListener = vitest.fn();
+    window.matchMedia = vitest.fn((q) => ({ matches: true })) as any;
+    const { useMedia } = await import('./media');
     useMedia(['a', 'b', 'c'], ['mobile', 'tablet', 'desktop'], 'desktop');
     const cleanup = usedEffect.mock.calls[0][0]();
     expect(window.removeEventListener).toHaveBeenCalledTimes(0);
@@ -60,13 +67,14 @@ describe('Media Hook Module', () => {
     window.removeEventListener = originalRemove;
   });
 
-  it('resize fires the handler', () => {
-    const usedEffect = jest.fn();
-    const update = jest.fn();
+  it('resize fires the handler', async () => {
+    const usedEffect = vitest.fn();
+    const update = vitest.fn();
     (React as any).useState = (v) => [v(), (k) => update(k())];
     (React as any).useEffect = usedEffect;
     let matcher = (q) => ({ matches: true });
-    window.matchMedia = jest.fn((q) => matcher(q)) as any;
+    window.matchMedia = vitest.fn((q) => matcher(q)) as any;
+    const { useMedia } = await import('./media');
     const layout = useMedia(['a', 'b', 'c'], ['mobile', 'tablet', 'desktop'], 'desktop');
     const cleanup = usedEffect.mock.calls[0][0]();
     const event = new Event('resize', { bubbles: true });

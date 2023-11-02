@@ -1,3 +1,4 @@
+import { describe, it, expect, vitest, beforeEach } from 'vitest';
 import rule from './pilet-has-externals-as-peers';
 import { PiletRuleContext } from '../types';
 
@@ -16,8 +17,8 @@ const usedExternalsToFail = usedExternalPrefixesToFail
   .map((prefix) => [`${prefix}-1`, `${prefix}-2`, `${prefix}-3`, `${prefix}-4`, `${prefix}-5`])
   .reduce((acc, val) => acc.concat(val), []);
 
-jest.mock('../common', () => ({
-  ...jest.requireActual('../common'),
+vitest.mock('../common', async () => ({
+  ...(await vitest.importActual('../common') as any),
   getSourceFiles() {
     return usedExternalPrefixes.map((prefix) => ({
       read() {
@@ -28,7 +29,7 @@ jest.mock('../common', () => ({
 }));
 
 describe('Rule pilet-has-externals-as-peers', () => {
-  const error = jest.fn();
+  const error = vitest.fn();
   const peerDependencies = {
     foo: '*',
     bar: '*',

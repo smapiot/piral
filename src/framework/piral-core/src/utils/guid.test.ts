@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { buildName, generateId } from './guid';
 
 describe('Guid Utility Module', () => {

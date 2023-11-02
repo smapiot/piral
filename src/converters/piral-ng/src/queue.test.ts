@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { enqueue } from './queue';
 
 describe('queue', () => {

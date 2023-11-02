@@ -1,8 +1,8 @@
 import { resolve } from 'path';
-import { log } from '../log';
-import { findFile } from '../io';
-import { runCommand } from '../scripts';
-import { MemoryStream } from '../MemoryStream';
+import { log } from '../common/log';
+import { findFile } from '../common/io';
+import { runCommand } from '../common/scripts';
+import { MemoryStream } from '../common/MemoryStream';
 
 // Helpers:
 

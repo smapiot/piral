@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vitest } from 'vitest';
 import { useDynamicLanguage, useTranslate } from './hooks';
 
-jest.mock('piral-core', () => ({
+vitest.mock('piral-core', () => ({
   useActions() {
     return {
       translate() {
@@ -13,7 +17,7 @@ jest.mock('piral-core', () => ({
   },
 }));
 
-jest.mock('react', () => ({
+vitest.mock('react', () => ({
   useEffect() {},
   useState(initial) {
     return [initial, () => {}];
