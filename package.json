@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@jsenv/file-size-impact": "12.1.1",
+    "@testing-library/react": "^14.1.0",
     "caniuse-lite": "^1.0.30001341",
     "esbuild": "^0.13.6",
     "lerna": "^6.0.1",
