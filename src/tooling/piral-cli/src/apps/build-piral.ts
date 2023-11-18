@@ -19,11 +19,14 @@ import {
   getDestination,
   validateSharedDependencies,
   flattenExternals,
+  createEmulatorWebsite,
 } from '../common';
 
+const allName = 'all';
 const releaseName = 'release';
 const emulatorName = 'emulator';
 const emulatorSourcesName = 'emulator-sources';
+const emulatorWebsiteName = 'emulator-website';
 
 export interface BuildPiralOptions {
   /**
@@ -118,7 +121,7 @@ export const buildPiralDefaults: BuildPiralOptions = {
   logLevel: LogLevels.info,
   fresh: false,
   minify: true,
-  type: 'all',
+  type: allName,
   subdir: true,
   sourceMaps: true,
   watch: false,
@@ -177,10 +180,11 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(dest.outDir);
   }
 
-  // everything except release -> build emulator
-  if (type !== releaseName) {
+  // either 'emulator-*' or 'all'
+  if (type === emulatorName || type === emulatorSourcesName || type === emulatorWebsiteName || type === allName) {
     const emulatorPublicUrl = '/';
     const targetDir = useSubdir ? join(dest.outDir, emulatorName) : dest.outDir;
+    const appDir = type !== emulatorWebsiteName ? join(targetDir, 'app') : targetDir;
     progress('Starting emulator build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
@@ -209,7 +213,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
         entryFiles,
         logLevel,
         ignored,
-        outDir: join(targetDir, 'app'),
+        outDir: appDir,
         outFile: dest.outFile,
         _,
       },
@@ -233,24 +237,28 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
 
-    const rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
+    const rootDir = await (type !== emulatorWebsiteName
+      ? createEmulatorSources(root, externals, outDir, outFile, logLevel)
+      : createEmulatorWebsite(root, externals, outDir, outFile, logLevel));
 
     await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
 
-    if (type !== emulatorSourcesName) {
+    if (type === allName || type === emulatorName) {
       await hooks.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
       await packageEmulator(rootDir);
       await hooks.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
       logDone(`Emulator package available in "${rootDir}".`);
-    } else {
+    } else if (type === emulatorSourcesName) {
       logDone(`Emulator sources available in "${rootDir}".`);
+    } else if (type === emulatorWebsiteName) {
+      logDone(`Emulator website available in "${rootDir}".`);
     }
 
     logReset();
   }
 
-  // everything except emulator and emulator-soruces -> build release
-  if (type !== emulatorName && type !== emulatorSourcesName) {
+  // either 'release' or 'all'
+  if (type === releaseName || type === allName) {
     const targetDir = useSubdir ? join(dest.outDir, releaseName) : dest.outDir;
     progress('Starting release build ...');
 

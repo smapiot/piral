@@ -14,7 +14,13 @@ import type {
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'v3', 'none'];
 export const publishModeKeys: Array<PiletPublishScheme> = ['none', 'basic', 'bearer', 'digest'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
-export const piralBuildTypeKeys: Array<PiralBuildType> = ['all', 'release', 'emulator', 'emulator-sources'];
+export const piralBuildTypeKeys: Array<PiralBuildType> = [
+  'all',
+  'release',
+  'emulator',
+  'emulator-sources',
+  'emulator-website',
+];
 export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'pnp', 'yarn', 'lerna', 'rush', 'bun'];
 export const sourceLanguageKeys: Array<SourceLanguage> = ['ts', 'js'];

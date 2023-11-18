@@ -3,9 +3,10 @@
 ## 1.4.0 (tbd)
 
 - Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
-- Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into separate repository
+- Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into a separate repository
 - Updated dependencies (#641)
 - Added `piral-react` as converter for React
+- Added possibility to publish emulator as a website (#644)
 
 ## 1.3.3 (November 2, 2023)
 
