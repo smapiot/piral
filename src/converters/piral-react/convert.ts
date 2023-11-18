@@ -1,3 +1,4 @@
+import { version, ComponentType } from 'react';
 import { createConverter } from './esm/converter';
 
 export interface HtmlComponent<TProps> {
@@ -10,16 +11,19 @@ export interface HtmlComponent<TProps> {
 }
 
 export interface ReactConverter {
-  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any>;
+  (...params: Parameters<ReturnType<typeof createConverter>>): HtmlComponent<any> | ComponentType<any>;
 }
 
 export function createReactConverter(...params: Parameters<typeof createConverter>) {
   const convert = createConverter(...params);
+  const transparent = System.get('react')?.version === version;
   const Extension = convert.Extension;
-  const from: ReactConverter = (root) => ({
-    type: 'html',
-    component: convert(root),
-  });
+  const from: ReactConverter = transparent
+    ? (root) => root
+    : (root) => ({
+        type: 'html',
+        component: convert(root),
+      });
 
   return { from, Extension };
 }
