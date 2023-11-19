@@ -195,7 +195,7 @@ export function publishNpmPackage(
   interactive = false,
 ): Promise<string> {
   const { publishPackage, loginUser } = clients.npm;
-  return publishPackage(target, file, ...flags).catch(err => {
+  return publishPackage(target, file, ...flags).catch((err) => {
     if (!interactive) {
       throw err;
     }
@@ -266,15 +266,26 @@ export function makeNpmAlias(name: string, version: string) {
 }
 
 export function isGitPackage(fullName: string) {
-  log('generalDebug_0003', 'Checking if its a Git package ...');
+  log('generalDebug_0003', 'Checking if its a git package ...');
 
   if (fullName) {
     const gitted = fullName.startsWith(gitPrefix);
 
     if (gitted || /^(https?|ssh):\/\/.*\.git$/.test(fullName)) {
-      log('generalDebug_0003', 'Found a Git package by name.');
+      log('generalDebug_0003', 'Found a git package by name.');
       return true;
     }
+  }
+
+  return false;
+}
+
+export function isRemotePackage(fullName: string) {
+  log('generalDebug_0003', 'Checking if its a remote package ...');
+
+  if (fullName && /^https?:\/\/.*/.test(fullName)) {
+    log('generalDebug_0003', 'Found a remote package by name.');
+    return true;
   }
 
   return false;
@@ -309,6 +320,8 @@ export async function dissectPackageName(
   if (isGitPackage(fullName)) {
     const gitUrl = makeGitUrl(fullName);
     return [gitUrl, 'latest', false, 'git'];
+  } else if (isRemotePackage(fullName)) {
+    return [fullName, 'latest', false, 'remote'];
   } else if (isLocalPackage(baseDir, fullName)) {
     const fullPath = resolveAbsPath(baseDir, fullName);
     const exists = await checkExists(fullPath);

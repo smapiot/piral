@@ -184,7 +184,7 @@ always-auth=true`,
       ),
     );
 
-    const [packageName, packageVersion] = await installPiralInstance(
+    const [packageName, packageVersion, packageDetails] = await installPiralInstance(
       source || `empty-piral@${cliVersion}`,
       fullBase,
       root,
@@ -209,6 +209,7 @@ always-auth=true`,
     await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
       language,
       bundler: bundlerName,
+      details: packageDetails,
     });
 
     const chosenTemplate = template || preSelectedTemplate || 'default';

@@ -74,13 +74,14 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
       const piletJsonDir = dirname(piletJsonPath);
       const root = await findPiletRoot(piletJsonDir);
       const oldContent = await readJson(piletJsonDir, piletJson);
-      const [appName] = await installPiralInstance(app, fullBase, root, npmClient);
+      const [appName, _, appDetails] = await installPiralInstance(app, fullBase, root, npmClient);
 
       const newContent = {
         ...oldContent,
         piralInstances: {
           ...oldContent.piralInstances,
           [appName]: {
+            ...appDetails,
             selected,
           },
         },

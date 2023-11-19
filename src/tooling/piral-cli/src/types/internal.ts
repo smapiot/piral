@@ -1,19 +1,20 @@
 import type { LogLevels } from './common';
 import type { ImportmapVersions, PiletSchemaVersion } from './public';
 
+export interface PiralInstanceDetails {
+  selected?: boolean;
+  port?: number;
+  path?: string;
+  url?: string;
+}
+
 /**
  * Shape of the pilet.json
  */
 export interface PiletDefinition {
   schemaVersion?: PiletSchemaVersion;
   importmapVersions?: ImportmapVersions;
-  piralInstances?: Record<
-    string,
-    {
-      selected?: boolean;
-      port?: number;
-    }
-  >;
+  piralInstances?: Record<string, PiralInstanceDetails>;
 }
 
 export interface PackageFiles {

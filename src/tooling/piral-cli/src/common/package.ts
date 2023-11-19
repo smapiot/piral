@@ -38,6 +38,7 @@ import {
   PiletDefinition,
   AppDefinition,
   PiralInstancePackageData,
+  PiralInstanceDetails,
 } from '../types';
 
 export interface PiralInstanceData {
@@ -653,7 +654,7 @@ export async function patchPiletPackage(
   version: string,
   piralInfo: PiralPackageData,
   fromEmulator: boolean,
-  newInfo?: { language: SourceLanguage; bundler: string },
+  newInfo?: { language: SourceLanguage; bundler: string; details: PiralInstanceDetails },
 ) {
   log('generalDebug_0003', `Patching the package.json in "${root}" ...`);
   const pkg = await getPiletPackage(root, name, version, piralInfo, fromEmulator, newInfo);
@@ -664,7 +665,7 @@ export async function patchPiletPackage(
   await updateExistingJson(root, piletJson, {
     $schema: piletJsonSchemaUrl,
     piralInstances: {
-      [name]: {},
+      [name]: newInfo?.details || {},
     },
   });
   log('generalDebug_0003', `Succesfully patched the pilet.json.`);

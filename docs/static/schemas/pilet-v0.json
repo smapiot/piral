@@ -36,6 +36,10 @@
           "path": {
             "type": "string",
             "description": "Defines the path to the emulator package of this app shell. If not given, the emulator package is resolved by the name of the given app shell key."
+          },
+          "url": {
+            "type": "string",
+            "description": "Defines the URL to the emulator website of this app shell. If provided, the emulator package is downloaded and updated automatically from the source."
           }
         },
         "required": []
