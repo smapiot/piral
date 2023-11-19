@@ -136,6 +136,7 @@ export interface BundlerPrepareArgs<T> {
 
 export interface BaseBundlerDefinition<T> {
   path: string;
+  exec?: string;
   prepare?: BundlerPrepareArgs<T>;
 }
 

@@ -122,7 +122,7 @@ export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: s
   try {
     const action = bundler.actions.debugPiral;
     const params = await prepareArgs(action, args);
-    return await callDynamic('debug-piral', action.path, params);
+    return await callDynamic('debug-piral', action.path, params, action.exec);
   } catch (err) {
     fail('bundlingFailed_0174', err);
   }
@@ -134,7 +134,7 @@ export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: s
   try {
     const action = bundler.actions.debugPilet;
     const params = await prepareArgs(action, args);
-    return await callDynamic('debug-pilet', action.path, params);
+    return await callDynamic('debug-pilet', action.path, params, action.exec);
   } catch (err) {
     fail('bundlingFailed_0174', err);
   }
@@ -146,7 +146,7 @@ export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: s
   try {
     const action = bundler.actions.buildPiral;
     const params = await prepareArgs(action, args);
-    const instance = await callStatic('build-piral', action.path, params);
+    const instance = await callStatic('build-piral', action.path, params, action.exec);
     return instance.bundle;
   } catch (err) {
     fail('bundlingFailed_0174', err);
@@ -159,7 +159,7 @@ export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: s
   try {
     const action = bundler.actions.buildPilet;
     const params = await prepareArgs(action, args);
-    const instance = await callStatic('build-pilet', action.path, params);
+    const instance = await callStatic('build-pilet', action.path, params, action.exec);
     return instance.bundle;
   } catch (err) {
     fail('bundlingFailed_0174', err);
@@ -175,7 +175,7 @@ export async function callDebugPiralFromMonoRepo(
   try {
     const action = bundler.actions.watchPiral;
     const params = await prepareArgs(action, args);
-    const instance = await callStatic('debug-mono-piral', action.path, params);
+    const instance = await callStatic('debug-mono-piral', action.path, params, action.exec);
     return instance.bundle;
   } catch (err) {
     fail('bundlingFailed_0174', err);

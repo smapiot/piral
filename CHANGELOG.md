@@ -7,6 +7,7 @@
 - Updated dependencies (#641)
 - Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
+- Added option to specify execution path for bundler plugins
 
 ## 1.3.3 (November 2, 2023)
 
