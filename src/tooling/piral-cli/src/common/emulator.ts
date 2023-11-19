@@ -1,4 +1,3 @@
-import { resolve as resolveUrl } from 'url';
 import { join, resolve, relative, basename } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
@@ -8,46 +7,9 @@ import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
 import { ForceOverwrite } from './enums';
 import { createTarball } from './archive';
-import { createDirectory, removeDirectory, matchFiles, removeAny, getFileNames, writeBinary } from './io';
+import { createDirectory, removeDirectory, matchFiles, removeAny, getFileNames } from './io';
 import { updateExistingJson, readJson, writeJson, createFileIfNotExists } from './io';
-import { axios } from '../external';
-import { LogLevels, SharedDependency, PiletsInfo, TemplateFileLocation, Importmap } from '../types';
-
-export interface EmulatorWebsiteManifestFiles {
-  typings: string;
-  main: string;
-  app: string;
-  assets: Array<string>;
-}
-
-export interface EmulatorWebsiteManifest {
-  name: string;
-  description: string;
-  version: string;
-  timestamp: string;
-  scaffolding: {
-    pilets: PiletsInfo;
-    cli: string;
-  };
-  files: EmulatorWebsiteManifestFiles;
-  importmap: Importmap;
-  dependencies: {
-    optional: Record<string, string>;
-    included: Record<string, string>;
-  };
-}
-
-async function downloadEmulatorFiles(manifestUrl: string, target: string, files: EmulatorWebsiteManifestFiles) {
-  const requiredFiles = [files.typings, files.main, files.app];
-
-  await Promise.all(
-    requiredFiles.map(async (file) => {
-      const res = await axios.default.get(resolveUrl(manifestUrl, file), { responseType: 'arraybuffer' });
-      const data: Buffer = res.data;
-      await writeBinary(target, file, data);
-    }),
-  );
-}
+import { EmulatorWebsiteManifest, LogLevels, SharedDependency, PiletsInfo, TemplateFileLocation } from '../types';
 
 export async function createEmulatorSources(
   sourceDir: string,
@@ -282,51 +244,6 @@ export async function createEmulatorWebsite(
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
   return targetDir;
-}
-
-export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
-  const response = await axios.default.get(manifestUrl);
-  const emulatorJson: EmulatorWebsiteManifest = response.data;
-
-  const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
-  const appDirName = 'app';
-  const mainFile = 'index.js';
-  const appDir = resolve(targetDir, appDirName);
-  await createDirectory(appDir);
-
-  await writeJson(
-    targetDir,
-    packageJson,
-    {
-      name: emulatorJson.name,
-      description: emulatorJson.description,
-      version: emulatorJson.version,
-      importmap: emulatorJson.importmap,
-      pilets: emulatorJson.scaffolding.pilets,
-      piralCLI: {
-        version: emulatorJson.scaffolding.cli,
-        timestamp: emulatorJson.timestamp,
-        source: manifestUrl,
-        generated: true,
-      },
-      main: `./${join(appDirName, mainFile)}`,
-      typings: `./${join(appDirName, emulatorJson.files.typings)}`,
-      app: `./${join(appDirName, emulatorJson.files.app)}`,
-      peerDependencies: {},
-      optionalDependencies: emulatorJson.dependencies.optional,
-      devDependencies: emulatorJson.dependencies.included,
-    },
-    true,
-  );
-
-  // actually including this one hints that the app shell should have been included - which is forbidden
-  await createPiralStubIndexIfNotExists(appDir, mainFile, ForceOverwrite.yes, {
-    name: emulatorJson.name,
-    outFile: emulatorJson.files.main,
-  });
-
-  await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files);
-  return emulatorJson;
 }
 
 export async function packageEmulator(rootDir: string) {

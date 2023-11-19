@@ -1,8 +1,8 @@
 import { progress } from './log';
+import { scaffoldFromEmulatorWebsite } from './website';
 import { combinePackageRef, getPackageName, getPackageVersion } from './npm';
 import { dissectPackageName, installNpmPackage, isLinkedPackage } from './npm';
 import { NpmClientType, PiralInstanceDetails } from '../types';
-import { scaffoldFromEmulatorWebsite } from './emulator';
 
 export async function installPiralInstance(
   usedSource: string,
@@ -13,20 +13,14 @@ export async function installPiralInstance(
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource);
 
   if (type === 'remote') {
+    progress(`Downloading emulator from %s ...`, sourceName);
     const emulatorJson = await scaffoldFromEmulatorWebsite(rootDir, sourceName);
+    const details = {
+      url: sourceName,
+    };
 
-    return [
-      emulatorJson.name,
-      emulatorJson.version,
-      {
-        url: sourceName,
-      },
-    ];
-  }
-
-  const isLocal = isLinkedPackage(sourceName, type, hadVersion, rootDir);
-
-  if (!isLocal) {
+    return [emulatorJson.name, emulatorJson.version, details];
+  } else if (!isLinkedPackage(sourceName, type, hadVersion, rootDir)) {
     const packageRef = combinePackageRef(sourceName, sourceVersion, type);
 
     progress(`Installing npm package %s ...`, packageRef);
@@ -37,6 +31,5 @@ export async function installPiralInstance(
 
   const packageName = await getPackageName(rootDir, sourceName, type);
   const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, rootDir);
-
   return [packageName, packageVersion, {}];
 }

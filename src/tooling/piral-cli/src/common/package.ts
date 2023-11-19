@@ -11,35 +11,15 @@ import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
-import { getModulePath } from '../external';
+import { scaffoldFromEmulatorWebsite } from './website';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
-import {
-  declarationEntryExtensions,
-  piralJsonSchemaUrl,
-  piletJsonSchemaUrl,
-  filesTar,
-  filesOnceTar,
-  bundlerNames,
-  frameworkLibs,
-  piralJson,
-  piletJson,
-  packageJson,
-} from './constants';
-import {
-  SourceLanguage,
-  Framework,
-  FileInfo,
-  PiletsInfo,
-  TemplateFileLocation,
-  PiletPackageData,
-  PiralPackageData,
-  SharedDependency,
-  PiletDefinition,
-  AppDefinition,
-  PiralInstancePackageData,
-  PiralInstanceDetails,
-} from '../types';
+import { piralJsonSchemaUrl, piletJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames } from './constants';
+import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson, packageJson } from './constants';
+import { getModulePath } from '../external';
+import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition } from '../types';
+import { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
+import { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
 export interface PiralInstanceData {
   packageName: Framework;
@@ -169,10 +149,10 @@ export function getPiralPath(root: string, name: string) {
 
 export async function findPiralInstance(
   proposedApp: string,
-  baseDir: string,
-  port: number,
+  rootDir: string,
+  details?: PiralInstanceDetails,
 ): Promise<PiralInstancePackageData> {
-  const path = findPackageRoot(proposedApp, baseDir);
+  const path = findPackageRoot(proposedApp, rootDir);
 
   if (path) {
     log('generalDebug_0003', `Following the app package in "${path}" ...`);
@@ -181,8 +161,13 @@ export async function findPiralInstance(
     const relPath = appPackage && appPackage.app;
     appPackage.app = relPath && resolve(root, relPath);
     appPackage.root = root;
-    appPackage.port = port;
+    appPackage.port = details?.port || 0;
     return appPackage;
+  } else if (details?.url) {
+    const { url, ...rest } = details;
+    log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
+    await scaffoldFromEmulatorWebsite(rootDir, url);
+    return await findPiralInstance(proposedApp, rootDir, rest);
   }
 
   fail('appInstanceNotFound_0010', proposedApp);
@@ -192,7 +177,7 @@ export async function findPiralInstances(
   proposedApps: Array<string>,
   piletPackage: PiletPackageData,
   piletDefinition: undefined | PiletDefinition,
-  baseDir: string,
+  rootDir: string,
 ) {
   if (proposedApps) {
     // do nothing
@@ -210,7 +195,7 @@ export async function findPiralInstances(
   if (proposedApps.length > 0) {
     return Promise.all(
       proposedApps.map((proposedApp) =>
-        findPiralInstance(proposedApp, baseDir, piletDefinition?.piralInstances?.[proposedApp]?.port ?? 0),
+        findPiralInstance(proposedApp, rootDir, piletDefinition?.piralInstances?.[proposedApp]),
       ),
     );
   }
@@ -221,7 +206,7 @@ export async function findPiralInstances(
 export function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
-  return readJson(path, 'package.json');
+  return readJson(path, packageJson);
 }
 
 export async function patchPiralPackage(
@@ -798,7 +783,7 @@ export async function retrievePiletData(target: string, app?: string) {
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, 'package.json');
   const piletDefinition: PiletDefinition = piletJsonPath && (await readJson(proposedRoot, piletJson));
-  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, target);
+  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, root);
   const apps: Array<AppDefinition> = [];
 
   for (const appPackage of appPackages) {
