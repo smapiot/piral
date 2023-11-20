@@ -64,7 +64,7 @@ describe('Piral-CLI piral injector', () => {
     expect(injector.active).toBeFalsy();
   });
 
-  it('PiralInjector can send reponse and fails with invalid path', () => {
+  it('PiralInjector can send reponse and fails with invalid path', async () => {
     // Arrange
     const config = {
       bundler: bundlerMock,
@@ -75,7 +75,7 @@ describe('Piral-CLI piral injector', () => {
     const injector = new PiralInjector(config, undefined as any, new EventEmitter());
 
     // Act
-    const res = injector.sendResponse('some/nice/invalid/path', 'sometarget.file', 'someDir', 'localhost:1234');
+    const res = await injector.sendResponse('some/nice/invalid/path', 'sometarget.file', 'someDir', 'localhost:1234');
 
     // Assert
     expect(res).toBeUndefined();

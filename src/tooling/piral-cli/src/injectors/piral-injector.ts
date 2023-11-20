@@ -1,20 +1,29 @@
 import { join } from 'path';
 import { EventEmitter } from 'events';
-import { readFileSync, existsSync, statSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration } from 'kras';
+import { readFile, stat } from 'fs/promises';
+import { KrasInjector, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { mime } from '../external';
 import { Bundler } from '../types';
-
-/**
- * The maximum amount of retries when sending a response
- */
-const maxRetrySendResponse = 4;
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
   feed?: string;
   headers?: Record<string, string>;
+}
+
+/**
+ * The maximum amount of retries when sending a response
+ */
+const maxRetrySendResponse = 4;
+
+async function isNoFile(target: string) {
+  try {
+    const info = await stat(target);
+    return !info.isFile();
+  } catch {
+    return true;
+  }
 }
 
 export default class PiralInjector implements KrasInjector {
@@ -63,7 +72,7 @@ export default class PiralInjector implements KrasInjector {
 
   setOptions() {}
 
-  sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
+  sendContent(content: Buffer | string, type: string, url: string): KrasResult {
     const { headers } = this.config;
     return {
       injector: { name: this.name },
@@ -80,8 +89,8 @@ export default class PiralInjector implements KrasInjector {
     };
   }
 
-  sendIndexFile(target: string, url: string): KrasResponse {
-    const indexHtml = readFileSync(target, 'utf8');
+  async sendIndexFile(target: string, url: string): Promise<KrasResult> {
+    const indexHtml = await readFile(target, 'utf8');
     const { feed } = this.config;
 
     if (feed) {
@@ -96,7 +105,7 @@ export default class PiralInjector implements KrasInjector {
     return this.sendContent(indexHtml, mime.getType(target), url);
   }
 
-  sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): KrasResponse {
+  async sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): Promise<KrasResult> {
     if (recursionDepth > maxRetrySendResponse) {
       return undefined;
     }
@@ -104,17 +113,18 @@ export default class PiralInjector implements KrasInjector {
     const { bundler } = this.config;
     const newTarget = join(bundler.bundle.dir, bundler.bundle.name);
 
-    if (!path || !existsSync(target) || !statSync(target).isFile()) {
-      return this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
+    if (!path || (await isNoFile(target))) {
+      return await this.sendResponse(bundler.bundle.name, newTarget, dir, url, recursionDepth + 1);
     } else if (target === newTarget) {
-      return this.sendIndexFile(target, url);
+      return await this.sendIndexFile(target, url);
+    } else {
+      const type = mime.getType(target) ?? 'application/octet-stream';
+      const content = await readFile(target);
+      return this.sendContent(content, type, url);
     }
-
-    const type = mime.getType(target) ?? 'application/octet-stream';
-    return this.sendContent(readFileSync(target), type, url);
   }
 
-  handle(req: KrasRequest): KrasResponse {
+  async handle(req: KrasRequest): Promise<KrasResult> {
     if (!req.target) {
       const { bundler, publicUrl } = this.config;
 
@@ -122,8 +132,9 @@ export default class PiralInjector implements KrasInjector {
         const pathLength = publicUrl.length || 1;
         const path = req.url.substring(pathLength);
         const dir = bundler.bundle.dir;
-        const target = join(dir, path.split('?')[0]);
-        return bundler.ready().then(() => this.sendResponse(path, target, dir, req.url));
+        const target = join(dir, path.split('?').shift());
+        await bundler.ready();
+        return await this.sendResponse(path, target, dir, req.url);
       }
     }
   }

@@ -1,19 +1,13 @@
 import { URL } from 'url';
 import { join } from 'path';
 import { EventEmitter } from 'events';
-import { readFileSync, existsSync, statSync, writeFileSync } from 'fs';
-import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
+import { readFile, stat, writeFile } from 'fs/promises';
+import { KrasInjector, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
 import { getPiletSpecMeta } from '../common/spec';
 import { config as commonConfig } from '../common/config';
 import { axios, mime, jju } from '../external';
 import { Bundler } from '../types';
-
-interface Pilet {
-  bundler: Bundler;
-  root: string;
-  getMeta(basePath: string): PiletMetadata;
-}
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   /**
@@ -54,31 +48,43 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
   headers?: Record<string, string>;
 }
 
+interface Pilet {
+  bundler: Bundler;
+  root: string;
+  getMeta(basePath: string): PiletMetadata;
+}
+
 interface PiletMetadata {
   name?: string;
   config?: Record<string, any>;
   [key: string]: unknown;
 }
 
-function getMetaOverride(root: string, metaFile: string) {
+async function getMetaOverride(root: string, metaFile: string) {
   if (metaFile) {
     const metaPath = join(root, metaFile);
+    const exists = await stat(metaPath).then(
+      () => true,
+      () => false,
+    );
 
-    if (existsSync(metaPath)) {
-      return jju.parse(readFileSync(metaPath, 'utf8'));
+    if (exists) {
+      const metaContent = await readFile(metaPath, 'utf8');
+      return jju.parse(metaContent);
     }
   }
 
   return undefined;
 }
 
-function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
+async function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
   const { root, bundler } = pilet;
   const packagePath = join(root, 'package.json');
-  const def = jju.parse(readFileSync(packagePath, 'utf8'));
+  const jsonContent = await readFile(packagePath, 'utf8');
+  const def = jju.parse(jsonContent);
   const file = bundler.bundle.name.replace(/^[\/\\]/, '');
   const target = join(bundler.bundle.dir, file);
-  const metaOverride = getMetaOverride(root, metaFile);
+  const metaOverride = await getMetaOverride(root, metaFile);
 
   pilet.getMeta = (parentPath) => {
     const basePath = `${parentPath}${subPath}`;
@@ -96,11 +102,11 @@ function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
   };
 }
 
+type FeedResponse = { items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata;
+
 async function loadFeed(feed: string) {
   try {
-    const response = await axios.default.get<{ items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata>(
-      feed,
-    );
+    const response = await axios.default.get<FeedResponse>(feed);
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -161,8 +167,8 @@ export default class PiletInjector implements KrasInjector {
       });
 
       pilets.forEach((p, i) =>
-        p.bundler.on(() => {
-          fillPiletMeta(p, config.meta, `/${i}/`);
+        p.bundler.on(async () => {
+          await fillPiletMeta(p, config.meta, `/${i}/`);
 
           for (const id of Object.keys(cbs)) {
             const { baseUrl, notify } = cbs[id];
@@ -268,7 +274,7 @@ export default class PiletInjector implements KrasInjector {
     return merged;
   }
 
-  sendContent(content: Buffer | string, type: string, url: string): KrasResponse {
+  sendContent(content: Buffer | string, type: string, url: string): KrasResult {
     const { headers } = this.config;
 
     return {
@@ -286,8 +292,8 @@ export default class PiletInjector implements KrasInjector {
     };
   }
 
-  sendFile(target: string, url: string): KrasResponse {
-    const content = readFileSync(target);
+  async sendFile(target: string, url: string): Promise<KrasResult> {
+    const content = await readFile(target);
     const type = mime.getType(target) ?? 'application/octet-stream';
     return this.sendContent(content, type, url);
   }
@@ -298,23 +304,25 @@ export default class PiletInjector implements KrasInjector {
     const pilet = pilets[+index];
     const bundler = pilet?.bundler;
 
+    await bundler?.ready();
+
     if (!path) {
-      await bundler?.ready();
       const content = await this.getIndexMeta(baseUrl);
       return this.sendContent(content, 'application/json', url);
-    } else {
-      return bundler?.ready().then(() => {
-        const target = join(bundler.bundle.dir, rest.join('/'));
+    } else if (bundler?.bundle) {
+      const target = join(bundler.bundle.dir, rest.join('/'));
+      const info = await stat(target).catch(() => undefined);
 
-        if (existsSync(target) && statSync(target).isFile()) {
-          return this.sendFile(target, url);
-        }
-      });
+      if (info && info.isFile()) {
+        return await this.sendFile(target, url);
+      }
     }
+
+    return undefined;
   }
 
-  sendIndexFile(target: string, url: string, baseUrl: string): KrasResponse {
-    const indexHtml = readFileSync(target, 'utf8');
+  async sendIndexFile(target: string, url: string, baseUrl: string): Promise<KrasResult> {
+    const indexHtml = await readFile(target, 'utf8');
 
     // mechanism to inject server side debug piletApi config into piral emulator
     const windowInjectionScript = `window['dbg:pilet-api'] = '${this.getPiletApi(baseUrl)}';`;
@@ -331,17 +339,17 @@ export default class PiletInjector implements KrasInjector {
         return false;
       }
 
-      const fileInfo = statSync(target, { throwIfNoEntry: false });
+      const fileInfo = await stat(target).catch(() => undefined);
 
       if (!fileInfo || fileInfo.mtime < this.proxyInfo.date) {
         const url = new URL(path, this.proxyInfo.source);
         const response = await axios.default.get(url.href, { responseType: 'arraybuffer' });
-        writeFileSync(target, response.data);
+        await writeFile(target, response.data);
       }
 
       return true;
     } else {
-      const fileInfo = statSync(target, { throwIfNoEntry: false });
+      const fileInfo = await stat(target).catch(() => undefined);
       return fileInfo && fileInfo.isFile();
     }
   }
@@ -353,22 +361,22 @@ export default class PiletInjector implements KrasInjector {
 
     if (!req.target) {
       if (req.url.startsWith(publicUrl)) {
-        const path = req.url.substring(publicUrl.length).split('?')[0];
+        const path = req.url.substring(publicUrl.length).split('?').shift();
 
         if (app) {
           const target = join(app, path);
 
           if (await this.shouldLoad(target, path)) {
             if (req.url === this.indexPath) {
-              return this.sendIndexFile(target, req.url, baseUrl);
+              return await this.sendIndexFile(target, req.url, baseUrl);
             }
 
-            return this.sendFile(target, req.url);
+            return await this.sendFile(target, req.url);
           }
         }
 
         if (req.url !== this.indexPath) {
-          return this.handle({
+          return await this.handle({
             ...req,
             url: this.indexPath,
           });
@@ -377,8 +385,8 @@ export default class PiletInjector implements KrasInjector {
 
       return undefined;
     } else if (req.target === api) {
-      const path = req.url.substring(1).split('?')[0];
-      return this.sendResponse(path, req.url, baseUrl);
+      const path = req.url.substring(1).split('?').shift();
+      return await this.sendResponse(path, req.url, baseUrl);
     }
   }
 }
