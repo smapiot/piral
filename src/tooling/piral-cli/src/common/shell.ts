@@ -15,8 +15,12 @@ async function updatePiletJson(target: string, appName: string, appDetails: Pira
       [appName]: appDetails,
     },
   };
-
   await writeJson(target, piletJson, newContent, true);
+  await updateExistingJson(target, packageJson, {
+    importmap: {
+      inherit: [appName],
+    },
+  });
 }
 
 async function setupPiralInstance(

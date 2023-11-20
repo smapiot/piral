@@ -1,7 +1,7 @@
 import { URL } from 'url';
 import { join } from 'path';
 import { EventEmitter } from 'events';
-import { readFileSync, existsSync, statSync } from 'fs';
+import { readFileSync, existsSync, statSync, writeFileSync } from 'fs';
 import { KrasInjector, KrasResponse, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
 import { getPiletSpecMeta } from '../common/spec';
@@ -118,15 +118,32 @@ export default class PiletInjector implements KrasInjector {
   public config: PiletInjectorConfig;
   private serverConfig: KrasConfiguration;
   private indexPath: string;
+  private proxyInfo?: {
+    source: string;
+    files: Array<string>;
+    date: Date;
+  };
 
   constructor(config: PiletInjectorConfig, serverConfig: KrasConfiguration, core: EventEmitter) {
     this.config = config;
     this.serverConfig = serverConfig;
 
     if (this.config.active) {
-      const { pilets, api, publicUrl, assetUrl } = config;
+      const { pilets, api, app, publicUrl, assetUrl } = config;
       this.indexPath = `${publicUrl}index.html`;
       const cbs = {};
+
+      if (app.endsWith('/app')) {
+        const packageJson = require(`${app}/../package.json`);
+
+        if (typeof packageJson.piralCLI.source === 'string') {
+          this.proxyInfo = {
+            source: packageJson.piralCLI.source,
+            files: packageJson.files,
+            date: new Date(packageJson.piralCLI.timestamp),
+          };
+        }
+      }
 
       core.on('user-connected', (e) => {
         const baseUrl = assetUrl || e.req.headers.origin;
@@ -308,7 +325,28 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, mime.getType(target), url);
   }
 
-  handle(req: KrasRequest): KrasResponse {
+  private async shouldLoad(target: string, path: string) {
+    if (this.proxyInfo) {
+      if (!this.proxyInfo.files.includes(path)) {
+        return false;
+      }
+
+      const fileInfo = statSync(target, { throwIfNoEntry: false });
+
+      if (!fileInfo || fileInfo.mtime < this.proxyInfo.date) {
+        const url = new URL(path, this.proxyInfo.source);
+        const response = await axios.default.get(url.href, { responseType: 'arraybuffer' });
+        writeFileSync(target, response.data);
+      }
+
+      return true;
+    } else {
+      const fileInfo = statSync(target, { throwIfNoEntry: false });
+      return fileInfo && fileInfo.isFile();
+    }
+  }
+
+  async handle(req: KrasRequest): Promise<KrasResult> {
     const { app, api, publicUrl, assetUrl } = this.config;
     const baseUrl =
       assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined);
@@ -320,7 +358,7 @@ export default class PiletInjector implements KrasInjector {
         if (app) {
           const target = join(app, path);
 
-          if (existsSync(target) && statSync(target).isFile()) {
+          if (await this.shouldLoad(target, path)) {
             if (req.url === this.indexPath) {
               return this.sendIndexFile(target, req.url, baseUrl);
             }

@@ -47,7 +47,7 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
         source: manifestUrl,
         generated: true,
       },
-      files: emulatorJson.files,
+      files: emulatorJson.files.assets,
       main: `./${join(appDirName, mainFile)}`,
       typings: `./${join(appDirName, emulatorJson.files.typings)}`,
       app: `./${join(appDirName, emulatorJson.files.app)}`,
