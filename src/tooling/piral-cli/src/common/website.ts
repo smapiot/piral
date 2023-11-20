@@ -1,10 +1,10 @@
-import { resolve as resolveUrl } from 'url';
 import { join, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
 import { packageJson } from './constants';
 import { ForceOverwrite } from './enums';
 import { createDirectory, writeBinary } from './io';
 import { writeJson } from './io';
+import { progress } from './log';
 import { axios } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
@@ -13,7 +13,8 @@ async function downloadEmulatorFiles(manifestUrl: string, target: string, files:
 
   await Promise.all(
     requiredFiles.map(async (file) => {
-      const res = await axios.default.get(resolveUrl(manifestUrl, file), { responseType: 'arraybuffer' });
+      const url = new URL(file, manifestUrl);
+      const res = await axios.default.get(url.href, { responseType: 'arraybuffer' });
       const data: Buffer = res.data;
       await writeBinary(target, file, data);
     }),
@@ -21,6 +22,7 @@ async function downloadEmulatorFiles(manifestUrl: string, target: string, files:
 }
 
 export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
+  progress(`Downloading emulator from %s ...`, manifestUrl);
   const response = await axios.default.get(manifestUrl);
   const emulatorJson: EmulatorWebsiteManifest = response.data;
 
@@ -63,5 +65,5 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
   });
 
   await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files);
-  return emulatorJson;
+  return emulatorJson.name;
 }

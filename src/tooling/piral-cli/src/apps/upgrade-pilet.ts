@@ -107,6 +107,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   }
 
   for (const { appPackage } of apps) {
+    //TODO distinguish if it's a website / remote emulator or an npm package
     const sourceName = appPackage.name;
     const language = /\.jsx?$/.test(source) ? 'js' : 'ts';
 
@@ -121,7 +122,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     const monorepoRef = await isMonorepoPackageRef(sourceName, fullBase);
-    const [packageRef, packageVersion] = await getCurrentPackageDetails(
+    const [packageRef] = await getCurrentPackageDetails(
       fullBase,
       sourceName,
       currentVersion,
@@ -162,7 +163,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo, data);
     }
 
-    await patchPiletPackage(root, sourceName, packageVersion, piralInfo, isEmulator);
+    await patchPiletPackage(root, piralInfo, isEmulator);
 
     if (install) {
       progress(`Updating dependencies ...`);

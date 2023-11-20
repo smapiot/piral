@@ -178,22 +178,17 @@ always-auth=true`,
       JSON.stringify(
         {
           schemaVersion: defaultSchemaVersion,
+          piralInstances: {},
         },
         undefined,
         2,
       ),
     );
 
-    const [packageName, packageVersion, packageDetails] = await installPiralInstance(
-      source || `empty-piral@${cliVersion}`,
-      fullBase,
-      root,
-      npmClient,
-    );
+    const sourceName = source || `empty-piral@${cliVersion}`;
+    const packageName = await installPiralInstance(sourceName, fullBase, root, npmClient, true);
     const piralInfo = await readPiralPackage(root, packageName);
-
     const isEmulator = checkAppShellPackage(piralInfo);
-
     const { preScaffold, postScaffold, files, template: preSelectedTemplate } = getPiletsInfo(piralInfo);
 
     if (preScaffold) {
@@ -206,10 +201,9 @@ always-auth=true`,
 
     const data = getPiletScaffoldData(language, root, packageName, variables);
 
-    await patchPiletPackage(root, packageName, packageVersion, piralInfo, isEmulator, {
+    await patchPiletPackage(root, piralInfo, isEmulator, {
       language,
       bundler: bundlerName,
-      details: packageDetails,
     });
 
     const chosenTemplate = template || preSelectedTemplate || 'default';

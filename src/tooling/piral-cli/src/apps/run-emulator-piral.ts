@@ -116,7 +116,7 @@ always-auth=true`,
   }
 
   const npmClient = await determineNpmClient(appRoot, defaultNpmClient);
-  const [packageName] = await installPiralInstance(app, fullBase, appRoot, npmClient);
+  const packageName = await installPiralInstance(app, fullBase, appRoot, npmClient);
   const piral = await findPiralInstance(packageName, appRoot, {
     port: originalPort,
   });
