@@ -5,6 +5,7 @@
 - Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
 - Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into a separate repository
 - Updated dependencies (#641)
+- Updated generated code to fully use ES2020
 - Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
 - Added option to specify execution path for bundler plugins
