@@ -4,6 +4,7 @@
 
 - Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
 - Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into a separate repository
+- Updated documentation on `piral-ng` (#646)
 - Updated dependencies (#641)
 - Updated generated code to fully use ES2020
 - Added `piral-react` as converter for React

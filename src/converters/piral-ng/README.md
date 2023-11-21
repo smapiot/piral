@@ -41,13 +41,13 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-We recommend that you still put these components into modules as you would normally do. In order for Piral to use that module you need to define it first. This also allows you to use special Piral declarations such as the `NgExtension` or the `ResourceUrlPipe`. All these declarations come with the `SharedModule` available via import from `piral-ng/common`.
+We recommend that you still put these components into modules as you would normally do. In order for Piral to use that module you need to define it first. This also allows you to use special Piral declarations such as the `NgExtension` or the `ResourceUrlPipe`. All these declarations come with the `SharedModule` available via import from `piral-ng-common`.
 
 Example (app) module:
 
 ```ts
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'piral-ng/common';
+import { SharedModule } from 'piral-ng-common';
 import { AngularPage } from './AngularPage';
 
 @NgModule({
@@ -347,7 +347,7 @@ The related packages should be shared with the pilets via the *package.json*:
       "@angular/core": "",
       "@angular/platform-browser": "",
       "@angular/platform-browser-dynamic": "",
-      "piral-ng/common": "",
+      "piral-ng-common": "",
       "rxjs": "",
       "zone.js": ""
     }
