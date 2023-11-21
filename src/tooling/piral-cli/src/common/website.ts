@@ -93,5 +93,5 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
   const appDir = resolve(targetDir, 'app');
   await createDirectory(appDir);
   await createEmulatorFiles(targetDir, appDir, manifestUrl, emulatorJson);
-  return emulatorJson.name;
+  return { name: emulatorJson.name, path: targetDir };
 }

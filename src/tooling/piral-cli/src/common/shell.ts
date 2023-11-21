@@ -60,7 +60,8 @@ export async function installPiralInstance(
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource);
 
   if (type === 'remote') {
-    const packageName = await scaffoldFromEmulatorWebsite(rootDir, sourceName);
+    const emulator = await scaffoldFromEmulatorWebsite(rootDir, sourceName);
+    const packageName = emulator.name;
     await updatePiletJson(rootDir, packageName, {
       selected,
       url: sourceName,

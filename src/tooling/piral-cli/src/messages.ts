@@ -2559,7 +2559,7 @@ export function remoteEmulatorNameChanged_0121(name: string): QuickMessage {
  * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
  */
 export function optionalEmulatorAssetUpdateSkipped_0122(url: string): QuickMessage {
-  return [LogLevels.info, '0122', ``];
+  return [LogLevels.info, '0122', `Could not update asset file at "${url}".`];
 }
 
 /**
@@ -2582,7 +2582,7 @@ export function optionalEmulatorAssetUpdateSkipped_0122(url: string): QuickMessa
  * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
  */
 export function requiredEmulatorAssetDownloadSkipped_0123(url: string): QuickMessage {
-  return [LogLevels.warning, '0123', ``];
+  return [LogLevels.warning, '0123', `Could not download asset file at "${url}".`];
 }
 
 /**

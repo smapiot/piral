@@ -147,34 +147,33 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-export async function findPiralInstance(
-  proposedApp: string,
-  rootDir: string,
-  details?: PiralInstanceDetails,
-): Promise<PiralInstancePackageData> {
+async function loadPiralInstance(root: string, details?: PiralInstanceDetails): Promise<PiralInstancePackageData> {
+  log('generalDebug_0003', `Following the app package in "${root}" ...`);
+  const appPackage = await readJson(root, packageJson);
+  const relPath = appPackage.app;
+  appPackage.app = relPath && resolve(root, relPath);
+  appPackage.root = root;
+  appPackage.port = details?.port || 0;
+  return appPackage;
+}
+
+export async function findPiralInstance(proposedApp: string, rootDir: string, details?: PiralInstanceDetails) {
   const path = findPackageRoot(proposedApp, rootDir);
+  const url = details?.url;
 
   if (path) {
-    log('generalDebug_0003', `Following the app package in "${path}" ...`);
-    const url = details?.url;
     const root = dirname(path);
-    const appPackage = await readJson(root, basename(path));
-    const relPath = appPackage.app;
-    appPackage.app = relPath && resolve(root, relPath);
-    appPackage.root = root;
-    appPackage.port = details?.port || 0;
 
     if (url) {
       log('generalDebug_0003', `Updating the emulator from remote "${url}" ...`);
       await updateFromEmulatorWebsite(root, url);
     }
 
-    return appPackage;
-  } else if (details?.url) {
-    const { url, ...rest } = details;
+    return await loadPiralInstance(root, details);
+  } else if (url) {
     log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
-    await scaffoldFromEmulatorWebsite(rootDir, url);
-    return await findPiralInstance(proposedApp, rootDir, rest);
+    const emulator = await scaffoldFromEmulatorWebsite(rootDir, url);
+    return await loadPiralInstance(emulator.path, details);
   }
 
   fail('appInstanceNotFound_0010', proposedApp);
