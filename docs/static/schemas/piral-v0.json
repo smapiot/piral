@@ -54,7 +54,10 @@
         "platform": {
           "type": "string",
           "description": "The platform where the Piral instance is to be run.",
-          "enum": ["web", "node"]
+          "enum": [
+            "web",
+            "node"
+          ]
         },
         "options": {
           "type": "object",
@@ -65,6 +68,14 @@
     "emulatorStartup": {
       "type": "string",
       "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
+    },
+    "orchestrator": {
+      "type": "string",
+      "enum": [
+        "systemjs",
+        "module-federation"
+      ],
+      "description": "Defines what orchestration engine is used by the app shell. By default, the 'systemjs' orchestration engine is used."
     },
     "pilets": {
       "type": "object",
