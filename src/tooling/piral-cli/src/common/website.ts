@@ -76,8 +76,11 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
     if (currentEmulator.name !== nextEmulator.name) {
       log('remoteEmulatorNameChanged_0121', currentEmulator.name);
     } else if (currentEmulator.piralCLI.timstamp !== nextEmulator.timestamp) {
+      log('generalDebug_0003', `The timestamp on "${currentEmulator.name}" is different (${nextEmulator.timestamp}).`);
       const appDir = resolve(targetDir, 'app');
       await createEmulatorFiles(targetDir, appDir, manifestUrl, nextEmulator);
+    } else {
+      log('generalDebug_0003', `Nothing to update for "${currentEmulator.name}".`);
     }
   } catch (ex) {
     log('generalDebug_0003', `HTTP request for emulator update failed: ${ex}`);
