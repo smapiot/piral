@@ -74,17 +74,14 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
     const currentEmulator = await readJson(targetDir, packageJson);
 
     if (currentEmulator.name !== nextEmulator.name) {
-      log(
-        'generalWarning_0001',
-        `The name of the emulator has changed. Please remove the Piral instance "${currentEmulator.name}".`,
-      );
+      log('remoteEmulatorNameChanged_0121', currentEmulator.name);
     } else if (currentEmulator.piralCLI.timstamp !== nextEmulator.timestamp) {
       const appDir = resolve(targetDir, 'app');
       await createEmulatorFiles(targetDir, appDir, manifestUrl, nextEmulator);
     }
   } catch (ex) {
-    log('generalDebug_0003', `HTTP request failed: ${ex}`);
-    log('generalInfo_0000', `Failed to retrieve current emulator from "${manifestUrl}". Skipping update.`);
+    log('generalDebug_0003', `HTTP request for emulator update failed: ${ex}`);
+    log('skipEmulatorUpdate_0120', manifestUrl);
   }
 }
 

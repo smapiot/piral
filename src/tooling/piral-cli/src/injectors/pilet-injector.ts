@@ -343,8 +343,18 @@ export default class PiletInjector implements KrasInjector {
 
       if (!fileInfo || fileInfo.mtime < this.proxyInfo.date) {
         const url = new URL(path, this.proxyInfo.source);
-        const response = await axios.default.get(url.href, { responseType: 'arraybuffer' });
-        await writeFile(target, response.data);
+
+        try {
+          const response = await axios.default.get(url.href, { responseType: 'arraybuffer' });
+          await writeFile(target, response.data);
+        } catch (ex) {
+          log('generalDebug_0003', `HTTP request for emulator asset retrieval failed: ${ex}`);
+          log(
+            fileInfo ? 'optionalEmulatorAssetUpdateSkipped_0122' : 'requiredEmulatorAssetDownloadSkipped_0123',
+            url.href,
+          );
+          return !!fileInfo;
+        }
       }
 
       return true;
