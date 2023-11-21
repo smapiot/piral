@@ -1,10 +1,10 @@
-import { join, resolve } from 'path';
+import { join, relative, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
 import { packageJson } from './constants';
 import { ForceOverwrite } from './enums';
-import { createDirectory, writeBinary } from './io';
+import { createDirectory, readJson, writeBinary } from './io';
 import { writeJson } from './io';
-import { progress } from './log';
+import { progress, log } from './log';
 import { axios } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
@@ -21,16 +21,14 @@ async function downloadEmulatorFiles(manifestUrl: string, target: string, files:
   );
 }
 
-export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
-  progress(`Downloading emulator from %s ...`, manifestUrl);
-  const response = await axios.default.get(manifestUrl);
-  const emulatorJson: EmulatorWebsiteManifest = response.data;
-
-  const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
-  const appDirName = 'app';
+async function createEmulatorFiles(
+  targetDir: string,
+  appDir: string,
+  manifestUrl: string,
+  emulatorJson: EmulatorWebsiteManifest,
+) {
   const mainFile = 'index.js';
-  const appDir = resolve(targetDir, appDirName);
-  await createDirectory(appDir);
+  const appDirName = relative(targetDir, appDir);
 
   await writeJson(
     targetDir,
@@ -48,9 +46,9 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
         generated: true,
       },
       files: emulatorJson.files.assets,
-      main: `./${join(appDirName, mainFile)}`,
-      typings: `./${join(appDirName, emulatorJson.files.typings)}`,
-      app: `./${join(appDirName, emulatorJson.files.app)}`,
+      main: join(appDirName, mainFile),
+      typings: join(appDirName, emulatorJson.files.typings),
+      app: join(appDirName, emulatorJson.files.app),
       peerDependencies: {},
       optionalDependencies: emulatorJson.dependencies.optional,
       devDependencies: emulatorJson.dependencies.included,
@@ -65,5 +63,38 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
   });
 
   await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files);
+}
+
+export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string) {
+  progress(`Updating emulator from %s ...`, manifestUrl);
+
+  try {
+    const response = await axios.default.get(manifestUrl);
+    const nextEmulator: EmulatorWebsiteManifest = response.data;
+    const currentEmulator = await readJson(targetDir, packageJson);
+
+    if (currentEmulator.name !== nextEmulator.name) {
+      log(
+        'generalWarning_0001',
+        `The name of the emulator has changed. Please remove the Piral instance "${currentEmulator.name}".`,
+      );
+    } else if (currentEmulator.piralCLI.timstamp !== nextEmulator.timestamp) {
+      const appDir = resolve(targetDir, 'app');
+      await createEmulatorFiles(targetDir, appDir, manifestUrl, nextEmulator);
+    }
+  } catch (ex) {
+    log('generalDebug_0003', `HTTP request failed: ${ex}`);
+    log('generalInfo_0000', `Failed to retrieve current emulator from "${manifestUrl}". Skipping update.`);
+  }
+}
+
+export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
+  progress(`Downloading emulator from %s ...`, manifestUrl);
+  const response = await axios.default.get(manifestUrl);
+  const emulatorJson: EmulatorWebsiteManifest = response.data;
+  const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
+  const appDir = resolve(targetDir, 'app');
+  await createDirectory(appDir);
+  await createEmulatorFiles(targetDir, appDir, manifestUrl, emulatorJson);
   return emulatorJson.name;
 }

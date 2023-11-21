@@ -11,7 +11,7 @@ import { getHash, checkIsDirectory, matchFiles } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
-import { scaffoldFromEmulatorWebsite } from './website';
+import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite } from './website';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
 import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson } from './constants';
@@ -156,12 +156,19 @@ export async function findPiralInstance(
 
   if (path) {
     log('generalDebug_0003', `Following the app package in "${path}" ...`);
+    const url = details?.url;
     const root = dirname(path);
     const appPackage = await readJson(root, basename(path));
-    const relPath = appPackage && appPackage.app;
+    const relPath = appPackage.app;
     appPackage.app = relPath && resolve(root, relPath);
     appPackage.root = root;
     appPackage.port = details?.port || 0;
+
+    if (url) {
+      log('generalDebug_0003', `Updating the emulator from remote "${url}" ...`);
+      await updateFromEmulatorWebsite(root, url);
+    }
+
     return appPackage;
   } else if (details?.url) {
     const { url, ...rest } = details;
