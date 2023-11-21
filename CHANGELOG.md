@@ -9,7 +9,8 @@
 - Updated generated code to fully use ES2020
 - Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
-- Added option to specify execution path for bundler plugins
+- Added orchestration engine choices (`systemjs`, `module-federation`) (#643)
+- Added option to specify runtime execution path for bundler plugins
 
 ## 1.3.3 (November 2, 2023)
 
