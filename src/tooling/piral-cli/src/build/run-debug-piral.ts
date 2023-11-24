@@ -1,4 +1,4 @@
-import { setStandardEnvs } from '../common';
+import { setStandardEnvs } from '../common/envs';
 import type { BundleHandlerResponse, LogLevels, PiralBuildHandler } from '../types';
 
 let handler: PiralBuildHandler;
