@@ -699,7 +699,36 @@ The basic dependencies look as follows:
 }
 ```
 
-Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (4.9 or later).
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (and pre-5.0).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 17
+
+In general, Angular 17 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^17",
+  "@angular/compiler": "^17",
+  "@angular/core": "^17",
+  "@angular/router": "^17",
+  "@angular/platform-browser": "^17",
+  "@angular/platform-browser-dynamic": "^17",
+  "core-js": "^3.19.0",
+  "rxjs": "^7.4",
+  "zone.js": "~0.14.0"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.2 (and less than 5.3).
 
 So include in your app shell as preamble:
 

@@ -109,16 +109,16 @@ if (process.env.NODE_ENV === 'development') {
   // May be used later for something useful. Right now only debugging output.
   const versionHandlers = {
     legacy() {
-      console.log('Running in legacy mode (Angular 2, Angular 4)');
+      console.log('Running in legacy mode (Angular 2-8)');
     },
     outdated() {
-      console.log('Running in outdated mode (Angular 5-8)');
+      console.log('Running in outdated mode (Angular 9-13)');
     },
     current() {
-      console.log('Running in current mode (Angular 9-15)');
+      console.log('Running in current mode (Angular 14-17)');
     },
     next() {
-      console.log('Running in next mode (Angular 16)');
+      console.log('Running in next mode (Angular 18)');
     },
     unknown() {
       console.log('Running with an unknown version of Angular');
@@ -127,18 +127,20 @@ if (process.env.NODE_ENV === 'development') {
   const versions = {
     v2: versionHandlers.legacy,
     v4: versionHandlers.legacy,
-    v5: versionHandlers.outdated,
-    v6: versionHandlers.outdated,
-    v7: versionHandlers.outdated,
-    v8: versionHandlers.outdated,
-    v9: versionHandlers.current,
-    v10: versionHandlers.current,
-    v11: versionHandlers.current,
-    v12: versionHandlers.current,
-    v13: versionHandlers.current,
+    v5: versionHandlers.legacy,
+    v6: versionHandlers.legacy,
+    v7: versionHandlers.legacy,
+    v8: versionHandlers.legacy,
+    v9: versionHandlers.outdated,
+    v10: versionHandlers.outdated,
+    v11: versionHandlers.outdated,
+    v12: versionHandlers.outdated,
+    v13: versionHandlers.outdated,
     v14: versionHandlers.current,
     v15: versionHandlers.current,
-    v16: versionHandlers.next,
+    v16: versionHandlers.current,
+    v17: versionHandlers.current,
+    v18: versionHandlers.next,
   };
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;

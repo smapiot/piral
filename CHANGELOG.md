@@ -6,7 +6,9 @@
 - Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into a separate repository
 - Updated documentation on `piral-ng` (#646)
 - Updated dependencies (#641)
+- Updated `piral-cli` compatibility with Bun as runtime
 - Updated generated code to fully use ES2020
+- Added support for Angular 17 in `piral-ng`
 - Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
 - Added orchestration engine choices (`systemjs`, `module-federation`) (#643)
