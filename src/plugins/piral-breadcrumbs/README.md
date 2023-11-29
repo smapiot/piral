@@ -75,16 +75,11 @@ export function setup(piral: PiletApi) {
 
 ### Rendering Breadcrumbs
 
-Within pilets, you typically _cannot_ access the `Breadcrumbs` component from the `piral-breadcrumbs`. While there are several options to work around this, the simplest is to use a built-in extension provided by Piral called `piral-breadcrumbs`:
+While there are several options to render breadcrumbs in a pilet, Piral provides a built-in extension called `piral-breadcrumbs` which handles everything for you:
 
 ```tsx
 // Within any pilet:
-return (
-  <>
-    <Extension name="piral-breadcrumbs" />
-    {otherContent}
-  </>
-);
+<piral-extension name="piral-breadcrumbs"></piral-extension>
 ```
 
 :::
