@@ -8,6 +8,9 @@ const messages = {
   en: {
     hi: 'hello',
     greeting: 'Hi {{name}}, welcome back',
+    header: {
+      title: 'Hello world'
+    }
   },
   de: {
     hi: 'hallo',
@@ -75,5 +78,12 @@ describe('Localize Module', () => {
     const localizer = new Localizer(messages, 'en');
     const result = localizer.localizeGlobal('greeting', { name: undefined });
     expect(result).toBe('Hi , welcome back');
+  });
+
+  it('localizeGlobal translates from global translations using passed nested translations', () => {
+    const localizer = new Localizer(messages, 'en');
+    const result = localizer.localizeGlobal('header.title');
+
+    expect(result).toBe('Hello world');
   });
 });

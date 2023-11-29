@@ -73,6 +73,22 @@ describe('Create Localize API', () => {
     expect(result).toEqual('bár');
   });
 
+  it('createApi can translate from local-global translations using the current language and passed nested translations', () => {
+    const config = {
+      language: 'en'
+    };
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+    api.setTranslations({
+      en: {
+        header: {
+          title: 'Hello world'
+        }
+      }
+    });
+    const result = api.translate('header.title');
+    expect(result).toBe('Hello world');
+  });
+
   it('createApi falls back to standard string if language is not found', () => {
     const config = {
       language: 'en',

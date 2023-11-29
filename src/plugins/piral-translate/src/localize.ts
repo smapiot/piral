@@ -1,4 +1,5 @@
-import { LocalizationMessages, Localizable } from './types';
+import { LocalizationMessages, Localizable, NestedLocalizationMessages } from './types';
+import { flattenTranslations } from './flatten-translations';
 
 function defaultFallback(key: string, language: string): string {
   if (process.env.NODE_ENV === 'production') {
@@ -20,15 +21,19 @@ function formatMessage<T extends object>(message: string, variables: T): string 
 }
 
 export class Localizer implements Localizable {
+  public messages: LocalizationMessages;
+
   /**
    * Creates a new instance of a localizer.
    */
   constructor(
-    public messages: LocalizationMessages,
+    messages: LocalizationMessages | NestedLocalizationMessages,
     public language: string,
     public languages: Array<string>,
     private fallback = defaultFallback,
-  ) {}
+  ) {
+    this.messages = flattenTranslations(messages);
+  }
 
   /**
    * Localizes the given key via the global translations.

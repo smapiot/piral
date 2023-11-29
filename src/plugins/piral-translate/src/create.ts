@@ -4,7 +4,8 @@ import type { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
-import { PiletLocaleApi, LocalizationMessages, Localizable, PiralSelectLanguageEvent } from './types';
+import { PiletLocaleApi, LocalizationMessages, Localizable, PiralSelectLanguageEvent, NestedLocalizationMessages } from './types';
+import { flattenTranslations } from './flatten-translations';
 
 export interface TranslationFallback {
   (key: string, language: string): string;
@@ -22,7 +23,7 @@ export interface LocaleConfig {
    * Sets the default (global) localization messages.
    * @default {}
    */
-  messages?: LocalizationMessages;
+  messages?: LocalizationMessages | NestedLocalizationMessages;
   /**
    * Sets the default language to use.
    */
@@ -72,8 +73,8 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
       let localTranslations: LocalizationMessages = {};
 
       return {
-        addTranslations(messages: LocalizationMessages[], isOverriding: boolean = true) {
-          const messagesToMerge: LocalizationMessages[] = messages;
+        addTranslations(messages, isOverriding = true) {
+          const messagesToMerge = messages;
 
           if (isOverriding) {
             messagesToMerge.unshift(localizer.messages);
@@ -100,7 +101,7 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
           return selected;
         },
         setTranslations(messages) {
-          localTranslations = messages;
+          localTranslations = flattenTranslations(messages);
         },
         getTranslations() {
           return localTranslations;
