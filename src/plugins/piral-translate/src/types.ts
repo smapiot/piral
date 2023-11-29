@@ -133,6 +133,8 @@ export interface NestedLocalizationMessages {
   [lang: string]: NestedTranslations;
 }
 
+export type AnyLocalizationMessages = LocalizationMessages | NestedLocalizationMessages;
+
 export interface PiletLocaleApi {
   /**
    * Adds a list of translations to the existing translations.
@@ -143,7 +145,7 @@ export interface PiletLocaleApi {
    * @param messagesList The list of messages that extend the existing translations
    * @param [isOverriding=true] Indicates whether the new translations overwrite the existing translations
    */
-  addTranslations(messagesList: (LocalizationMessages | NestedLocalizationMessages)[], isOverriding?: boolean): void;
+  addTranslations(messagesList: Array<AnyLocalizationMessages>, isOverriding?: boolean): void;
   /**
    * Gets the currently selected language directly.
    */
@@ -165,7 +167,7 @@ export interface PiletLocaleApi {
    * The translations will be exclusively used for retrieving translations for the pilet.
    * @param messages The messages to use as translation basis.
    */
-  setTranslations(messages: LocalizationMessages | NestedLocalizationMessages): void;
+  setTranslations(messages: AnyLocalizationMessages): void;
   /**
    * Gets the currently provided translations by the pilet.
    */

@@ -8,6 +8,7 @@
 - Updated dependencies (#641)
 - Updated `piral-cli` compatibility with Bun as runtime
 - Updated generated code to fully use ES2020
+- Added support for nested translations in `piral-translate` (#648)
 - Added support for Angular 17 in `piral-ng`
 - Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
