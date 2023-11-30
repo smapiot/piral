@@ -67,7 +67,7 @@ function getModulePathOrDefault(root: string, origin: string, name: string) {
   try {
     const absPath = getModulePath(root, name);
     const relPath = relative(origin, absPath);
-    
+
     // The relative path is to be used in an import statement,
     // so it should be normalized back to use posix path separators.
     const path = relPath.split(sep).join(posix.sep);
@@ -84,6 +84,7 @@ interface CodegenOptions {
   appName: string;
   externals: Array<string>;
   publicPath: string;
+  isolation: 'classic' | 'modern';
   debug?: {
     viewState?: boolean;
     loadPilets?: boolean;
@@ -140,8 +141,9 @@ export function createDependencies(imports: Array<string>, exports: Array<string
 }
 
 export function createDefaultState(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
-  const { root, cat, publicPath } = opts;
+  const { root, cat, publicPath, isolation } = opts;
   const routerVersion = getRouterVersion(root);
+  const wrap = isolation === 'modern' ? 'true' : 'false';
 
   imports.push(
     `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo';`,
@@ -177,6 +179,7 @@ export function createDefaultState(imports: Array<string>, exports: Array<string
         app: {
           error: undefined,
           loading: typeof window !== 'undefined',
+          wrap: ${wrap},
         },
         components: {
           ErrorInfo: DefaultErrorInfo,

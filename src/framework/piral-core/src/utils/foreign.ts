@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { GlobalStateContext, ForeignComponent } from '../types';
 
 export const extensionName = 'piral-extension';
+export const componentName = 'piral-component';
 export const contentName = 'piral-content';
 export const portalName = 'piral-portal';
 export const slotName = 'piral-slot';
