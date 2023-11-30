@@ -24,6 +24,7 @@ module.exports = function () {
     publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
     debug: debug && (cfg.debugSettings || {}),
     emulator: !!process.env.DEBUG_PILET,
+    isolation: cfg.isolation || 'classic',
   };
 
   cg.createDependencies(imports, exports, opts);

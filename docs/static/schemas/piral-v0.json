@@ -69,6 +69,14 @@
       "type": "string",
       "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
     },
+    "isolation": {
+      "type": "string",
+      "enum": [
+        "classic",
+        "modern"
+      ],
+      "description": "Defines what isolation / component wrapper is used for components of micro frontends. By default, the 'classic' isolation mode is used."
+    },
     "orchestrator": {
       "type": "string",
       "enum": [
