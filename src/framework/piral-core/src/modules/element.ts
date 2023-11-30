@@ -18,19 +18,6 @@ export interface Updatable {
   (newProps: any): void;
 }
 
-declare global {
-  interface Window {
-    /**
-     * Assigns content in form a ReactChild to be rendered later
-     * from a foreign container / element in an piral-content
-     * child.
-     * @param cid The ID of the piral-content node.
-     * @param content The ReactChild to be rendered.
-     */
-    assignContent(cid: string, content: any): void;
-  }
-}
-
 if (typeof window !== 'undefined' && 'customElements' in window) {
   const contents = 'contents';
 
@@ -239,7 +226,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
 
       if (content && portal) {
         const portalId = portal.getAttribute('pid');
-        document.body.dispatchEvent(
+        window.dispatchEvent(
           new CustomEvent('render-content', {
             detail: { target: this, content, portalId },
           }),

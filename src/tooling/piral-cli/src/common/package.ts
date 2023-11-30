@@ -230,6 +230,7 @@ export async function patchPiralPackage(
 
   await updateExistingJson(root, piralJson, {
     $schema: piralJsonSchemaUrl,
+    isolation: 'modern',
     pilets: getPiletsInfo({}),
   });
   log('generalDebug_0003', `Succesfully patched the pilet.json.`);
