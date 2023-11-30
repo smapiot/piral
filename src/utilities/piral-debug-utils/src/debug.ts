@@ -1,18 +1,8 @@
-import { DebugTracker } from './DebugTracker';
-import { VisualizationWrapper } from './VisualizationWrapper';
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
+import { createVisualizer, destroyVisualizer, toggleVisualizer } from './visualizer';
+import { getInitialSettings, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
-import {
-  setState,
-  getInitialSettings,
-  setInitialState,
-  setNavigate,
-  initialSetter,
-  enablePersistance,
-  disablePersistance,
-  settingsKeys,
-} from './state';
 
 export function installPiralDebug(options: DebuggerOptions) {
   const {
@@ -37,8 +27,6 @@ export function installPiralDebug(options: DebuggerOptions) {
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
   let setValue = initialSetter;
-
-  setInitialState(initialSettings);
 
   const settings: Record<string, DebugCustomSetting> = {
     ...customSettings,
@@ -103,6 +91,10 @@ export function installPiralDebug(options: DebuggerOptions) {
       },
     },
   };
+
+  if (initialSettings.viewOrigins) {
+    createVisualizer();
+  }
 
   const sendMessage = (content: any) => {
     window.postMessage(
@@ -190,34 +182,12 @@ export function installPiralDebug(options: DebuggerOptions) {
     }
   };
 
-  const toggleVisualize = () => {
-    setState((s) => ({
-      ...s,
-      visualize: {
-        ...s.visualize,
-        force: !s.visualize.force,
-      },
-    }));
-  };
-
   const updateVisualize = (active: boolean) => {
-    setState((s) => ({
-      ...s,
-      visualize: {
-        ...s.visualize,
-        active,
-      },
-    }));
-  };
-
-  const goToRoute = (path: string, state?: any) => {
-    setState((s) => ({
-      ...s,
-      route: {
-        path,
-        state,
-      },
-    }));
+    if (active) {
+      createVisualizer();
+    } else {
+      destroyVisualizer();
+    }
   };
 
   const eventDispatcher = document.body.dispatchEvent;
@@ -419,24 +389,16 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'emit-event':
           return fireEvent(content.name, content.args);
         case 'goto-route':
-          return goToRoute(content.route, content.state);
+          return navigate(content.route, content.state);
         case 'visualize-all':
-          return toggleVisualize();
+          return toggleVisualizer();
       }
     }
   });
 
-  setNavigate(navigate);
-
   integrate({
-    components: {
-      Debug: DebugTracker,
-    },
     routes: {
       [initialSettings.cataloguePath]: ExtensionCatalogue,
-    },
-    wrappers: {
-      '*': VisualizationWrapper,
     },
     onChange(previous, current, changed) {
       if (changed.state) {

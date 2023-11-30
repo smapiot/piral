@@ -40,8 +40,6 @@ export interface EmulatorComponents {
 }
 
 export interface DebugComponents {
-  wrappers: Record<string, FC>;
-  components: Record<string, FC>;
   routes: Record<string, FC>;
   onChange(previous: any, current: any, changed: ChangeSet): void;
 }

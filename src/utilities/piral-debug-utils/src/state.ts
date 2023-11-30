@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { DefaultDebugSettings } from './types';
 
 export const settingsKeys = {
@@ -81,100 +80,9 @@ export function getInitialSettings(defaultValues: DefaultDebugSettings) {
     loadPilets: getValue(settingsKeys.loadPilets, defaultValues.loadPilets, false),
     hardRefresh: getValue(settingsKeys.hardRefresh, defaultValues.hardRefresh, false),
     viewOrigins: getValue(settingsKeys.viewOrigins, defaultValues.viewOrigins, false),
-    extensionCatalogue:  getValue(settingsKeys.extensionCatalogue, defaultValues.extensionCatalogue, true),
+    extensionCatalogue: getValue(settingsKeys.extensionCatalogue, defaultValues.extensionCatalogue, true),
     clearConsole: getValue(settingsKeys.clearConsole, defaultValues.clearConsole, false),
     persistSettings,
     cataloguePath: '/$debug-extension-catalogue',
   };
-}
-
-export interface PiralDebugState {
-  visualize: {
-    active: boolean;
-    force: boolean;
-  };
-  catalogue: {
-    active: boolean;
-    path: string;
-  };
-  route:
-    | {
-        path: string;
-        state?: any;
-      }
-    | undefined;
-}
-
-const listeners: Array<() => void> = [];
-
-interface NavigateFunction {
-  (path: string, state?: any): void;
-}
-
-let _navigate: NavigateFunction = undefined;
-
-export function setNavigate(navigate: NavigateFunction) {
-  _navigate = navigate;
-}
-
-export function navigate(path: string, state?: any) {
-  _navigate?.(path, state);
-}
-
-let state: PiralDebugState = {
-  visualize: {
-    active: false,
-    force: false,
-  },
-  catalogue: {
-    active: false,
-    path: '',
-  },
-  route: undefined,
-};
-
-export function setInitialState(initialSettings: ReturnType<typeof getInitialSettings>) {
-  state.visualize.active = initialSettings.viewOrigins;
-  state.catalogue.active = initialSettings.extensionCatalogue;
-  state.catalogue.path = initialSettings.cataloguePath;
-}
-
-export function setState(dispatch: (arg: PiralDebugState) => PiralDebugState) {
-  const newState = dispatch(state);
-
-  if (newState !== state) {
-    state = newState;
-    listeners.forEach((listener) => listener());
-  }
-}
-
-export function getState() {
-  return state;
-}
-
-export function subscribe<T>(select: (arg: PiralDebugState) => T, notify: (state: T) => void) {
-  let prevState = select(state);
-  const cb = () => {
-    const nextState = select(state);
-
-    if (prevState !== nextState) {
-      prevState = nextState;
-      notify(nextState);
-    }
-  };
-  const unsubscribe = () => {
-    const idx = listeners.indexOf(cb);
-
-    if (idx !== -1) {
-      listeners.splice(idx, 1);
-    }
-  };
-  listeners.push(cb);
-  return unsubscribe;
-}
-
-export function useDebugState<T>(select: (arg: PiralDebugState) => T) {
-  const [state, setState] = useState(() => select(getState()));
-  useEffect(() => subscribe(select, setState), []);
-  return state;
 }
