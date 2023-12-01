@@ -10,7 +10,9 @@ import { StateContext } from '../state';
 
 function createMockContainer() {
   const state = create(() => ({
-    app: {},
+    app: {
+      wrap: false,
+    },
     components: {
       ErrorInfo: StubErrorInfo,
     },
@@ -50,6 +52,9 @@ function createMockContainerWithNoWrappers() {
       converters: {},
       readState(cb) {
         return cb({
+          app: {
+            wrap: false,
+          },
           registry: {
             wrappers: {},
           },
