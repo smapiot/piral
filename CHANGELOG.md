@@ -10,10 +10,9 @@
 - Updated generated code to fully use ES2020
 - Added support for nested translations in `piral-translate` (#648)
 - Added support for Angular 17 in `piral-ng`
-- Added `piral-react` as converter for React
 - Added possibility to publish emulator as a website (#644)
-- Added orchestration engine choices (`systemjs`, `module-federation`) (#643)
-- Added isolation mode option to opt-in for `piral-component` boundary
+- Added orchestration engine choices (`systemjs`, `module-federation`) in *piral.json* (#643)
+- Added isolation mode option in *piral.json* to opt-in for `piral-component` boundary
 - Added option to specify runtime execution path for bundler plugins
 
 ## 1.3.3 (November 2, 2023)

@@ -4,6 +4,12 @@
 
 This is a plugin that only has a peer dependency to `react@>=16` and `react-dom@>=16`. What `piral-react` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
+::: warning: Experimental release
+Right now this package is released as an experimental converter. While it does automatically switch between the existing React tree and a new React tree (depending on the version of React being used) it does not include any handling geared towards the `react-router`. Therefore, problems with shared or non-shared React Router instances are expected.
+
+Our recommendation for the moment is to only use this package if you know that you are using a different version of React + React Router (i.e., have both bundled / using your own version and not the one provided by the Piral instance), i.e., using your own context providers, too.
+:::
+
 The set includes a React 16+ converter for any component registration, as well as a `fromReact` shortcut and a `ReactExtension` component.
 
 By default, these API extensions are not integrated in `piral`, so you'd need to add them to your Piral instance.
