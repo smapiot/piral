@@ -8,7 +8,8 @@ import type { DefaultLoaderConfig, PiletEntry, Pilet } from '../../types';
  * @returns The evaluated pilet that can now be integrated.
  */
 export default function loader(entry: PiletEntry, _config: DefaultLoaderConfig): Promise<Pilet> {
-  const { name, spec = 'vx', dependencies = {}, ...rest } = entry;
+  const { name, spec = 'vx', ...rest } = entry;
+  const dependencies = 'dependencies' in entry ? entry.dependencies : {};
   const meta = {
     name,
     version: '',
@@ -21,6 +22,5 @@ export default function loader(entry: PiletEntry, _config: DefaultLoaderConfig):
   };
 
   console.warn('Empty pilet found!', name);
-
   return promisify({ ...meta, ...emptyApp });
 }

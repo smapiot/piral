@@ -5,6 +5,7 @@ import type {
   PiletV1Entry,
   PiletV2Entry,
   PiletV3Entry,
+  PiletMfEntry,
   PiletBundleEntry,
   PiletRunner,
 } from './types';
@@ -17,6 +18,8 @@ export type InspectPiletV2 = ['v2', PiletV2Entry, PiletRunner];
 
 export type InspectPiletV3 = ['v3', PiletV3Entry, PiletRunner];
 
+export type InspectPiletMf = ['mf', PiletMfEntry, PiletRunner];
+
 export type InspectPiletBundle = ['bundle', PiletBundleEntry, PiletRunner];
 
 export type InspectPiletUnknown = ['unknown', PiletEntry, PiletRunner];
@@ -26,6 +29,7 @@ export type InspectPiletResult =
   | InspectPiletV1
   | InspectPiletV2
   | InspectPiletV3
+  | InspectPiletMf
   | InspectPiletUnknown
   | InspectPiletBundle;
 
@@ -34,6 +38,8 @@ export function inspectPilet(meta: PiletEntry): InspectPiletResult {
 
   if ('link' in meta && meta.spec === 'v3') {
     return ['v3', meta, setupSinglePilet];
+  } else if (inBrowser && 'link' in meta && meta.spec === 'mf') {
+    return ['mf', meta, setupSinglePilet];
   } else if (inBrowser && 'link' in meta && meta.spec === 'v2') {
     return ['v2', meta, setupSinglePilet];
   } else if (inBrowser && 'requireRef' in meta && meta.spec !== 'v2') {

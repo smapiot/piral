@@ -197,6 +197,40 @@ export interface PiletV3Entry {
   dependencies?: Record<string, string>;
 }
 
+/**
+ * Metadata for pilets using the v2 schema.
+ */
+export interface PiletMfEntry {
+  /**
+   * The name of the pilet, i.e., the package id.
+   */
+  name: string;
+  /**
+   * The version of the pilet. Should be semantically versioned.
+   */
+  version: string;
+  /**
+   * Provides the version of the specification for this pilet.
+   */
+  spec: 'mf';
+  /**
+   * The computed integrity of the pilet.
+   */
+  integrity?: string;
+  /**
+   * The fallback link for retrieving the content of the pilet.
+   */
+  link: string;
+  /**
+   * Optionally provides some custom metadata for the pilet.
+   */
+  custom?: any;
+  /**
+   * Optionally provides some configuration to be used in the pilet.
+   */
+  config?: Record<string, any>;
+}
+
 export interface PiletVxEntry {
   /**
    * The name of the pilet, i.e., the package id.
@@ -262,7 +296,7 @@ export interface PiletBundleEntry {
 /**
  * The metadata response for a single pilet.
  */
-export type SinglePiletEntry = PiletV0Entry | PiletV1Entry | PiletV2Entry | PiletV3Entry | PiletVxEntry;
+export type SinglePiletEntry = PiletV0Entry | PiletV1Entry | PiletV2Entry | PiletV3Entry | PiletMfEntry | PiletVxEntry;
 
 /**
  * The metadata response for a multi pilet.

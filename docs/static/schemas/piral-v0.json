@@ -77,14 +77,6 @@
       ],
       "description": "Defines what isolation / component wrapper is used for components of micro frontends. By default, the 'classic' isolation mode is used."
     },
-    "orchestrator": {
-      "type": "string",
-      "enum": [
-        "systemjs",
-        "module-federation"
-      ],
-      "description": "Defines what orchestration engine is used by the app shell. By default, the 'systemjs' orchestration engine is used."
-    },
     "pilets": {
       "type": "object",
       "description": "Determines the scaffolding and upgrading behavior of pilets using this Piral instance.",
