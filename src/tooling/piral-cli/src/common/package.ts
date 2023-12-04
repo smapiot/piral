@@ -673,6 +673,7 @@ async function getPiletPackage(
         start: 'pilet debug',
         build: 'pilet build',
         upgrade: 'pilet upgrade',
+        postinstall: 'pilet declaration',
         ...info.scripts,
       }
     : info.scripts;
