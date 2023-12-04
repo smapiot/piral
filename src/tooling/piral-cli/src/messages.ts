@@ -2628,11 +2628,12 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * the interpretation of compatible feed services slightly and has an impact of the usage
  * of the pilet in the browser.
  *
- * The selected schema version needs to be either "v0", "v1", or "v2".
+ * The selected schema version needs to be either "v0", "v1", "v2", or "mf".
  *
  * - v0: will download and evaluate the pilet explicitly
  * - v1: will use a script tag for integration of the pilet
  * - v2: will use SystemJS for integration of the pilet (default)
+ * - mf: will use Module Federation for integration of the pilet (only supported bundlers)
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
  * correctly. This polyfill is part of the `piral-ie11polyfills-utils` package.
@@ -2641,6 +2642,10 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
  * indirectly, making it a quite broad choice.
+ * 
+ * In bundlers that support Module Federation (e.g., Webpack 5) the "mf" format may be
+ * the best choice. Keep in mind that "mf" is only supported by applications using
+ * Piral 1.4.0 or higher.
  *
  * @see
  * - [GitHub currentScript-polyfill](https://github.com/amiller-gh/currentScript-polyfill)
