@@ -1,5 +1,6 @@
 import { join, relative, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
+import { config } from './config';
 import { packageJson } from './constants';
 import { ForceOverwrite } from './enums';
 import { createDirectory, readJson, writeBinary } from './io';
@@ -7,6 +8,28 @@ import { writeJson } from './io';
 import { progress, log } from './log';
 import { axios } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
+
+function requestManifest(url: string) {
+  const auth = config.auth?.[url];
+
+  switch (auth?.mode) {
+    case 'header':
+      return axios.default.get(url, {
+        headers: {
+          [auth.key]: auth.value,
+        },
+      });
+    case 'http':
+      return axios.default.get(url, {
+        auth: {
+          username: auth.username,
+          password: auth.password,
+        },
+      });
+    default:
+      return axios.default.get(url);
+  }
+}
 
 async function downloadEmulatorFiles(manifestUrl: string, target: string, files: EmulatorWebsiteManifestFiles) {
   const requiredFiles = [files.typings, files.main, files.app];
@@ -69,7 +92,7 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
   progress(`Updating emulator from %s ...`, manifestUrl);
 
   try {
-    const response = await axios.default.get(manifestUrl);
+    const response = await requestManifest(manifestUrl);
     const nextEmulator: EmulatorWebsiteManifest = response.data;
     const currentEmulator = await readJson(targetDir, packageJson);
 
@@ -90,7 +113,7 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
 
 export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
   progress(`Downloading emulator from %s ...`, manifestUrl);
-  const response = await axios.default.get(manifestUrl);
+  const response = await requestManifest(manifestUrl);
   const emulatorJson: EmulatorWebsiteManifest = response.data;
   const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
   const appDir = resolve(targetDir, 'app');

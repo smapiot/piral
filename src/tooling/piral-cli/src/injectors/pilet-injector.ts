@@ -333,6 +333,31 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, mime.getType(target), url);
   }
 
+  private download(path: string) {
+    const url = new URL(path, this.proxyInfo.source);
+    const auth = commonConfig.auth?.[this.proxyInfo.source];
+
+    switch (auth?.mode) {
+      case 'header':
+        return axios.default.get(url.href, {
+          responseType: 'arraybuffer',
+          headers: {
+            [auth.key]: auth.value,
+          },
+        });
+      case 'http':
+        return axios.default.get(url.href, {
+          responseType: 'arraybuffer',
+          auth: {
+            username: auth.username,
+            password: auth.password,
+          },
+        });
+      default:
+        return axios.default.get(url.href, { responseType: 'arraybuffer' });
+    }
+  }
+
   private async shouldLoad(target: string, path: string) {
     if (this.proxyInfo) {
       if (!this.proxyInfo.files.includes(path)) {
@@ -342,17 +367,12 @@ export default class PiletInjector implements KrasInjector {
       const fileInfo = await stat(target).catch(() => undefined);
 
       if (!fileInfo || fileInfo.mtime < this.proxyInfo.date) {
-        const url = new URL(path, this.proxyInfo.source);
-
         try {
-          const response = await axios.default.get(url.href, { responseType: 'arraybuffer' });
+          const response = await this.download(path);
           await writeFile(target, response.data);
         } catch (ex) {
           log('generalDebug_0003', `HTTP request for emulator asset retrieval failed: ${ex}`);
-          log(
-            fileInfo ? 'optionalEmulatorAssetUpdateSkipped_0122' : 'requiredEmulatorAssetDownloadSkipped_0123',
-            url.href,
-          );
+          log(fileInfo ? 'optionalEmulatorAssetUpdateSkipped_0122' : 'requiredEmulatorAssetDownloadSkipped_0123', path);
           return !!fileInfo;
         }
       }

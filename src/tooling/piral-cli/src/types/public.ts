@@ -226,6 +226,20 @@ export type ImportmapMode = 'host' | 'remote';
 
 export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3' | 'mf';
 
+export interface HeaderAuthConfig {
+  mode: 'header';
+  key: string;
+  value: string;
+}
+
+export interface HttpAuthConfig {
+  mode: 'http';
+  username: string;
+  password: string;
+}
+
+export type AuthConfig = HeaderAuthConfig | HttpAuthConfig;
+
 export type SourceLanguage = 'js' | 'ts';
 
 export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
