@@ -201,7 +201,6 @@ function piletMfWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   const { name, variables, externals, file, importmap, entry } = options;
   const { ModuleFederationPlugin } = container;
 
-  withExternals(compiler, externals);
   setEnvironment(variables);
 
   const plugins = [
@@ -210,12 +209,13 @@ function piletMfWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
       filename: file,
       name: name.replace(/^@/, '').replace('/', '-').replace(/\-/g, '_'),
       exposes: {
-        './pilet': entry,
+        './pilet': compiler.entry[entry],
       },
-      shared: getShared(importmap),
+      shared: getShared(importmap, externals),
     })
   ];
 
+  compiler.entry = {};
   compiler.output.publicPath = 'auto';
   compiler.plugins = [...compiler.plugins, ...plugins];
 

@@ -13,7 +13,8 @@
         "v0",
         "v1",
         "v2",
-        "v3"
+        "v3",
+        "mf"
       ],
       "description": "The default output schema to be used when building the pilet."
     },
