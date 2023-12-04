@@ -23,6 +23,24 @@ export function getDefineVariables(variables: Record<string, string>) {
   }, {});
 }
 
+export function getShared(importmap: Array<SharedDependency>) {
+  const shared = {};
+
+  for (const dep of importmap) {
+    if (dep.type === 'local') {
+      shared[dep.name] = {
+        eager: false,
+        requiredVersion: dep.requireId.split('@').pop(),
+        version: dep.id.split('@').pop(),
+        packageName: dep.entry,
+        singleton: true,
+      };
+    }
+  }
+
+  return shared;
+}
+
 export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
   const dependencies = {};
   const { entry, externals } = compilerOptions;

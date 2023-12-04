@@ -224,7 +224,7 @@ export type ImportmapVersions = 'all' | 'match-major' | 'any-patch' | 'exact';
 
 export type ImportmapMode = 'host' | 'remote';
 
-export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3';
+export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3' | 'mf';
 
 export type SourceLanguage = 'js' | 'ts';
 
