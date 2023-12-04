@@ -18,6 +18,7 @@ export const piralBuildTypeKeys: Array<PiralBuildType> = [
   'all',
   'release',
   'emulator',
+  'emulator-package',
   'emulator-sources',
   'emulator-website',
 ];

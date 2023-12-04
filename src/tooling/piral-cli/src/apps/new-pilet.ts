@@ -27,6 +27,7 @@ import {
   installPiralInstance,
   piletJson,
   defaultSchemaVersion,
+  piletJsonSchemaUrl,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -177,6 +178,7 @@ always-auth=true`,
       piletJson,
       JSON.stringify(
         {
+          $schema: piletJsonSchemaUrl,
           schemaVersion: defaultSchemaVersion,
           piralInstances: {},
         },

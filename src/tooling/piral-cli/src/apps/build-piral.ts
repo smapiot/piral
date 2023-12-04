@@ -25,8 +25,9 @@ import {
 const allName = 'all';
 const releaseName = 'release';
 const emulatorName = 'emulator';
-const emulatorSourcesName = 'emulator-sources';
-const emulatorWebsiteName = 'emulator-website';
+const emulatorPackageName = 'package';
+const emulatorSourcesName = 'sources';
+const emulatorWebsiteName = 'website';
 
 export interface BuildPiralOptions {
   /**
@@ -167,7 +168,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(fullBase, entry);
-  const { name, root, ignored, externals, scripts } = await retrievePiletsInfo(entryFiles);
+  const {
+    name,
+    root,
+    ignored,
+    externals,
+    scripts,
+    emulator = emulatorPackageName,
+  } = await retrievePiletsInfo(entryFiles);
   const piralInstances = [name];
   const dest = getDestination(entryFiles, resolve(fullBase, target));
 
@@ -180,11 +188,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     await removeDirectory(dest.outDir);
   }
 
-  // either 'emulator-*' or 'all'
-  if (type === emulatorName || type === emulatorSourcesName || type === emulatorWebsiteName || type === allName) {
+  // either take the explicit type or find out the implicit / default one
+  const emulatorType = type === allName || type === emulatorName ? emulator : type.replace(`${emulatorName}-`, '');
+
+  // only applies to an explicit emulator target (e.g., "emulator-website") or to "all" / "emulator" with the setting from the piral.json
+  if ([emulatorSourcesName, emulatorPackageName, emulatorWebsiteName].includes(emulatorType)) {
     const emulatorPublicUrl = '/';
     const targetDir = useSubdir ? join(dest.outDir, emulatorName) : dest.outDir;
-    const appDir = type !== emulatorWebsiteName ? join(targetDir, 'app') : targetDir;
+    const appDir = emulatorType !== emulatorWebsiteName ? join(targetDir, 'app') : targetDir;
     progress('Starting emulator build ...');
 
     // since we create this anyway let's just pretend we want to have it clean!
@@ -237,23 +248,26 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
     await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
 
-    const rootDir = await (type !== emulatorWebsiteName
-      ? createEmulatorSources(root, externals, outDir, outFile, logLevel)
-      : createEmulatorWebsite(root, externals, outDir, outFile, logLevel));
+    let rootDir = root;
 
-    await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
-
-    if (type === allName || type === emulatorName) {
-      await hooks.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
-      await packageEmulator(rootDir);
-      await hooks.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
-      logDone(`Emulator package available in "${rootDir}".`);
-    } else if (type === emulatorSourcesName) {
-      logDone(`Emulator sources available in "${rootDir}".`);
-    } else if (type === emulatorWebsiteName) {
-      logDone(`Emulator website available in "${rootDir}".`);
+    switch (emulatorType) {
+      case emulatorPackageName:
+        rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
+        await hooks.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
+        await packageEmulator(rootDir);
+        await hooks.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
+        break;
+      case emulatorSourcesName:
+        rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
+        logDone(`Emulator package sources available in "${rootDir}".`);
+        break;
+      case emulatorWebsiteName:
+        rootDir = await createEmulatorWebsite(root, externals, outDir, outFile, logLevel);
+        logDone(`Emulator website available in "${rootDir}".`);
+        break;
     }
 
+    await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
     logReset();
   }
 

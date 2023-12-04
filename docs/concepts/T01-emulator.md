@@ -8,7 +8,7 @@ section: Tooling
 
 To make developing pilets as easy and intuitive as possible, the app shell can be distributed as a so-called emulator. For this distribution there are right now 3 different models:
 
-1. Classic - a tarball (npm package) is used (use case: a (private) npm registry exists)
+1. Package - a tarball (npm package) is used (use case: a (private) npm registry exists)
 2. Source - the app shell's source code is directly referenced (use case: monorepo)
 3. Website - a special build of the app shell is uploaded to some static storage (use case: the emulator can be public)
 
@@ -16,9 +16,29 @@ The emulator is essentially the app shell with special debug helpers (e.g., allo
 
 ## Building
 
-### Classic Emulator
+### Package Emulator
 
-The emulator is built via the `piral-cli` using the command `piral build --type emulator`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an npm registry.
+The emulator is built via the `piral-cli` using the command `piral build --type emulator-package`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an npm registry.
+
+In case you want to inspect the files contained in the emulator package (without opening / unpacking the tarball) you can use the `--type emulator-sources` flag for the `piral-cli`: `piral build --type emulator-sources`.
+
+This type of emulator is the default. In case you want to be explicit about this being the default you can change the *piral.json* to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "package"
+}
+```
+
+Alternatively, if you want to have the emulator package, but not already packaged but rather in form of its sources, you can change that default to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "sources"
+}
+```
 
 ### Source Emulator
 
@@ -28,9 +48,17 @@ In this variation no build step is necessary. This is the case in a monorepo whe
 
 In this variation the emulator is built via the `piral-cli` using the command `piral build --type emulator-website`. The result quite similar to the release build, with the artifacts placed in `dist/emulator` instead of `dist/release`. The files located in `dist/emulator` can then be uploaded to some static storage that can be referenced by an URL.
 
+In case you want to always produce this kind of emulator when you call `piral build` you can adjust the *piral.json* to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "website"
+}
+
 ## Package Definition
 
-In case of a classic emulator the generated tarball contains a pre-bundled version of the sources, together with a modified version of the app shell repository's original *package.json*.
+In case of a emulator package the generated tarball contains a pre-bundled version of the sources, together with a modified version of the app shell repository's original *package.json*.
 
 The following properties are taken over:
 

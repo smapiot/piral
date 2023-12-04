@@ -65,9 +65,15 @@
         }
       }
     },
-    "emulatorStartup": {
+    "emulator": {
       "type": "string",
-      "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
+      "enum": [
+        "package",
+        "website",
+        "sources",
+        "none"
+      ],
+      "description": "Defines what the type of the emulator artifact used by the build command is. 'none' skips implicit building of the emulator."
     },
     "isolation": {
       "type": "string",

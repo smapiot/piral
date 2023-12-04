@@ -232,7 +232,13 @@ export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
-export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources' | 'emulator-website';
+export type PiralBuildType =
+  | 'all'
+  | 'release'
+  | 'emulator'
+  | 'emulator-package'
+  | 'emulator-sources'
+  | 'emulator-website';
 
 export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
