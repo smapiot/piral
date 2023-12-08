@@ -8,6 +8,7 @@ const messages = {
   en: {
     hi: 'hello',
     greeting: 'Hi {{name}}, welcome back',
+    secretNumber: 'The secret number is {{number}}.',
     header: {
       title: 'Hello world'
     }
@@ -78,6 +79,12 @@ describe('Localize Module', () => {
     const localizer = new Localizer(messages, 'en');
     const result = localizer.localizeGlobal('greeting', { name: undefined });
     expect(result).toBe('Hi , welcome back');
+  });
+
+  it('localizeGlobal does not replace falsy variables with an empty string', () => {
+    const localizer = new Localizer(messages, 'en');
+    const result = localizer.localizeGlobal('secretNumber', { number: 0 });
+    expect(result).toBe('The secret number is 0.');
   });
 
   it('localizeGlobal translates from global translations using passed nested translations', () => {

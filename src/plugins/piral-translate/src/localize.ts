@@ -16,7 +16,7 @@ function defaultFallback(key: string, language: string): string {
 
 function formatMessage<T extends object>(message: string, variables: T): string {
   return message.replace(/{{\s*([A-Za-z0-9_.]+)\s*}}/g, (_match: string, p1: string) => {
-    return p1 in variables ? variables[p1] || '' : `{{${p1}}}`;
+    return p1 in variables ? variables[p1] ?? '' : `{{${p1}}}`;
   });
 }
 
