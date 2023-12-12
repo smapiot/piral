@@ -1,6 +1,6 @@
 {
   "name": "piral-react",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Plugin for integrating React 16+ components in Piral.",
   "keywords": [
     "piral",
@@ -67,6 +67,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.3.3"
+    "piral-core": "^1.4.0"
   }
 }
