@@ -16,6 +16,7 @@ import { getDependencies, getDependencyPackages, getDevDependencies } from './la
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
 import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson } from './constants';
 import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson } from './constants';
+import { satisfies } from './version';
 import { getModulePath } from '../external';
 import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition } from '../types';
 import { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
@@ -653,6 +654,10 @@ export async function patchPiletPackage(
   log('generalDebug_0003', `Succesfully patched the ${packageJson}.`);
 }
 
+function isWebsiteCompatible(version: string) {
+  return satisfies(version, '>=1.4.0');
+}
+
 async function getPiletPackage(
   root: string,
   piralInfo: PiralPackageData,
@@ -673,7 +678,7 @@ async function getPiletPackage(
         start: 'pilet debug',
         build: 'pilet build',
         upgrade: 'pilet upgrade',
-        postinstall: 'pilet declaration',
+        postinstall: isWebsiteCompatible(toolVersion) ? 'pilet declaration' : undefined,
         ...info.scripts,
       }
     : info.scripts;
