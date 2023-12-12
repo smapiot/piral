@@ -5152,10 +5152,10 @@ detect-libc@^1.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
 
-dets@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.14.0.tgz#6585c96d97493da52770e1039ecc51ae3ce9b3d4"
-  integrity sha512-nKrGBQRs7/tsmoMEVbFL6dmYDPRqeRupSw9Xf1zneZWydwkGrwzIPxgB/28Kxw5pe8GLJsaPG8Pnz9jOEJa1dw==
+dets@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.14.1.tgz#9ff2c12bb8120110ac9dee0b42e61c6d9540a0ac"
+  integrity sha512-Sh/wYozF+PEbWguCb8joqDfkMiUY5QZczndbjh6E3jwF5gE9hmNf90HIsx0HELcXnNsDMjhsB9j+Nuy5Q6gcOQ==
 
 diff-sequences@^29.4.3:
   version "29.6.3"
