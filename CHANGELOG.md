@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.4.0 (tbd)
+## 1.4.0 (December 12, 2023)
 
 - Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
 - Fixed issue in `piral-translate` replacing falsy values with empty string (#651)
