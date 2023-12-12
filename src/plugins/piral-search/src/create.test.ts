@@ -7,6 +7,9 @@ import { createSearchApi } from './create';
 
 function createMockContainer() {
   const state = create(() => ({
+    app: {
+      wrap: false,
+    },
     registry: {
       wrappers: {},
       extensions: {},

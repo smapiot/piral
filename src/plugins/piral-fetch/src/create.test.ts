@@ -1,7 +1,6 @@
 /**
  * @vitest-environment jsdom
  */
-import 'url-polyfill';
 import 'whatwg-fetch';
 import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
 import { createFetchApi } from './create';

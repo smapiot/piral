@@ -73,26 +73,12 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     if (piletJsonPath) {
       const piletJsonDir = dirname(piletJsonPath);
       const root = await findPiletRoot(piletJsonDir);
-      const oldContent = await readJson(piletJsonDir, piletJson);
-      const [appName] = await installPiralInstance(app, fullBase, root, npmClient);
-
-      const newContent = {
-        ...oldContent,
-        piralInstances: {
-          ...oldContent.piralInstances,
-          [appName]: {
-            selected,
-          },
-        },
-      };
-
-      await writeJson(piletJsonDir, piletJson, newContent, true);
+      await installPiralInstance(app, fullBase, root, npmClient, selected);
     } else {
       log('piletJsonNotAvailable_0180', targetDir);
     }
   });
 
   await Promise.all(tasks);
-
   logDone(`Added the Piral instance!`);
 }

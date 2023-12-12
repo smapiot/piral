@@ -4,6 +4,7 @@ import loadV0 from './loaders/v0';
 import loadV1 from './loaders/v1';
 import loadV2 from './loaders/v2';
 import loadV3 from './loaders/v3';
+import loadMf from './loaders/mf';
 import { isfunc } from './utils';
 import { inspectPilet } from './inspect';
 import type { DefaultLoaderConfig, PiletLoader, CustomSpecLoaders } from './types';
@@ -50,6 +51,8 @@ export function getDefaultLoader(config: DefaultLoaderConfig = {}): PiletLoader 
         return loadV1(r[1], config);
       case 'v0':
         return loadV0(r[1], config);
+      case 'mf':
+        return loadMf(r[1], config);
       case 'bundle':
         return loadBundle(r[1], config);
       default:

@@ -44,12 +44,7 @@ function wrapForeignComponent<T>(
     return (
       <Wrapper {...props}>
         <PortalRenderer id={id} />
-        <ForeignComponentContainer
-          innerProps={innerProps}
-          $portalId={id}
-          $component={component}
-          $context={context}
-        />
+        <ForeignComponentContainer innerProps={innerProps} $portalId={id} $component={component} $context={context} />
       </Wrapper>
     );
   });

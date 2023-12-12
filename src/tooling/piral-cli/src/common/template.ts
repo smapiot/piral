@@ -1,7 +1,12 @@
 import { ForceOverwrite } from './enums';
 import { createFileIfNotExists } from './io';
 
-function fillTemplate(data: any = {}) {
+export interface PiralStubFileTemplateData {
+  outFile: string;
+  name: string;
+}
+
+function fillTemplate(data: PiralStubFileTemplateData) {
   return `if (process.env.NODE_ENV === 'test') {
   // behavior for the test environment, we'll try to make it work
 
@@ -24,8 +29,8 @@ function fillTemplate(data: any = {}) {
 export async function createPiralStubIndexIfNotExists(
   targetDir: string,
   fileName: string,
-  forceOverwrite?: ForceOverwrite,
-  data?: any,
+  forceOverwrite: ForceOverwrite,
+  data: PiralStubFileTemplateData,
 ) {
   const content = fillTemplate(data);
   await createFileIfNotExists(targetDir, fileName, content, forceOverwrite);

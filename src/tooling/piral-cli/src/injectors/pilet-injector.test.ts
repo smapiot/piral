@@ -40,7 +40,7 @@ describe('Piral-CLI pilet injector', () => {
     expect(injector.active).toBeFalsy();
   });
 
-  it('PiletInjector does not send empty content', () => {
+  it('PiletInjector does not send empty content', async () => {
     // Arrange
     const core = new EventEmitter();
     const injector = new PiletInjector(optionsMock, configMock, core);
@@ -51,7 +51,7 @@ describe('Piral-CLI pilet injector', () => {
 
     // Act
     try {
-      injector.sendFile(target, url); // this file does not exist
+      await injector.sendFile(target, url); // this file does not exist
     } catch {
       hasFailed = true;
     }
@@ -113,7 +113,7 @@ describe('Piral-CLI pilet injector', () => {
     expect(res).toBeUndefined();
   });
 
-  it('PiletInjector wont crash on request with no target', () => {
+  it('PiletInjector wont crash on request with no target', async () => {
     // Arrange
     const optionsMock = {
       pilets: [],
@@ -136,7 +136,7 @@ describe('Piral-CLI pilet injector', () => {
     } as KrasRequest;
 
     // Act
-    const res = injector.handle(request);
+    const res = await injector.handle(request);
 
     // Assert
     expect(res).toBeUndefined();

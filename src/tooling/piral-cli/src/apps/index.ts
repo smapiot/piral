@@ -13,5 +13,6 @@ export * from './run-emulator-piral';
 export * from './debug-pilet';
 export * from './build-pilet';
 export * from './pack-pilet';
+export * from './declaration-pilet';
 export * from './publish-pilet';
 export * from './validate-pilet';

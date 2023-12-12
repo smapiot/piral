@@ -51,7 +51,7 @@
     "@types/rimraf": "^2.0.2",
     "@types/tar": "^4.0.0",
     "@types/yargs": "^15.0.4",
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "chalk": "^4.0.0",
     "enhanced-resolve": "^5.10.0",
     "form-data": "^3.0.0",
@@ -65,7 +65,7 @@
     "ora": "^6.1.2",
     "rc": "^1.2.8",
     "rimraf": "^3.0.0",
-    "tar": "^4.4.8",
+    "tar": "^6.2.0",
     "typescript": "^5.0.0",
     "yargs": "^15.0.0"
   }

@@ -1,22 +1,64 @@
 ---
 title: Emulator
-description: Details on how an emulator package is created and used.
+description: Details on how an emulator is created and used.
 section: Tooling
 ---
 
-# Emulator Package
+# Emulator
 
-To make developing pilets as easy and intuitive as possible, the app shell can be packaged to serve as an emulator.
+To make developing pilets as easy and intuitive as possible, the app shell can be distributed as a so-called emulator. For this distribution there are right now 3 different models:
+
+1. Package - a tarball (npm package) is used (use case: a (private) npm registry exists)
+2. Source - the app shell's source code is directly referenced (use case: monorepo)
+3. Website - a special build of the app shell is uploaded to some static storage (use case: the emulator can be public)
 
 The emulator is essentially the app shell with special debug helpers (e.g., allowing usage with the Piral Inspector), source maps, and non-production sources (e.g., shipping with the full React error explanations and development warnings).
 
 ## Building
 
-The emulator is built via the `piral-cli` using the command `piral build --type emulator`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an npm registry.
+### Package Emulator
+
+The emulator is built via the `piral-cli` using the command `piral build --type emulator-package`. The result is a `tgz` located in the `dist/emulator` folder that could be published to an npm registry.
+
+In case you want to inspect the files contained in the emulator package (without opening / unpacking the tarball) you can use the `--type emulator-sources` flag for the `piral-cli`: `piral build --type emulator-sources`.
+
+This type of emulator is the default. In case you want to be explicit about this being the default you can change the *piral.json* to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "package"
+}
+```
+
+Alternatively, if you want to have the emulator package, but not already packaged but rather in form of its sources, you can change that default to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "sources"
+}
+```
+
+### Source Emulator
+
+In this variation no build step is necessary. This is the case in a monorepo where your app shell is just one of the "packages" / directories along your pilets. Alternatively, you could also just package or distribute the app shell's source code with no build step. In this case your app shell is already an emulator, however, the build of this emulator is still necessary and might fail if certain dependencies are not available in the pilet's directory.
+
+### Website Emulator
+
+In this variation the emulator is built via the `piral-cli` using the command `piral build --type emulator-website`. The result quite similar to the release build, with the artifacts placed in `dist/emulator` instead of `dist/release`. The files located in `dist/emulator` can then be uploaded to some static storage that can be referenced by an URL.
+
+In case you want to always produce this kind of emulator when you call `piral build` you can adjust the *piral.json* to be:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "emulator": "website"
+}
 
 ## Package Definition
 
-The generated tarball contains a pre-bundled version of the sources, together with a modified version of the app shell repository's original *package.json*.
+In case of a emulator package the generated tarball contains a pre-bundled version of the sources, together with a modified version of the app shell repository's original *package.json*.
 
 The following properties are taken over:
 
@@ -58,6 +100,19 @@ If you build your emulator package on your own incl. already pre-bundled sources
 
 This makes sure to avoid running a `piral debug` on the sources.
 :::
+
+## Emulator Manifest
+
+The emulator website comes with a special file called `emulator.json` that contains all information to be used by pilets. This file contains the following information:
+
+- `name` has the name of the app shell
+- `description` contains the description given for the app shell
+- `version` specifies the currently used version of the app shell
+- `timestamp` defines the point in time when the emulator was created
+- `scaffolding` information with the defined pilets info and used version of the `piral-cli`
+- `files` referencing essential files for typings, the app (HTML and JS), as well as all assets
+- `importmap` having the exposed importmap (centrally shared dependencies)
+- `dependencies` goes into details on the used optional and included dependencies
 
 ## Declaration
 

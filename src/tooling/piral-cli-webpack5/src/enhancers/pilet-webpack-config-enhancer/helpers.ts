@@ -23,6 +23,33 @@ export function getDefineVariables(variables: Record<string, string>) {
   }, {});
 }
 
+export function getShared(importmap: Array<SharedDependency>, externals: Array<string>) {
+  const shared = {};
+
+  for (const external of externals) {
+    shared[external] = {
+      import: false,
+      requiredVersion: '*',
+      packageName: external,
+      singleton: true,
+    };
+  }
+
+  for (const dep of importmap) {
+    if (dep.type === 'local') {
+      shared[dep.name] = {
+        eager: false,
+        requiredVersion: dep.requireId.split('@').pop(),
+        version: dep.id.split('@').pop(),
+        packageName: dep.entry,
+        singleton: true,
+      };
+    }
+  }
+
+  return shared;
+}
+
 export function getDependencies(importmap: Array<SharedDependency>, compilerOptions: Configuration) {
   const dependencies = {};
   const { entry, externals } = compilerOptions;
@@ -68,7 +95,7 @@ export function withExternals(compilerOptions: Configuration, externals: Array<s
     return external;
   }, {});
 
-  const newExternals = arrayExternals.filter(external => {
+  const newExternals = arrayExternals.filter((external) => {
     if (typeof external === 'object' && Object.keys(external).length) {
       for (const dep in external) {
         objectExternal[dep] = external[dep];

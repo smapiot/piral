@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { setStandardEnvs } from '../common';
+import { setStandardEnvs } from '../common/envs';
 import type { LogLevels, PiralBuildHandler } from '../types';
 
 let handler: PiralBuildHandler;

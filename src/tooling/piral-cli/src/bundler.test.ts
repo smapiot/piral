@@ -92,7 +92,7 @@ describe('Piral CLI Bundler Module', () => {
 
     const args = { root: undefined };
     await callPiletBuild(args as any, 'foo1');
-    expect(callStatic).toHaveBeenCalledWith('build-pilet', '1', args);
+    expect(callStatic).toHaveBeenCalledWith('build-pilet', '1', args, undefined);
   });
 
   it('setting the bundler with optimize modules calls optimize modules', async () => {
@@ -134,7 +134,7 @@ describe('Piral CLI Bundler Module', () => {
 
     const args = { root: undefined };
     await callPiralBuild(args as any, 'foo2');
-    expect(callStatic).toHaveBeenCalledWith('build-piral', '3', args);
+    expect(callStatic).toHaveBeenCalledWith('build-piral', '3', args, undefined);
   });
 
   it('setting the bundler can resolve it properly for call pilet debug', async () => {
@@ -153,7 +153,7 @@ describe('Piral CLI Bundler Module', () => {
 
     const args = { root: undefined };
     await callPiletDebug(args as any, 'foo3');
-    expect(callDynamic).toHaveBeenCalledWith('debug-pilet', '1', args);
+    expect(callDynamic).toHaveBeenCalledWith('debug-pilet', '1', args, undefined);
   });
 
   it('setting the bundler can resolve it properly for call piral debug', async () => {
@@ -172,7 +172,7 @@ describe('Piral CLI Bundler Module', () => {
 
     const args = { root: undefined };
     await callPiralDebug(args as any, 'foo4');
-    expect(callDynamic).toHaveBeenCalledWith('debug-piral', '10', args);
+    expect(callDynamic).toHaveBeenCalledWith('debug-piral', '10', args, undefined);
   });
 
   it('setting the bundler can resolve it properly for call piral watch', async () => {
@@ -191,7 +191,7 @@ describe('Piral CLI Bundler Module', () => {
 
     const args = { root: undefined };
     await callDebugPiralFromMonoRepo(args as any, 'foo5');
-    expect(callStatic).toHaveBeenCalledWith('debug-mono-piral', '7', args);
+    expect(callStatic).toHaveBeenCalledWith('debug-mono-piral', '7', args, undefined);
   });
 
   it('using a non-available bundler should fail', () => {

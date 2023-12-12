@@ -2493,6 +2493,99 @@ export function publishFeedMissingVersion_0116(): QuickMessage {
 }
 
 /**
+ * @kind Info
+ *
+ * @summary
+ * The remote emulator could not be updated using its given manifest URL.
+ *
+ * @abstract
+ * The remote emulator could not be retrieved from its specified URL. This could be due to a problem with
+ * the network or due to the emulator website not being available right now.
+ *
+ * This is just an informative message. In the current scenario the emulator has been downloaded previously
+ * already. Therefore, only potential updates are blocked due to the error.
+ *
+ * If the error persists please try to access the emulator's URL in your browser. In case this works make
+ * sure that the browser does not have different proxy settings compared ot the rest of your system.
+ *
+ * @see
+ * - [Chrome proxy settings](https://oxylabs.io/resources/integrations/chrome)
+ * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
+ */
+export function skipEmulatorUpdate_0120(manifestUrl: string): QuickMessage {
+  return [LogLevels.info, '0120', `Failed to retrieve current emulator from "${manifestUrl}". Skipping update.`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * The remote emulator could not be updated as the given manifest URL returns a differently named emulator.
+ *
+ * @abstract
+ * When a remote emulator is first installed it will be integrated using its specified name as shell name.
+ * The remote emulator is always auto-updated whenever the Piral CLI is running pilet commands. However,
+ * in case the current emulator manifest has a different name the update will be blocked. In this case a
+ * reinstallation of the emulator is necessary.
+ *
+ * Use "pilet remove-piral-instance" and "pilet add-piral-instance" to remove the old instance (by its given
+ * name) and add the new instance (by the manifest URL).
+ *
+ * @see
+ * - [Chrome proxy settings](https://oxylabs.io/resources/integrations/chrome)
+ * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
+ */
+export function remoteEmulatorNameChanged_0121(name: string): QuickMessage {
+  return [LogLevels.warning, '0121', `The name of the emulator has changed. Skipping updates for "${name}".`];
+}
+
+/**
+ * @kind Info
+ *
+ * @summary
+ * An asset of the remote emulator could not be updated.
+ *
+ * @abstract
+ * The metadata of an remote emulator has been updated, however, one of the asset files could
+ * not be updated. The previously downloaded version of this file will be used as a fallback.
+ *
+ * Using the previously downloaded version of a file might just work, however, for several
+ * reasons this might also break. In any case, if you see this info then any kinds of issues
+ * appearing could potentially be solved by just giving your machine network access again or
+ * waiting for the remote sources to be accessible again.
+ *
+ * @see
+ * - [Chrome proxy settings](https://oxylabs.io/resources/integrations/chrome)
+ * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
+ */
+export function optionalEmulatorAssetUpdateSkipped_0122(url: string): QuickMessage {
+  return [LogLevels.info, '0122', `Could not update asset file at "${url}".`];
+}
+
+/**
+ * @kind Warning
+ *
+ * @summary
+ * An asset of the remote emulator could not be downloaded.
+ *
+ * @abstract
+ * The metadata of an remote emulator has been downloaded, however, one of the asset files
+ * could not be downloaded. Consequently, the fallback (index.html) will be used as
+ * replacement in the dev server.
+ *
+ * If you see this warning then any kinds of issues appearing could potentially be solved by
+ * just giving your machine network access again or waiting for the remote sources to be
+ * accessible again.
+ *
+ * @see
+ * - [Chrome proxy settings](https://oxylabs.io/resources/integrations/chrome)
+ * - [Firefox proxy settings](https://support.mozilla.org/en-US/kb/connection-settings-firefox)
+ */
+export function requiredEmulatorAssetDownloadSkipped_0123(url: string): QuickMessage {
+  return [LogLevels.warning, '0123', `Could not download asset file at "${url}".`];
+}
+
+/**
  * @kind Warning
  *
  * @summary
@@ -2535,11 +2628,12 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * the interpretation of compatible feed services slightly and has an impact of the usage
  * of the pilet in the browser.
  *
- * The selected schema version needs to be either "v0", "v1", or "v2".
+ * The selected schema version needs to be either "v0", "v1", "v2", or "mf".
  *
  * - v0: will download and evaluate the pilet explicitly
  * - v1: will use a script tag for integration of the pilet
  * - v2: will use SystemJS for integration of the pilet (default)
+ * - mf: will use Module Federation for integration of the pilet (only supported bundlers)
  *
  * The v1 version has better support for older browsers, but requires a polyfill to work
  * correctly. This polyfill is part of the `piral-ie11polyfills-utils` package.
@@ -2548,6 +2642,10 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
  * indirectly, making it a quite broad choice.
+ * 
+ * In bundlers that support Module Federation (e.g., Webpack 5) the "mf" format may be
+ * the best choice. Keep in mind that "mf" is only supported by applications using
+ * Piral 1.4.0 or higher.
  *
  * @see
  * - [GitHub currentScript-polyfill](https://github.com/amiller-gh/currentScript-polyfill)

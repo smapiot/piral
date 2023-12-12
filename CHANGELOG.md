@@ -1,5 +1,22 @@
 # Piral Changelog
 
+## 1.4.0 (tbd)
+
+- Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
+- Fixed issue in `piral-translate` replacing falsy values with empty string (#651)
+- Moved `piral-jest-utils` and `piral-ie11polyfills-utils` into a separate repository
+- Updated documentation on `piral-ng` (#646)
+- Updated dependencies (#641)
+- Updated `piral-cli` compatibility with Bun as runtime
+- Updated generated code to fully use ES2020
+- Updated to latest version of `dets`
+- Added support for nested translations in `piral-translate` (#648)
+- Added support for Angular 17 in `piral-ng`
+- Added possibility to publish emulator as a website (#644)
+- Added support for micro frontends based on module federation (#643)
+- Added isolation mode option in *piral.json* to opt-in for `piral-component` boundary
+- Added option to specify runtime execution path for bundler plugins
+
 ## 1.3.3 (November 2, 2023)
 
 - Fixed inlined source maps for CSS files of Angular components

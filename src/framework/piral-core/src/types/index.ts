@@ -11,3 +11,4 @@ export * from './navigation';
 export * from './plugin';
 export * from './state';
 export * from './utils';
+export * from './web';

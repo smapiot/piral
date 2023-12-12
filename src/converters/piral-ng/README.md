@@ -41,13 +41,13 @@ export function setup(piral: PiletApi) {
 }
 ```
 
-We recommend that you still put these components into modules as you would normally do. In order for Piral to use that module you need to define it first. This also allows you to use special Piral declarations such as the `NgExtension` or the `ResourceUrlPipe`. All these declarations come with the `SharedModule` available via import from `piral-ng/common`.
+We recommend that you still put these components into modules as you would normally do. In order for Piral to use that module you need to define it first. This also allows you to use special Piral declarations such as the `NgExtension` or the `ResourceUrlPipe`. All these declarations come with the `SharedModule` available via import from `piral-ng-common`.
 
 Example (app) module:
 
 ```ts
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'piral-ng/common';
+import { SharedModule } from 'piral-ng-common';
 import { AngularPage } from './AngularPage';
 
 @NgModule({
@@ -347,7 +347,7 @@ The related packages should be shared with the pilets via the *package.json*:
       "@angular/core": "",
       "@angular/platform-browser": "",
       "@angular/platform-browser-dynamic": "",
-      "piral-ng/common": "",
+      "piral-ng-common": "",
       "rxjs": "",
       "zone.js": ""
     }
@@ -699,7 +699,36 @@ The basic dependencies look as follows:
 }
 ```
 
-Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (4.9 or later).
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher than 4.8 (and pre-5.0).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 17
+
+In general, Angular 17 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^17",
+  "@angular/compiler": "^17",
+  "@angular/core": "^17",
+  "@angular/router": "^17",
+  "@angular/platform-browser": "^17",
+  "@angular/platform-browser-dynamic": "^17",
+  "core-js": "^3.19.0",
+  "rxjs": "^7.4",
+  "zone.js": "~0.14.0"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.2 (and less than 5.3).
 
 So include in your app shell as preamble:
 

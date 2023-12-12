@@ -73,6 +73,15 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+### Rendering Breadcrumbs
+
+While there are several options to render breadcrumbs in a pilet, Piral provides a built-in extension called `piral-breadcrumbs` which handles everything for you:
+
+```tsx
+// Within any pilet:
+<piral-extension name="piral-breadcrumbs"></piral-extension>
+```
+
 :::
 
 ::: summary: For Piral instance developers
@@ -117,6 +126,22 @@ const instance = createInstance({
   })],
   // ...
 });
+```
+
+### Rendering Breadcrumbs
+
+From within a Piral instance, you can render the current breadcrumbs via the `Breadcrumbs` component:
+
+```tsx
+import { Breadcrumbs } from 'piral-breadcrumbs';
+
+// Render it via:
+return (
+  <>
+    <Breadcrumbs />
+    {otherContent}
+  </>
+);
 ```
 
 ### Customizing

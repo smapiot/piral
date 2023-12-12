@@ -100,6 +100,13 @@ export interface Translations {
   [tag: string]: string;
 }
 
+export interface NestedTranslations {
+  /**
+   * The available wordings (tag to translation or nested translations).
+   */
+  [tag: string]: string | NestedTranslations;
+}
+
 export interface LanguageLoader {
   (language: string, current: LanguageData): Promise<LanguageData>;
 }
@@ -119,6 +126,15 @@ export interface LocalizationMessages {
   [lang: string]: Translations;
 }
 
+export interface NestedLocalizationMessages {
+  /**
+   * The available languages (lang to wordings or nested wordings).
+   */
+  [lang: string]: NestedTranslations;
+}
+
+export type AnyLocalizationMessages = LocalizationMessages | NestedLocalizationMessages;
+
 export interface PiletLocaleApi {
   /**
    * Adds a list of translations to the existing translations.
@@ -129,7 +145,7 @@ export interface PiletLocaleApi {
    * @param messagesList The list of messages that extend the existing translations
    * @param [isOverriding=true] Indicates whether the new translations overwrite the existing translations
    */
-  addTranslations(messagesList: LocalizationMessages[], isOverriding?: boolean): void;
+  addTranslations(messagesList: Array<AnyLocalizationMessages>, isOverriding?: boolean): void;
   /**
    * Gets the currently selected language directly.
    */
@@ -151,7 +167,7 @@ export interface PiletLocaleApi {
    * The translations will be exclusively used for retrieving translations for the pilet.
    * @param messages The messages to use as translation basis.
    */
-  setTranslations(messages: LocalizationMessages): void;
+  setTranslations(messages: AnyLocalizationMessages): void;
   /**
    * Gets the currently provided translations by the pilet.
    */

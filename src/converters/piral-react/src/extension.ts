@@ -1,5 +1,5 @@
 import type { ExtensionSlotProps, PiletApi } from 'piral-core';
-import { createElement, Component } from 'react-15';
+import { createElement, Component } from 'react';
 import { anyPropType } from './mount';
 
 function compareObjects(a: any, b: any) {
@@ -34,7 +34,7 @@ function compare<T>(a: T, b: T) {
 }
 
 export function createExtension(rootName: string) {
-  const React15Extension: any = class extends Component<ExtensionSlotProps> {
+  const ReactExtension: any = class extends Component<ExtensionSlotProps> {
     static contextTypes = {
       piral: anyPropType,
     };
@@ -58,5 +58,5 @@ export function createExtension(rootName: string) {
     }
   };
 
-  return React15Extension;
+  return ReactExtension;
 }

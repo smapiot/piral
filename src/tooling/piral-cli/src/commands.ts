@@ -678,6 +678,40 @@ const allCommands: Array<ToolCommand<any>> = [
     },
   },
   {
+    name: 'declaration-pilet',
+    alias: ['declare-pilet'],
+    description: 'Creates the TypeScript declaration file (index.d.ts) for a pilet.',
+    arguments: ['[source]'],
+    flags(argv) {
+      return argv
+        .positional('source', {
+          type: 'string',
+          describe: 'Sets the source pilet path for collecting all the information.',
+          default: apps.declarationPiletDefaults.entry,
+        })
+        .string('target')
+        .describe('target', 'Sets the target directory for the generated .d.ts file.')
+        .default('target', apps.declarationPiletDefaults.target)
+        .number('log-level')
+        .describe('log-level', 'Sets the log level to use (1-5).')
+        .default('log-level', apps.declarationPiletDefaults.logLevel)
+        .choices('force-overwrite', forceOverwriteKeys)
+        .describe('force-overwrite', 'Determines if files should be overwritten by the command.')
+        .default('force-overwrite', keyOfForceOverwrite(apps.declarationPiletDefaults.forceOverwrite))
+        .string('base')
+        .default('base', process.cwd())
+        .describe('base', 'Sets the base directory. By default the current directory is used.');
+    },
+    run(args) {
+      return apps.declarationPilet(args.base as string, {
+        entry: args.source as string,
+        target: args.target as string,
+        forceOverwrite: valueOfForceOverwrite(args['force-overwrite'] as string),
+        logLevel: args['log-level'] as LogLevels,
+      });
+    },
+  },
+  {
     name: 'new-pilet',
     alias: ['create-pilet', 'scaffold-pilet', 'scaffold', 'new', 'create'],
     description: 'Scaffolds a new pilet for a specified Piral instance.',

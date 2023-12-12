@@ -11,6 +11,7 @@ export const ExtensionCatalogue: React.FC = () => {
 
   if (state) {
     const { name = '', params = {} } = state;
+    // @ts-ignore
     return <piral-extension name={name} params={JSON.stringify(params)} />;
   }
 

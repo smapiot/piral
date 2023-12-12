@@ -101,7 +101,13 @@ The script for the partial resource has to be loaded from the same base URL as t
 
 ### `v2` Format
 
-This code in this section works exclusively for `v2` pilets. `v2` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
+The code in this section works exclusively for `v2` pilets. `v2` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
+
+### `mf` Format
+
+The code in this section works exclusively for `mf` pilets. `mf` pilets are using [Module Federation](https://module-federation.io/) for exposing their API and taking part in (distributed) sharing of dependencies. For conformance to this format the Module Federation specification should be considered.
+
+The `mf` format does not require a spec version marker. By detecting a script that uses module federation the `mf` format is assumed.
 
 ## Package Keys
 

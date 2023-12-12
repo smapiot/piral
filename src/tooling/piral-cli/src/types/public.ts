@@ -136,6 +136,7 @@ export interface BundlerPrepareArgs<T> {
 
 export interface BaseBundlerDefinition<T> {
   path: string;
+  exec?: string;
   prepare?: BundlerPrepareArgs<T>;
 }
 
@@ -223,7 +224,21 @@ export type ImportmapVersions = 'all' | 'match-major' | 'any-patch' | 'exact';
 
 export type ImportmapMode = 'host' | 'remote';
 
-export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3';
+export type PiletSchemaVersion = 'none' | 'v0' | 'v1' | 'v2' | 'v3' | 'mf';
+
+export interface HeaderAuthConfig {
+  mode: 'header';
+  key: string;
+  value: string;
+}
+
+export interface HttpAuthConfig {
+  mode: 'http';
+  username: string;
+  password: string;
+}
+
+export type AuthConfig = HeaderAuthConfig | HttpAuthConfig;
 
 export type SourceLanguage = 'js' | 'ts';
 
@@ -231,11 +246,17 @@ export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
-export type PiralBuildType = 'all' | 'release' | 'emulator' | 'emulator-sources';
+export type PiralBuildType =
+  | 'all'
+  | 'release'
+  | 'emulator'
+  | 'emulator-package'
+  | 'emulator-sources'
+  | 'emulator-website';
 
 export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
-export type PackageType = 'registry' | 'file' | 'git';
+export type PackageType = 'registry' | 'file' | 'git' | 'remote';
 
 export type NpmClientType = 'npm' | 'yarn' | 'pnp' | 'pnpm' | 'lerna' | 'rush' | 'bun';
 

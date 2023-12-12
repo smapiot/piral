@@ -55,6 +55,15 @@ export function getPiletSpecMeta(target: string, basePath: string) {
         requireRef,
         dependencies: getDependencies(plainDependencies, basePath),
       };
+    } else if (
+      content.includes(
+        '"Container initialization failed as it has already been initialized with a different share scope"',
+      ) &&
+      /^var [A-Za-z0-9_]+;/.test(content)
+    ) {
+      return {
+        spec: 'mf',
+      };
     } else {
       // uses no arguments
       return {

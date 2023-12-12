@@ -11,26 +11,16 @@ import {
   slotName,
   isSame,
   contentName,
+  componentName,
 } from '../utils';
 
 export interface Updatable {
   (newProps: any): void;
 }
 
-declare global {
-  interface Window {
-    /**
-     * Assigns content in form a ReactChild to be rendered later
-     * from a foreign container / element in an piral-content
-     * child.
-     * @param cid The ID of the piral-content node.
-     * @param content The ReactChild to be rendered.
-     */
-    assignContent(cid: string, content: any): void;
-  }
-}
-
 if (typeof window !== 'undefined' && 'customElements' in window) {
+  const contents = 'contents';
+
   /**
    * This is a nice abstraction allowing anyone to actually use the extension system
    * brought by Piral. Not all props of the extension system are actually exposed.
@@ -122,7 +112,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     connectedCallback() {
-      this.style.display = 'contents';
+      this.style.display = contents;
 
       if (this.isConnected) {
         this.dispatchEvent(
@@ -177,7 +167,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    */
   class PiralPortal extends HTMLElement {
     connectedCallback() {
-      this.style.display = 'contents';
+      this.style.display = contents;
     }
   }
 
@@ -196,7 +186,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    */
   class PiralSlot extends HTMLElement {
     connectedCallback() {
-      this.style.display = 'contents';
+      this.style.display = contents;
     }
   }
 
@@ -205,7 +195,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   /**
    * This is a virtual element to render children defined in React / by Piral in other
    * frameworks.
-   * 
+   *
    * Internally, you can use the assignContent function to populate the content to be
    * rendered once the element is attached / mounted in the DOM.
    *
@@ -214,13 +204,13 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    * ```
    * <piral-content cid="123"></piral-content>
    * ```
-   * 
+   *
    * where you'd
-   * 
+   *
    * ```
    * window.assignContent("123", myReactContent)
    * ```
-   * 
+   *
    * beforehand.
    */
   class PiralContent extends HTMLElement {
@@ -229,16 +219,18 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     static contentAssignments = {};
 
     connectedCallback() {
-      this.style.display = 'contents';
+      this.style.display = contents;
       const cid = this.getAttribute('cid');
       const content = PiralContent.contentAssignments[cid];
       const portal = this.closest('piral-portal');
 
       if (content && portal) {
         const portalId = portal.getAttribute('pid');
-        document.body.dispatchEvent(new CustomEvent('render-content', {
-          detail: { target: this, content, portalId }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('render-content', {
+            detail: { target: this, content, portalId },
+          }),
+        );
       }
     }
 
@@ -253,6 +245,41 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   };
 
   customElements.define(contentName, PiralContent);
+
+  /**
+   * This is a virtual element to indicate that the contained content is
+   * rendered from a micro frontend's component. It will be used by the
+   * orchestrator, so there is nothing you will need to do with it.
+   *
+   * Right now this is only used when you opt-in in the createInstance.
+   */
+  class PiralComponent extends HTMLElement {
+    get name() {
+      return this.getAttribute('name');
+    }
+
+    get origin() {
+      return this.getAttribute('origin');
+    }
+
+    connectedCallback() {
+      this.style.display = contents;
+      this.deferEvent('add-component');
+    }
+
+    disconnectedCallback() {
+      this.deferEvent('remove-component');
+    }
+
+    deferEvent(eventName: string) {
+      const ev = new CustomEvent(eventName, {
+        detail: { name: this.name, origin: this.origin },
+      });
+      setTimeout(() => window.dispatchEvent(ev), 0);
+    }
+  }
+
+  customElements.define(componentName, PiralComponent);
 }
 
 export function renderElement(

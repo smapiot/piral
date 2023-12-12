@@ -8,12 +8,24 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "enum": ["none", "v0", "v1", "v2", "v3"],
+      "enum": [
+        "none",
+        "v0",
+        "v1",
+        "v2",
+        "v3",
+        "mf"
+      ],
       "description": "The default output schema to be used when building the pilet."
     },
     "importmapVersions": {
       "type": "string",
-      "enum": ["all", "match-major", "any-patch", "exact"],
+      "enum": [
+        "all",
+        "match-major",
+        "any-patch",
+        "exact"
+      ],
       "description": "The default behavior for implicitly defined versions of shared dependencies."
     },
     "piralInstances": {
@@ -36,6 +48,10 @@
           "path": {
             "type": "string",
             "description": "Defines the path to the emulator package of this app shell. If not given, the emulator package is resolved by the name of the given app shell key."
+          },
+          "url": {
+            "type": "string",
+            "description": "Defines the URL to the emulator website of this app shell. If provided, the emulator package is downloaded and updated automatically from the source."
           }
         },
         "required": []

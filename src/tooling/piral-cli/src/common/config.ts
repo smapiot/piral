@@ -1,6 +1,6 @@
 import { defaultRegistry } from './constants';
 import { rc } from '../external';
-import { SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
+import { AuthConfig, SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {
   /**
@@ -12,6 +12,10 @@ export interface PiralCliConfig {
    * Feed URL to API key specifications.
    */
   apiKeys?: Record<string, string>;
+  /**
+   * Emulator URL to auth options mapping.
+   */
+  auth?: Record<string, AuthConfig>;
   /**
    * URL to be used for publishing a pilet in case
    * there is no specialized key in url specified.
@@ -69,6 +73,7 @@ export const config: PiralCliConfig = rc(
   {
     apiKey: undefined,
     apiKeys: {},
+    auth: {},
     url: undefined,
     cert: undefined,
     npmClient: 'npm' as const,

@@ -22,19 +22,27 @@ function getWrapper(wrappers: Record<string, React.ComponentType<any>>, wrapperT
 
 function makeWrapper<TProps>(
   context: GlobalStateContext,
-  outerProps: any,
+  outerProps: BaseComponentProps,
   wrapperType: string,
   errorType: keyof Errors,
 ): React.FC<React.PropsWithChildren<TProps>> {
+  const wrapped = context.readState((m) => m.app.wrap);
   const OuterWrapper = context.readState((m) => getWrapper(m.registry.wrappers, wrapperType));
-
-  return (props) => (
+  const Wrapper = (props) => (
     <OuterWrapper {...outerProps} {...props}>
       <ErrorBoundary {...outerProps} {...props} errorType={errorType}>
         {props.children}
       </ErrorBoundary>
     </OuterWrapper>
   );
+
+  return wrapped
+    ? (props) => (
+        <piral-component origin={outerProps.piral.meta.name}>
+          <Wrapper {...props} />
+        </piral-component>
+      )
+    : Wrapper;
 }
 
 export function withApi<TProps>(

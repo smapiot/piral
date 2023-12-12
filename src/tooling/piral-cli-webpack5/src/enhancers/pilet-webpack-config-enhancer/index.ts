@@ -1,6 +1,6 @@
 import * as SystemJSPublicPathWebpackPlugin from 'systemjs-webpack-interop/SystemJSPublicPathWebpackPlugin';
 import type { SharedDependency } from 'piral-cli';
-import { Configuration, BannerPlugin, DefinePlugin } from 'webpack';
+import { Configuration, BannerPlugin, DefinePlugin, container } from 'webpack';
 import {
   setEnvironment,
   getDefineVariables,
@@ -8,6 +8,7 @@ import {
   withSetPath,
   withExternals,
   getDependencies,
+  getShared,
 } from './helpers';
 import StylesPlugin from '../../plugins/StylesPlugin';
 import SheetPlugin from '../../plugins/SheetPlugin';
@@ -38,7 +39,7 @@ export interface PiletWebpackConfigEnhancerOptions {
   /**
    * The schema version. By default, v1 is used.
    */
-  schema?: 'v0' | 'v1' | 'v2' | 'v3' | 'none';
+  schema?: 'v0' | 'v1' | 'v2' | 'v3' | 'mf' | 'none';
   /**
    * The shared dependencies. By default, these are read from the
    * Piral instance.
@@ -196,6 +197,31 @@ function piletV3WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   return compiler;
 }
 
+function piletMfWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: Configuration) {
+  const { name, variables, externals, file, importmap, entry } = options;
+  const { ModuleFederationPlugin } = container;
+
+  setEnvironment(variables);
+
+  const plugins = [
+    new DefinePlugin(getDefineVariables(variables)),
+    new ModuleFederationPlugin({
+      filename: file,
+      name: name.replace(/^@/, '').replace('/', '-').replace(/\-/g, '_'),
+      exposes: {
+        './pilet': compiler.entry[entry],
+      },
+      shared: getShared(importmap, externals),
+    })
+  ];
+
+  compiler.entry = {};
+  compiler.output.publicPath = 'auto';
+  compiler.plugins = [...compiler.plugins, ...plugins];
+
+  return compiler;
+}
+
 export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOptions) => (compiler: Configuration) => {
   const { externals = [], schema, importmap } = details;
   const environment = process.env.NODE_ENV || 'development';
@@ -220,6 +246,8 @@ export const piletWebpackConfigEnhancer = (details: PiletWebpackConfigEnhancerOp
       return piletV2WebpackConfigEnhancer(options, compiler);
     case 'v3':
       return piletV3WebpackConfigEnhancer(options, compiler);
+    case 'mf':
+      return piletMfWebpackConfigEnhancer(options, compiler);
     case 'none':
     default:
       return piletVxWebpackConfigEnhancer(options, compiler);

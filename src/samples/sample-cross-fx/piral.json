@@ -1,0 +1,4 @@
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "isolation": "modern"
+}

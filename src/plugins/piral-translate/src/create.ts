@@ -4,7 +4,14 @@ import type { PiralPlugin } from 'piral-core';
 import { createActions } from './actions';
 import { Localizer } from './localize';
 import { DefaultPicker } from './default';
-import { PiletLocaleApi, LocalizationMessages, Localizable, PiralSelectLanguageEvent } from './types';
+import { flattenTranslations } from './flatten-translations';
+import type {
+  PiletLocaleApi,
+  LocalizationMessages,
+  Localizable,
+  PiralSelectLanguageEvent,
+  AnyLocalizationMessages,
+} from './types';
 
 export interface TranslationFallback {
   (key: string, language: string): string;
@@ -22,7 +29,7 @@ export interface LocaleConfig {
    * Sets the default (global) localization messages.
    * @default {}
    */
-  messages?: LocalizationMessages;
+  messages?: AnyLocalizationMessages;
   /**
    * Sets the default language to use.
    */
@@ -71,18 +78,15 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
     return (api) => {
       let localTranslations: LocalizationMessages = {};
 
+      const setTranslations = (messages: AnyLocalizationMessages) => {
+        localTranslations = flattenTranslations(messages);
+      };
+
       return {
-        addTranslations(messages: LocalizationMessages[], isOverriding: boolean = true) {
-          const messagesToMerge: LocalizationMessages[] = messages;
-
-          if (isOverriding) {
-            messagesToMerge.unshift(localizer.messages);
-          } else {
-            messagesToMerge.push(localizer.messages);
-          }
-
-          this.setTranslations(
-            deepmerge.all(messagesToMerge),
+        addTranslations(messages, isOverriding = true) {
+          const current = localizer.messages;
+          setTranslations(
+            deepmerge.all<AnyLocalizationMessages>(isOverriding ? [current, ...messages] : [...messages, current]),
           );
         },
         getCurrentLanguage(cb?: (l: string) => void): any {
@@ -99,9 +103,7 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
 
           return selected;
         },
-        setTranslations(messages) {
-          localTranslations = messages;
-        },
+        setTranslations,
         getTranslations() {
           return localTranslations;
         },

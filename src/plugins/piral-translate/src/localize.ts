@@ -1,4 +1,5 @@
-import { LocalizationMessages, Localizable } from './types';
+import { LocalizationMessages, Localizable, NestedLocalizationMessages } from './types';
+import { flattenTranslations } from './flatten-translations';
 
 function defaultFallback(key: string, language: string): string {
   if (process.env.NODE_ENV === 'production') {
@@ -15,20 +16,24 @@ function defaultFallback(key: string, language: string): string {
 
 function formatMessage<T extends object>(message: string, variables: T): string {
   return message.replace(/{{\s*([A-Za-z0-9_.]+)\s*}}/g, (_match: string, p1: string) => {
-    return p1 in variables ? variables[p1] || '' : `{{${p1}}}`;
+    return p1 in variables ? variables[p1] ?? '' : `{{${p1}}}`;
   });
 }
 
 export class Localizer implements Localizable {
+  public messages: LocalizationMessages;
+
   /**
    * Creates a new instance of a localizer.
    */
   constructor(
-    public messages: LocalizationMessages,
+    messages: LocalizationMessages | NestedLocalizationMessages,
     public language: string,
     public languages: Array<string>,
     private fallback = defaultFallback,
-  ) {}
+  ) {
+    this.messages = flattenTranslations(messages);
+  }
 
   /**
    * Localizes the given key via the global translations.

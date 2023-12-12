@@ -179,6 +179,15 @@ System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _d
 
 The `$pr_name` has to be replaced with the globally used name for other (lazy loaded) chunks of the pilet. The `$shared_dependencies` represent the used shared dependencies. This is a JSON object mapping the identifiers used for the shared dependencies to their bundles.
 
+**`mf`**
+
+The bundled code follows the specification and implementation of Module Federation. While originated at Webpack ("Webpack Module Federation") it is now also ported over to other bundlers. In supported bundlers the `mf` format can be used to produce compatible pilets.
+
+Pilets that are compatible must have:
+
+- Exposed entry point `./pilet` leading to the module with a `setup` function
+- Accepting a share scope with name `default` (this is also the default, so no changes required here)
+
 ## Limitations
 
 The specification does not cover things like validation, declaration generation, scaffolding, or upgrading.

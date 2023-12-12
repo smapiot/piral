@@ -24,11 +24,11 @@ export const RootListener: React.FC = () => {
         target.dispose = dispose;
       };
       document.body.addEventListener('render-html', renderHtml, false);
-      document.body.addEventListener('render-content', renderContent, false);
+      window.addEventListener('render-content', renderContent, false);
 
       return () => {
         document.body.removeEventListener('render-html', renderHtml, false);
-        document.body.removeEventListener('render-content', renderContent, false);
+        window.removeEventListener('render-content', renderContent, false);
       };
     }
   }, [context]);

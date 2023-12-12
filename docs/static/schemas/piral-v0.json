@@ -54,7 +54,10 @@
         "platform": {
           "type": "string",
           "description": "The platform where the Piral instance is to be run.",
-          "enum": ["web", "node"]
+          "enum": [
+            "web",
+            "node"
+          ]
         },
         "options": {
           "type": "object",
@@ -62,9 +65,23 @@
         }
       }
     },
-    "emulatorStartup": {
+    "emulator": {
       "type": "string",
-      "description": "Defines the script file to use when the emulator should start. By default, a web server serving the contents from 'app' is started."
+      "enum": [
+        "package",
+        "website",
+        "sources",
+        "none"
+      ],
+      "description": "Defines what the type of the emulator artifact used by the build command is. 'none' skips implicit building of the emulator."
+    },
+    "isolation": {
+      "type": "string",
+      "enum": [
+        "classic",
+        "modern"
+      ],
+      "description": "Defines what isolation / component wrapper is used for components of micro frontends. By default, the 'classic' isolation mode is used."
     },
     "pilets": {
       "type": "object",

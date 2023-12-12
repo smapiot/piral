@@ -85,6 +85,13 @@ export async function createPiletPackage(baseDir: string, source: string, target
   log('generalDebug_0003', `Reading out unique files from "${content}" ...`);
   const uniqueFiles = await getUniqueFiles(files);
 
+  // Edge case: If the files to be packaged contains the destination .tgz file, e.g., as a leftover
+  // from a previous build/pack, exclude that file, because it will be overwritten/replaced in the
+  // upcoming steps.
+  if (uniqueFiles.includes(file)) {
+    uniqueFiles.splice(uniqueFiles.indexOf(file), 1);
+  }
+
   log('generalDebug_0003', `Creating directory if not exist for "${file}" ...`);
   await createDirectory(dirname(file));
 

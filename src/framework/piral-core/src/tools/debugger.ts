@@ -50,20 +50,9 @@ export function integrateDebugger(
     integrate(dbg) {
       context.dispatch((s) => ({
         ...s,
-        components: {
-          ...s.components,
-          ...dbg.components,
-        },
         routes: {
           ...s.routes,
           ...dbg.routes,
-        },
-        registry: {
-          ...s.registry,
-          wrappers: {
-            ...s.registry.wrappers,
-            ...dbg.wrappers,
-          },
         },
       }));
 

@@ -130,7 +130,7 @@ describe('Build Piral Command', () => {
     const actions = await import(resolve(__dirname, '../../../piral-cli-webpack5/lib/actions'));
 
     process.env.NODE_ENV = undefined;
-    
+
     setBundler({
       name: 'webpack5',
       actions,

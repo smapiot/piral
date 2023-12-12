@@ -123,6 +123,11 @@ export interface AppState {
    * Gets an unrecoverable application error, if any.
    */
   error: Error | undefined;
+  /**
+   * Gets if the components from the micro frontends should be wrapped
+   * in a piral-component element.
+   */
+  wrap: boolean;
 }
 
 /**

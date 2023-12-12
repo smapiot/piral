@@ -55,10 +55,10 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
   return bundler;
 }
 
-export function callDynamic<T extends BaseBundleParameters>(name: string, path: string, args: T) {
+export function callDynamic<T extends BaseBundleParameters>(name: string, path: string, args: T, exec?: string) {
   const cwd = args.root;
   return new Promise<Bundler>((resolve, reject) => {
-    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env });
+    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env, execPath: exec });
     const bundler = createBundler(cwd, ps, args);
     const setup = {
       type: 'init',
@@ -97,10 +97,10 @@ export function callDynamic<T extends BaseBundleParameters>(name: string, path: 
   });
 }
 
-export function callStatic<T extends BaseBundleParameters>(name: string, path: string, args: T) {
+export function callStatic<T extends BaseBundleParameters>(name: string, path: string, args: T, exec?: string) {
   const cwd = args.root;
   return new Promise<Bundler>((resolve, reject) => {
-    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env });
+    const ps = fork(getPath(name), [], { cwd, stdio: 'pipe', env: process.env, execPath: exec });
     const bundler = createBundler(cwd, ps, args);
     const setup = {
       type: 'init',

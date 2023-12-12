@@ -4,6 +4,30 @@ export interface Importmap {
   exclude?: Array<string>;
 }
 
+export interface EmulatorWebsiteManifestFiles {
+  typings: string;
+  main: string;
+  app: string;
+  assets: Array<string>;
+}
+
+export interface EmulatorWebsiteManifest {
+  name: string;
+  description: string;
+  version: string;
+  timestamp: string;
+  scaffolding: {
+    pilets: PiletsInfo;
+    cli: string;
+  };
+  files: EmulatorWebsiteManifestFiles;
+  importmap: Importmap;
+  dependencies: {
+    optional: Record<string, string>;
+    included: Record<string, string>;
+  };
+}
+
 export interface PackageData {
   name: string;
   version: string;
