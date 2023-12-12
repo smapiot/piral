@@ -62,7 +62,7 @@
     "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "0.25.2",
     "typescript": "5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^1.0.4"
   },
   "resolutions": {
     "ansi-html": "0.0.9",
