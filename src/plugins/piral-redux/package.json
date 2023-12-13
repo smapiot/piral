@@ -1,6 +1,6 @@
 {
   "name": "piral-redux",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Plugin for the integration of Redux in a Piral instance.",
   "keywords": [
     "piral",
@@ -69,7 +69,7 @@
     "@types/react": "^18.0.0",
     "@types/react-redux": "^5.0.19",
     "@types/redux": "^3.6.0",
-    "piral-core": "^1.3.3",
+    "piral-core": "^1.4.0",
     "react": "^18.0.0"
   }
 }
