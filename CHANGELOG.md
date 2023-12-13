@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.4.1 (tbd)
+
+- Added support for middleware functions in `piral-fetch` (#655)
+
 ## 1.4.0 (December 12, 2023)
 
 - Fixed issue when target tarball is part of tarball content in `pilet pack` (#642)
