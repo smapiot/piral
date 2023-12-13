@@ -2,7 +2,7 @@
 
 ## 1.4.1 (tbd)
 
-- Added support for middleware functions in `piral-fetch` (#655)
+- Added support for middleware functions in `piral-fetch` (#645)
 
 ## 1.4.0 (December 12, 2023)
 
