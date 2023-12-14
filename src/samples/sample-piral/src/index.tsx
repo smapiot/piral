@@ -25,12 +25,6 @@ const instance = createInstance({
     }),
   ],
   requestPilets() {
-    return Promise.resolve([{
-      spec: 'mf',
-      name: '@wmf/foo',
-      version: '1.0.0',
-      link: 'http://localhost:8080/index.js',
-    }]);
     return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
       .then((res) => res.json())
       .then((res) => res.items);

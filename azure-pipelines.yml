@@ -821,7 +821,7 @@ stages:
 - stage: DeployDemos
   displayName: Deploy Demos
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
 
   jobs:
   - deployment: DeployCoreDemo
