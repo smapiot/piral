@@ -2,6 +2,7 @@
 
 ## 1.4.1 (tbd)
 
+- Fixed issue with pilet injector for certain apps in monorepos
 - Added support for middleware functions in `piral-fetch` (#645)
 
 ## 1.4.0 (December 12, 2023)
