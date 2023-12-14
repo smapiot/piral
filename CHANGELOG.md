@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.4.2 (tbd)
+
+- (tbd)
+
 ## 1.4.1 (December 14, 2023)
 
 - Fixed issue with pilet injector for certain apps in monorepos
