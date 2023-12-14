@@ -52,7 +52,7 @@ process.on('message', async (msg: any) => {
         break;
       case 'start':
         const root = process.cwd();
-        const outDir = resolve(root, 'dist', 'app');
+        const outDir = resolve(root, 'dist');
         const bundler = await run(
           root,
           msg.outFile,

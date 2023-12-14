@@ -1,6 +1,7 @@
 import { URL } from 'url';
 import { join, resolve } from 'path';
 import { EventEmitter } from 'events';
+import { existsSync } from 'fs';
 import { readFile, stat, writeFile } from 'fs/promises';
 import { KrasInjector, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
@@ -140,18 +141,23 @@ export default class PiletInjector implements KrasInjector {
       const cbs = {};
 
       if (app.endsWith('/app')) {
-        try {
-          const path = resolve(app, '..', 'package.json');
-          const packageJson = require(path);
+        const path = resolve(app, '..', 'package.json');
 
-          if (typeof packageJson.piralCLI.source === 'string') {
-            this.proxyInfo = {
-              source: packageJson.piralCLI.source,
-              files: packageJson.files,
-              date: new Date(packageJson.piralCLI.timestamp),
-            };
+        if (existsSync(path)) {
+          try {
+            const packageJson = require(path);
+  
+            if (typeof packageJson.piralCLI.source === 'string') {
+              this.proxyInfo = {
+                source: packageJson.piralCLI.source,
+                files: packageJson.files,
+                date: new Date(packageJson.piralCLI.timestamp),
+              };
+            }
+          } catch {
+            // silently ignore errors - we just continue as-is
           }
-        } catch {}
+        }
       }
 
       core.on('user-connected', (e) => {
