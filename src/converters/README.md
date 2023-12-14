@@ -17,6 +17,7 @@ Piral is developed as a monorepo.
 - [piral-ng](./piral-ng/README.md) provides integration for *Angular*
 - [piral-ngjs](./piral-ngjs/README.md) provides integration for *Angular.js*
 - [piral-preact](./piral-preact/README.md) provides integration for *Preact*
+- [piral-react](./piral-react/README.md) provides integration for *React* 16+
 - [piral-react-15](./piral-react-15/README.md) provides integration for *React* in version 15
 - [piral-riot](./piral-riot/README.md) provides integration for *Riot*
 - [piral-solid](./piral-solid/README.md) provides integration for *Solid.js*

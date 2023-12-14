@@ -83,4 +83,48 @@ describe('Create fetch API Module', () => {
     const result = response.body;
     expect(result.substr(0, 5)).toBe(`<?xml`);
   });
+
+  it('invokes configured middleware function and calls API', async () => {
+    const context = { emit: vitest.fn() } as any;
+    const middleware = vitest.fn((path, options, next) => next(path, options));
+    const { fetch } = createFetchApi({
+      base: `http://localhost:${port}`,
+      middlewares: [middleware],
+    })(context) as any;
+    const response = await fetch('json');
+    const result = response.body;
+    expect(Array.isArray(result)).toBeTruthy();
+    expect(result.length).toBe(10);
+    expect(result[0]).toBe(1);
+    expect(middleware).toHaveBeenCalledOnce();
+  });
+
+  it('invokes middleware functions in top-down order', async () => {
+    const context = { emit: vitest.fn() } as any;
+    const invocationOrder: Array<number> = [];
+    const createMiddleware = (myPosition: number) => (path, options, next) => {
+      invocationOrder.push(myPosition);
+      return next(path, options);
+    };
+    const { fetch } = createFetchApi({
+      base: `http://localhost:${port}`,
+      middlewares: [createMiddleware(1), createMiddleware(2), createMiddleware(3)],
+    })(context) as any;
+    await fetch('json');
+    expect(invocationOrder).toEqual([1, 2, 3]);
+  });
+
+  it('allows middleware functions to terminate middleware chain', async () => {
+    const context = { emit: vitest.fn() } as any;
+    const expectedResponse = { code: 200, body: 'Terminated by middleware', text: 'Terminated by middleware' };
+    const middleware = () => Promise.resolve(expectedResponse);
+    const { fetch } = createFetchApi({
+      base: `http://localhost:${port}`,
+      middlewares: [middleware],
+    })(context) as any;
+    const globalFetch = vitest.spyOn(global, 'fetch');
+    const response = await fetch('json');
+    expect(response).toBe(expectedResponse);
+    expect(globalFetch).not.toHaveBeenCalled();
+  });
 });

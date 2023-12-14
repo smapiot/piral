@@ -83,6 +83,48 @@ const instance = createInstance({
 
 **Note**: `piral-fetch` plays nicely together with authentication providers such as `piral-adal`. As such authentication tokens are automatically inserted on requests to the base URL.
 
+### Middlewares
+
+`piral-fetch` allows you to configure middleware functions which are executed on each `fetch` call. Middleware functions receive the same parameters as `fetch`, plus a `next` function which calls either the next middleware or the actual `fetch` function. The following code shows an exemplary middleware which logs when requests start and finish:
+
+```ts
+const logRequests: FetchMiddleware = async (
+  path: string,
+  options: FetchOptions,
+  next: PiletFetchApiFetch,
+): Promise<FetchResponse<any>> => {
+  try {
+    console.log(`Making request to ${path}...`);
+    const response = await next(path, options);
+    console.log(`Request to ${path} returned status code ${response.code}.`);
+    return response;
+  } catch (e) {
+    console.error(`Request to ${path} threw an error: `, e);
+    throw e;
+  }
+};
+```
+
+Middlewares must be configured in the Piral instance:
+
+```ts
+const instance = createInstance({
+  plugins: [createFetchApi({
+    // important part
+    middlewares: [
+      firstMiddleware,
+      secondMiddleware,
+      thirdMiddleware,
+      logRequests,
+    ],
+    // ...other options...
+  })],
+  // ...
+});
+```
+
+Middlewares are invoked in a top-down order. In the above example, this means that `firstMiddleware` is invoked first, then `secondMiddleware`, then `thirdMiddleware`, then `logRequests` and finally the actual `fetch` function.
+
 :::
 
 ## License
