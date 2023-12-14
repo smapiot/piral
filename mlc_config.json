@@ -19,7 +19,7 @@
       "pattern": "^https://aka.ms/"
     },
     {
-      "pattern": "^https://azure.microsoft.com/free"
+      "pattern": "^https://azure.microsoft.com/"
     }
   ],
   "aliveStatusCodes": [429, 200]
