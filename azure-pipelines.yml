@@ -51,17 +51,14 @@ stages:
         Arguments: setup
     - task: Yarn@2
       displayName: Build Core Demo
-      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-core
     - task: Yarn@2
       displayName: Build CrossFx Demo
-      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-cross
     - task: Yarn@2
       displayName: Build Full Demo
-      condition: ne(variables['Build.SourceBranchName'], variables['documentBranch'])
       inputs:
         Arguments: build:demo-full
     - task: Yarn@2
