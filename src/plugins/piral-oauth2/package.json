@@ -1,6 +1,6 @@
 {
   "name": "piral-oauth2",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Plugin to integrate OAuth 2.0 authentication in Piral.",
   "keywords": [
     "piral",
@@ -66,6 +66,6 @@
     "client-oauth2": "^4.2.5"
   },
   "devDependencies": {
-    "piral-core": "^1.4.0"
+    "piral-core": "^1.4.1"
   }
 }
