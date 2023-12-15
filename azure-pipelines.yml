@@ -45,10 +45,10 @@ stages:
       displayName: Install Dependencies
       inputs:
         Arguments: install
-    - task: Yarn@2
-      displayName: Assemble Packages
-      inputs:
-        Arguments: setup
+    # - task: Yarn@2
+    #   displayName: Assemble Packages
+    #   inputs:
+    #     Arguments: setup
     - task: Yarn@2
       displayName: Build Core Demo
       inputs:
@@ -175,10 +175,10 @@ stages:
             displayName: Install Dependencies
             inputs:
               Arguments: install
-          - task: Yarn@2
-            displayName: Assemble Packages
-            inputs:
-              Arguments: setup
+          # - task: Yarn@2
+          #   displayName: Assemble Packages
+          #   inputs:
+          #     Arguments: setup
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
