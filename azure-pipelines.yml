@@ -45,10 +45,10 @@ stages:
       displayName: Install Dependencies
       inputs:
         Arguments: install
-    # - task: Yarn@2
-    #   displayName: Assemble Packages
-    #   inputs:
-    #     Arguments: setup
+    - task: Yarn@2
+      displayName: Assemble Packages
+      inputs:
+        Arguments: install --ignore-scripts
     - task: Yarn@2
       displayName: Build Core Demo
       inputs:
@@ -122,7 +122,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -175,10 +175,10 @@ stages:
             displayName: Install Dependencies
             inputs:
               Arguments: install
-          # - task: Yarn@2
-          #   displayName: Assemble Packages
-          #   inputs:
-          #     Arguments: setup
+          - task: Yarn@2
+            displayName: Assemble Packages
+            inputs:
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -227,7 +227,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -280,7 +280,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -333,7 +333,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -386,7 +386,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -446,7 +446,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -514,7 +514,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -567,7 +567,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -620,7 +620,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -673,7 +673,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
@@ -726,7 +726,7 @@ stages:
           - task: Yarn@2
             displayName: Assemble Packages
             inputs:
-              Arguments: setup
+              Arguments: install --ignore-scripts
           - task: npmAuthenticate@0
             inputs:
               workingFile: .npmrc
