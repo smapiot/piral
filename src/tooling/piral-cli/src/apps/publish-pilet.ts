@@ -150,8 +150,9 @@ async function getFiles(
         const piralInstances = apps.map((m) => m.appPackage.name);
         const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
         const propDest = resolve(root, main);
+        const propDestDir = dirname(propDest);
         log('generalDebug_0003', `Pilet "${name}" is supposed to generate artifact in "${propDest}".`);
-        const usePropDest = dirname(propDest) !== root && isSubDir(root, propDest);
+        const usePropDest = propDestDir !== root && propDestDir !== targetDir && isSubDir(root, propDest);
         const dest = usePropDest ? propDest : resolve(root, 'dist');
         log('generalDebug_0003', `Pilet "${name}" is generating artifact in "${dest}".`);
         const outDir = dirname(dest);
