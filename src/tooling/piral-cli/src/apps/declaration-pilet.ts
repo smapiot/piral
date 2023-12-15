@@ -23,7 +23,7 @@ export interface DeclarationPiletOptions {
   target?: string;
 
   /**
-   * Specifies ff the target d.ts would be overwrwitten.
+   * Specifies ff the target d.ts would be overwritten.
    */
   forceOverwrite?: ForceOverwrite;
 
@@ -55,12 +55,10 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
 
   for (const item of allEntries) {
     const targetDir = dirname(item);
-    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } =
-      await retrievePiletData(targetDir);
+    const { peerDependencies, peerModules, root, apps, piletPackage, importmap } = await retrievePiletData(targetDir);
     const piralInstances = apps.map((m) => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
-    const outDir = dirname(dest);
 
     await createPiletDeclaration(
       piletPackage.name,
@@ -68,7 +66,7 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
       root,
       item,
       externals,
-      outDir,
+      dest,
       forceOverwrite,
       logLevel,
     );

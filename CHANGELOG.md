@@ -2,7 +2,7 @@
 
 ## 1.4.2 (tbd)
 
-- (tbd)
+- Fixed misplaced *index.d.ts* in a scaffolded pilet (#658)
 
 ## 1.4.1 (December 14, 2023)
 
