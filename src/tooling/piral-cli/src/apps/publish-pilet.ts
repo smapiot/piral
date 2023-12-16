@@ -148,11 +148,13 @@ async function getFiles(
         );
         const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
         const piralInstances = apps.map((m) => m.appPackage.name);
-        const { main = 'dist/index.js', name = 'pilet' } = piletPackage;
+        const defaultOutput = 'dist/index.js';
+        const { main = defaultOutput, name = 'pilet' } = piletPackage;
         const propDest = resolve(root, main);
+        const propDestDir = dirname(propDest);
         log('generalDebug_0003', `Pilet "${name}" is supposed to generate artifact in "${propDest}".`);
-        const usePropDest = dirname(propDest) !== root && isSubDir(root, propDest);
-        const dest = usePropDest ? propDest : resolve(root, 'dist');
+        const usePropDest = propDestDir !== root && propDestDir !== targetDir && isSubDir(root, propDest);
+        const dest = usePropDest ? propDest : resolve(root, defaultOutput);
         log('generalDebug_0003', `Pilet "${name}" is generating artifact in "${dest}".`);
         const outDir = dirname(dest);
         const outFile = basename(dest);

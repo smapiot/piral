@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.4.2 (tbd)
+
+- Fixed misplaced *index.d.ts* in a scaffolded pilet (#658)
+- Fixed issue where `pilet publish` could remove the source folder (#657)
+- Updated toggle in debug utilities to always use life cycle (#659)
+
 ## 1.4.1 (December 14, 2023)
 
 - Fixed issue with pilet injector for certain apps in monorepos

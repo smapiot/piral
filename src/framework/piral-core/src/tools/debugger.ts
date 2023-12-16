@@ -13,15 +13,7 @@ export function integrateDebugger(
     removePilet: context.removePilet,
     updatePilet(pilet) {
       if (!pilet.disabled) {
-        const { createApi } = options;
-        const newApi = createApi(pilet);
-
-        try {
-          context.injectPilet(pilet);
-          pilet.setup(newApi);
-        } catch (error) {
-          console.error(error);
-        }
+        context.addPilet(pilet);
       } else {
         context.injectPilet(pilet);
       }
