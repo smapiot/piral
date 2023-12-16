@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.4.2 (tbd)
+## 1.4.2 (December 16, 2023)
 
 - Fixed misplaced *index.d.ts* in a scaffolded pilet (#658)
 - Fixed issue where `pilet publish` could remove the source folder (#657)
