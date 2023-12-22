@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.4.3 (tbd)
+
+- Fixed issue with `piral-blazor` using routing in standalone mode
+- Fixed issue with `piral-blazor` connecting the Piral events
+
 ## 1.4.2 (December 16, 2023)
 
 - Fixed misplaced *index.d.ts* in a scaffolded pilet (#658)

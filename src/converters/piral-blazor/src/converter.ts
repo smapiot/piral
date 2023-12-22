@@ -87,30 +87,30 @@ export function createConverter(
         }
       }
 
+      if (capabilities.includes('events')) {
+        const eventDispatcher = document.body.dispatchEvent;
+
+        // listen to all events for forwarding them
+        document.body.dispatchEvent = function (ev: CustomEvent) {
+          if (ev.type.startsWith('piral-')) {
+            const type = ev.type.replace('piral-', '');
+            const args = ev.detail.arg;
+
+            try {
+              JSON.stringify(args);
+              processEvent(type, args);
+            } catch {
+              console.warn(`The event "${type}" could not be serialized and will not be handled by Blazor.`);
+            }
+          }
+
+          return eventDispatcher.call(this, ev);
+        };
+      }
+
       if (language && capabilities.includes('language')) {
         if (typeof language.current === 'string') {
           await setLanguage(language.current);
-        }
-
-        if (capabilities.includes('events')) {
-          const eventDispatcher = document.body.dispatchEvent;
-
-          // listen to all events for forwarding them
-          document.body.dispatchEvent = function (ev: CustomEvent) {
-            if (ev.type.startsWith('piral-')) {
-              const type = ev.type.replace('piral-', '');
-              const args = ev.detail.arg;
-
-              try {
-                JSON.stringify(args);
-                processEvent(type, args);
-              } catch {
-                console.warn(`The event "${type}" could not be serialized and will not be handled by Blazor.`);
-              }
-            }
-
-            return eventDispatcher.call(this, ev);
-          };
         }
 
         if (typeof language.onChange === 'function') {
@@ -147,16 +147,6 @@ export function createConverter(
       el.setAttribute('data-blazor-pilet-root', 'true');
 
       addGlobalEventListeners(el);
-
-      if (listener === undefined) {
-        listener = nav.listen(({ location, action }) => {
-          // POP is already handled by .NET
-          if (action !== 'POP') {
-            const url = makeUrl(location.href);
-            callNotifyLocationChanged(url, action === 'REPLACE', location.state);
-          }
-        });
-      }
 
       locals.state = 'fresh';
       locals.next = noop;
@@ -217,6 +207,19 @@ export function createConverter(
       }
 
       (loader || (convert.loader = loader = boot(opts)))
+        .then((config) => {
+          if (listener === undefined) {
+            listener = nav.listen(({ location, action }) => {
+              // POP is already handled by .NET
+              if (action !== 'POP') {
+                const url = makeUrl(location.href);
+                callNotifyLocationChanged(url, action === 'REPLACE', location.state);
+              }
+            });
+          }
+
+          return config;
+        })
         .then((config) =>
           dependency(config).then(() => {
             if (locals.state === 'fresh') {
