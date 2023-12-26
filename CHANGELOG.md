@@ -4,6 +4,7 @@
 
 - Fixed issue with `piral-blazor` using routing in standalone mode
 - Fixed issue with `piral-blazor` connecting the Piral events
+- Fixed support of `piral-blazor` for .NET 8 Blazor
 
 ## 1.4.2 (December 16, 2023)
 
