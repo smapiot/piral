@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.4.3 (tbd)
+## 1.4.3 (December 26, 2023)
 
 - Fixed issue with `piral-blazor` using routing in standalone mode
 - Fixed issue with `piral-blazor` connecting the Piral events
