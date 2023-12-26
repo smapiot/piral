@@ -1,6 +1,6 @@
 {
   "name": "piral-inferno",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Plugin for integrating Inferno components in Piral.",
   "keywords": [
     "piral",
@@ -66,6 +66,6 @@
   "devDependencies": {
     "inferno": "^7.3.2",
     "inferno-create-element": "^7.3.2",
-    "piral-core": "^1.4.2"
+    "piral-core": "^1.4.3"
   }
 }
