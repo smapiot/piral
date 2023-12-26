@@ -32,6 +32,8 @@ function toDepName(url: string) {
   return front;
 }
 
+const isAssembly = /\.(dll|wasm)$/;
+
 export function createDependencyLoader(convert: ReturnType<typeof createConverter>) {
   const definedBlazorReferences: Array<string> = [];
   const loadedBlazorPilets: Array<string> = [];
@@ -81,9 +83,9 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
           }
 
           const supportsCore = capabilities.includes('core-pilet');
-          const dependencies = references.filter((m) => m.endsWith('.dll'));
-          const dllUrl = dependencies.pop();
-          const pdbUrl = toPdb(dllUrl);
+          const dependencies = references.filter((m) => isAssembly.test(m));
+          const assemblyUrl = dependencies.pop();
+          const pdbUrl = toPdb(assemblyUrl);
           const dependencySymbols = dependencies.map(toPdb).filter((dep) => references.includes(dep));
           const id = Math.random().toString(26).substring(2);
 
@@ -105,13 +107,13 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             name: meta.name || '(unknown)',
             version: meta.version || '0.0.0',
             config: JSON.stringify(meta.config || {}),
-            baseUrl: meta.basePath || dllUrl.substring(0, dllUrl.lastIndexOf('/')).replace('/_framework/', '/'),
+            baseUrl: meta.basePath || assemblyUrl.substring(0, assemblyUrl.lastIndexOf('/')).replace('/_framework/', '/'),
             dependencies,
             dependencySymbols: capabilities.includes('dependency-symbols') ? dependencySymbols : undefined,
             sharedDependencies: supportsCore ? sharedDependencies : undefined,
             kind: supportsCore ? kind : undefined,
             satellites,
-            dllUrl,
+            dllUrl: assemblyUrl,
             pdbUrl: references.includes(pdbUrl) ? pdbUrl : undefined,
           });
 
@@ -122,15 +124,14 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
           for (const dllUrl of references) {
             const dllName = dllUrl.substring(dllUrl.lastIndexOf('/') + 1);
 
-            if (dllUrl.endsWith('.dll')) {
+            if (isAssembly.test(dllUrl)) {
               const entry = loadedDependencies.find((m) => m.name === dllName);
 
               if (entry) {
                 entry.count++;
                 await entry.promise;
               } else {
-                const urlWithoutExtension = dllUrl.substring(0, dllUrl.length - 4);
-                const pdbName = `${urlWithoutExtension}.pdb`;
+                const pdbName = toPdb(dllUrl);
                 const pdbUrl = references.find((m) => m === pdbName);
                 const promise = pdbUrl ? loadResourceWithSymbol(dllUrl, pdbUrl) : loadResource(dllUrl);
 

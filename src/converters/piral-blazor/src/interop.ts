@@ -6,7 +6,7 @@ const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
 const coreLib = 'Piral.Blazor.Core';
 
 function isDotNet6OrBelow() {
-  return typeof window.Blazor._internal.NavigationLock === 'undefined';
+  return typeof window.Blazor?._internal?.NavigationLock === 'undefined';
 }
 
 function createBase() {
