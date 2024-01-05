@@ -20,10 +20,14 @@ function eventHasSpecialKey(event: MouseEvent) {
 export function isInternalNavigation(event: MouseEvent) {
   const anchorTarget = getAnchorTarget(event);
   return (
+    anchorTarget &&
     event.type === 'click' &&
     event.button === 0 &&
+    !event.defaultPrevented &&
     !eventHasSpecialKey(event) &&
-    anchorTarget?.hasAttribute('href') &&
+    anchorTarget.hasAttribute('href') &&
+    (!anchorTarget.target || anchorTarget.target !== '_self') &&
+    !anchorTarget.hasAttribute('download') &&
     isWithinBaseUriSpace(anchorTarget.href)
   );
 }

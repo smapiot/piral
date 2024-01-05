@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.0 (tbd)
+
+- Improved internal navigation Blazor pilets using `piral-blazor`
+
 ## 1.4.3 (December 26, 2023)
 
 - Fixed issue with `piral-blazor` using routing in standalone mode
