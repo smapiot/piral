@@ -54,9 +54,11 @@ describe('API Module', () => {
     emit('foo', {});
 
     // Chaining should also work as each event fn returns this (i.e., the event emitter):
-    on('foo', () => {})
-      .off('foo', () => {})
-      .once('foo', () => {})
-      .emit('foo', {});
+    expect(
+      on('foo', () => {})
+        .off('foo', () => {})
+        .once('foo', () => {})
+        .emit('foo', {}),
+    ).not.toBeUndefined();
   });
 });
