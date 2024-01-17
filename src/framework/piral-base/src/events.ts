@@ -15,19 +15,19 @@ function nameOf(type: string | number) {
 export function createListener(state: any = {}): EventEmitter {
   const eventListeners: EventListeners = [];
 
-  return {
+  const events = {
     on(type, callback) {
       const listener = ({ detail }: CustomEvent) => detail && detail.state === state && callback(detail.arg);
       document.body.addEventListener(nameOf(type), listener);
       eventListeners.push([callback, listener]);
-      return this;
+      return events;
     },
     once(type, callback) {
       const cb = (ev: any) => {
-        this.off(type, cb);
+        events.off(type, cb);
         callback(ev);
       };
-      return this.on(type, cb);
+      return events.on(type, cb);
     },
     off(type, callback) {
       const [listener] = eventListeners.filter((m) => m[0] === callback);
@@ -37,7 +37,7 @@ export function createListener(state: any = {}): EventEmitter {
         eventListeners.splice(eventListeners.indexOf(listener), 1);
       }
 
-      return this;
+      return events;
     },
     emit(type, arg) {
       document.body.dispatchEvent(
@@ -50,7 +50,9 @@ export function createListener(state: any = {}): EventEmitter {
           },
         }),
       );
-      return this;
+      return events;
     },
   };
+
+  return events;
 }
