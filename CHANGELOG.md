@@ -2,6 +2,7 @@
 
 ## 1.5.0 (tbd)
 
+- Fixed issue with monorepos using Rush (#667)
 - Improved internal navigation Blazor pilets using `piral-blazor`
 
 ## 1.4.3 (December 26, 2023)
