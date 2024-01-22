@@ -1,5 +1,5 @@
 import { DeclOptions, generateDeclaration, createDiffPlugin, Logger } from 'dets';
-import { dirname, basename, resolve, extname } from 'path';
+import { basename, dirname, extname, join, resolve } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo, flattenExternals, validateSharedDependencies } from './package';
@@ -23,17 +23,19 @@ function findPiralBaseRoot(root: string, framework: string) {
   return root;
 }
 
-async function findPiralInstanceApi(piralInstance: string) {
+async function findPiralInstanceApi(root: string, piralInstance: string) {
   if (piralInstance) {
-    const path = require.resolve(`${piralInstance}/${packageJson}`);
-    const root = dirname(path);
-    const data = await readJson(root, packageJson);
+    const path = require.resolve(`${piralInstance}/${packageJson}`, {
+      paths: [join(root, 'node_modules')],
+    });
+    const appRoot = dirname(path);
+    const data = await readJson(appRoot, packageJson);
     const subpath = data.types || data.typings;
 
     if (subpath) {
       return [
         {
-          file: resolve(root, subpath),
+          file: resolve(appRoot, subpath),
           name: piletApiName,
         },
       ];
@@ -155,7 +157,7 @@ export async function createPiletDeclaration(
   logLevel: LogLevels,
 ) {
   const piralInstance = piralInstances[0];
-  const apis = await findPiralInstanceApi(piralInstance);
+  const apis = await findPiralInstanceApi(root, piralInstance);
   const file = apis.map((m) => m.file)[0];
 
   if (file) {
