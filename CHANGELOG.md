@@ -4,6 +4,7 @@
 
 - Fixed issue with monorepos using Rush (#667)
 - Improved internal navigation Blazor pilets using `piral-blazor`
+- Added feed selection view for remote emulator website (#654)
 
 ## 1.4.3 (December 26, 2023)
 
