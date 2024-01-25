@@ -2,7 +2,10 @@
 
 ## 1.5.0 (tbd)
 
+- Fixed error when importing `once` without context (#664)
+- Removed legacy option in `piral-cli-webpack5` to support IE8
 - Improved internal navigation Blazor pilets using `piral-blazor`
+- Added special entry point to emulator website when accessed online (#654)
 
 ## 1.4.3 (December 26, 2023)
 
