@@ -10,15 +10,15 @@ A collection of some statements from community members regarding Piral as a fram
 
 *Willian Alves*
 
-> Comparing all available options Piral is definitely the ultimate microfrontend framework.
+> Comparing all available options Piral is definitely the ultimate micro frontend framework.
 
 *Andreas Rossmann*
 
-> We are liking this. If we decide to go on microfrontend, for sure we gonna use Piral.
+> We are liking this. If we decide to go on micro frontend, for sure we gonna use Piral.
 
 *Palash Kapoor*
 
-> Smooth developer experience, best microfrontend framework on the market.
+> Smooth developer experience, best micro frontend framework on the market.
 
 *Boris Maric*
 
@@ -26,7 +26,7 @@ A collection of some statements from community members regarding Piral as a fram
 
 *Tarun Kumar Sukhu*
 
-> I really love the ideas behind the Piral micro-frontend framework.
+> I really love the ideas behind the Piral micro frontend framework.
 
 *Son Nguyen*
 
@@ -38,7 +38,7 @@ A collection of some statements from community members regarding Piral as a fram
 
 *Hans Frey*
 
-> Best solution for micro-frontends. Flexible, extensible, robust.
+> Best solution for micro frontends. Flexible, extensible, robust.
 
 *Sven Wiemann*
 
