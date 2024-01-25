@@ -3,10 +3,12 @@ import { join, resolve, sep, posix } from 'path';
 import { cliName, cliVersion, log } from './common';
 import { inject } from './inject';
 
+var rx = new RegExp(`/\\.pnpm/${cliName}@${cliVersion}(_[a-z0-9]+)?/node_modules/${cliName}/`);
+
 function getContainerDir() {
   const currentDir = __dirname.split(sep).join(posix.sep);
 
-  if (!currentDir.includes(`/.pnpm/${cliName}@${cliVersion}/node_modules/${cliName}/`)) {
+  if (!rx.test(currentDir)) {
     return resolve(__dirname, '..', '..');
   }
 
