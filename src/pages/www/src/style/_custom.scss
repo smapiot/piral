@@ -438,3 +438,19 @@ img {
     }
   }
 }
+
+.oss-friends-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .cell {
+    width: 350px;
+    box-sizing: border-box;
+    max-width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 1rem;
+  }
+}
