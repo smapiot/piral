@@ -7,7 +7,7 @@ export function installPiletEmulator(requestPilets: PiletRequester, options: Emu
     addPilet,
     removePilet,
     integrate,
-    piletApiFallback = 'https://feed.piral.cloud/api/v1/pilet/emulator-website',
+    defaultFeedUrl = 'https://feed.piral.cloud/api/v1/pilet/emulator-website',
   } = options;
 
   integrate(() => {
@@ -19,12 +19,12 @@ export function installPiletEmulator(requestPilets: PiletRequester, options: Emu
     const promise = requester();
 
     // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable
-    const piletApi = window[dbgPiletApiKey] || sessionStorage.getItem(dbgPiletApiKey) || piletApiFallback;
+    const feedUrl = window[dbgPiletApiKey] || sessionStorage.getItem(dbgPiletApiKey) || defaultFeedUrl;
 
     // either take a full URI or make it an absolute path relative to the current origin
-    const initialTarget = /^https?:/.test(piletApi)
-      ? piletApi
-      : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
+    const initialTarget = /^https?:/.test(feedUrl)
+      ? feedUrl
+      : `${location.origin}${feedUrl[0] === '/' ? '' : '/'}${feedUrl}`;
     const updateTarget = initialTarget.replace('http', 'ws');
     const ws = new WebSocket(updateTarget);
     const timeoutCache = {};

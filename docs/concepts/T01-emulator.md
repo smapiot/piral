@@ -55,6 +55,42 @@ In case you want to always produce this kind of emulator when you call `piral bu
   "$schema": "https://docs.piral.io/schemas/piral-v0.json",
   "emulator": "website"
 }
+```
+
+While the primary use case of the website emulator is a fast / always up-to-date package for local development, it also allows being used as a website (hence the name and method of deployment). By default, when accessed as a website the emulator shows a "select feed" screen. This way, the website emulator is not bound to a specific feed, but rather allows usage of essentially *any* feed.
+
+If you want to choose a specific feed then configure the behavior like:
+
+```js
+const instance = createInstance({
+  debug: {
+    // feed to be used when made available as a website emulator
+    defaultFeedUrl: 'https://feed.piral.cloud/api/v1/pilet/empty',
+  },
+  // your normal way reading pilets / for your production artifact
+  requestPilets() {
+    return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+});
+```
+
+Both feeds can also be the same. In this case just make a variable and reference it for both, e.g., like:
+
+```js
+const defaultFeedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';
+const instance = createInstance({
+  debug: {
+    defaultFeedUrl,
+  },
+  requestPilets() {
+    return fetch(defaultFeedUrl)
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+});
+```
 
 ## Package Definition
 
