@@ -40,6 +40,8 @@ A pilet feed service must provide an endpoint for publishing a pilet. By default
 
 The endpoint needs to accept a `POST` request using basic authentication with an `Authorization` header. Other ways of authentication may be implemented as well. The value of the basic authentication is an API key that can be fully decided by the implementation. We recommend using a base64 encoded value here.
 
+The endpoint can be enhanced with an optional custom header named `X-Microfrontend-Type`. If not provided the endpoint needs to act as if the value of `X-Microfrontend-Type` was set to `pilet`. Other supported values are implementation specific.
+
 The payload of the `POST` request is form encoded with the content type `multipart/form-data`. There is a single entry named `file` transporting the contents of a file with the name *pilet.tgz*, which represents a Pilet tarball (i.e., an npm package). The content detail of this file is explained in the Pilet Specification (see references).
 
 Other entries besides `file` may be used, too. These can be determined by implementation-dependent requirements. The `piral-cli` supports filling these fields via the `--fields[field]` flag, followed by a value, e.g., `--fields.tag next`.
@@ -52,6 +54,7 @@ Consider the following example:
 POST /api/v1/pilet
 Content-Type: multipart/form-data;boundary="boundary"
 Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+X-Microfrontend-Type: pilet
 
 --boundary
 Content-Disposition: form-data; name="file"; filename="pilet.tgz"
@@ -66,6 +69,8 @@ In case of a successful upload, the HTTP response code has to be `200`. The exac
 **Error Response**
 
 In case of a bad request (e.g., missing a `file` entry, or uploading an invalid file) the HTTP status code has to be `400`. This is also true if, e.g., the `name` does not match an expected format.
+
+In case the `X-Microfrontend-Type` header was set to an unsupported value different than `pilet`, the HTTP response status code has to be `400`.
 
 In case of a failed authentication, the HTTP response status code has to be `401`.
 
