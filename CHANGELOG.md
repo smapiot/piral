@@ -6,6 +6,7 @@
 - Fixed issue with monorepos using Rush (#667)
 - Removed legacy option in `piral-cli-webpack5` to support IE8
 - Improved internal navigation Blazor pilets using `piral-blazor`
+- Updated dependencies
 - Added special entry point to emulator website when accessed online (#654)
 - Added feed selection view for remote emulator website (#654)
 
