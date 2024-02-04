@@ -5,6 +5,7 @@
 - Fixed error when importing `once` without context (#664)
 - Fixed issue with monorepos using Rush (#667)
 - Removed legacy option in `piral-cli-webpack5` to support IE8
+- Removed pilet-related options in debug settings when running `piral debug` (#670)
 - Improved internal navigation Blazor pilets using `piral-blazor`
 - Updated dependencies
 - Added special entry point to emulator website when accessed online (#654)

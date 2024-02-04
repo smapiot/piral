@@ -67,11 +67,13 @@ export interface DebugCustomStringSetting {
 
 export type DebugCustomSetting = (DebugCustomBooleanSetting | DebugCustomNumberSetting | DebugCustomStringSetting) & {
   label: string;
+  group?: string;
 };
 
 export interface DebuggerBaseOptions {
   customSettings?: Record<string, DebugCustomSetting>;
   defaultSettings?: DefaultDebugSettings;
+  emulator?: boolean;
 }
 
 export interface DebuggerOptions extends DebuggerBaseOptions {
