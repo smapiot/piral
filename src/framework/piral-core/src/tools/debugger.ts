@@ -8,6 +8,7 @@ export function integrateDebugger(
   debug: DebuggerExtensionOptions = {},
 ) {
   installPiralDebug({
+    emulator: debug.emulator,
     customSettings: debug.customSettings,
     defaultSettings: debug.defaultSettings,
     addPilet: context.addPilet,
