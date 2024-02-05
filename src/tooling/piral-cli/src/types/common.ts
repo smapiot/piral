@@ -112,6 +112,7 @@ export interface BundleDetails {
 export interface Bundler {
   readonly bundle: BundleDetails;
   start(): void;
+  stop(): void;
   on(cb: (args: any) => void): void;
   off(cb: (args: any) => void): void;
   ready(): Promise<void>;

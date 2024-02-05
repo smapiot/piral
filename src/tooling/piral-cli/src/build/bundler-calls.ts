@@ -37,6 +37,9 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
         });
       }
     },
+    stop() {
+      ps.kill();
+    },
     on(cb: BundleListener) {
       listeners.push(cb);
     },

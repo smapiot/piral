@@ -142,9 +142,6 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 
-    watcherContext.watch(join(root, packageJson));
-    watcherContext.watch(join(root, piralJson));
-
     const bundler = await callPiralDebug(
       {
         root,
@@ -161,6 +158,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       },
       bundlerName,
     );
+
+    watcherContext.watch(join(root, packageJson));
+    watcherContext.watch(join(root, piralJson));
+    watcherContext.onClean(() => bundler.stop());
 
     bundler.ready().then(() => logDone(`Ready!`));
 

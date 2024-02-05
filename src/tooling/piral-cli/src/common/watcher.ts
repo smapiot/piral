@@ -7,7 +7,7 @@ export interface WatcherRef<T> {
 }
 
 export interface WatcherContext {
-  onClean(dispose: () => void): void;
+  onClean(dispose: () => void | Promise<void>): void;
   watch(file: string): void;
   dependOn<T>(ref: WatcherRef<T>): void;
   close(): void;
@@ -19,7 +19,7 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
   let pending = false;
   let notify = () => {};
 
-  const disposers: Array<() => void> = [];
+  const disposers: Array<() => void | Promise<void>> = [];
   const triggers: Array<() => void> = [];
   const end = new Promise<void>(resolve => {
     notify = resolve;
@@ -36,16 +36,13 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
     if (!pending) {
       pending = true;
       await running;
-      disposers.splice(0, disposers.length).forEach((dispose) => {
-        dispose();
-      });
+      await Promise.all(disposers.splice(0, disposers.length).map((dispose) => dispose()));
+
       pending = false;
       context.status = 'reoccuring';
       await run();
 
-      triggers.splice(0, triggers.length).forEach((trigger) => {
-        trigger();
-      });
+      triggers.splice(0, triggers.length).forEach((trigger) => trigger());
     }
   };
 
