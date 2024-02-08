@@ -38,7 +38,10 @@ function createBundler(cwd: string, ps: ChildProcess, args: any) {
       }
     },
     stop() {
-      ps.kill();
+      return new Promise<void>(resolve => {
+        ps.on('exit', resolve);
+        ps.kill();
+      });
     },
     on(cb: BundleListener) {
       listeners.push(cb);

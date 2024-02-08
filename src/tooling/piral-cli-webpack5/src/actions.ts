@@ -20,7 +20,7 @@ export const debugPiral: DebugPiralBundlerDefinition = {
       .default('config', defaultWebpackConfig)
       .number('hmr-port')
       .describe('hmr-port', 'Sets the port to be used for HMR for reloading the application.')
-      .default('hmr-port', 62123);
+      .default('hmr-port', undefined);
   },
   path: resolve(__dirname, 'webpack', 'piral.js'),
 };

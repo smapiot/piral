@@ -6,7 +6,16 @@ import { config } from '../common/config';
 import { openBrowser } from '../common/browser';
 import { checkExistingDirectory, findFile } from '../common/io';
 import { getAvailablePort } from '../common/port';
-import { PlatformStartShellOptions, PlatformStartModuleOptions } from '../types';
+import { PlatformStartShellOptions, PlatformStartModuleOptions, NetworkSpec } from '../types';
+
+async function getPort(network: NetworkSpec) {
+  if (network.type === 'proposed') {
+    network.port = await getAvailablePort(network.port);
+    network.type = 'fixed';
+  }
+
+  return network.port;
+}
 
 async function startModule(options: PlatformStartModuleOptions) {
   const {
@@ -16,7 +25,7 @@ async function startModule(options: PlatformStartModuleOptions) {
     feed,
     publicUrl,
     customkrasrc,
-    originalPort,
+    network,
     hooks,
     registerWatcher,
     registerEnd,
@@ -60,7 +69,8 @@ async function startModule(options: PlatformStartModuleOptions) {
 
   configs.forEach(registerWatcher);
 
-  const port = await getAvailablePort(originalPort);
+  const shouldNotify = network.type === 'proposed';
+  const port = await getPort(network);
   const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
@@ -68,7 +78,10 @@ async function startModule(options: PlatformStartModuleOptions) {
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.setMaxListeners(maxListeners);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
+
+  if (shouldNotify) {
+    krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
+  }
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
   await krasServer.start();
@@ -88,7 +101,7 @@ async function startShell(options: PlatformStartShellOptions) {
     publicUrl,
     bundler,
     customkrasrc,
-    originalPort,
+    network,
     hooks,
     registerWatcher,
     registerEnd,
@@ -123,21 +136,25 @@ async function startShell(options: PlatformStartShellOptions) {
 
   configs.forEach(registerWatcher);
 
-  const port = await getAvailablePort(originalPort);
+  const shouldNotify = network.type === 'proposed';
+  const port = await getPort(network);
   const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
   log('generalVerbose_0004', `Using kras with configuration: ${JSON.stringify(krasConfig, undefined, 2)}`);
 
   const krasServer = buildKrasWithCli(krasConfig);
   krasServer.setMaxListeners(16);
   krasServer.removeAllListeners('open');
-  krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
+
+  if (shouldNotify) {
+    krasServer.on('open', notifyServerOnline(publicUrl, krasConfig.api));
+  }
 
   await hooks.beforeOnline?.({ krasServer, krasConfig, open, port, publicUrl });
   await krasServer.start();
   openBrowser(open, port, publicUrl, !!krasConfig.ssl);
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
 
-  registerEnd(() => krasServer.stop());
+  registerEnd(async () => krasServer.stop());
 }
 
 export function setup() {
