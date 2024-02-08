@@ -9,6 +9,7 @@
 - Removed pilet-related options in debug settings when running `piral debug` (#670)
 - Improved internal navigation Blazor pilets using `piral-blazor`
 - Updated dependencies
+- Updated `piral publish` command to work exclusively for emulator websites
 - Added special entry point to emulator website when accessed online (#654)
 - Added feed selection view for remote emulator website (#654)
 

@@ -1,33 +1,25 @@
 import { join, resolve } from 'path';
-import { callPiralBuild } from '../bundler';
 import { LogLevels, PiralBuildType } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
   removeDirectory,
-  logDone,
   checkCliCompatibility,
   progress,
   setLogLevel,
   logReset,
-  createEmulatorSources,
-  log,
-  logInfo,
-  runScript,
-  packageEmulator,
   normalizePublicUrl,
   getDestination,
   validateSharedDependencies,
-  flattenExternals,
-  createEmulatorWebsite,
+  allName,
+  emulatorPackageName,
+  emulatorName,
+  emulatorWebsiteName,
+  emulatorSourcesName,
+  releaseName,
+  triggerBuildEmulator,
+  triggerBuildShell,
 } from '../common';
-
-const allName = 'all';
-const releaseName = 'release';
-const emulatorName = 'emulator';
-const emulatorPackageName = 'package';
-const emulatorSourcesName = 'sources';
-const emulatorWebsiteName = 'website';
 
 export interface BuildPiralOptions {
   /**
@@ -130,18 +122,6 @@ export const buildPiralDefaults: BuildPiralOptions = {
   optimizeModules: false,
 };
 
-async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {
-  const script = scripts?.[type];
-
-  if (script) {
-    log('generalDebug_0003', `Running "${type}" ("${script}") ...`);
-    await runScript(script, root);
-    log('generalDebug_0003', `Finished running "${type}".`);
-  } else {
-    log('generalDebug_0003', `No script for "${type}" found ...`);
-  }
-}
-
 export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOptions = {}) {
   const {
     entry = buildPiralDefaults.entry,
@@ -193,139 +173,56 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
 
   // only applies to an explicit emulator target (e.g., "emulator-website") or to "all" / "emulator" with the setting from the piral.json
   if ([emulatorSourcesName, emulatorPackageName, emulatorWebsiteName].includes(emulatorType)) {
-    const emulatorPublicUrl = '/';
     const targetDir = useSubdir ? join(dest.outDir, emulatorName) : dest.outDir;
-    const appDir = emulatorType !== emulatorWebsiteName ? join(targetDir, 'app') : targetDir;
-    progress('Starting emulator build ...');
 
-    // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(targetDir);
-
-    await hooks.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, piralInstances });
-
-    logInfo(`Bundle ${emulatorName} ...`);
-    const {
-      dir: outDir,
-      name: outFile,
-      hash,
-    } = await callPiralBuild(
-      {
-        root,
-        piralInstances,
-        emulator: true,
-        standalone: false,
-        optimizeModules,
-        sourceMaps,
-        watch,
-        contentHash,
-        minify: false,
-        externals: flattenExternals(externals),
-        publicUrl: emulatorPublicUrl,
-        entryFiles,
-        logLevel,
-        ignored,
-        outDir: appDir,
-        outFile: dest.outFile,
-        _,
-      },
-      bundlerName,
-    );
-
-    await hooks.afterBuild?.({
+    await triggerBuildEmulator({
       root,
-      publicUrl: emulatorPublicUrl,
+      logLevel,
+      bundlerName,
+      emulatorType,
+      hooks,
+      targetDir,
+      ignored,
       externals,
       entryFiles,
-      targetDir,
       piralInstances,
-      hash,
-      outDir,
-      outFile,
+      optimizeModules,
+      sourceMaps,
+      watch,
+      scripts,
+      contentHash,
+      outFile: dest.outFile,
+      _,
     });
 
-    await runLifecycle(root, scripts, 'piral:postbuild');
-    await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
-
-    await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
-
-    let rootDir = root;
-
-    switch (emulatorType) {
-      case emulatorPackageName:
-        rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
-        await hooks.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
-        await packageEmulator(rootDir);
-        await hooks.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
-        break;
-      case emulatorSourcesName:
-        rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
-        logDone(`Emulator package sources available in "${rootDir}".`);
-        break;
-      case emulatorWebsiteName:
-        rootDir = await createEmulatorWebsite(root, externals, outDir, outFile, logLevel);
-        logDone(`Emulator website available in "${rootDir}".`);
-        break;
-    }
-
-    await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
     logReset();
   }
 
   // either 'release' or 'all'
   if (type === releaseName || type === allName) {
     const targetDir = useSubdir ? join(dest.outDir, releaseName) : dest.outDir;
-    progress('Starting release build ...');
 
-    // since we create this anyway let's just pretend we want to have it clean!
-    await removeDirectory(targetDir);
-
-    logInfo(`Bundle ${releaseName} ...`);
-
-    await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances });
-
-    const {
-      dir: outDir,
-      name: outFile,
-      hash,
-    } = await callPiralBuild(
-      {
-        root,
-        piralInstances,
-        emulator: false,
-        standalone: false,
-        optimizeModules,
-        sourceMaps,
-        watch,
-        contentHash,
-        minify,
-        externals: flattenExternals(externals),
-        publicUrl,
-        outFile: dest.outFile,
-        outDir: targetDir,
-        entryFiles,
-        logLevel,
-        ignored,
-        _,
-      },
-      bundlerName,
-    );
-
-    await hooks.afterBuild?.({
-      root,
-      publicUrl,
-      externals,
-      entryFiles,
+    await triggerBuildShell({
       targetDir,
+      logLevel,
+      bundlerName,
+      contentHash,
+      externals,
+      ignored,
+      minify,
+      optimizeModules,
+      publicUrl,
+      outFile: dest.outFile,
+      root,
+      sourceMaps,
+      watch,
+      hooks,
+      entryFiles,
       piralInstances,
-      outDir,
-      outFile,
-      hash,
+      scripts,
+      _,
     });
 
-    await runLifecycle(root, scripts, 'piral:postbuild');
-    await runLifecycle(root, scripts, `piral:postbuild-${releaseName}`);
-
-    logDone(`Files for publication available in "${outDir}".`);
     logReset();
   }
 

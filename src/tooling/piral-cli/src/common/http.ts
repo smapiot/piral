@@ -7,7 +7,7 @@ import { log } from './log';
 import { standardHeaders } from './info';
 import { getTokenInteractively } from './interactive';
 import { axios, FormData } from '../external';
-import { PiletPublishScheme } from '../types';
+import { PublishScheme } from '../types';
 
 function getMessage(body: string | { message?: string }) {
   if (typeof body === 'string') {
@@ -67,7 +67,7 @@ export type FormDataObj = Record<string, string | number | boolean | [Buffer, st
 
 export function postForm(
   target: string,
-  scheme: PiletPublishScheme,
+  scheme: PublishScheme,
   key: string,
   formData: FormDataObj,
   customHeaders: Record<string, string> = {},
@@ -192,7 +192,7 @@ export function postForm(
 
 export function postFile(
   target: string,
-  scheme: PiletPublishScheme,
+  scheme: PublishScheme,
   key: string,
   file: Buffer,
   customFields: Record<string, string> = {},

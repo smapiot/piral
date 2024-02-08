@@ -7,12 +7,12 @@ import type {
   PiletPublishSource,
   PiralBuildType,
   PiletBuildType,
-  PiletPublishScheme,
+  PublishScheme,
   SourceLanguage,
 } from './types';
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'v3', 'mf', 'none'];
-export const publishModeKeys: Array<PiletPublishScheme> = ['none', 'basic', 'bearer', 'digest'];
+export const publishModeKeys: Array<PublishScheme> = ['none', 'basic', 'bearer', 'digest'];
 export const fromKeys: Array<PiletPublishSource> = ['local', 'remote', 'npm'];
 export const piralBuildTypeKeys: Array<PiralBuildType> = [
   'all',

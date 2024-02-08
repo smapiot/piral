@@ -24,7 +24,7 @@ import {
   PiletPublishSource,
   PiletSchemaVersion,
   PiletBuildType,
-  PiletPublishScheme,
+  PublishScheme,
   SourceLanguage,
 } from './types';
 
@@ -196,25 +196,39 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['release-piral', 'release'],
     description: 'Publishes Piral instance build artifacts.',
     arguments: ['[source]'],
-    flags(argv) {
+    // "any" due to https://github.com/microsoft/TypeScript/issues/28663 [artifical N = 50]
+    flags(argv: any) {
       return argv
         .positional('source', {
           type: 'string',
           describe: 'Sets the previously used output directory to publish.',
           default: apps.publishPiralDefaults.source,
         })
+        .string('url')
+        .describe('url', 'Sets the explicit URL where to publish the emulator to.')
+        .default('url', apps.publishPiralDefaults.url)
+        .string('api-key')
+        .describe('api-key', 'Sets the potential API key to send to the service.')
+        .default('api-key', apps.publishPiralDefaults.apiKey)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.publishPiralDefaults.cert)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiralDefaults.logLevel)
-        .choices('type', piralBuildTypeKeys)
-        .describe('type', 'Selects the target type to publish. "all" publishes all target types.')
-        .default('type', apps.publishPiralDefaults.type)
-        .choices('provider', availableReleaseProviders)
-        .describe('provider', 'Sets the provider for publishing the release assets.')
-        .default('provider', apps.publishPiralDefaults.provider)
-        .option('opts', undefined)
-        .describe('opts', 'Sets the options to forward to the chosen provider.')
-        .default('opts', apps.publishPiralDefaults.opts)
+        .boolean('fresh')
+        .describe('fresh', 'Performs a fresh build of the emulator website.')
+        .default('fresh', apps.publishPiralDefaults.fresh)
+        .choices('mode', publishModeKeys)
+        .describe('mode', 'Sets the authorization mode to use.')
+        .default('mode', apps.publishPiralDefaults.mode)
+        .alias('mode', 'auth-mode')
+        .choices('bundler', availableBundlers)
+        .describe('bundler', 'Sets the bundler to use.')
+        .default('bundler', availableBundlers[0])
+        .option('headers', undefined)
+        .describe('headers', 'Sets additional headers to be included in the feed service request.')
+        .default('headers', apps.publishPiralDefaults.headers)
         .boolean('interactive')
         .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
         .default('interactive', apps.publishPiralDefaults.interactive)
@@ -226,10 +240,15 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.publishPiral(args.base as string, {
         source: args.source as string,
         logLevel: args['log-level'] as LogLevels,
-        type: args.type as PiralBuildType,
-        provider: args.provider as string,
-        opts: args.opts as Record<string, string>,
+        apiKey: args['api-key'] as string,
+        cert: args['ca-cert'] as string,
+        url: args.url as string,
         interactive: args.interactive as boolean,
+        mode: args.mode as PublishScheme,
+        bundlerName: args.bundler as string,
+        fresh: args.fresh as boolean,
+        headers: args.headers as Record<string, string>,
+        _: args,
       });
     },
   },
@@ -671,7 +690,7 @@ const allCommands: Array<ToolCommand<any>> = [
         schemaVersion: args.schema as PiletSchemaVersion,
         fields: args.fields as Record<string, string>,
         headers: args.headers as Record<string, string>,
-        mode: args.mode as PiletPublishScheme,
+        mode: args.mode as PublishScheme,
         interactive: args.interactive as boolean,
         _: args,
       });

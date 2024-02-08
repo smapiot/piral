@@ -1,6 +1,5 @@
-import { relative, dirname, basename, resolve, isAbsolute } from 'path';
-import { callPiletBuild } from '../bundler';
-import { LogLevels, PiletSchemaVersion, PiletPublishSource, PiletPublishScheme } from '../types';
+import { relative, dirname, basename, resolve } from 'path';
+import { LogLevels, PiletSchemaVersion, PiletPublishSource, PublishScheme } from '../types';
 import {
   postFile,
   readBinary,
@@ -16,11 +15,7 @@ import {
   findNpmTarball,
   downloadFile,
   matchAnyPilet,
-  retrievePiletData,
-  removeDirectory,
-  logInfo,
-  combinePiletExternals,
-  defaultSchemaVersion,
+  triggerBuildPilet,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -92,12 +87,22 @@ export interface PublishPiletOptions {
   /**
    * Sets the authorization scheme to use.
    */
-  mode?: PiletPublishScheme;
+  mode?: PublishScheme;
 
   /**
    * Additional arguments for a specific bundler.
    */
   _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    beforeBuild?(e: any): Promise<void>;
+    afterBuild?(e: any): Promise<void>;
+    beforeDeclaration?(e: any): Promise<void>;
+    afterDeclaration?(e: any): Promise<void>;
+  };
 }
 
 export const publishPiletDefaults: PublishPiletOptions = {
@@ -114,11 +119,6 @@ export const publishPiletDefaults: PublishPiletOptions = {
   interactive: false,
 };
 
-function isSubDir(parent: string, dir: string) {
-  const rel = relative(parent, dir);
-  return rel && !rel.startsWith('..') && !isAbsolute(rel);
-}
-
 async function getFiles(
   baseDir: string,
   sources: Array<string>,
@@ -129,6 +129,7 @@ async function getFiles(
   bundlerName: string,
   _?: Record<string, any>,
   ca?: Buffer,
+  hooks?: PublishPiletOptions['hooks'],
 ): Promise<Array<string>> {
   if (fresh) {
     log('generalDebug_0003', 'Detected "--fresh". Trying to resolve the package.json.');
@@ -140,54 +141,25 @@ async function getFiles(
 
     return await Promise.all(
       allEntries.map(async (entryModule) => {
-        const targetDir = dirname(entryModule);
-
         progress('Triggering pilet build ...');
-        const { root, piletPackage, importmap, peerDependencies, peerModules, apps, schema } = await retrievePiletData(
-          targetDir,
-        );
-        const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
-        const piralInstances = apps.map((m) => m.appPackage.name);
-        const defaultOutput = 'dist/index.js';
-        const { main = defaultOutput, name = 'pilet' } = piletPackage;
-        const propDest = resolve(root, main);
-        const propDestDir = dirname(propDest);
-        log('generalDebug_0003', `Pilet "${name}" is supposed to generate artifact in "${propDest}".`);
-        const usePropDest = propDestDir !== root && propDestDir !== targetDir && isSubDir(root, propDest);
-        const dest = usePropDest ? propDest : resolve(root, defaultOutput);
-        log('generalDebug_0003', `Pilet "${name}" is generating artifact in "${dest}".`);
-        const outDir = dirname(dest);
-        const outFile = basename(dest);
-        const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
-        log('generalDebug_0003', `Pilet "${name}" uses externals: ${externals.join(', ')}.`);
 
-        progress('Removing output directory ...');
-        await removeDirectory(outDir);
-
-        logInfo('Bundle pilet ...');
-        await callPiletBuild(
-          {
-            root,
-            piralInstances,
-            optimizeModules: false,
-            sourceMaps: true,
-            watch: false,
-            contentHash: true,
-            minify: true,
-            externals,
-            targetDir,
-            importmap,
-            outFile,
-            outDir,
-            entryModule: `./${relative(root, entryModule)}`,
-            logLevel,
-            version: schemaVersion,
-            ignored: [],
-            _,
-          },
+        const { root, piletPackage } = await triggerBuildPilet({
+          _,
           bundlerName,
-        );
+          entryModule,
+          fresh,
+          logLevel,
+          originalSchemaVersion,
+          watch: false,
+          optimizeModules: false,
+          sourceMaps: true,
+          declaration: true,
+          contentHash: true,
+          minify: true,
+          hooks,
+        });
 
+        const name = piletPackage.name;
         log('generalDebug_0003', `Pilet "${name}" built successfully!`);
         progress('Triggering pilet pack ...');
 
@@ -237,6 +209,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     mode = publishPiletDefaults.mode,
     interactive = publishPiletDefaults.interactive,
     _ = {},
+    hooks = {},
     bundlerName,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
@@ -259,7 +232,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
   log('generalDebug_0003', 'Getting the tgz files ...');
   const sources = Array.isArray(source) ? source : [source];
-  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, ca);
+  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, ca, hooks);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
@@ -275,7 +248,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     const content = await readBinary(fullBase, fileName);
 
     if (content) {
-      progress(`Publishing "%s" ...`, file, url);
+      progress(`Publishing "%s" to "%s" ...`, file, url);
       const result = await postFile(url, mode, apiKey, content, fields, headers, ca, interactive);
 
       if (result.success) {

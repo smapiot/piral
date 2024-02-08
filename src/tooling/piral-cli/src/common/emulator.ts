@@ -1,7 +1,7 @@
 import { join, resolve, relative, basename } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
-import { filesTar, filesOnceTar, packageJson, piralJson } from './constants';
+import { filesTar, filesOnceTar, packageJson, piralJson, emulatorJson } from './constants';
 import { cliVersion } from './info';
 import { createNpmPackage } from './npm';
 import { createPiralDeclaration } from './declaration';
@@ -238,7 +238,7 @@ export async function createEmulatorWebsite(
     },
   };
 
-  await writeJson(targetDir, 'emulator.json', data, true);
+  await writeJson(targetDir, emulatorJson, data, true);
 
   // generate the associated index.d.ts
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);

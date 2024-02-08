@@ -3,7 +3,7 @@ import { openBrowserAt } from './browser';
 import { standardHeaders } from './info';
 import { logSuspend, logInfo } from './log';
 import { axios, inquirer } from '../external';
-import { PiletPublishScheme } from '../types';
+import { PublishScheme } from '../types';
 
 export function promptSelect(message: string, values: Array<string>, defaultValue: string): Promise<string> {
   const questions = [
@@ -30,7 +30,7 @@ export function promptConfirm(message: string, defaultValue: boolean): Promise<b
   return inquirer.prompt(questions).then((answers: any) => answers.q);
 }
 
-type TokenResult = Promise<{ mode: PiletPublishScheme; token: string }>;
+type TokenResult = Promise<{ mode: PublishScheme; token: string }>;
 
 const tokenRetrievers: Record<string, TokenResult> = {};
 

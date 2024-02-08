@@ -1,5 +1,5 @@
 import { Argv, Arguments } from 'yargs';
-import { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency, ReleaseProvider } from './common';
+import { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency } from './common';
 
 export interface ToolCommandRunner<U = {}> {
   (args: Arguments<U>): void | Promise<void>;
@@ -44,7 +44,6 @@ export interface CliPluginApi {
   withPiletRule(ruleName: string, runner: RuleRunner<PiletRuleContext>): CliPluginApi;
   withPatcher(packageName: string, patch: PackagePatcher): CliPluginApi;
   withBundler(bundlerName: string, bundler: BundlerDefinition): CliPluginApi;
-  withReleaseProvider(providerName: string, provider: ReleaseProvider): CliPluginApi;
 }
 
 export interface CliPlugin {
@@ -242,7 +241,7 @@ export type AuthConfig = HeaderAuthConfig | HttpAuthConfig;
 
 export type SourceLanguage = 'js' | 'ts';
 
-export type PiletPublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
+export type PublishScheme = 'none' | 'digest' | 'bearer' | 'basic';
 
 export type PiletPublishSource = 'local' | 'npm' | 'remote';
 
