@@ -18,5 +18,20 @@ export default function loader(entry: PiletV3Entry, _config: DefaultLoaderConfig
 
   registerDependencyUrls(dependencies);
 
-  return loadSystemPilet(link).then((app) => createEvaluatedPilet(meta, app));
+  return loadSystemPilet(link).then((app) => {
+    const pilet = createEvaluatedPilet(meta, app);
+
+    if (Array.isArray(app.styles) && typeof document !== 'undefined') {
+      for (const style of app.styles) {
+        const link = document.createElement('link');
+        link.setAttribute('data-origin', pilet.name);
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.href = `${pilet.basePath}/${style}`;
+        document.head.appendChild(link);
+      }
+    }
+
+    return pilet;
+  });
 }
