@@ -275,9 +275,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
-      watcherContext.watch(join(root, packageJson));
-      watcherContext.watch(join(root, piletJson));
-
       const bundler = await callPiletDebug(
         {
           root,
@@ -297,6 +294,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         },
         bundlerName,
       );
+
+      watcherContext.watch(join(root, packageJson));
+      watcherContext.watch(join(root, piletJson));
+      watcherContext.onClean(() => bundler.stop());
 
       bundler.on((args) => {
         hooks.afterBuild?.({
@@ -342,7 +343,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await Promise.all(
       appInstances.sort(byPort).map(async ([appDir, appPort], i) => {
         const platform = configurePlatform();
-        
+
         if (networks.length === i) {
           networks.push({
             port: appPort || originalPort + i,
