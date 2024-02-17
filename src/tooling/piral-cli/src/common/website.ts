@@ -1,6 +1,6 @@
 import { join, relative, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
-import { config } from './config';
+import { getAxiosOptions } from './http';
 import { packageJson } from './constants';
 import { ForceOverwrite } from './enums';
 import { createDirectory, readJson, writeBinary } from './io';
@@ -10,34 +10,18 @@ import { axios } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
 function requestManifest(url: string) {
-  const auth = config.auth?.[url];
-
-  switch (auth?.mode) {
-    case 'header':
-      return axios.default.get(url, {
-        headers: {
-          [auth.key]: auth.value,
-        },
-      });
-    case 'http':
-      return axios.default.get(url, {
-        auth: {
-          username: auth.username,
-          password: auth.password,
-        },
-      });
-    default:
-      return axios.default.get(url);
-  }
+  const opts = getAxiosOptions(url);
+  return axios.default.get(url, opts);
 }
 
 async function downloadEmulatorFiles(manifestUrl: string, target: string, files: EmulatorWebsiteManifestFiles) {
   const requiredFiles = [files.typings, files.main, files.app];
+  const opts = getAxiosOptions(manifestUrl);
 
   await Promise.all(
     requiredFiles.map(async (file) => {
       const url = new URL(file, manifestUrl);
-      const res = await axios.default.get(url.href, { responseType: 'arraybuffer' });
+      const res = await axios.default.get(url.href, { ...opts, responseType: 'arraybuffer' });
       const data: Buffer = res.data;
       await writeBinary(target, file, data);
     }),

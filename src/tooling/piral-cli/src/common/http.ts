@@ -4,6 +4,7 @@ import { Stream } from 'stream';
 import { tmpdir } from 'os';
 import { createWriteStream } from 'fs';
 import { log } from './log';
+import { config } from './config';
 import { standardHeaders } from './info';
 import { getTokenInteractively } from './interactive';
 import { axios, FormData } from '../external';
@@ -35,6 +36,28 @@ function streamToFile(source: Stream, target: string) {
     source.on('error', (err) => reject(err));
     dest.on('finish', () => resolve([target]));
   });
+}
+
+export function getAxiosOptions(url: string) {
+  const auth = config.auth?.[url];
+
+  switch (auth?.mode) {
+    case 'header':
+      return {
+        headers: {
+          [auth.key]: auth.value,
+        },
+      };
+    case 'http':
+      return {
+        auth: {
+          username: auth.username,
+          password: auth.password,
+        },
+      };
+    default:
+      return {};
+  }
 }
 
 export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {

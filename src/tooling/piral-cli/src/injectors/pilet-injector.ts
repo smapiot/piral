@@ -5,6 +5,7 @@ import { existsSync } from 'fs';
 import { readFile, stat, writeFile } from 'fs/promises';
 import { KrasInjector, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
 import { log } from '../common/log';
+import { getAxiosOptions } from '../common/http';
 import { getPiletSpecMeta } from '../common/spec';
 import { config as commonConfig } from '../common/config';
 import { axios, mime, jju } from '../external';
@@ -146,7 +147,7 @@ export default class PiletInjector implements KrasInjector {
         if (existsSync(path)) {
           try {
             const packageJson = require(path);
-  
+
             if (typeof packageJson.piralCLI.source === 'string') {
               this.proxyInfo = {
                 source: packageJson.piralCLI.source,
@@ -343,28 +344,10 @@ export default class PiletInjector implements KrasInjector {
   }
 
   private download(path: string) {
-    const url = new URL(path, this.proxyInfo.source);
-    const auth = commonConfig.auth?.[this.proxyInfo.source];
-
-    switch (auth?.mode) {
-      case 'header':
-        return axios.default.get(url.href, {
-          responseType: 'arraybuffer',
-          headers: {
-            [auth.key]: auth.value,
-          },
-        });
-      case 'http':
-        return axios.default.get(url.href, {
-          responseType: 'arraybuffer',
-          auth: {
-            username: auth.username,
-            password: auth.password,
-          },
-        });
-      default:
-        return axios.default.get(url.href, { responseType: 'arraybuffer' });
-    }
+    const manifestUrl = this.proxyInfo.source;
+    const url = new URL(path, manifestUrl);
+    const opts = getAxiosOptions(manifestUrl);
+    return axios.default.get(url.href, { ...opts, responseType: 'arraybuffer' });
   }
 
   private async shouldLoad(target: string, path: string) {
