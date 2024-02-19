@@ -130,20 +130,14 @@ function createLogger(): Logger {
 
 async function createDeclarationFile(
   options: DeclOptions,
-  source: string,
   target: string,
   forceOverwrite: ForceOverwrite,
 ) {
   progress('Bundling declaration file ...');
+  const result = await generateDeclaration(options);
 
-  try {
-    const result = await generateDeclaration(options);
-
-    progress('Writing declaration file ...');
-    await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
-  } catch (ex) {
-    log('declarationCouldNotBeGenerated_0076', source, ex);
-  }
+  progress('Writing declaration file ...');
+  await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
 }
 
 export async function createPiletDeclaration(
@@ -175,7 +169,15 @@ export async function createPiletDeclaration(
       logLevel,
       logger: createLogger(),
     };
-    return await createDeclarationFile(options, root, target, forceOverwrite);
+
+    try {
+      await createDeclarationFile(options, target, forceOverwrite);
+      return true;
+    } catch (ex) {
+      log('declarationCouldNotBeGenerated_0076', root, ex);
+    }
+
+    return false;
   }
 }
 
@@ -206,8 +208,15 @@ export async function createPiralDeclaration(
   validateSharedDependencies(externals);
 
   if (options.apis.length) {
-    return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+    try {
+      await createDeclarationFile(options, target, forceOverwrite);
+      return true;
+    } catch (ex) {
+      log('declarationCouldNotBeGenerated_0076', baseDir, ex);
+    }
+  } else {
+    log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
   }
 
-  log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
+  return false;
 }

@@ -1,18 +1,15 @@
-import { dirname, basename, resolve, relative } from 'path';
+import { dirname, resolve } from 'path';
 import { LogLevels, PiletBuildType, PiletSchemaVersion } from '../types';
-import { callPiletBuild, callPiralBuild } from '../bundler';
+import { callPiralBuild } from '../bundler';
 import {
   removeDirectory,
-  retrievePiletData,
   setLogLevel,
   progress,
   logDone,
   logInfo,
-  createPiletDeclaration,
   ForceOverwrite,
   matchAnyPilet,
   fail,
-  config,
   log,
   writeJson,
   getPiletSpecMeta,
@@ -22,10 +19,7 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
-  combinePiletExternals,
   retrievePiletsInfo,
-  validateSharedDependencies,
-  defaultSchemaVersion,
   flattenExternals,
   triggerBuildPilet,
 } from '../common';

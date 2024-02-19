@@ -52,6 +52,7 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
   setLogLevel(logLevel);
 
   const allEntries = await matchAnyPilet(fullBase, entryList);
+  const results: Array<boolean> = [];
 
   for (const item of allEntries) {
     const targetDir = dirname(item);
@@ -59,18 +60,21 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
     const piralInstances = apps.map((m) => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
-
-    await createPiletDeclaration(
-      piletPackage.name,
-      piralInstances,
-      root,
-      item,
-      externals,
-      dest,
-      forceOverwrite,
-      logLevel,
+    results.push(
+      await createPiletDeclaration(
+        piletPackage.name,
+        piralInstances,
+        root,
+        item,
+        externals,
+        dest,
+        forceOverwrite,
+        logLevel,
+      ),
     );
   }
 
-  logDone(`Declaration created successfully in "${target}"!`);
+  if (results.every(Boolean)) {
+    logDone(`Declaration created successfully in "${target}"!`);
+  }
 }
