@@ -1,5 +1,6 @@
 export const defaultRegistry = 'https://registry.npmjs.org/';
 export const filesTar = 'files';
+export const appName = 'piral';
 export const packageJson = 'package.json';
 export const piralJson = 'piral.json';
 export const piletJson = 'pilet.json';

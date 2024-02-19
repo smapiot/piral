@@ -1,14 +1,12 @@
-import { basename, dirname, resolve } from 'path';
+import { resolve } from 'path';
 import { LogLevels, PublishScheme } from '../types';
 import {
   setLogLevel,
   progress,
-  checkExists,
   fail,
   logDone,
   log,
   config,
-  readBinary,
   emulatorName,
   emulatorJson,
   publishWebsiteEmulator,
@@ -21,6 +19,7 @@ import {
   emulatorPackageName,
   retrievePiletsInfo,
   validateSharedDependencies,
+  getCertificate,
 } from '../common';
 
 export interface PublishPiralOptions {
@@ -111,7 +110,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     fresh = publishPiralDefaults.fresh,
     url = config.url ?? publishPiralDefaults.url,
     apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiralDefaults.apiKey,
-    cert = config.cert ?? publishPiralDefaults.cert,
+    cert = publishPiralDefaults.cert,
     headers = publishPiralDefaults.headers,
     mode = publishPiralDefaults.mode,
     _ = {},
@@ -126,15 +125,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     fail('missingPiletFeedUrl_0060');
   }
 
-  log('generalDebug_0003', 'Checking if certificate exists.');
-  let ca: Buffer = undefined;
-
-  if (await checkExists(cert)) {
-    const dir = dirname(cert);
-    const file = basename(cert);
-    log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
-    ca = await readBinary(dir, file);
-  }
+  const ca = await getCertificate(cert);
 
   log('generalDebug_0003', 'Getting the files ...');
   const entryFiles = await retrievePiralRoot(fullBase, './');
@@ -150,7 +141,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
   if (emulator !== emulatorWebsiteName) {
     fail('generalError_0002', `Currently only the "${emulatorWebsiteName}" option is supported.`);
   }
-  
+
   const emulatorDir = resolve(fullBase, source, emulatorName);
 
   if (fresh) {

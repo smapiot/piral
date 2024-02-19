@@ -1,4 +1,4 @@
-import { relative, dirname, basename, resolve } from 'path';
+import { relative, resolve } from 'path';
 import { LogLevels, PiletSchemaVersion, PiletPublishSource, PublishScheme } from '../types';
 import {
   postFile,
@@ -11,11 +11,11 @@ import {
   progress,
   log,
   config,
-  checkExists,
   findNpmTarball,
   downloadFile,
   matchAnyPilet,
   triggerBuildPilet,
+  getCertificate,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -203,7 +203,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
-    cert = config.cert ?? publishPiletDefaults.cert,
+    cert = publishPiletDefaults.cert,
     fields = publishPiletDefaults.fields,
     headers = publishPiletDefaults.headers,
     mode = publishPiletDefaults.mode,
@@ -220,15 +220,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     fail('missingPiletFeedUrl_0060');
   }
 
-  log('generalDebug_0003', 'Checking if certificate exists.');
-  let ca: Buffer = undefined;
-
-  if (await checkExists(cert)) {
-    const dir = dirname(cert);
-    const file = basename(cert);
-    log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
-    ca = await readBinary(dir, file);
-  }
+  const ca = await getCertificate(cert);
 
   log('generalDebug_0003', 'Getting the tgz files ...');
   const sources = Array.isArray(source) ? source : [source];

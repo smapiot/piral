@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { basename, dirname, join } from 'path';
 import { Agent } from 'https';
 import { Stream } from 'stream';
 import { tmpdir } from 'os';
@@ -6,6 +6,7 @@ import { createWriteStream } from 'fs';
 import { log } from './log';
 import { config } from './config';
 import { standardHeaders } from './info';
+import { checkExists, readBinary } from './io';
 import { getTokenInteractively } from './interactive';
 import { axios, FormData } from '../external';
 import { PublishScheme } from '../types';
@@ -60,6 +61,45 @@ export function getAxiosOptions(url: string) {
   }
 }
 
+export async function getCertificate(cert = config.cert): Promise<Buffer> {
+  log('generalDebug_0003', 'Checking if certificate exists.');
+
+  if (await checkExists(cert)) {
+    const dir = dirname(cert);
+    const file = basename(cert);
+    log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
+    return await readBinary(dir, file);
+  }
+
+  return undefined;
+}
+
+export function getAuthorizationHeaders(scheme: PublishScheme, key: string) {
+  if (key) {
+    switch (scheme) {
+      case 'basic':
+        return {
+          authorization: `Basic ${key}`,
+        };
+      case 'bearer':
+        return {
+          authorization: `Bearer ${key}`,
+        };
+      case 'digest':
+        return {
+          authorization: `Digest ${key}`,
+        };
+      case 'none':
+      default:
+        return {
+          authorization: key,
+        };
+    }
+  }
+
+  return {};
+}
+
 export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
   return axios.default
@@ -80,24 +120,9 @@ export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>
     });
 }
 
-export interface PostFormResult {
-  status: number;
-  success: boolean;
-  response?: object;
-}
-
 export type FormDataObj = Record<string, string | number | boolean | [Buffer, string]>;
 
-export function postForm(
-  target: string,
-  scheme: PublishScheme,
-  key: string,
-  formData: FormDataObj,
-  customHeaders: Record<string, string> = {},
-  ca?: Buffer,
-  interactive = false,
-): Promise<PostFormResult> {
-  const httpsAgent = ca ? new Agent({ ca }) : undefined;
+export function createAxiosForm(formData: FormDataObj) {
   const form = new FormData();
 
   Object.keys(formData).forEach((key) => {
@@ -112,105 +137,126 @@ export function postForm(
     }
   });
 
+  return form;
+}
+
+export function handleAxiosError(
+  error: any,
+  interactive: boolean,
+  httpsAgent: Agent,
+  refetch: (mode: PublishScheme, key: string) => Promise<any>,
+  onfail?: (status: number, statusText: string, response: string) => any,
+) {
+  if (!onfail) {
+    onfail = () => {
+      throw error;
+    };
+  }
+
+  if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    const { data, statusText, status } = error.response;
+
+    if (interactive && 'interactiveAuth' in data) {
+      const { interactiveAuth } = data;
+
+      if (typeof interactiveAuth === 'string') {
+        log(
+          'generalDebug_0003',
+          `Received status "${status}" from HTTP - trying interactive log in to "${interactiveAuth}".`,
+        );
+
+        return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) => refetch(mode, token));
+      }
+    }
+
+    const message = getMessage(data) || '';
+    return onfail(status, statusText, message);
+  } else if (error.isAxiosError) {
+    // axios initiated error: try to parse message from error object
+    let errorMessage: string = error.errno || 'Unknown Axios Error';
+
+    if (typeof error.toJSON === 'function') {
+      const errorObj: { message?: string } = error.toJSON();
+      errorMessage = errorObj?.message ?? errorMessage;
+    }
+
+    return onfail(500, undefined, errorMessage);
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    return onfail(500, undefined, error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    return onfail(500, undefined, error.message);
+  }
+}
+
+export interface PostFormResult {
+  status: number;
+  success: boolean;
+  response?: object;
+}
+
+export async function postForm(
+  target: string,
+  scheme: PublishScheme,
+  key: string,
+  formData: FormDataObj,
+  customHeaders: Record<string, string> = {},
+  ca?: Buffer,
+  interactive = false,
+): Promise<PostFormResult> {
+  const httpsAgent = ca ? new Agent({ ca }) : undefined;
+  const form = createAxiosForm(formData);
+
   const headers: Record<string, string> = {
     ...form.getHeaders(),
     ...standardHeaders,
     ...customHeaders,
+    ...getAuthorizationHeaders(scheme, key),
   };
 
-  if (key) {
-    switch (scheme) {
-      case 'basic':
-        headers.authorization = `Basic ${key}`;
-        break;
-      case 'bearer':
-        headers.authorization = `Bearer ${key}`;
-        break;
-      case 'digest':
-        headers.authorization = `Digest ${key}`;
-        break;
-      case 'none':
-      default:
-        headers.authorization = key;
-        break;
-    }
-  }
-
-  return axios.default
-    .post(target, form, {
+  try {
+    const res = await axios.default.post(target, form, {
       headers,
       httpsAgent,
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
-    })
-    .then(
-      (res) => {
-        return {
-          status: res.status,
-          success: true,
-          response: res.data,
-        };
-      },
-      (error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          const { data, statusText, status } = error.response;
+    });
 
-          if (interactive && 'interactiveAuth' in data) {
-            const { interactiveAuth } = data;
-
-            if (typeof interactiveAuth === 'string') {
-              log(
-                'generalDebug_0003',
-                `Received status "${status}" from HTTP - trying interactive log in to "${interactiveAuth}".`,
-              );
-
-              return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
-                postForm(target, mode, token, formData, customHeaders, ca, false),
-              );
-            }
-          }
-
-          const message = getMessage(data) || '';
-          log('unsuccessfulHttpPost_0066', statusText, status, message);
-          return {
-            status,
-            success: false,
-            response: message,
-          };
-        } else if (error.isAxiosError) {
-          // axios initiated error: try to parse message from error object
-          let errorMessage: string = error.errno || 'Unknown Axios Error';
-
-          if (typeof error.toJSON === 'function') {
-            const errorObj: { message?: string } = error.toJSON();
-            errorMessage = errorObj?.message ?? errorMessage;
-          }
-
-          log('failedHttpPost_0065', errorMessage);
+    return {
+      status: res.status,
+      success: true,
+      response: res.data,
+    };
+  } catch (error) {
+    return await handleAxiosError(
+      error,
+      interactive,
+      httpsAgent,
+      (mode, token) => postForm(target, mode, token, formData, customHeaders, ca, false),
+      (status, statusText, response) => {
+        if (status === 500) {
+          log('failedHttpPost_0065', response);
           return {
             status: 500,
             success: false,
-            response: errorMessage,
+            response,
           };
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          log('failedHttpPost_0065', error.request);
         } else {
-          // Something happened in setting up the request that triggered an Error
-          log('failedHttpPost_0065', error.message);
+          log('unsuccessfulHttpPost_0066', statusText, status, response);
+          return {
+            status,
+            success: false,
+            response,
+          };
         }
-
-        return {
-          status: 500,
-          success: false,
-          response: undefined,
-        };
       },
     );
+  }
 }
 
 export function postFile(

@@ -1,4 +1,7 @@
-import { defaultRegistry } from './constants';
+import { homedir } from 'os';
+import { resolve } from 'path';
+import { readFile, writeFile } from 'fs/promises';
+import { appName, defaultRegistry } from './constants';
 import { rc } from '../external';
 import { AuthConfig, SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
@@ -69,7 +72,7 @@ export interface PiralCliConfig {
 }
 
 export const config: PiralCliConfig = rc(
-  'piral',
+  appName,
   {
     apiKey: undefined,
     apiKeys: {},
@@ -89,3 +92,34 @@ export const config: PiralCliConfig = rc(
   },
   {},
 );
+
+function mergeConfig<T extends keyof PiralCliConfig>(
+  existing: PiralCliConfig,
+  area: T,
+  value: Partial<PiralCliConfig[T]>,
+) {
+  const current = existing[area];
+
+  // update already existing config
+  Object.assign(existing, {
+    [area]:
+      typeof current === 'object'
+        ? {
+            ...current,
+            ...value,
+          }
+        : value,
+  });
+}
+
+export async function updateConfig<T extends keyof PiralCliConfig>(area: T, value: Partial<PiralCliConfig[T]>) {
+  // update already existing config
+  mergeConfig(config, area, value);
+
+  // update user-global config
+  const path = resolve(homedir(), `.${appName}rc`);
+  const content = await readFile(path, 'utf8').catch(() => '{}');
+  const configFile = JSON.parse(content);
+  mergeConfig(configFile, area, value);
+  await writeFile(path, JSON.stringify(configFile, undefined, 2), 'utf8');
+}
