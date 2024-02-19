@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { LogLevels, NpmClientType } from '../types';
+import { isInteractive } from '../external';
 import {
   installNpmPackage,
   checkExistingDirectory,
@@ -99,7 +100,10 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   }
 
   const npmClient = await determineNpmClient(root, defaultNpmClient);
-  const { apps, piletPackage } = await retrievePiletData(root);
+
+  // in case we run from a user's CLI we want to allow updating
+  const interactive = isInteractive();
+  const { apps, piletPackage } = await retrievePiletData(root, undefined, interactive);
   const { devDependencies = {}, dependencies = {}, source } = piletPackage;
 
   if (apps.length === 0) {

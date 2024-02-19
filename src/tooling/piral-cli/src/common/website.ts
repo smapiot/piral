@@ -8,29 +8,25 @@ import { ForceOverwrite } from './enums';
 import { createDirectory, readJson, writeBinary } from './io';
 import { writeJson } from './io';
 import { progress, log } from './log';
-import { axios } from '../external';
+import { axios, isInteractive } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
-async function requestManifest(url: string, httpsAgent?: Agent) {
+async function requestManifest(url: string, interactive: boolean, httpsAgent?: Agent) {
   const opts = getAxiosOptions(url);
 
   try {
     return await axios.default.get(url, { ...opts, httpsAgent });
   } catch (error) {
-    return await handleAxiosError(error, true, httpsAgent, async (mode, key) => {
+    return await handleAxiosError(error, interactive, httpsAgent, async (mode, key) => {
       const headers = getAuthorizationHeaders(mode, key);
-
-      if (headers.authorization) {
-        await updateConfig('auth', {
-          [url]: {
-            mode: 'header',
-            key: 'authorization',
-            value: headers.authorization,
-          },
-        });
-      }
-
-      return await axios.default.get(url, { headers, httpsAgent });
+      await updateConfig('auth', {
+        [url]: {
+          mode: 'header',
+          key: 'authorization',
+          value: headers.authorization,
+        },
+      });
+      return await requestManifest(url, false, httpsAgent);
     });
   }
 }
@@ -99,13 +95,13 @@ async function createEmulatorFiles(
   await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files, httpsAgent);
 }
 
-export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string) {
+export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string, interactive: boolean) {
   progress(`Updating emulator from %s ...`, manifestUrl);
   const ca = await getCertificate();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
 
   try {
-    const response = await requestManifest(manifestUrl, httpsAgent);
+    const response = await requestManifest(manifestUrl, interactive, httpsAgent);
     const nextEmulator: EmulatorWebsiteManifest = response.data;
     const currentEmulator = await readJson(targetDir, packageJson);
 
@@ -128,7 +124,8 @@ export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: 
   progress(`Downloading emulator from %s ...`, manifestUrl);
   const ca = await getCertificate();
   const httpsAgent = ca ? new Agent({ ca }) : undefined;
-  const response = await requestManifest(manifestUrl, httpsAgent);
+  const interactive = isInteractive();
+  const response = await requestManifest(manifestUrl, interactive, httpsAgent);
   const emulatorJson: EmulatorWebsiteManifest = response.data;
   const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
   const appDir = resolve(targetDir, 'app');
