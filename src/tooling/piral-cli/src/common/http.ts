@@ -244,7 +244,7 @@ export async function postForm(
           return {
             status: 500,
             success: false,
-            response,
+            response: undefined,
           };
         } else {
           log('unsuccessfulHttpPost_0066', statusText, status, response);
