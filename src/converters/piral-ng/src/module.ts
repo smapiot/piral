@@ -30,10 +30,16 @@ const availableModules: Array<ModuleDefinition> = [];
 function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   const { module, components } = moduleDef;
   const imports = [BrowserModule, SharedModule, module];
-  const props = { current: undefined as BehaviorSubject<any> };
+  const props = { current: undefined };
+  const createProxy = () =>
+    new Proxy(props.current, {
+      get(_, name) {
+        return props.current[name];
+      },
+    });
   const providers = [
     RoutingService,
-    { provide: 'Props', useFactory: () => props.current.value, deps: [] },
+    { provide: 'Props', useFactory: createProxy, deps: [] },
     { provide: 'piral', useFactory: () => piral, deps: [] },
   ];
 
@@ -60,7 +66,7 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
 
     attach(component: any, node: HTMLElement, $props: BehaviorSubject<any>) {
       const factory = this.resolver.resolveComponentFactory(component);
-      props.current = $props;
+      props.current = $props.value;
 
       if (factory) {
         const ref = this.zone.run(() => this.appRef.bootstrap<any>(factory, node));
