@@ -30,6 +30,7 @@ module.exports =
         esModule: false,
       },
     };
+    const jitMode = ngOptions.jitMode ?? true;
 
     function findRule(tester, changer) {
       config.module.rules.forEach((rule) => {
@@ -94,11 +95,29 @@ module.exports =
       },
     );
 
+    if (jitMode) {
+      // The job of this plugin is to make angular-core depend on angular-compiler - this way
+      // angular-compiler does not need to be loaded separately and angular-compiler is present
+      // *before* angular-core
+      // this is only required in jit mode - as otherwise everything should be pre-compiled
+      config.plugins.push({
+        apply(compiler) {
+          const { entry } = compiler.options;
+          const core = entry['angular-core'];
+
+          if (typeof core !== 'undefined') {
+            const compilerDependency = resolve(__dirname, 'core-dynamic.js');
+            core.import = [compilerDependency, ...core.import];
+          }
+        },
+      });
+    }
+
     config.plugins.push(
       new AngularWebpackPlugin({
         tsconfig: resolve(process.cwd(), 'tsconfig.json'),
-        jitMode: true,
         ...ngOptions,
+        jitMode,
         compilerOptions: {
           ...compilerOptions,
           compilationMode: 'partial',
