@@ -5223,10 +5223,10 @@ detect-libc@^1.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
 
-dets@^0.14.1:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.14.1.tgz#9ff2c12bb8120110ac9dee0b42e61c6d9540a0ac"
-  integrity sha512-Sh/wYozF+PEbWguCb8joqDfkMiUY5QZczndbjh6E3jwF5gE9hmNf90HIsx0HELcXnNsDMjhsB9j+Nuy5Q6gcOQ==
+dets@^0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.14.2.tgz#9e811c5c3f227c83fd28ece999b673a3e7072c86"
+  integrity sha512-jatRCsNHdeB3OebBudsOWRlp7Ka4/Kbi9PUQllnplXH7rWXl1Qe/G7F2Y5dqz2PYimNCH64lzLMuCLDsnnyEhA==
 
 diff-sequences@^29.6.3:
   version "29.6.3"
@@ -7763,10 +7763,10 @@ kras-management-portal@^0.13.0:
   resolved "https://registry.yarnpkg.com/kras-management-portal/-/kras-management-portal-0.13.0.tgz#550f2797fce399529897aaa871030644d96812c1"
   integrity sha512-NjjXTHKcJ/ECkz03L/HQSUVnkuzZkEV2mwcex36lxJNNwiUrYM5Ju0toAjhLnf8Zpc3nLEPnWKmoTwpSgGim2A==
 
-kras@^0.15.5:
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/kras/-/kras-0.15.5.tgz#c4a1beeff18071d09f911757530dc076b503156b"
-  integrity sha512-+yIK8QlmHkyspGsZ5gHyPK/67G1AwhIb/1Q696tUHRG/hb5sOSQo2sBh0wDt1pKpNXIWiiEiqyUI6sHdXu0R/g==
+kras@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/kras/-/kras-0.16.0.tgz#630803bdd7bb726bde5a25fe6f87cc39eb5f7894"
+  integrity sha512-tTNHboffP5eb2Aag/D+BgQlGMrjA/OWEc0s8zpRWH1f2edb6q1yzsh6mHf7Q9mK1QFQ5QvTjIGhprzT4ydgLgQ==
   dependencies:
     kras-management-portal "^0.13.0"
     yargs "^15.4.1"
