@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.0 (tbd)
+## 1.5.0 (February 25, 2024)
 
 - Fixed error when importing `once` without context (#664)
 - Fixed issue with monorepos using Rush (#667)
