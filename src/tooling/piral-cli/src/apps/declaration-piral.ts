@@ -40,6 +40,8 @@ export async function declarationPiral(baseDir = process.cwd(), options: Declara
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
-  await createPiralDeclaration(fullBase, entry, target, forceOverwrite, logLevel);
-  logDone(`Declaration created successfully in "${target}"!`);
+  
+  if (await createPiralDeclaration(fullBase, entry, target, forceOverwrite, logLevel)) {
+    logDone(`Declaration created successfully in "${target}"!`);
+  }
 }

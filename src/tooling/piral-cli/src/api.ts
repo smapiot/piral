@@ -1,7 +1,6 @@
 import { log, installPatch } from './common';
 import { commands } from './commands';
 import { setBundler } from './bundler';
-import { setReleaseProvider } from './release';
 import { addPiletRule, addPiralRule } from './rules';
 import {
   ToolCommand,
@@ -13,7 +12,6 @@ import {
   PiletRuleContext,
   PackagePatcher,
   BundlerDefinition,
-  ReleaseProvider,
 } from './types';
 
 function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index: number) => void) {
@@ -153,21 +151,6 @@ export function withBundler(name: string, actions: BundlerDefinition) {
     maybeWithFlags('build-piral', actions.buildPiral.flags);
     maybeWithFlags('debug-pilet', actions.debugPilet.flags);
     maybeWithFlags('build-pilet', actions.buildPilet.flags);
-  }
-
-  return this;
-}
-
-export function withReleaseProvider(name: string, action: ReleaseProvider) {
-  if (typeof name !== 'string') {
-    log('apiReleaseProviderInvalid_0207', 'providerName');
-  } else if (typeof action !== 'object') {
-    log('apiReleaseProviderInvalid_0207', 'provider');
-  } else {
-    setReleaseProvider({
-      name,
-      action,
-    });
   }
 
   return this;

@@ -1,5 +1,5 @@
 import { DeclOptions, generateDeclaration, createDiffPlugin, Logger } from 'dets';
-import { dirname, basename, resolve, extname } from 'path';
+import { basename, dirname, extname, join, resolve } from 'path';
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { ForceOverwrite } from './enums';
 import { retrievePiralRoot, retrievePiletsInfo, flattenExternals, validateSharedDependencies } from './package';
@@ -23,17 +23,19 @@ function findPiralBaseRoot(root: string, framework: string) {
   return root;
 }
 
-async function findPiralInstanceApi(piralInstance: string) {
+async function findPiralInstanceApi(root: string, piralInstance: string) {
   if (piralInstance) {
-    const path = require.resolve(`${piralInstance}/${packageJson}`);
-    const root = dirname(path);
-    const data = await readJson(root, packageJson);
+    const path = require.resolve(`${piralInstance}/${packageJson}`, {
+      paths: [join(root, 'node_modules')],
+    });
+    const appRoot = dirname(path);
+    const data = await readJson(appRoot, packageJson);
     const subpath = data.types || data.typings;
 
     if (subpath) {
       return [
         {
-          file: resolve(root, subpath),
+          file: resolve(appRoot, subpath),
           name: piletApiName,
         },
       ];
@@ -128,20 +130,14 @@ function createLogger(): Logger {
 
 async function createDeclarationFile(
   options: DeclOptions,
-  source: string,
   target: string,
   forceOverwrite: ForceOverwrite,
 ) {
   progress('Bundling declaration file ...');
+  const result = await generateDeclaration(options);
 
-  try {
-    const result = await generateDeclaration(options);
-
-    progress('Writing declaration file ...');
-    await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
-  } catch (ex) {
-    log('declarationCouldNotBeGenerated_0076', source, ex);
-  }
+  progress('Writing declaration file ...');
+  await createFileIfNotExists(target, 'index.d.ts', result, forceOverwrite);
 }
 
 export async function createPiletDeclaration(
@@ -155,7 +151,7 @@ export async function createPiletDeclaration(
   logLevel: LogLevels,
 ) {
   const piralInstance = piralInstances[0];
-  const apis = await findPiralInstanceApi(piralInstance);
+  const apis = await findPiralInstanceApi(root, piralInstance);
   const file = apis.map((m) => m.file)[0];
 
   if (file) {
@@ -173,7 +169,15 @@ export async function createPiletDeclaration(
       logLevel,
       logger: createLogger(),
     };
-    return await createDeclarationFile(options, root, target, forceOverwrite);
+
+    try {
+      await createDeclarationFile(options, target, forceOverwrite);
+      return true;
+    } catch (ex) {
+      log('declarationCouldNotBeGenerated_0076', root, ex);
+    }
+
+    return false;
   }
 }
 
@@ -204,8 +208,15 @@ export async function createPiralDeclaration(
   validateSharedDependencies(externals);
 
   if (options.apis.length) {
-    return await createDeclarationFile(options, baseDir, target, forceOverwrite);
+    try {
+      await createDeclarationFile(options, target, forceOverwrite);
+      return true;
+    } catch (ex) {
+      log('declarationCouldNotBeGenerated_0076', baseDir, ex);
+    }
+  } else {
+    log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
   }
 
-  log('declarationCouldNotBeGenerated_0076', baseDir, 'The main Pilet API interface could not be found.');
+  return false;
 }

@@ -70,7 +70,7 @@ async function getConfig(
           new TerserPlugin({
             extractComments: false,
             terserOptions: {
-              ie8: true,
+              ie8: false,
             },
           }),
           new CssMinimizerPlugin(),
@@ -83,9 +83,16 @@ async function getConfig(
   ];
 }
 
+function getRandomPort() {
+  const min = 60000;
+  const max = 65536;
+  const rng = max - min;
+  return ~~(Math.random() * rng) + min;
+}
+
 const handler: PiralBuildHandler = {
   async create(options) {
-    const { 'hmr-port': defaultHmrPort = 62123, config = defaultWebpackConfig } = options.args._;
+    const { 'hmr-port': defaultHmrPort = getRandomPort(), config = defaultWebpackConfig } = options.args._;
     const hmrPort = options.hmr ? await getFreePort(defaultHmrPort) : 0;
     const otherConfigPath = resolve(options.root, config);
     const baseConfig = await getConfig(

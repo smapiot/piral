@@ -3,22 +3,28 @@ import type { PiletRequester } from 'piral-base';
 import type { EmulatorConnectorOptions } from './types';
 
 export function installPiletEmulator(requestPilets: PiletRequester, options: EmulatorConnectorOptions) {
-  const { addPilet, removePilet, integrate, piletApiFallback = '/$pilet-api' } = options;
+  const {
+    addPilet,
+    removePilet,
+    integrate,
+    defaultFeedUrl = 'https://feed.piral.cloud/api/v1/pilet/emulator-website',
+  } = options;
 
   integrate(() => {
     // check if pilets should be loaded
+    const dbgPiletApiKey = 'dbg:pilet-api';
     const loadPilets = sessionStorage.getItem('dbg:load-pilets') === 'on';
     const noPilets: PiletRequester = () => Promise.resolve([]);
     const requester = loadPilets ? requestPilets : noPilets;
     const promise = requester();
 
     // the window['dbg:pilet-api'] should point to an API address used as a proxy, fall back to '/$pilet-api' if unavailable
-    const piletApi = window['dbg:pilet-api'] || piletApiFallback;
+    const feedUrl = window[dbgPiletApiKey] || sessionStorage.getItem(dbgPiletApiKey) || defaultFeedUrl;
 
     // either take a full URI or make it an absolute path relative to the current origin
-    const initialTarget = /^https?:/.test(piletApi)
-      ? piletApi
-      : `${location.origin}${piletApi[0] === '/' ? '' : '/'}${piletApi}`;
+    const initialTarget = /^https?:/.test(feedUrl)
+      ? feedUrl
+      : `${location.origin}${feedUrl[0] === '/' ? '' : '/'}${feedUrl}`;
     const updateTarget = initialTarget.replace('http', 'ws');
     const ws = new WebSocket(updateTarget);
     const timeoutCache = {};
@@ -26,7 +32,15 @@ export function installPiletEmulator(requestPilets: PiletRequester, options: Emu
 
     const appendix = fetch(initialTarget)
       .then((res) => res.json())
-      .then((item) => (Array.isArray(item) ? item : [item]));
+      .then((item) =>
+        Array.isArray(item)
+          ? item
+          : item && typeof item === 'object'
+          ? Array.isArray(item.items)
+            ? item.items
+            : [item]
+          : [],
+      );
 
     ws.onmessage = ({ data }) => {
       const hardRefresh = sessionStorage.getItem('dbg:hard-refresh') === 'on';

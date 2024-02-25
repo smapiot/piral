@@ -208,7 +208,11 @@ export function createDebugHandler(imports: Array<string>, exports: Array<string
 
   // if we build the debug version of piral (debug and emulator build)
   if (debug) {
-    const originalCall = `originalDebugger(context, options, { defaultSettings: ${JSON.stringify(debug)}, ...debug })`;
+    const originalCall = `originalDebugger(context, options, {
+      defaultSettings: ${JSON.stringify(debug)},
+      emulator: ${JSON.stringify(emulator)},
+      ...debug,
+    })`;
     imports.push(`import { integrateDebugger as originalDebugger } from "piral-core/${cat}/tools/debugger"`);
     exports.push(`export function integrateDebugger(context, options, debug) { return ${originalCall}; }`);
   } else {

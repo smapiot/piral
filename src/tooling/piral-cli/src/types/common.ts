@@ -112,9 +112,15 @@ export interface BundleDetails {
 export interface Bundler {
   readonly bundle: BundleDetails;
   start(): void;
+  stop(): Promise<void>;
   on(cb: (args: any) => void): void;
   off(cb: (args: any) => void): void;
   ready(): Promise<void>;
+}
+
+export interface NetworkSpec {
+  port: number;
+  type: 'proposed' | 'fixed';
 }
 
 export interface PlatformStartModuleOptions {
@@ -124,7 +130,7 @@ export interface PlatformStartModuleOptions {
   feed: string | Array<string>;
   publicUrl: string;
   customkrasrc: string;
-  originalPort: number;
+  network: NetworkSpec;
   hooks: Record<string, Function>;
   registerWatcher(file: string): void;
   registerEnd(cb: () => void): void;
@@ -142,10 +148,10 @@ export interface PlatformStartShellOptions {
   publicUrl: string;
   bundler: Bundler;
   customkrasrc: string;
-  originalPort: number;
+  network: NetworkSpec;
   hooks: Record<string, Function>;
   registerWatcher(file: string): void;
-  registerEnd(cb: () => void): void;
+  registerEnd(cb: () => void | Promise<void>): void;
 }
 
 export interface ReleaseProvider {

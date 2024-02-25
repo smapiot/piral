@@ -1,5 +1,21 @@
 # Piral Changelog
 
+## 1.5.0 (tbd)
+
+- Fixed error when importing `once` without context (#664)
+- Fixed issue with monorepos using Rush (#667)
+- Fixed issue with blocked port in case of full debug reload (#671)
+- Fixed `@Inject` with multiple instances in `piral-ng` (#673)
+- Fixed standalone pilets depending on `@angular/compiler`
+- Removed legacy option in `piral-cli-webpack5` to support IE8
+- Removed pilet-related options in debug settings when running `piral debug` (#670)
+- Improved internal navigation Blazor pilets using `piral-blazor`
+- Updated dependencies
+- Updated `kras` to `v0.16` to fix some issues and remove `request`
+- Updated `piral publish` command to work exclusively for emulator websites
+- Added special entry point to emulator website when accessed online (#654)
+- Added feed selection view for remote emulator website (#654)
+
 ## 1.4.3 (December 26, 2023)
 
 - Fixed issue with `piral-blazor` using routing in standalone mode

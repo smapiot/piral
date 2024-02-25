@@ -2,6 +2,7 @@ import * as React from 'react';
 
 export interface FooterMenuProps {
   title: string;
+  children: React.ReactNode;
 }
 
 export const FooterMenu: React.FC<FooterMenuProps> = ({ title, children }) => (

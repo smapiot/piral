@@ -41,6 +41,11 @@ export const Footer: React.FC = () => (
               </a>
             </li>
             <li>
+              <a href="https://www.piral.io/oss-friends" target="_blank">
+                Open-Source Friends
+              </a>
+            </li>
+            <li>
               <a href="https://status.piral.io" target="_blank">
                 Status
               </a>
@@ -79,6 +84,11 @@ export const Footer: React.FC = () => (
             <li>
               <a href="https://github.com/smapiot/piral/issues" target="_blank">
                 Issue Tracker
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/piral-samples" target="_blank">
+                Sample Codes
               </a>
             </li>
           </FooterMenu>

@@ -1,16 +1,25 @@
 import { resolve } from 'path';
-import { publishArtifacts } from '../release';
-import { LogLevels, PiralBuildType } from '../types';
+import { LogLevels, PublishScheme } from '../types';
 import {
   setLogLevel,
   progress,
-  checkExists,
   fail,
   logDone,
-  logReset,
-  publishNpmPackage,
-  matchFiles,
   log,
+  config,
+  emulatorName,
+  emulatorJson,
+  publishWebsiteEmulator,
+  matchFiles,
+  readJson,
+  triggerBuildEmulator,
+  logReset,
+  emulatorWebsiteName,
+  retrievePiralRoot,
+  emulatorPackageName,
+  retrievePiletsInfo,
+  validateSharedDependencies,
+  getCertificate,
 } from '../common';
 
 export interface PublishPiralOptions {
@@ -20,14 +29,35 @@ export interface PublishPiralOptions {
   source?: string;
 
   /**
+   * Sets the URL of the feed service to deploy to.
+   */
+  url?: string;
+
+  /**
+   * Sets the API key to use.
+   */
+  apiKey?: string;
+
+  /**
    * Sets the log level to use (1-5).
    */
   logLevel?: LogLevels;
 
   /**
-   * The options to supply for the provider.
+   * Specifies if the Piral instance should be built before publishing.
+   * If yes, then the tarball is created from fresh build artifacts.
    */
-  opts?: Record<string, string>;
+  fresh?: boolean;
+
+  /**
+   * Defines a custom certificate for the feed service.
+   */
+  cert?: string;
+
+  /**
+   * Places additional headers that should be posted to the feed service.
+   */
+  headers?: Record<string, string>;
 
   /**
    * Defines if authorization tokens can be retrieved interactively.
@@ -35,104 +65,135 @@ export interface PublishPiralOptions {
   interactive?: boolean;
 
   /**
-   * The provider to use for publishing the release artifacts.
+   * Sets the bundler to use for building, if any specific.
    */
-  provider?: string;
+  bundlerName?: string;
 
   /**
-   * The type of publish.
+   * Sets the authorization scheme to use.
    */
-  type?: PiralBuildType;
+  mode?: PublishScheme;
+
+  /**
+   * Additional arguments for a specific bundler.
+   */
+  _?: Record<string, any>;
+
+  /**
+   * Hooks to be triggered at various stages.
+   */
+  hooks?: {
+    beforeEmulator?(e: any): Promise<void>;
+    afterEmulator?(e: any): Promise<void>;
+    beforePackage?(e: any): Promise<void>;
+    afterPackage?(e: any): Promise<void>;
+  };
 }
 
 export const publishPiralDefaults: PublishPiralOptions = {
   source: './dist',
   logLevel: LogLevels.info,
-  type: 'all',
-  provider: 'none',
-  opts: {},
+  url: undefined,
   interactive: false,
+  apiKey: undefined,
+  fresh: false,
+  cert: undefined,
+  mode: 'basic',
+  headers: {},
 };
-
-async function publishEmulator(
-  baseDir: string,
-  source: string,
-  args: Record<string, string> = {},
-  interactive = false,
-) {
-  const type = 'emulator';
-  const directory = resolve(baseDir, source, type);
-  const exists = await checkExists(directory);
-
-  if (!exists) {
-    fail('publishDirectoryMissing_0110', directory);
-  }
-
-  const files = await matchFiles(directory, '*.tgz');
-  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
-
-  if (files.length !== 1) {
-    fail('publishEmulatorFilesUnexpected_0111', directory);
-  }
-
-  const [file] = files;
-  const flags = Object.keys(args).reduce((p, c) => {
-    p.push(`--${c}`, args[c]);
-    return p;
-  }, [] as Array<string>);
-
-  await publishNpmPackage(directory, file, flags, interactive);
-}
-
-async function publishRelease(
-  baseDir: string,
-  source: string,
-  providerName: string,
-  args: Record<string, string> = {},
-  interactive = false,
-) {
-  const type = 'release';
-  const directory = resolve(baseDir, source, type);
-  const exists = await checkExists(directory);
-
-  if (!exists) {
-    fail('publishDirectoryMissing_0110', directory);
-  }
-
-  const files = await matchFiles(directory, '**/*');
-  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
-  await publishArtifacts(providerName, directory, files, args, interactive);
-}
 
 export async function publishPiral(baseDir = process.cwd(), options: PublishPiralOptions = {}) {
   const {
     source = publishPiralDefaults.source,
-    type = publishPiralDefaults.type,
     logLevel = publishPiralDefaults.logLevel,
-    opts = publishPiralDefaults.opts,
-    provider = publishPiralDefaults.provider,
     interactive = publishPiralDefaults.interactive,
+    fresh = publishPiralDefaults.fresh,
+    url = config.url ?? publishPiralDefaults.url,
+    apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiralDefaults.apiKey,
+    cert = publishPiralDefaults.cert,
+    headers = publishPiralDefaults.headers,
+    mode = publishPiralDefaults.mode,
+    _ = {},
+    hooks = {},
+    bundlerName,
   } = options;
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
-
-  if (type === 'emulator-sources') {
-    fail('publishEmulatorSourcesInvalid_0114');
-  }
-
   progress('Reading configuration ...');
 
-  if (type !== 'release') {
-    progress('Publishing emulator package ...');
-    await publishEmulator(fullBase, source, opts, interactive);
-    logDone(`Successfully published emulator.`);
+  if (!url) {
+    fail('missingPiletFeedUrl_0060');
+  }
+
+  const ca = await getCertificate(cert);
+
+  log('generalDebug_0003', 'Getting the files ...');
+  const entryFiles = await retrievePiralRoot(fullBase, './');
+  const {
+    name,
+    root,
+    ignored,
+    externals,
+    scripts,
+    emulator = emulatorPackageName,
+  } = await retrievePiletsInfo(entryFiles);
+
+  if (emulator !== emulatorWebsiteName) {
+    fail('generalError_0002', `Currently only the "${emulatorWebsiteName}" option is supported.`);
+  }
+
+  const emulatorDir = resolve(fullBase, source, emulatorName);
+
+  if (fresh) {
+    const piralInstances = [name];
+
+    validateSharedDependencies(externals);
+
+    await triggerBuildEmulator({
+      root,
+      logLevel,
+      bundlerName,
+      emulatorType: emulatorWebsiteName,
+      hooks,
+      targetDir: emulatorDir,
+      ignored,
+      externals,
+      entryFiles,
+      piralInstances,
+      optimizeModules: true,
+      sourceMaps: true,
+      watch: false,
+      scripts,
+      contentHash: true,
+      outFile: 'index.html',
+      _,
+    });
+
     logReset();
   }
 
-  if (type !== 'emulator') {
-    progress('Publishing release files ...');
-    await publishRelease(fullBase, source, provider, opts, interactive);
-    logDone(`Successfully published release.`);
-    logReset();
+  const { version } = await readJson(emulatorDir, emulatorJson);
+
+  if (!version) {
+    fail('missingEmulatorWebsite_0130', emulatorDir);
   }
+
+  log('generalInfo_0000', `Using feed service "${url}".`);
+
+  const files = await matchFiles(emulatorDir, '**/*');
+
+  progress(`Publishing emulator to "%s" ...`, url);
+  const result = await publishWebsiteEmulator(version, url, apiKey, mode, emulatorDir, files, interactive, headers, ca);
+
+  if (!result.success) {
+    fail('failedUploading_0064');
+  }
+
+  if (result.response) {
+    log('httpPostResponse_0067', result);
+  }
+
+  progress(`Published successfully!`);
+
+  logDone(`Emulator published successfully!`);
 }

@@ -152,7 +152,7 @@ export interface PiletV2Entry {
 }
 
 /**
- * Metadata for pilets using the v2 schema.
+ * Metadata for pilets using the v3 schema.
  */
 export interface PiletV3Entry {
   /**

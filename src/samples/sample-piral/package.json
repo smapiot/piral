@@ -60,6 +60,7 @@
   "scripts": {
     "build": "tsc",
     "build:emulator-sources": "piral build --type emulator-sources --bundler webpack5",
+    "build:emulator-website": "piral build --type emulator-website --bundler webpack5",
     "build:release": "piral build --type release --bundler webpack5",
     "test": "echo \"Error: run tests from root\" && exit 1"
   }

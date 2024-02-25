@@ -1,18 +1,15 @@
-import { dirname, basename, resolve, relative } from 'path';
+import { dirname, resolve } from 'path';
 import { LogLevels, PiletBuildType, PiletSchemaVersion } from '../types';
-import { callPiletBuild, callPiralBuild } from '../bundler';
+import { callPiralBuild } from '../bundler';
 import {
   removeDirectory,
-  retrievePiletData,
   setLogLevel,
   progress,
   logDone,
   logInfo,
-  createPiletDeclaration,
   ForceOverwrite,
   matchAnyPilet,
   fail,
-  config,
   log,
   writeJson,
   getPiletSpecMeta,
@@ -22,11 +19,9 @@ import {
   cpuCount,
   concurrentWorkers,
   normalizePublicUrl,
-  combinePiletExternals,
   retrievePiletsInfo,
-  validateSharedDependencies,
-  defaultSchemaVersion,
   flattenExternals,
+  triggerBuildPilet,
 } from '../common';
 
 interface PiletData {
@@ -217,66 +212,23 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   }
 
   const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
-    const targetDir = dirname(entryModule);
-    const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } =
-      await retrievePiletData(targetDir, app);
-    const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
-    const piralInstances = apps.map((m) => m.appPackage.name);
-    const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
-    const dest = resolve(root, target);
-    const outDir = dirname(dest);
-    const outFile = basename(dest);
-
-    validateSharedDependencies(importmap);
-
-    if (fresh) {
-      progress('Removing output directory ...');
-      await removeDirectory(outDir);
-    }
-
-    logInfo('Bundle pilet ...');
-
-    await hooks.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
-
-    await callPiletBuild(
-      {
-        root,
-        piralInstances,
-        optimizeModules,
-        sourceMaps,
-        watch,
-        contentHash,
-        minify,
-        externals,
-        targetDir,
-        importmap,
-        outFile,
-        outDir,
-        entryModule: `./${relative(root, entryModule)}`,
-        logLevel,
-        version: schemaVersion,
-        ignored,
-        _,
-      },
+    const { piletPackage, root, outDir, apps, outFile, dest } = await triggerBuildPilet({
+      _,
+      app,
       bundlerName,
-    );
-
-    await hooks.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
-
-    if (declaration) {
-      await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
-      await createPiletDeclaration(
-        piletPackage.name,
-        piralInstances,
-        root,
-        entryModule,
-        externals,
-        outDir,
-        ForceOverwrite.yes,
-        logLevel,
-      );
-      await hooks.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
-    }
+      contentHash,
+      entryModule,
+      fresh,
+      logLevel,
+      minify,
+      optimizeModules,
+      originalSchemaVersion,
+      sourceMaps,
+      target,
+      watch,
+      hooks,
+      declaration,
+    });
 
     logDone(`Pilet "${piletPackage.name}" built successfully!`);
 

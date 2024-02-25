@@ -1,43 +1,49 @@
+import { Agent } from 'https';
 import { join, relative, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
-import { config } from './config';
+import { getAuthorizationHeaders, getAxiosOptions, getCertificate, handleAxiosError } from './http';
 import { packageJson } from './constants';
+import { updateConfig } from './config';
 import { ForceOverwrite } from './enums';
 import { createDirectory, readJson, writeBinary } from './io';
 import { writeJson } from './io';
 import { progress, log } from './log';
-import { axios } from '../external';
+import { axios, isInteractive } from '../external';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
-function requestManifest(url: string) {
-  const auth = config.auth?.[url];
+async function requestManifest(url: string, interactive: boolean, httpsAgent?: Agent) {
+  const opts = getAxiosOptions(url);
 
-  switch (auth?.mode) {
-    case 'header':
-      return axios.default.get(url, {
-        headers: {
-          [auth.key]: auth.value,
+  try {
+    return await axios.default.get(url, { ...opts, httpsAgent });
+  } catch (error) {
+    return await handleAxiosError(error, interactive, httpsAgent, async (mode, key) => {
+      const headers = getAuthorizationHeaders(mode, key);
+      await updateConfig('auth', {
+        [url]: {
+          mode: 'header',
+          key: 'authorization',
+          value: headers.authorization,
         },
       });
-    case 'http':
-      return axios.default.get(url, {
-        auth: {
-          username: auth.username,
-          password: auth.password,
-        },
-      });
-    default:
-      return axios.default.get(url);
+      return await requestManifest(url, false, httpsAgent);
+    });
   }
 }
 
-async function downloadEmulatorFiles(manifestUrl: string, target: string, files: EmulatorWebsiteManifestFiles) {
+async function downloadEmulatorFiles(
+  manifestUrl: string,
+  target: string,
+  files: EmulatorWebsiteManifestFiles,
+  httpsAgent?: Agent,
+) {
   const requiredFiles = [files.typings, files.main, files.app];
+  const opts = getAxiosOptions(manifestUrl);
 
   await Promise.all(
     requiredFiles.map(async (file) => {
       const url = new URL(file, manifestUrl);
-      const res = await axios.default.get(url.href, { responseType: 'arraybuffer' });
+      const res = await axios.default.get(url.href, { ...opts, httpsAgent, responseType: 'arraybuffer' });
       const data: Buffer = res.data;
       await writeBinary(target, file, data);
     }),
@@ -49,6 +55,7 @@ async function createEmulatorFiles(
   appDir: string,
   manifestUrl: string,
   emulatorJson: EmulatorWebsiteManifest,
+  httpsAgent?: Agent,
 ) {
   const mainFile = 'index.js';
   const appDirName = relative(targetDir, appDir);
@@ -85,14 +92,16 @@ async function createEmulatorFiles(
     outFile: emulatorJson.files.main,
   });
 
-  await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files);
+  await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files, httpsAgent);
 }
 
-export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string) {
+export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string, interactive: boolean) {
   progress(`Updating emulator from %s ...`, manifestUrl);
+  const ca = await getCertificate();
+  const httpsAgent = ca ? new Agent({ ca }) : undefined;
 
   try {
-    const response = await requestManifest(manifestUrl);
+    const response = await requestManifest(manifestUrl, interactive, httpsAgent);
     const nextEmulator: EmulatorWebsiteManifest = response.data;
     const currentEmulator = await readJson(targetDir, packageJson);
 
@@ -101,7 +110,7 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
     } else if (currentEmulator.piralCLI.timstamp !== nextEmulator.timestamp) {
       log('generalDebug_0003', `The timestamp on "${currentEmulator.name}" is different (${nextEmulator.timestamp}).`);
       const appDir = resolve(targetDir, 'app');
-      await createEmulatorFiles(targetDir, appDir, manifestUrl, nextEmulator);
+      await createEmulatorFiles(targetDir, appDir, manifestUrl, nextEmulator, httpsAgent);
     } else {
       log('generalDebug_0003', `Nothing to update for "${currentEmulator.name}".`);
     }
@@ -113,11 +122,14 @@ export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: 
 
 export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string) {
   progress(`Downloading emulator from %s ...`, manifestUrl);
-  const response = await requestManifest(manifestUrl);
+  const ca = await getCertificate();
+  const httpsAgent = ca ? new Agent({ ca }) : undefined;
+  const interactive = isInteractive();
+  const response = await requestManifest(manifestUrl, interactive, httpsAgent);
   const emulatorJson: EmulatorWebsiteManifest = response.data;
   const targetDir = resolve(rootDir, 'node_modules', emulatorJson.name);
   const appDir = resolve(targetDir, 'app');
   await createDirectory(appDir);
-  await createEmulatorFiles(targetDir, appDir, manifestUrl, emulatorJson);
+  await createEmulatorFiles(targetDir, appDir, manifestUrl, emulatorJson, httpsAgent);
   return { name: emulatorJson.name, path: targetDir };
 }

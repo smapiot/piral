@@ -30,6 +30,9 @@
     "./convert": {
       "import": "./convert.js"
     },
+    "./core-dynamic": {
+      "import": "./core-dynamic.js"
+    },
     "./extend-webpack": {
       "require": "./extend-webpack.js"
     },
@@ -54,6 +57,7 @@
     "common.js",
     "convert.d.ts",
     "convert.js",
+    "core-dynamic.js",
     "extend-webpack.js"
   ],
   "repository": {

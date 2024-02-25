@@ -1,9 +1,10 @@
 import { LoadPiletsOptions } from 'piral-base';
-import { installPiletEmulator } from 'piral-debug-utils';
+import { DebuggerExtensionOptions, installPiletEmulator } from 'piral-debug-utils';
 import { GlobalStateContext } from '../types';
 
-export function integrateEmulator(context: GlobalStateContext, options: LoadPiletsOptions) {
+export function integrateEmulator(context: GlobalStateContext, options: LoadPiletsOptions, debug: DebuggerExtensionOptions = {}) {
   installPiletEmulator(options.fetchPilets, {
+    defaultFeedUrl: debug.defaultFeedUrl,
     addPilet: context.addPilet,
     removePilet: context.removePilet,
     integrate(requester) {

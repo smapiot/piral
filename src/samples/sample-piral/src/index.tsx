@@ -7,6 +7,8 @@ import { createSearchApi } from 'piral-search';
 import { setupFooter, setupMenu } from './parts';
 import { layout, errors } from './layout';
 
+const defaultFeedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
+
 const instance = createInstance({
   plugins: [
     createAuthApi(),
@@ -24,8 +26,11 @@ const instance = createInstance({
       },
     }),
   ],
+  debug: {
+    defaultFeedUrl,
+  },
   requestPilets() {
-    return fetch('https://feed.piral.cloud/api/v1/pilet/sample')
+    return fetch(defaultFeedUrl)
       .then((res) => res.json())
       .then((res) => res.items);
   },

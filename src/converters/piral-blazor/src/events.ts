@@ -61,7 +61,9 @@ function findTarget(target: HTMLElement = document.body) {
 }
 
 function dispatchToRoot(event: any) {
-  isInternalNavigation(event) && performInternalNavigation(event);
+  if (isInternalNavigation(event)) {
+    performInternalNavigation(event);
+  }
 
   // the mutation event cannot be cloned (at least in Webkit-based browsers)
   if (!(event instanceof MutationEvent) && !event.processed) {

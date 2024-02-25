@@ -74,7 +74,7 @@ async function getConfig(
           new TerserPlugin({
             extractComments: false,
             terserOptions: {
-              ie8: true,
+              ie8: false,
               output: {
                 comments: /^@pilet/,
               },

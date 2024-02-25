@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from 'path';
 import { callPiralDebug } from '../bundler';
-import { LogLevels } from '../types';
+import { LogLevels, NetworkSpec } from '../types';
 import {
   retrievePiletsInfo,
   retrievePiralRoot,
@@ -124,6 +124,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const network: NetworkSpec = {
+    port: originalPort,
+    type: 'proposed',
+  };
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
@@ -142,9 +146,6 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
 
     await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, piralInstances });
 
-    watcherContext.watch(join(root, packageJson));
-    watcherContext.watch(join(root, piralJson));
-
     const bundler = await callPiralDebug(
       {
         root,
@@ -161,6 +162,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       },
       bundlerName,
     );
+
+    watcherContext.watch(join(root, packageJson));
+    watcherContext.watch(join(root, piralJson));
+    watcherContext.onClean(() => bundler.stop());
 
     bundler.ready().then(() => logDone(`Ready!`));
 
@@ -186,7 +191,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       fullBase,
       hooks,
       open,
-      originalPort,
+      network,
       publicUrl,
       root,
       targetDir,

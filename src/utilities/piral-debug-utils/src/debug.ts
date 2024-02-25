@@ -17,16 +17,40 @@ export function installPiralDebug(options: DebuggerOptions) {
     updatePilet,
     addPilet,
     navigate,
+    emulator = true,
     customSettings = {},
     defaultSettings = {},
   } = options;
   const events = [];
   const legacyBrowser = !new Error().stack;
-  const initialSettings = getInitialSettings(defaultSettings);
-  const excludedRoutes = [initialSettings.cataloguePath];
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
   let setValue = initialSetter;
+
+  const initialSettings = getInitialSettings(defaultSettings);
+
+  const emulatorSettings: Record<string, DebugCustomSetting> = emulator
+    ? {
+        loadPilets: {
+          value: initialSettings.loadPilets,
+          type: 'boolean',
+          label: 'Load available pilets',
+          group: 'general',
+          onChange(value) {
+            setValue(settingsKeys.loadPilets, value ? 'on' : 'off');
+          },
+        },
+        hardRefresh: {
+          value: initialSettings.hardRefresh,
+          type: 'boolean',
+          label: 'Full refresh on change',
+          group: 'general',
+          onChange(value) {
+            setValue(settingsKeys.hardRefresh, value ? 'on' : 'off');
+          },
+        },
+      }
+    : {};
 
   const settings: Record<string, DebugCustomSetting> = {
     ...customSettings,
@@ -34,30 +58,17 @@ export function installPiralDebug(options: DebuggerOptions) {
       value: initialSettings.viewState,
       type: 'boolean',
       label: 'State container logging',
+      group: 'general',
       onChange(value) {
         setValue(settingsKeys.viewState, value ? 'on' : 'off');
       },
     },
-    loadPilets: {
-      value: initialSettings.loadPilets,
-      type: 'boolean',
-      label: 'Load available pilets',
-      onChange(value) {
-        setValue(settingsKeys.loadPilets, value ? 'on' : 'off');
-      },
-    },
-    hardRefresh: {
-      value: initialSettings.hardRefresh,
-      type: 'boolean',
-      label: 'Full refresh on change',
-      onChange(value) {
-        setValue(settingsKeys.hardRefresh, value ? 'on' : 'off');
-      },
-    },
+    ...emulatorSettings,
     viewOrigins: {
       value: initialSettings.viewOrigins,
       type: 'boolean',
       label: 'Visualize component origins',
+      group: 'extensions',
       onChange(value, prev) {
         setValue(settingsKeys.viewOrigins, value ? 'on' : 'off');
 
@@ -70,6 +81,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       value: initialSettings.extensionCatalogue,
       type: 'boolean',
       label: 'Enable extension catalogue',
+      group: 'extensions',
       onChange(value) {
         setValue(settingsKeys.extensionCatalogue, value ? 'on' : 'off');
       },
@@ -78,6 +90,7 @@ export function installPiralDebug(options: DebuggerOptions) {
       value: initialSettings.clearConsole,
       type: 'boolean',
       label: 'Clear console during HMR',
+      group: 'general',
       onChange(value) {
         setValue(settingsKeys.clearConsole, value ? 'on' : 'off');
       },
@@ -86,11 +99,14 @@ export function installPiralDebug(options: DebuggerOptions) {
       value: initialSettings.persistSettings,
       type: 'boolean',
       label: 'Persist settings',
+      group: 'inspector',
       onChange(value) {
         setValue = value ? enablePersistance() : disablePersistance();
       },
     },
   };
+
+  const excludedRoutes = [initialSettings.cataloguePath];
 
   if (initialSettings.viewOrigins) {
     createVisualizer();

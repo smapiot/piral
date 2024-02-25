@@ -2586,6 +2586,28 @@ export function requiredEmulatorAssetDownloadSkipped_0123(url: string): QuickMes
 }
 
 /**
+ * @kind Error
+ *
+ * @summary
+ * The emulator.json and associated files could not be found in the source directory.
+ *
+ * @abstract
+ * Only an emulator website can be published using `piral publish`. Other artifacts such as
+ * standard release artifacts or the package emulator (tgz) need to be published using other
+ * mechanisms such as `npm publish`.
+ * 
+ * If no emulator website exists you can either build one using the `--fresh` flag with
+ * `piral publish` (i.e., `piral publish --fresh`) or preparing the build using `piral build`
+ * with the `--type emulator-website` flag.
+ *
+ * @see
+ * - [Emulator](https://docs.piral.io/concepts/T01-emulator)
+ */
+export function missingEmulatorWebsite_0130(path: string): QuickMessage {
+  return [LogLevels.error, '0130', `Could not find the files for an emulator website at "${path}".`];
+}
+
+/**
  * @kind Warning
  *
  * @summary

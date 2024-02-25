@@ -363,6 +363,8 @@ Depending on your Angular needs you'd want to share more packages.
 
 Depending on the mounted component different services are injected. the following table lists the names of the injected services per component type.
 
+**Important**: These are all meant as constructor injectors. As injected services are always singletons in Angular you will *never* receive a changed value on them. Therefore, only use these values in the constructor and **don't** capture them. You might capture / store values *inside* the props (e.g., `props.params`), but don't capture the injected props. Instead, use `@Input` (see next section) if you need to continuously monitor the props.
+
 | Component | Props   | Piral   | Context   |
 |-----------|---------|---------|-----------|
 | Tile      | `Props` | `piral` | `Context` |
@@ -379,12 +381,15 @@ The following code snippet illustrates the injection of the `Props` service from
 @Component({
   template: `
     <div class="tile">
-      <p>{{ props.rows }} rows and {{ props.columns }} columns</p>
+      <p>{{ rows }} rows and {{ cols }} columns</p>
     </div>
   `,
 })
 export class SampleTileComponent {
-  constructor(@Inject('Props') public props: TileComponentProps<any>) {}
+  constructor(@Inject('Props') props: TileComponentProps<any>) {
+    this.rows = props.rows;
+    this.cols = props.columns;
+  }
 }
 ```
 

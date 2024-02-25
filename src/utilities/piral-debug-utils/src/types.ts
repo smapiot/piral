@@ -14,10 +14,13 @@ export interface DefaultDebugSettings {
   clearConsole?: boolean;
 }
 
-export interface EmulatorConnectorOptions {
+export interface EmulatorBaseOptions {
+  defaultFeedUrl?: string;
+}
+
+export interface EmulatorConnectorOptions extends EmulatorBaseOptions {
   addPilet(pilet: PiletEntry): Promise<void>;
   removePilet(name: string): Promise<void>;
-  piletApiFallback?: string;
   integrate(requester: PiletRequester): void;
 }
 
@@ -64,14 +67,16 @@ export interface DebugCustomStringSetting {
 
 export type DebugCustomSetting = (DebugCustomBooleanSetting | DebugCustomNumberSetting | DebugCustomStringSetting) & {
   label: string;
+  group?: string;
 };
 
-export interface DebuggerExtensionOptions {
+export interface DebuggerBaseOptions {
   customSettings?: Record<string, DebugCustomSetting>;
   defaultSettings?: DefaultDebugSettings;
+  emulator?: boolean;
 }
 
-export interface DebuggerOptions extends DebuggerExtensionOptions {
+export interface DebuggerOptions extends DebuggerBaseOptions {
   getDependencies(): Array<string>;
   fireEvent(name: string, arg: any): void;
   getGlobalState(): any;
@@ -84,3 +89,5 @@ export interface DebuggerOptions extends DebuggerExtensionOptions {
   updatePilet(data: any): void;
   navigate(path: string, state?: any): void;
 }
+
+export type DebuggerExtensionOptions = DebuggerBaseOptions & EmulatorBaseOptions;

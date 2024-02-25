@@ -1,6 +1,6 @@
 import { join, dirname, resolve, relative, basename } from 'path';
 import { callDebugPiralFromMonoRepo, callPiletDebug } from '../bundler';
-import { AppDefinition, LogLevels, PiletSchemaVersion } from '../types';
+import { AppDefinition, LogLevels, NetworkSpec, PiletSchemaVersion } from '../types';
 import {
   checkExistingDirectory,
   retrievePiletData,
@@ -230,6 +230,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   } = options;
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
+  const networks: Array<NetworkSpec> = [];
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
@@ -274,9 +275,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
       await hooks.beforeBuild?.({ root, publicUrl, importmap, entryModule, schemaVersion });
 
-      watcherContext.watch(join(root, packageJson));
-      watcherContext.watch(join(root, piletJson));
-
       const bundler = await callPiletDebug(
         {
           root,
@@ -296,6 +294,10 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         },
         bundlerName,
       );
+
+      watcherContext.watch(join(root, packageJson));
+      watcherContext.watch(join(root, piletJson));
+      watcherContext.onClean(() => bundler.stop());
 
       bundler.on((args) => {
         hooks.afterBuild?.({
@@ -341,7 +343,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     await Promise.all(
       appInstances.sort(byPort).map(async ([appDir, appPort], i) => {
         const platform = configurePlatform();
-        const suggestedPort = appPort || originalPort + i;
+
+        if (networks.length === i) {
+          networks.push({
+            port: appPort || originalPort + i,
+            type: 'proposed',
+          });
+        }
 
         await platform.startModule({
           appDir,
@@ -351,7 +359,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           fullBase,
           hooks,
           open,
-          originalPort: suggestedPort,
+          network: networks[i],
           publicUrl,
           maxListeners,
           registerEnd(cb) {
