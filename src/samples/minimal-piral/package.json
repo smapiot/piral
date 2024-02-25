@@ -1,7 +1,7 @@
 {
   "name": "minimal-piral",
   "private": true,
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "Example project illustrating the exposure of a minimal Pilet API.",
   "keywords": [
     "portal",
@@ -35,15 +35,15 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "piral-core": "^1.4.3"
+    "piral-core": "^1.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
-    "piral-cli": "^1.4.3",
-    "piral-cli-webpack5": "^1.4.3"
+    "piral-cli": "^1.5.0",
+    "piral-cli-webpack5": "^1.5.0"
   },
   "pilets": {},
   "scripts": {
