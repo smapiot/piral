@@ -14,6 +14,7 @@ import {
   bundlerKeys,
   piralBuildTypeKeys,
   publishModeKeys,
+  piralPublishTypeKeys,
 } from './helpers';
 import {
   ToolCommand,
@@ -26,6 +27,7 @@ import {
   PiletBuildType,
   PublishScheme,
   SourceLanguage,
+  PiralPublishType,
 } from './types';
 
 function specializeCommand(commands: Array<ToolCommand<any>>, command: ToolCommand<any>, suffix: string) {
@@ -232,6 +234,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('interactive')
         .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
         .default('interactive', apps.publishPiralDefaults.interactive)
+        .choices('type', piralPublishTypeKeys)
+        .describe('type', 'Selects the target type of the publish.')
+        .default('type', apps.publishPiralDefaults.type)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -246,8 +251,10 @@ const allCommands: Array<ToolCommand<any>> = [
         interactive: args.interactive as boolean,
         mode: args.mode as PublishScheme,
         bundlerName: args.bundler as string,
+        type: args.type as PiralPublishType,
         fresh: args.fresh as boolean,
         headers: args.headers as Record<string, string>,
+        hooks: args.hooks as object,
         _: args,
       });
     },

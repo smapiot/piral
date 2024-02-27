@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.1 (tbd)
+
+- Added `--type` flag to `piral publish` command
+
 ## 1.5.0 (February 25, 2024)
 
 - Fixed error when importing `once` without context (#664)

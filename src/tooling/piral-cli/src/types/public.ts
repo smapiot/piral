@@ -253,6 +253,10 @@ export type PiralBuildType =
   | 'emulator-sources'
   | 'emulator-website';
 
+export type PiralPublishType =
+  | 'release'
+  | 'emulator';
+
 export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
 export type PackageType = 'registry' | 'file' | 'git' | 'remote';

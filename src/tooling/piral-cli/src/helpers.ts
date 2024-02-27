@@ -9,6 +9,7 @@ import type {
   PiletBuildType,
   PublishScheme,
   SourceLanguage,
+  PiralPublishType,
 } from './types';
 
 export const schemaKeys: Array<PiletSchemaVersion> = ['v0', 'v1', 'v2', 'v3', 'mf', 'none'];
@@ -22,6 +23,7 @@ export const piralBuildTypeKeys: Array<PiralBuildType> = [
   'emulator-sources',
   'emulator-website',
 ];
+export const piralPublishTypeKeys: Array<PiralPublishType> = ['release', 'emulator'];
 export const piletBuildTypeKeys: Array<PiletBuildType> = ['default', 'standalone', 'manifest'];
 export const clientTypeKeys: Array<NpmClientType> = ['npm', 'pnpm', 'pnp', 'yarn', 'lerna', 'rush', 'bun'];
 export const sourceLanguageKeys: Array<SourceLanguage> = ['ts', 'js'];
