@@ -19,10 +19,12 @@ import {
   emulatorPackageName,
   retrievePiletsInfo,
   validateSharedDependencies,
+  publishNpmPackage,
   getCertificate,
   releaseName,
   packageJson,
   triggerBuildShell,
+  publishPackageEmulator,
 } from '../common';
 
 export interface PublishPiralOptions {
@@ -148,8 +150,8 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     emulator = emulatorPackageName,
   } = await retrievePiletsInfo(entryFiles);
 
-  if (type === 'emulator' && emulator !== emulatorWebsiteName) {
-    fail('generalError_0002', `Currently only the "${emulatorWebsiteName}" option is supported.`);
+  if (type === 'emulator' && ![emulatorPackageName, emulatorWebsiteName].includes(emulator)) {
+    fail('generalError_0002', `The emulator type "${emulator}" is not supported. Select one of these types to use the publish command: "${emulatorWebsiteName}", "${emulatorPackageName}".`);
   }
 
   const dir = type === 'release' ? releaseName : emulatorName;
@@ -226,7 +228,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     progress(`Published successfully!`);
   
     logDone(`Release artifacts published successfully!`);
-  } else {
+  } else if (emulator === emulatorWebsiteName) {
     const { version } = await readJson(targetDir, emulatorJson);
 
     if (!version) {
@@ -251,5 +253,28 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     progress(`Published successfully!`);
   
     logDone(`Emulator published successfully!`);
+  } else if (emulator === emulatorPackageName) {
+    log('generalInfo_0000', `Using npm registry "${url}".`);
+
+    const files = await matchFiles(targetDir, '*.tgz');
+    log('generalDebug_0003', `Found ${files.length} in "${targetDir}": ${files.join(', ')}`);
+    const file = files[0];
+
+    if (!file) {
+      fail('publishEmulatorFilesUnexpected_0111', targetDir);
+    }
+
+    progress(`Publishing emulator to "%s" ...`, url);
+
+    try {
+      await publishPackageEmulator(targetDir, file, url, interactive);
+      progress(`Published successfully!`);
+    } catch {
+      fail('failedUploading_0064');
+    }
+  
+    logDone(`Emulator published successfully!`);
+  } else {
+    // we should not enter here - anyway let's do nothing
   }
 }
