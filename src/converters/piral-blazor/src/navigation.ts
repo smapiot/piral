@@ -18,23 +18,27 @@ function eventHasSpecialKey(event: MouseEvent) {
 }
 
 export function isInternalNavigation(event: MouseEvent) {
-  const anchorTarget = getAnchorTarget(event);
-  return (
-    anchorTarget &&
-    event.type === 'click' &&
-    event.button === 0 &&
-    !event.defaultPrevented &&
-    !eventHasSpecialKey(event) &&
-    anchorTarget.hasAttribute('href') &&
-    (!anchorTarget.target || anchorTarget.target !== '_self') &&
-    !anchorTarget.hasAttribute('download') &&
-    isWithinBaseUriSpace(anchorTarget.href)
-  );
+  if (event.type === 'click' && event.button === 0 && !event.defaultPrevented) {
+    const anchorTarget = getAnchorTarget(event);
+    return (
+      anchorTarget &&
+      !eventHasSpecialKey(event) &&
+      anchorTarget.hasAttribute('href') &&
+      !anchorTarget.hasAttribute('download') &&
+      (!anchorTarget.target || anchorTarget.target === '_self') &&
+      isWithinBaseUriSpace(anchorTarget.href)
+    );
+  }
+
+  return false;
 }
 
 export function performInternalNavigation(event: MouseEvent) {
   const anchorTarget = getAnchorTarget(event);
   event.preventDefault();
+  const baseURI = document.baseURI;
+  const baseUriUntilLastSlash = baseURI.substr(0, baseURI.lastIndexOf('/') + 1);
   const to = anchorTarget.getAttribute('href');
-  window.Blazor.emitNavigateEvent(anchorTarget, to);
+  const path = to.startsWith(baseUriUntilLastSlash) ? to.substring(baseUriUntilLastSlash.length) : to;
+  window.Blazor.emitNavigateEvent(anchorTarget, path);
 }

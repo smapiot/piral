@@ -3,6 +3,7 @@
 ## 1.5.1 (tbd)
 
 - Fixed Node.js engine constraint in `piral-cli` to "16.0.0"
+- Fixed `target`-specific navigation in `piral-blazor`
 - Updated `kras` to latest `v0.16` release
 - Added `--type` flag to `piral publish` command
 
