@@ -12,7 +12,7 @@ export const DefaultRouteSwitch: React.FC<RouteSwitchProps> = ({ paths, NotFound
       ))}
       {
         //@ts-ignore
-        <Route element={<NotFound />} />
+        <Route path={'*'} element={<NotFound />} />
       }
     </Routes>
   );
