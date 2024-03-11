@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.1 (tbd)
+## 1.5.1 (March 11, 2024)
 
 - Fixed Node.js engine constraint in `piral-cli` to "16.0.0"
 - Fixed `target`-specific navigation in `piral-blazor`
