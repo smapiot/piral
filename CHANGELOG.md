@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 1.5.1 (tbd)
+
+- Fixed Node.js engine constraint in `piral-cli` to "16.0.0"
+- Fixed `target`-specific navigation in `piral-blazor`
+- Fixed definition of not found page for React Router v6 (#677)
+- Updated `kras` to latest `v0.16` release
+- Added `--type` flag to `piral publish` command
+
 ## 1.5.0 (February 25, 2024)
 
 - Fixed error when importing `once` without context (#664)

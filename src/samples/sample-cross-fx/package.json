@@ -50,7 +50,7 @@
   "files": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smapiot/piral.git"
+    "url": "https://github.com/smapiot/piral.git"
   },
   "bugs": {
     "url": "https://github.com/smapiot/piral/issues"

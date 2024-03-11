@@ -1,36 +1,31 @@
-import { basename, dirname, relative, resolve } from 'path';
-import { fail, log } from './log';
+import { basename, dirname, relative } from 'path';
+import { readBinary } from './io';
 import { publishNpmPackage } from './npm';
 import { FormDataObj, postForm } from './http';
-import { checkExists, matchFiles, readBinary } from './io';
 import { PublishScheme } from '../types';
 
+function nerfUrl(url: string) {
+  const parsed = new URL(url);
+  const from = `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
+  const rel = new URL('.', from);
+  const res = `//${rel.host}${rel.pathname}`;
+  return res;
+}
+
 export async function publishPackageEmulator(
-  baseDir: string,
-  source: string,
-  args: Record<string, string> = {},
+  directory: string,
+  file: string,
+  url?: string,
   interactive = false,
+  apiKey?: string,
 ) {
-  const type = 'emulator';
-  const directory = resolve(baseDir, source, type);
-  const exists = await checkExists(directory);
+  const flags = url ? [`--registry=${url}`] : [];
 
-  if (!exists) {
-    fail('publishDirectoryMissing_0110', directory);
+  if (url && apiKey) {
+    const authUrl = nerfUrl(url);
+    const tokenKey = `${authUrl}:_authToken`;
+    flags.push(`--${tokenKey}=${apiKey}`);
   }
-
-  const files = await matchFiles(directory, '*.tgz');
-  log('generalDebug_0003', `Found ${files.length} in "${directory}": ${files.join(', ')}`);
-
-  if (files.length !== 1) {
-    fail('publishEmulatorFilesUnexpected_0111', directory);
-  }
-
-  const [file] = files;
-  const flags = Object.keys(args).reduce((p, c) => {
-    p.push(`--${c}`, args[c]);
-    return p;
-  }, [] as Array<string>);
 
   await publishNpmPackage(directory, file, flags, interactive);
 }
