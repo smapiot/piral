@@ -1,6 +1,6 @@
 {
   "name": "piral-million",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Plugin for integrating Million components in Piral.",
   "keywords": [
     "piral",
@@ -65,6 +65,6 @@
   },
   "devDependencies": {
     "million": "^1.12.0",
-    "piral-core": "^1.5.0"
+    "piral-core": "^1.5.1"
   }
 }

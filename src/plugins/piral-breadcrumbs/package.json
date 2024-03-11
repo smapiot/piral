@@ -1,6 +1,6 @@
 {
   "name": "piral-breadcrumbs",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Plugin for creating a breadcrumb manager in Piral.",
   "keywords": [
     "piral",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-router": "^5.1.8",
-    "piral-core": "^1.5.0",
+    "piral-core": "^1.5.1",
     "react": "^18.0.0",
     "react-router": "^5.2.0"
   }
