@@ -4,8 +4,29 @@ import { publishNpmPackage } from './npm';
 import { FormDataObj, postForm } from './http';
 import { PublishScheme } from '../types';
 
-export async function publishPackageEmulator(directory: string, file: string, url?: string, interactive = false) {
+function nerfUrl(url: string) {
+  const parsed = new URL(url);
+  const from = `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
+  const rel = new URL('.', from);
+  const res = `//${rel.host}${rel.pathname}`;
+  return res;
+}
+
+export async function publishPackageEmulator(
+  directory: string,
+  file: string,
+  url?: string,
+  interactive = false,
+  apiKey?: string,
+) {
   const flags = url ? [`--registry=${url}`] : [];
+
+  if (url && apiKey) {
+    const authUrl = nerfUrl(url);
+    const tokenKey = `${authUrl}:_authToken`;
+    flags.push(`--${tokenKey}=${apiKey}`);
+  }
+
   await publishNpmPackage(directory, file, flags, interactive);
 }
 

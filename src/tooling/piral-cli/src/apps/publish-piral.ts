@@ -266,7 +266,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     progress(`Publishing emulator to "%s" ...`, url);
 
     try {
-      await publishPackageEmulator(targetDir, file, url, interactive);
+      await publishPackageEmulator(targetDir, file, url, interactive, apiKey);
       progress(`Published successfully!`);
     } catch {
       fail('failedUploading_0064');
