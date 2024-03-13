@@ -1,5 +1,5 @@
 import { Agent } from 'https';
-import { join, relative, resolve } from 'path';
+import { posix, relative, resolve } from 'path';
 import { createPiralStubIndexIfNotExists } from './template';
 import { getAuthorizationHeaders, getAxiosOptions, getCertificate, handleAxiosError } from './http';
 import { packageJson } from './constants';
@@ -76,9 +76,9 @@ async function createEmulatorFiles(
         generated: true,
       },
       files: emulatorJson.files.assets,
-      main: join(appDirName, mainFile),
-      typings: join(appDirName, emulatorJson.files.typings),
-      app: join(appDirName, emulatorJson.files.app),
+      main: posix.join(appDirName, mainFile),
+      typings: posix.join(appDirName, emulatorJson.files.typings),
+      app: posix.join(appDirName, emulatorJson.files.app),
       peerDependencies: {},
       optionalDependencies: emulatorJson.dependencies.optional,
       devDependencies: emulatorJson.dependencies.included,

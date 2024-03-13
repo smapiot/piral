@@ -2,7 +2,9 @@
 
 ## 1.5.2 (tbd)
 
-- Added tea constitution file to repository
+- Fixed created website emulator paths when running in Windows
+- Fixed website emulator running for `pilet debug` in Windows
+- Added tea constitution file to repo
 
 ## 1.5.1 (March 11, 2024)
 
