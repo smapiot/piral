@@ -1,6 +1,6 @@
 {
   "name": "piral-blazor",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Plugin for integrating Blazor components in Piral.",
   "keywords": [
     "piral",
@@ -67,6 +67,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.5.1"
+    "piral-core": "^1.5.2"
   }
 }
