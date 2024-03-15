@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.2 (tbd)
+## 1.5.2 (March 15, 2024)
 
 - Fixed created website emulator paths when running in Windows
 - Fixed website emulator running for `pilet debug` in Windows
