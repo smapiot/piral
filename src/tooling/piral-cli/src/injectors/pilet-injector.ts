@@ -1,5 +1,5 @@
 import { URL } from 'url';
-import { join, resolve } from 'path';
+import { join, resolve, basename } from 'path';
 import { EventEmitter } from 'events';
 import { existsSync } from 'fs';
 import { readFile, stat, writeFile } from 'fs/promises';
@@ -141,7 +141,8 @@ export default class PiletInjector implements KrasInjector {
       this.indexPath = `${publicUrl}index.html`;
       const cbs = {};
 
-      if (app.endsWith('/app')) {
+      // If we end with "/app" or "\app" we might have a proper emulator
+      if (basename(app) === 'app') {
         const path = resolve(app, '..', 'package.json');
 
         if (existsSync(path)) {

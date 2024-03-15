@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.5.2 (tbd)
+
+- Fixed created website emulator paths when running in Windows
+- Fixed website emulator running for `pilet debug` in Windows
+- Added tea constitution file to repo
+
 ## 1.5.1 (March 11, 2024)
 
 - Fixed Node.js engine constraint in `piral-cli` to "16.0.0"
