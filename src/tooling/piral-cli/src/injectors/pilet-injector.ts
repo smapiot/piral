@@ -10,6 +10,7 @@ import { getPiletSpecMeta } from '../common/spec';
 import { config as commonConfig } from '../common/config';
 import { axios, mime, jju } from '../external';
 import { Bundler } from '../types';
+import { IncomingHttpHeaders } from 'http';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   /**
@@ -106,9 +107,9 @@ async function fillPiletMeta(pilet: Pilet, metaFile: string, subPath: string) {
 
 type FeedResponse = { items?: Array<PiletMetadata> } | Array<PiletMetadata> | PiletMetadata;
 
-async function loadFeed(feed: string) {
+async function loadFeed(feed: string, headers: any) {
   try {
-    const response = await axios.default.get<FeedResponse>(feed);
+    const response = await axios.default.get<FeedResponse>(feed, { headers });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -228,18 +229,37 @@ export default class PiletInjector implements KrasInjector {
     return JSON.stringify(pilet.getMeta(basePath));
   }
 
-  async getIndexMeta(baseUrl: string) {
+  async getIndexMeta(baseUrl: string, headers: IncomingHttpHeaders) {
     const { pilets, feed } = this.config;
     const basePath = this.getPiletApi(baseUrl);
     const localPilets = pilets.map((pilet) => pilet.getMeta?.(basePath)).filter(Boolean);
-    const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(feed));
+    const mergedPilets = this.mergePilets(localPilets, await this.loadRemoteFeed(headers, feed));
     return JSON.stringify(mergedPilets);
   }
 
-  async loadRemoteFeed(feed?: string | Array<string>): Promise<Array<Array<PiletMetadata>>> {
+  async loadRemoteFeed(
+    rawHeaders: IncomingHttpHeaders,
+    feed?: string | Array<string>,
+  ): Promise<Array<Array<PiletMetadata>>> {
     if (feed) {
       const feeds = Array.isArray(feed) ? feed : [feed];
-      return await Promise.all(feeds.map(loadFeed));
+      const {
+        // We skip the standard client headers to focus on the custom ones
+        host: _0,
+        ['user-agent']: _1,
+        accept: _2,
+        ['accept-language']: _3,
+        ['accept-encoding']: _4,
+        referer: _5,
+        traceparent: _6,
+        dnt: _7,
+        connection: _8,
+        ['sec-fetch-fest']: _9,
+        ['sec-fetch-mode']: _10,
+        ['sec-fetch-site']: _11,
+        ...headers
+      } = rawHeaders;
+      return await Promise.all(feeds.map((url) => loadFeed(url, headers)));
     }
   }
 
@@ -309,7 +329,8 @@ export default class PiletInjector implements KrasInjector {
     return this.sendContent(content, type, url);
   }
 
-  async sendResponse(path: string, url: string, baseUrl: string): Promise<KrasResult> {
+  async sendResponse(path: string, req: KrasRequest, baseUrl: string): Promise<KrasResult> {
+    const { url, headers } = req;
     const { pilets } = this.config;
     const [index, ...rest] = path.split('/');
     const pilet = pilets[+index];
@@ -318,7 +339,7 @@ export default class PiletInjector implements KrasInjector {
     await bundler?.ready();
 
     if (!path) {
-      const content = await this.getIndexMeta(baseUrl);
+      const content = await this.getIndexMeta(baseUrl, headers);
       return this.sendContent(content, 'application/json', url);
     } else if (bundler?.bundle) {
       const target = join(bundler.bundle.dir, rest.join('/'));
@@ -409,7 +430,7 @@ export default class PiletInjector implements KrasInjector {
       return undefined;
     } else if (req.target === api) {
       const path = req.url.substring(1).split('?').shift();
-      return await this.sendResponse(path, req.url, baseUrl);
+      return await this.sendResponse(path, req, baseUrl);
     }
   }
 }

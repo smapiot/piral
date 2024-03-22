@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.3 (tbd)
+
+- Updated the `--feed` option for `pilet debug` to send custom headers
+
 ## 1.5.2 (March 15, 2024)
 
 - Fixed created website emulator paths when running in Windows
