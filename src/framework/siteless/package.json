@@ -1,7 +1,7 @@
 {
   "name": "siteless",
   "private": true,
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "A drop-in module for painless microfrontends. Simple, efficient, elegant.",
   "keywords": [
     "portal",
@@ -35,8 +35,8 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "piral": "^1.5.1",
-    "piral-lazy": "^1.5.1"
+    "piral": "^1.5.2",
+    "piral-lazy": "^1.5.2"
   },
   "pilets": {
     "externals": [],
