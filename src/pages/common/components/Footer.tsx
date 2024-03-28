@@ -26,7 +26,7 @@ export const Footer: React.FC = () => (
               </a>
             </li>
             <li>
-              <a href="https://gitter.im/piral-io/community" target="_blank">
+              <a href="https://discord.gg/kKJ2FZmK8t" target="_blank">
                 Community Chat
               </a>
             </li>

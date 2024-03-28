@@ -34,7 +34,7 @@ Independent of the reasons for choosing a monorepo you'll potentially desire one
 - Piral instance with selected pilets (core monorepo)
 - A collection of pilets (domain monorepo)
 
-Any of these types may make sense depending on your problem and the available resources to solve it. From an implementation point of view, the Piral instance with selected pilets may be the most difficult to set up - which is why we'll focus on this one here. However, the other two would not be so different. Let us know on [Gitter](https://gitter.im/piral-io/community) or [GitHub](https://github.com/smapiot/piral) if you need more help - we are always happy to assist.
+Any of these types may make sense depending on your problem and the available resources to solve it. From an implementation point of view, the Piral instance with selected pilets may be the most difficult to set up - which is why we'll focus on this one here. However, the other two would not be so different. Let us know on [Discord](https://discord.gg/kKJ2FZmK8t) or [GitHub](https://github.com/smapiot/piral) if you need more help - we are always happy to assist.
 
 ## Setting up a Monorepo
 

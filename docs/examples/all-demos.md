@@ -25,7 +25,7 @@ Each repository has a README file that is shown directly. The READMEs look simil
 The "getting started" section helps you to properly set up the repository after cloning it locally.
 :::
 
-If the desired sample is missing, just message use [on the community chat](https://gitter.im/piral-io/community).
+If the desired sample is missing, just message use [on the Discord server](https://discord.gg/kKJ2FZmK8t).
 
 ## Links
 

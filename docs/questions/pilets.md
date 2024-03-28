@@ -129,7 +129,7 @@ There is no direct guideline. It all depends on the project, the developers, and
 
 In general, there is no limit on how many pilets can be provisioned for a single user. Performance-wise less may be better, however, keep in mind that the total code size matters, too. A range between 20 and 60 pilets is definitely no problem. In extreme scenarios going over 150 or 200 pilets may be acceptable, too.
 
-If you feel like you need more advice, don't hesitate to use the [community chat](https://gitter.im/piral-io/community).
+If you feel like you need more advice, don't hesitate to use the [community chat](https://discord.gg/kKJ2FZmK8t).
 
 ---------------------------------------
 

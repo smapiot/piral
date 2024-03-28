@@ -1,6 +1,6 @@
 [![Piral Logo](docs/assets/logo.png)](https://piral.io)
 
-# [Piral](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lerna.js.org/) [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral?branchName=develop)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=47&branchName=develop) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsmapiot%2Fpiral.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsmapiot%2Fpiral?ref=badge_shield) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![Gitter Chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/piral-io/community) [![Feed Status](https://img.shields.io/uptimerobot/status/m783654792-cfe3913c7481e0f44c143f63)](https://status.piral.io/) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
+# [Piral](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![Lerna](https://img.shields.io/badge/monorepo-lerna-cc00ff.svg)](https://lerna.js.org/) [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral?branchName=develop)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=47&branchName=develop) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsmapiot%2Fpiral.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsmapiot%2Fpiral?ref=badge_shield) [![GitHub Tag](https://img.shields.io/github/tag/smapiot/piral.svg)](https://github.com/smapiot/piral/releases) [![GitHub Issues](https://img.shields.io/github/issues/smapiot/piral.svg)](https://github.com/smapiot/piral/issues) [![Community Chat](https://dcbadge.vercel.app/api/server/kKJ2FZmK8t?style=flat)](https://discord.gg/kKJ2FZmK8t) [![Feed Status](https://img.shields.io/uptimerobot/status/m783654792-cfe3913c7481e0f44c143f63)](https://status.piral.io/) [![CLA Assistant](https://cla-assistant.io/readme/badge/smapiot/piral)](https://cla-assistant.io/smapiot/piral)
 
 Easily build a next generation web application using microfrontends. Piral enables you to create a modular frontend application that is extended at runtime with decoupled modules called *pilets* leveraging a **microfrontend architecture**.
 
@@ -30,7 +30,7 @@ This makes Piral an ideal foundation for a mid-sized to large-scale applications
 * 🉐 **Help translating Piral!** - making PRs in the [documentation branch](https://github.com/smapiot/piral/tree/documentation)
 * 🐞 [Issue Tracker](https://github.com/smapiot/piral/issues) - report bugs or suggest new features
 * 🗨  [Forums](https://stackoverflow.com/questions/tagged/piral) - use the community support on StackOverflow
-* 👪 [Community Chat](https://gitter.im/piral-io/community) - ask questions and provide answers in our Gitter room
+* 👪 [Community Chat](https://discord.gg/kKJ2FZmK8t) - ask questions and provide answers in our Discord server
 
 ## Getting Started
 
@@ -40,7 +40,7 @@ Our recommendation is to start at the documentation available at [docs.piral.io]
 
 ## Questions
 
-While [the GitHub issues](https://github.com/smapiot/piral/issues) may be used in case of questions, we would prefer general usage questions to be raised either in [our Gitter chat](https://gitter.im/piral-io/community) or [at StackOverflow](https://stackoverflow.com/questions/tagged/piral).
+While [the GitHub issues](https://github.com/smapiot/piral/issues) may be used in case of questions, we would prefer general usage questions to be raised either in [our Discord server](https://discord.gg/kKJ2FZmK8t) or [at StackOverflow](https://stackoverflow.com/questions/tagged/piral).
 
 Be sure to check [our FAQ](https://docs.piral.io/faq) and [the official tutorials](https://docs.piral.io/tutorials) upfront!
 
