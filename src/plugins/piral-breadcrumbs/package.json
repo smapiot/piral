@@ -54,7 +54,7 @@
   "scripts": {
     "cleanup": "rimraf esm lib piral-breadcrumbs.min.js",
     "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
-    "build:bundle": "esbuild src/index.ts --outfile=piral-breadcrumbs.min.js --bundle --external:piral-core --external:react --external:react-router --minify",
+    "build:bundle": "esbuild src/index.ts --outfile=piral-breadcrumbs.min.js --bundle --external:piral-core --external:react --minify",
     "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
     "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-breadcrumbs.json src --exclude \"src/**/*.test.*\"",
@@ -62,9 +62,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "@types/react-router": "^5.1.8",
     "piral-core": "^1.5.2",
-    "react": "^18.0.0",
-    "react-router": "^5.2.0"
+    "react": "^18.0.0"
   }
 }

@@ -1,6 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { Dict, BaseRegistration, RegistrationDisposer } from 'piral-core';
-import type { Location } from 'history';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletBreadcrumbsApi {}
@@ -61,7 +60,6 @@ export interface BreadcrumbItemProps extends Omit<BreadcrumbSettings, 'title'> {
 export interface PiralCustomBreadcrumbSettings {}
 
 export interface BreadcrumbTitleParams {
-  location: Location;
   path: string;
   params: Record<string, string>;
 }

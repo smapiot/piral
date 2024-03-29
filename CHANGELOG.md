@@ -3,6 +3,7 @@
 ## 1.5.3 (tbd)
 
 - Updated the `--feed` option for `pilet debug` to send custom headers
+- Updated `piral-breadcrumbs` to be independent of React Router (#681)
 
 ## 1.5.2 (March 15, 2024)
 
