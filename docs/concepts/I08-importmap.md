@@ -298,10 +298,47 @@ Or alternatively, with the use of a relative or absolute path:
 The precedence of the lookup is:
 
 1. See if `<inherited-name>/package.json` exists. Follow up on any `importmap` property from the file if exists.
-2. See if `<inherited-name>` exists. Take it if it exists. **Note**: This has to be an importmap (JSON) then.
+2. See if `<inherited-name>` exists. Take it if it exists. **Note**: This has to be an importmap (JSON).
 
-Dependencies that are inherited by an importmap, but not installed in the pilet will be remarked during execution of the `pilet` command of the `piral-cli` tool.
+Dependencies that are inherited by an importmap, but not installed in the pilet will be remarked during execution of the `pilet` command of the `piral-cli` tool. This is only for informational purposes and not an error.
+
+Note that there is no difference if the inherited importmaps are from an app shell or not. Therefore, when specifying multiple app shells in the importmap the behavior is to return a union, rather than an intersection.
 
 ## Exclusions
 
 Exclusions work across all inherited packages - directly and indirectly. This way, you can also make general statements about bundling. For instance, you might want to put a dependency in `exclude` that you *want* to see bundled - independent if it appears (right now) in the inherited importmaps or not.
+
+## Version Behavior
+
+By default, an exact match of the dependency's version is performed, i.e., the following importmap
+
+```json
+{
+  "imports": {
+    "emojis-list": "https://mycdn.com/js/emojis-list.js"
+  }
+}
+```
+
+will take the `emojis-list` dependency, read its version, and use this version to match exactly. For instance, if `emojis-list` is locally available as `1.0.0` then only this version might be shared.
+
+As already seen this implicit behavior can be explicitly changed:
+
+```json
+{
+  "imports": {
+    "emojis-list@1.x": "https://mycdn.com/js/emojis-list.js"
+  }
+}
+```
+
+In this example we explicitly widen the range of accepted sharing peers to any `1.x` version. In case you have a lot of dependencies - and might want to update them regularly - this explicit statement can become a burden. Instead, you might want to change the (implicit) default behavior.
+
+In the *pilet.json* you can change the `importmapVersions` property to a different value. You can use:
+
+- `all`: matches anything (e.g., defaults to `emojis-list@*`)
+- `match-major`: matches the major version (e.g., default to `emojis-list@1.x` if 1.0.0 is installed)
+- `any-patch`: matches the patch-level version (e.g., default to `emojis-list@1.0.x` if 1.0.0 is installed)
+- `exact`: matches the exact version (e.g., default to `emojis-list@1.0.0` if 1.0.0 is installed); default behavior
+
+This changes the default behavior, i.e., the behavior if no explicit version specifier has been set.
