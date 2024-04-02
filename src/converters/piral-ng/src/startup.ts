@@ -7,13 +7,14 @@ import {
   NgZone,
   PlatformRef,
   ɵALLOW_MULTIPLE_PLATFORMS as ALLOW_MULTIPLE_PLATFORMS,
+  VERSION,
 } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import {
   ɵplatformCoreDynamic as platformCoreDynamic,
   ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS as INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
 } from '@angular/platform-browser-dynamic';
-import { getId, getNgVersion } from './utils';
+import { getNgVersion } from './utils';
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();
@@ -38,8 +39,11 @@ function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: N
     { provide: APP_BASE_HREF, useValue: path },
     { provide: 'NgFlags', useValue: ngFlags },
   ]);
-  const id = getId();
-  const zoneIdentifier = `piral-ng:${id}`;
+
+  // We need to bind the version-specific NgZone to its ID
+  // this will not be MF-dependent, but Angular dependent
+  // i.e., to allow using Zone.js with multiple versions of Angular
+  const zoneIdentifier = `piral-ng:${VERSION.full}`;
 
   // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
   // See:
@@ -48,6 +52,10 @@ function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: N
   // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L257
   // @ts-ignore
   NgZone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
+
+  // We disable those checks as they are misleading and might cause trouble
+  NgZone.assertInAngularZone = () => {};
+  NgZone.assertNotInAngularZone = () => {};
 
   return platform
     .bootstrapModule(BootstrapModule, ngOptions)

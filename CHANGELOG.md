@@ -2,6 +2,7 @@
 
 ## 1.5.3 (tbd)
 
+- Fixed handling of Zone.js across different Angular versions
 - Updated the `--feed` option for `pilet debug` to send custom headers
 - Updated `piral-breadcrumbs` to be independent of React Router (#681)
 
