@@ -1,4 +1,4 @@
-import ClientOAuth2 from 'client-oauth2';
+import { ClientOAuth2, ClientOAuth2Token } from './client-oauth2';
 import { createOAuth2MemoryPersistence } from './utils';
 import { OAuth2Config, OAuth2Client } from './types';
 
@@ -37,11 +37,11 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     state,
   });
 
-  let currentToken: ClientOAuth2.Token;
+  let currentToken: ClientOAuth2Token;
   let retrieveToken: () => Promise<string>;
   let getLoginUri: () => string;
 
-  const setCurrentToken = (token: ClientOAuth2.Token) => {
+  const setCurrentToken = (token: ClientOAuth2Token) => {
     persist.save({
       accessToken: token.accessToken,
       data: token.data,
@@ -51,7 +51,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     currentToken = token;
   };
 
-  const retrieve = (init: Promise<void>, refresh: () => Promise<ClientOAuth2.Token>) => {
+  const retrieve = (init: Promise<void>, refresh: () => Promise<ClientOAuth2Token>) => {
     return init.then(() => {
       if (!currentToken) {
         return Promise.reject('Not logged in. Please call `login()` to retrieve a token.');
@@ -68,11 +68,11 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
     });
   };
 
-  const initialize = (load: () => Promise<ClientOAuth2.Token>) => {
+  const initialize = (load: () => Promise<ClientOAuth2Token>) => {
     const info = persist.load();
 
     if (info) {
-      currentToken = client.createToken(info.accessToken, info.refreshToken, info.data);
+      currentToken = client.createToken(info.accessToken, info.refreshToken, undefined, info.data);
       return Promise.resolve();
     } else {
       return load().then(
@@ -109,7 +109,7 @@ export function setupOAuth2Client(config: OAuth2Config): OAuth2Client {
       return retrieve(
         init,
         () =>
-          new Promise<ClientOAuth2.Token>((resolve) => {
+          new Promise<ClientOAuth2Token>((resolve) => {
             window[callbackName] = resolve;
             window.open(client.token.getUri());
           }),

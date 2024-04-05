@@ -62,9 +62,7 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-oauth2.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
-    "client-oauth2": "^4.2.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "piral-core": "^1.5.2"
   }
