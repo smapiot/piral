@@ -14,9 +14,10 @@ var options = {
   overlayWarnings: false,
   ansiColors: {},
 };
+
 if (__resourceQuery) {
-  var querystring = require('querystring');
-  var overrides = querystring.parse(__resourceQuery.slice(1));
+  const params = new URLSearchParams(__resourceQuery.slice(1)); 
+  const overrides = Object.fromEntries(params.entries());
   setOverrides(overrides);
 }
 

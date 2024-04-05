@@ -67,7 +67,6 @@
     "loader-utils": "^2.0.0",
     "mini-css-extract-plugin": "^2.7.6",
     "parcel-codegen-loader": "^1.0.0",
-    "querystring": "^0.2.0",
     "sass": "^1.63.6",
     "sass-loader": "^13.3.2",
     "source-map-loader": "^4.0.1",
