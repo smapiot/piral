@@ -1,5 +1,3 @@
-import type { Data } from 'client-oauth2';
-
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiralOAuth2Api {}
 }
@@ -17,7 +15,7 @@ export interface PiralOAuth2Api {
 export interface OAuth2TokenInfo {
   accessToken: string;
   refreshToken: string;
-  data: Data;
+  data: Record<string, string>;
 }
 
 /**
