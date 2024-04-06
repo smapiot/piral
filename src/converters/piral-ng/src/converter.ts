@@ -1,6 +1,5 @@
 import type { ForeignComponent, BaseComponentProps, Disposable } from 'piral-core';
-import type { Type } from '@angular/core';
-import type { NgLazyType, NgModuleDefiner, PrepareBootstrapResult } from './types';
+import type { Type, NgLazyType, NgModuleDefiner, PrepareBootstrapResult } from './types';
 import { BehaviorSubject } from 'rxjs';
 import { enqueue } from './queue';
 import { defineModule } from './module';

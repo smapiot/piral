@@ -1,7 +1,6 @@
 import type { BaseComponentProps, ComponentContext, Disposable, PiletApi } from 'piral-core';
 import type { BehaviorSubject } from 'rxjs';
-import type { Type } from '@angular/core';
-import type { NgLazyType, PrepareBootstrapResult } from './types';
+import type { Type, NgLazyType, PrepareBootstrapResult } from './types';
 import { createModuleInstance, getModuleInstance, defineModule, findModule, activateModuleInstance } from './module';
 import { getAnnotations, hasSelector } from './utils';
 import { startup } from './startup';

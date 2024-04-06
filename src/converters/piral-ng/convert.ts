@@ -1,6 +1,5 @@
-import type { Type } from '@angular/core';
 import { createConverter } from './esm/converter';
-import type { LazyType, NgModuleFlags, NgOptions } from './esm/types';
+import type { Type, LazyType, NgModuleFlags, NgOptions } from './esm/types';
 
 export interface HtmlComponent<TProps> {
   component: {

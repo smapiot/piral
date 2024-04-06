@@ -1,6 +1,5 @@
-import type { PlatformRef, NgModuleRef } from '@angular/core';
+import type { Type, PlatformRef, NgModuleRef } from '@angular/core';
 import type { ForeignComponent } from 'piral-core';
-import type { Type } from '@angular/core';
 
 declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletNgApi {}
@@ -30,6 +29,8 @@ export type ModuleInstanceResult = [any, NgOptions, NgModuleFlags];
 export type PrepareBootstrapResult = [...ModuleInstanceResult, any];
 
 export type NgModuleInt = NgModuleRef<any> & { _destroyed: boolean };
+
+export { Type };
 
 /**
  * Gives you the ability to use a component from a lazy loaded module.
