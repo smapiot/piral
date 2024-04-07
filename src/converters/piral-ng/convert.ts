@@ -50,6 +50,7 @@ export function createNgConverter(...params: Parameters<typeof createConverter>)
     const lazy = convert.defineModule(...args);
 
     if (typeof lazy === 'function') {
+      // @ts-ignore
       return (selector: string) => from(lazy(selector).component);
     }
   };
