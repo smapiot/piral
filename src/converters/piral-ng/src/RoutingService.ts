@@ -54,7 +54,8 @@ export class RoutingService implements OnDestroy {
   ) {
     if (this.router) {
       this.router.errorHandler = (error: Error) => {
-        if (error.message.match('Cannot match any routes')) {
+        // Match in development and production
+        if (error.message.match('Cannot match any routes') || error.message.match('NG04002')) {
           // ignore this special error
           return undefined;
         }

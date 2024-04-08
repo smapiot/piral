@@ -3,6 +3,7 @@
 ## 1.5.3 (tbd)
 
 - Fixed handling of Zone.js across different Angular versions
+- Fixed partial appearance of `NG04002` for production pilets using `piral-ng`
 - Fixed lazy loading of `defineNgModule` in `piral-ng/convert` to return a generic component
 - Updated the `--feed` option for `pilet debug` to send custom headers
 - Updated `piral-breadcrumbs` to be independent of React Router (#681)
