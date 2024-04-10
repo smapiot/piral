@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.3 (tbd)
+## 1.5.3 (April 10, 2024)
 
 - Fixed handling of Zone.js across different Angular versions
 - Fixed partial appearance of `NG04002` for production pilets using `piral-ng`
