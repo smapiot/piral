@@ -26,14 +26,19 @@ const persistentSetter = (name: string, value: string) => {
 
 function getValue(key: string, defaultValue: boolean, fallbackValue: boolean) {
   const value = sessionStorage.getItem(key);
+  const actualValue = value === 'on';
 
   if (['on', 'off'].includes(value)) {
-    return value === 'on';
-  } else if (typeof defaultValue === 'boolean') {
-    return defaultValue;
-  } else {
-    return fallbackValue;
+    return actualValue;
   }
+
+  const currentValue = typeof defaultValue === 'boolean' ? defaultValue : fallbackValue;
+  
+  if (actualValue !== currentValue) {
+    sessionStorage.setItem(key, currentValue ? 'on' : 'off');
+  }
+
+  return currentValue;
 }
 
 if (persistSettings) {
