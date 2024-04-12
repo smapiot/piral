@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.4 (tbd)
+
+- Fixed `pilet build` with `--type standalone` to end up at feed selection
+
 ## 1.5.3 (April 10, 2024)
 
 - Fixed handling of Zone.js across different Angular versions
