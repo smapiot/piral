@@ -30,8 +30,8 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
     mount(parent, data, ctx, locals: Vue3State) {
       const el = parent.appendChild(document.createElement(rootName));
       const app = mountVue(root, data, ctx, captured);
-      app.mount(el);
       app.component(selector, createExtension(rootName));
+      app.mount(el);
       !app._props && (app._props = {});
       locals.instance = app;
     },
