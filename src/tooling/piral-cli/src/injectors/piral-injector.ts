@@ -27,31 +27,41 @@ async function isNoFile(target: string) {
 }
 
 export default class PiralInjector implements KrasInjector {
-  public config: PiralInjectorConfig;
+  public readonly config: PiralInjectorConfig;
+  private readonly cbs: Record<string, (msg: string) => void> = {};
 
   constructor(options: PiralInjectorConfig, _config: KrasConfiguration, core: EventEmitter) {
     this.config = options;
 
     if (this.config.active) {
       const api = '/$events';
-      const cbs = {};
 
       core.on('user-connected', (e) => {
         if (e.target === '*' && e.url === api.substring(1)) {
-          cbs[e.id] = (msg: string) => e.ws.send(msg);
+          this.cbs[e.id] = (msg: string) => e.ws.send(msg);
         }
       });
 
       core.on('user-disconnected', (e) => {
-        delete cbs[e.id];
+        delete this.cbs[e.id];
       });
 
-      this.config.bundler.on((args) => {
-        for (const id of Object.keys(cbs)) {
-          cbs[id](JSON.stringify(args));
-        }
-      });
+      this.setupBundler();
     }
+  }
+
+  private forwardBundlerEvent = (args: any) => {
+    for (const id of Object.keys(this.cbs)) {
+      this.cbs[id](JSON.stringify(args));
+    }
+  };
+
+  private setupBundler() {
+    this.config.bundler.on(this.forwardBundlerEvent);
+  }
+
+  private teardownBundler() {
+    this.config.bundler.off(this.forwardBundlerEvent);
   }
 
   get active() {
@@ -70,7 +80,13 @@ export default class PiralInjector implements KrasInjector {
     return {};
   }
 
-  setOptions() {}
+  setOptions(options: any) {
+    if ('bundler' in options) {
+      this.teardownBundler();
+      this.config.bundler = options.bundler;
+      this.setupBundler();
+    }
+  }
 
   sendContent(content: Buffer | string, type: string, url: string): KrasResult {
     const { headers } = this.config;

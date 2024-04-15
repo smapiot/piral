@@ -235,27 +235,23 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   await hooks.onBegin?.({ options, fullBase });
 
-  const watcherRef = await watcherTask(async (watcherContext) => {
-    progress('Reading configuration ...');
-    const entryList = Array.isArray(entry) ? entry : [entry];
-    const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
-    log(
-      'generalDebug_0003',
-      `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`,
-    );
+  progress('Reading configuration ...');
 
-    const allEntries = await matchAnyPilet(fullBase, entryList);
-    const maxListeners = Math.max(2 + allEntries.length * 2, 16);
-    log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
+  const entryList = Array.isArray(entry) ? entry : [entry];
+  const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
+  log(
+    'generalDebug_0003',
+    `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`,
+  );
 
-    if (allEntries.length === 0) {
-      fail('entryFileMissing_0077');
-    }
+  const allEntries = await matchAnyPilet(fullBase, entryList);
+  log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
-    process.stderr?.setMaxListeners(maxListeners);
-    process.stdout?.setMaxListeners(maxListeners);
-    process.stdin?.setMaxListeners(maxListeners);
+  if (allEntries.length === 0) {
+    fail('entryFileMissing_0077');
+  }
 
+  const buildRef = await watcherTask(async (watcherContext) => {
     const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
       const targetDir = dirname(entryModule);
       const { peerDependencies, peerModules, root, apps, ignored, importmap, schema } = await retrievePiletData(
@@ -326,13 +322,24 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     // sanity check see #250
     checkSanity(pilets);
 
+    Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
+
+    return { pilets };
+  });
+
+  const watcherRef = await watcherTask(async (watcherContext) => {
+    const { pilets } = buildRef.data;
+    const maxListeners = Math.max(2 + allEntries.length * 2, 16);
+
+    process.stderr?.setMaxListeners(maxListeners);
+    process.stdout?.setMaxListeners(maxListeners);
+    process.stdin?.setMaxListeners(maxListeners);
+
     await hooks.beforeApp?.({ appInstanceDir, pilets });
 
     const appInstances: Array<PiralInstanceInfo> = appInstanceDir
       ? [[appInstanceDir, 0]]
       : await getOrMakeApps(pilets[0], logLevel);
-
-    Promise.all(pilets.map((p) => p.bundler.ready())).then(() => logDone(`Ready!`));
 
     pilets.forEach((p) => p.bundler.start());
 
@@ -351,7 +358,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           });
         }
 
-        await platform.startModule({
+        const update = await platform.startModule({
           appDir,
           pilets,
           customkrasrc,
@@ -369,6 +376,16 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
             return watcherContext.watch(file);
           },
         });
+    
+        const handleUpdate = () => {
+          const { pilets } = buildRef.data;
+          pilets.forEach((p) => p.bundler.start());
+          update({ pilets });
+        };
+    
+        buildRef.on(handleUpdate);
+
+        watcherContext.onClean(() => buildRef.off(handleUpdate));
       }),
     );
 

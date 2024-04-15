@@ -89,6 +89,10 @@ async function startModule(options: PlatformStartModuleOptions) {
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
 
   registerEnd(() => krasServer.stop());
+  return (options: any) => {
+    const injector = krasServer.injectors.find(m => m.name === 'pilet-injector');
+    injector?.setOptions(options);
+  };
 }
 
 async function startShell(options: PlatformStartShellOptions) {
@@ -155,6 +159,10 @@ async function startShell(options: PlatformStartShellOptions) {
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
 
   registerEnd(async () => krasServer.stop());
+  return (options: any) => {
+    const injector = krasServer.injectors.find(m => m.name === 'piral-injector');
+    injector?.setOptions(options);
+  };
 }
 
 export function setup() {
