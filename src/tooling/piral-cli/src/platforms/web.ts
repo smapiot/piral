@@ -62,6 +62,8 @@ async function startModule(options: PlatformStartModuleOptions) {
       configs.unshift(resolve(dirname(appPackageJson), krasrc));
     }
   }
+  
+  configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
     configs.push(resolve(fullBase, customkrasrc));
@@ -133,6 +135,8 @@ async function startShell(options: PlatformStartShellOptions) {
       },
     },
   };
+  
+  configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
     configs.push(resolve(fullBase, customkrasrc));
