@@ -4,6 +4,7 @@
 
 - Fixed `pilet build` with `--type standalone` to end up at feed selection
 - Improved handling of server restart (#687)
+- Added `defineVue3Middleware` function to `piral-vue3` (#689)
 
 ## 1.5.3 (April 10, 2024)
 

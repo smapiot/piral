@@ -20,6 +20,49 @@ Transforms a standard Vue@3 component into a component that can be used in Piral
 
 The extension slot component to be used in Vue@3 components. This is not really needed, as it is made available automatically via a Vue@3 custom element named `extension-component`.
 
+### `defineVue3Middleware`
+
+This function is used to declare additional middleware such as plugins when setting up Vue3.
+
+Example in a standalone pilet:
+
+```ts
+import { fromVue3, defineVue3Middleware } from 'piral-vue-3/convert';
+import Page from './Page.vue';
+import i18next from 'i18next';
+import I18NextVue from 'i18next-vue';
+import type { PiletApi } from 'sample-piral';
+
+i18next.init({
+  lng: 'de',
+  interpolation: {
+    escapeValue: false
+  },
+  fallbackLng: false,
+  resources: {
+		en: {
+			translation: {
+				greeter: "Welcome",
+			},
+		},
+		de: {
+			translation: {
+				greeter: "Willkommen",
+			},
+		},
+  }
+});
+
+export function setup(app: PiletApi) {
+  defineVue3Middleware(vue => {
+    vue.use(I18NextVue, { i18next });
+  });
+  app.registerPage('/sample', fromVue3(Page));
+}
+```
+
+Here we integrate the `i18next` plugin using the `i18next-vue` package. By defining the middleware using the `defineVue3Middleware` and the provided callback, we can integrate the plugin without requiring any access to the original `app` instance of Vue.
+
 ## Usage
 
 ::: summary: For pilet authors
