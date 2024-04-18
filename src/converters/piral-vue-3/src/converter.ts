@@ -24,7 +24,7 @@ interface Vue3State {
 export function createConverter(config: Vue3ConverterOptions = {}) {
   const { rootName = 'piral-slot', selector = 'extension-component' } = config;
   const Extension = createExtension(rootName);
-  let middleware: Vue3MiddlewareHandler = () => {};
+  const middlewares: Array<Vue3MiddlewareHandler> = [];
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,
     captured?: Record<string, any>,
@@ -32,7 +32,7 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
     mount(parent, data, ctx, locals: Vue3State) {
       const el = parent.appendChild(document.createElement(rootName));
       const app = mountVue(root, data, ctx, captured);
-      middleware(app);
+      middlewares.forEach((middleware) => middleware(app));
       app.component(selector, createExtension(rootName));
       app.mount(el);
       !app._props && (app._props = {});
@@ -50,8 +50,10 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
     },
   });
   convert.Extension = Extension;
-  convert.defineMiddleware = (setup: Vue3MiddlewareHandler) => {
-    middleware = setup;
+  convert.defineMiddleware = (middleware: Vue3MiddlewareHandler) => {
+    if (!middlewares.includes(middleware)) {
+      middlewares.push(middleware);
+    }
   };
   return convert;
 }
