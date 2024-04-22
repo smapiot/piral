@@ -65,7 +65,7 @@ function prepareForStartup() {
 function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions) => Promise<BlazorRootConfig> {
   const root = document.body.appendChild(document.createElement('div'));
 
-  root.style.display = 'none';
+  root.style.display = 'contents';
   root.id = 'blazor-root';
 
   if (publicPath) {
