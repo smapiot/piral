@@ -62,6 +62,8 @@ async function startModule(options: PlatformStartModuleOptions) {
       configs.unshift(resolve(dirname(appPackageJson), krasrc));
     }
   }
+  
+  configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
     configs.push(resolve(fullBase, customkrasrc));
@@ -89,6 +91,10 @@ async function startModule(options: PlatformStartModuleOptions) {
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, api, feed, pilets, publicUrl });
 
   registerEnd(() => krasServer.stop());
+  return (options: any) => {
+    const injector = krasServer.injectors.find(m => m.name === 'pilet-injector');
+    injector?.setOptions(options);
+  };
 }
 
 async function startShell(options: PlatformStartShellOptions) {
@@ -129,6 +135,8 @@ async function startShell(options: PlatformStartShellOptions) {
       },
     },
   };
+  
+  configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
     configs.push(resolve(fullBase, customkrasrc));
@@ -155,6 +163,10 @@ async function startShell(options: PlatformStartShellOptions) {
   await hooks.afterOnline?.({ krasServer, krasConfig, open, port, publicUrl });
 
   registerEnd(async () => krasServer.stop());
+  return (options: any) => {
+    const injector = krasServer.injectors.find(m => m.name === 'piral-injector');
+    injector?.setOptions(options);
+  };
 }
 
 export function setup() {

@@ -1,4 +1,4 @@
-import type { Component } from 'vue';
+import type { App, Component } from 'vue';
 import type { ForeignComponent, ExtensionSlotProps } from 'piral-core';
 
 declare module 'piral-core/lib/types/custom' {
@@ -7,6 +7,16 @@ declare module 'piral-core/lib/types/custom' {
   interface PiralCustomComponentConverters<TProps> {
     vue3(component: Vue3Component<TProps>): ForeignComponent<TProps>;
   }
+}
+
+/**
+ * Defines a handler to set up Vue 3 middleware.
+ */
+export interface Vue3MiddlewareHandler {
+  /**
+   * Receives the app instance to integrate middleware.
+   */
+  (app: App<Element>): void;
 }
 
 export interface Vue3Component<TProps> {
@@ -39,4 +49,8 @@ export interface PiletVue3Api {
    * Vue component for displaying extensions of the given name.
    */
   Vue3Extension: Component<ExtensionSlotProps>;
+  /**
+   * Function to use for declaring a callback to setup additional middleware.
+   */
+  defineVue3Middleware(setup: Vue3MiddlewareHandler): void;
 }

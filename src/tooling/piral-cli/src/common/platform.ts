@@ -11,9 +11,13 @@ export interface NodePlatformSettings {
 
 export type PlatformSettings = WebPlatformSettings | NodePlatformSettings;
 
+export interface UpdatePlatformOptions {
+  (options: any): void;
+}
+
 export interface PlatformTarget {
-  startShell(options: PlatformStartShellOptions): Promise<void>;
-  startModule(options: PlatformStartModuleOptions): Promise<void>;
+  startShell(options: PlatformStartShellOptions): Promise<UpdatePlatformOptions>;
+  startModule(options: PlatformStartModuleOptions): Promise<UpdatePlatformOptions>;
 }
 
 export function configurePlatform(target: Partial<PlatformSettings> = {}): PlatformTarget {

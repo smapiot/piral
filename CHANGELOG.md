@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 1.5.4 (tbd)
+
+- Fixed `pilet build` with `--type standalone` to end up at feed selection
+- Improved handling of server restart (#687)
+- Updated `piral-cli` to also include the *.krasrc* from the current directory (#691)
+- Updated `piral-blazor` to contain support for Piral.Blazor providers
+- Added `defineVue3Middleware` function to `piral-vue3` (#689)
+
 ## 1.5.3 (April 10, 2024)
 
 - Fixed handling of Zone.js across different Angular versions

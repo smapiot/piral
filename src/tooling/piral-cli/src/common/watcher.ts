@@ -3,7 +3,8 @@ import { watch, existsSync } from 'fs';
 export interface WatcherRef<T> {
   end: Promise<void>;
   data: T;
-  onTrigger(cb: () => void): void;
+  on(cb: () => void): void;
+  off(cb: () => void): void;
 }
 
 export interface WatcherContext {
@@ -26,8 +27,12 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
   });
   const ref: WatcherRef<T> = {
     data: undefined,
-    onTrigger(cb) {
+    on(cb) {
       triggers.push(cb);
+    },
+    off(cb) {
+      const idx = triggers.indexOf(cb);
+      idx >= 0 && triggers.splice(idx, 1);
     },
     end,
   };
@@ -63,7 +68,7 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
       }
     },
     dependOn(anotherRef) {
-      anotherRef.onTrigger(reRun);
+      anotherRef.on(reRun);
     },
     close() {
       cb = () => Promise.resolve(undefined);

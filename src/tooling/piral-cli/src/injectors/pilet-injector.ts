@@ -1,4 +1,5 @@
 import { URL } from 'url';
+import { IncomingHttpHeaders } from 'http';
 import { join, resolve, basename } from 'path';
 import { EventEmitter } from 'events';
 import { existsSync } from 'fs';
@@ -10,7 +11,6 @@ import { getPiletSpecMeta } from '../common/spec';
 import { config as commonConfig } from '../common/config';
 import { axios, mime, jju } from '../external';
 import { Bundler } from '../types';
-import { IncomingHttpHeaders } from 'http';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {
   /**
@@ -54,6 +54,7 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
 interface Pilet {
   bundler: Bundler;
   root: string;
+  dispose(): void;
   getMeta(basePath: string): PiletMetadata;
 }
 
@@ -124,9 +125,10 @@ async function loadFeed(feed: string, headers: any) {
 }
 
 export default class PiletInjector implements KrasInjector {
-  public config: PiletInjectorConfig;
-  private serverConfig: KrasConfiguration;
-  private indexPath: string;
+  public readonly config: PiletInjectorConfig;
+  private readonly serverConfig: KrasConfiguration;
+  private readonly indexPath: string;
+  private readonly cbs: Record<string, { baseUrl: string; notify: (msg: string) => void }> = {};
   private proxyInfo?: {
     source: string;
     files: Array<string>;
@@ -138,9 +140,8 @@ export default class PiletInjector implements KrasInjector {
     this.serverConfig = serverConfig;
 
     if (this.config.active) {
-      const { pilets, api, app, publicUrl, assetUrl } = config;
+      const { api, app, publicUrl, assetUrl } = config;
       this.indexPath = `${publicUrl}index.html`;
-      const cbs = {};
 
       // If we end with "/app" or "\app" we might have a proper emulator
       if (basename(app) === 'app') {
@@ -167,7 +168,7 @@ export default class PiletInjector implements KrasInjector {
         const baseUrl = assetUrl || e.req.headers.origin;
 
         if (e.target === '*' && e.url === api.substring(1)) {
-          cbs[e.id] = {
+          this.cbs[e.id] = {
             baseUrl,
             notify: (msg: string) => e.ws.send(msg),
           };
@@ -175,21 +176,39 @@ export default class PiletInjector implements KrasInjector {
       });
 
       core.on('user-disconnected', (e) => {
-        delete cbs[e.id];
+        delete this.cbs[e.id];
       });
 
-      pilets.forEach((p, i) =>
-        p.bundler.on(async () => {
-          await fillPiletMeta(p, config.meta, `/${i}/`);
-
-          for (const id of Object.keys(cbs)) {
-            const { baseUrl, notify } = cbs[id];
-            const meta = this.getPiletMeta(baseUrl, p);
-            notify(meta);
-          }
-        }),
-      );
+      this.setupBundler();
     }
+  }
+
+  private setupBundler() {
+    const { pilets } = this.config;
+
+    pilets.forEach((p, i) => {
+      const handler = async () => {
+        await fillPiletMeta(p, this.config.meta, `/${i}/`);
+
+        for (const id of Object.keys(this.cbs)) {
+          const { baseUrl, notify } = this.cbs[id];
+          const meta = this.getPiletMeta(baseUrl, p);
+          notify(meta);
+        }
+      };
+      p.bundler.on(handler);
+      p.dispose = () => {
+        p.bundler.off(handler);
+      };
+    });
+  }
+
+  private teardownBundler() {
+    const { pilets } = this.config;
+
+    pilets.forEach((p) => {
+      p.dispose();
+    });
   }
 
   get active() {
@@ -208,7 +227,13 @@ export default class PiletInjector implements KrasInjector {
     return {};
   }
 
-  setOptions() {}
+  setOptions(options: any) {
+    if ('pilets' in options) {
+      this.teardownBundler();
+      this.config.pilets = options.pilets;
+      this.setupBundler();
+    }
+  }
 
   getPiletApi(baseUrl: string) {
     const { api } = this.config;

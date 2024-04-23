@@ -22,6 +22,8 @@ import {
   retrievePiletsInfo,
   flattenExternals,
   triggerBuildPilet,
+  readText,
+  writeText,
 } from '../common';
 
 interface PiletData {
@@ -200,6 +202,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const entryList = Array.isArray(entry) ? entry : [entry];
+  const manifest = 'pilets.json';
   setLogLevel(logLevel);
 
   await hooks.onBegin?.({ options, fullBase });
@@ -246,6 +249,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   if (type === 'standalone') {
     const distDir = dirname(resolve(fullBase, target));
     const outDir = resolve(distDir, 'standalone');
+    const outFile = 'index.html';
     const { apps, root } = pilets[0];
 
     if (apps.length === 0) {
@@ -264,7 +268,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     await copyPilets(outDir, pilets);
 
-    await createMetadata(outDir, '$pilet-api', pilets, publicUrl);
+    await createMetadata(outDir, manifest, pilets, publicUrl);
 
     if (isEmulator) {
       // in case of an emulator assets are not "seen" by the bundler, so we
@@ -287,7 +291,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           minify,
           externals: [],
           publicUrl,
-          outFile: 'index.html',
+          outFile,
           outDir,
           entryFiles: appFile,
           logLevel,
@@ -313,7 +317,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           minify,
           externals: flattenExternals(externals),
           publicUrl,
-          outFile: 'index.html',
+          outFile,
           outDir,
           entryFiles: appFile,
           logLevel,
@@ -324,9 +328,15 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       );
     }
 
+    const html = await readText(outDir, outFile);
+    const newHtml = html.replace(
+      '<script', // place the assignment before the first seen script
+      `<script>window['dbg:pilet-api']=${JSON.stringify(publicUrl + manifest)};</script><script`,
+    );
+    await writeText(outDir, outFile, newHtml);
+
     logDone(`Standalone app available at "${outDir}"!`);
   } else if (type === 'manifest') {
-    const manifest = 'pilets.json';
     const outDir = dirname(resolve(fullBase, target));
 
     logInfo('Building pilet manifest ...');

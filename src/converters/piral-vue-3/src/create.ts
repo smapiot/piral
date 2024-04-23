@@ -24,6 +24,7 @@ export function createVue3Api(config: Vue3Config = {}): PiralPlugin<PiletVue3Api
         };
       },
       Vue3Extension: convert.Extension,
+      defineVue3Middleware: convert.defineMiddleware,
     };
   };
 }

@@ -180,11 +180,10 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const platform = configurePlatform();
 
   const serverRef = await watcherTask(async (watcherContext) => {
-    watcherContext.dependOn(buildRef);
     const { bundler, entryFiles, root } = buildRef.data;
     const targetDir = dirname(entryFiles);
 
-    await platform.startShell({
+    const update = await platform.startShell({
       bundler,
       customkrasrc,
       feed,
@@ -202,6 +201,14 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         return watcherContext.watch(file);
       },
     });
+    
+    const handleUpdate = () => {
+      const { bundler } = buildRef.data;
+      update({ bundler });
+    };
+
+    buildRef.on(handleUpdate);
+    watcherContext.onClean(() => buildRef.off(handleUpdate));
   });
 
   await Promise.all([buildRef.end, serverRef.end]);
