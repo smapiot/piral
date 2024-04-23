@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.4 (tbd)
+## 1.5.4 (April 23, 2024)
 
 - Fixed `pilet build` with `--type standalone` to end up at feed selection
 - Improved handling of server restart (#687)
