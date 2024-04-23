@@ -1,6 +1,6 @@
 {
   "name": "piral-cycle",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Plugin for integrating Cycle.js components in Piral.",
   "keywords": [
     "piral",
@@ -66,7 +66,7 @@
   "devDependencies": {
     "@cycle/dom": "^22.7.0",
     "@cycle/run": "^5.4.0",
-    "piral-core": "^1.5.3",
+    "piral-core": "^1.5.4",
     "xstream": "^11.12.0"
   }
 }

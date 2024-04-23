@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -73,8 +73,8 @@
   },
   "dependencies": {
     "path-to-regexp": "^1.8.0",
-    "piral-base": "^1.5.3",
-    "piral-debug-utils": "^1.5.3",
+    "piral-base": "^1.5.4",
+    "piral-debug-utils": "^1.5.4",
     "zustand": "^3.0.0"
   },
   "devDependencies": {
