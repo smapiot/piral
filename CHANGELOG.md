@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.5 (tbd)
+
+- Fixed `piral-ng/extend-webpack` for MJS files using not fully specified references
+
 ## 1.5.4 (April 23, 2024)
 
 - Fixed `pilet build` with `--type standalone` to end up at feed selection

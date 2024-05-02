@@ -80,6 +80,11 @@ module.exports =
             loader: ngtoolsLoader,
           },
           {
+            test: /\.mjs$/,
+            loader: ngtoolsLoader,
+            resolve: { fullySpecified: false },
+          },
+          {
             test: /\.component.html$/i,
             use: [toStringLoader, htmlLoaderNoModule],
           },
