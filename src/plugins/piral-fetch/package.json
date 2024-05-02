@@ -1,6 +1,6 @@
 {
   "name": "piral-fetch",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Plugin for standardizing fetch in Piral.",
   "keywords": [
     "piral",
@@ -65,7 +65,7 @@
     "@types/express": "^4.11.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "piral-core": "^1.5.3",
+    "piral-core": "^1.5.4",
     "whatwg-fetch": "^3.0.0"
   }
 }
