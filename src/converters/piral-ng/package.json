@@ -36,6 +36,9 @@
     "./extend-webpack": {
       "require": "./extend-webpack.js"
     },
+    "./standalone": {
+      "import": "./esm/standalone.js"
+    },
     "./esm/*": {
       "import": "./esm/*"
     },

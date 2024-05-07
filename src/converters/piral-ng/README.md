@@ -108,11 +108,29 @@ which defines the selector (`angular-page`) matching the specified selector in t
 
 ### Standalone Components
 
-The `piral-ng` plugin also supports Angular standalone components as rendering source.
+The `piral-ng` plugin also supports Angular standalone components as rendering source. For this we have two modes:
+
+#### Legacy Standalone Mode
+
+This mode works with `piral-ng` itself, i.e., integrated in the app shell. It also works in a mix with modules.
 
 Standalone components can also be used with lazy loading.
 
 ```ts
+import { PiletApi } from '<name-of-piral-instance>';
+
+export function setup(piral: PiletApi) {
+  // Just make sure that `AngularPage` exports the component as `default` export
+  piral.registerPage('/sample', piral.fromNg(() => import('./AngularPage')));
+}
+```
+
+#### Isolated Standalone Mode
+
+This mode works only with `piral-ng/standalone`, which has to be used in a pilet directly (as a replacement for `piral-ng/convert`). It does not mix with modules - as components need to be proper standalone entry points.
+
+```ts
+import { createConverter } from 'piral-ng/standalone';
 import { PiletApi } from '<name-of-piral-instance>';
 
 export function setup(piral: PiletApi) {
