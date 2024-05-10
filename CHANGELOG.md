@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.5 (tbd)
+## 1.5.5 (May 10, 2024)
 
 - Fixed `piral-ng/extend-webpack` for MJS files using not fully specified references
 - Added `piral-ng/standalone` to support pure modern Angular standalone (#690)
