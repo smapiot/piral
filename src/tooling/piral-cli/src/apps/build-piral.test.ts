@@ -89,7 +89,7 @@ const tsConfigJson = `
       "outDir": "./lib",
       "skipLibCheck": true,
       "lib": ["dom", "es2018"],
-      "moduleResolution": "node",
+      "moduleResolution": "Bundler",
       "module": "esnext",
       "jsx": "react",
       "importHelpers": true

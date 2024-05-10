@@ -519,7 +519,7 @@ export async function getSourceFiles(entry: string) {
               checkJs: false,
               jsx: JsxEmit.React,
               module: ModuleKind.ESNext,
-              moduleResolution: ModuleResolutionKind.NodeJs,
+              moduleResolution: ModuleResolutionKind.Bundler,
               target: ScriptTarget.ESNext,
             },
           }).outputText;
