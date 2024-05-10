@@ -10,8 +10,20 @@ import {
 import type { BaseComponentProps, HtmlComponent } from 'piral-core';
 import { CoreRoutingService } from './CoreRoutingService';
 
+function isLazyLoader<TProps>(thing: NgStandaloneComponent<TProps>): thing is NgStandaloneComponentLoader<TProps> {
+  return typeof thing === 'function' && thing.hasOwnProperty('prototype') && thing.hasOwnProperty('arguments');
+}
+
+export interface DefaultExport<T> {
+  default: T;
+}
+
+export type NgStandaloneComponentLoader<TProps> = () => Promise<DefaultExport<Type<TProps>>>;
+
+export type NgStandaloneComponent<TProps> = Type<TProps> | NgStandaloneComponentLoader<TProps>;
+
 export interface NgStandaloneConverter {
-  <TProps extends BaseComponentProps>(component: Type<TProps>): HtmlComponent<TProps>;
+  <TProps extends BaseComponentProps>(component: NgStandaloneComponent<TProps>): HtmlComponent<TProps>;
 }
 
 export function createConverter(options: ApplicationConfig): NgStandaloneConverter {
@@ -55,17 +67,26 @@ export function createConverter(options: ApplicationConfig): NgStandaloneConvert
 
         locals.active = true;
 
-        app.then((appRef) => {
-          if (locals.active) {
-            const ref = appRef.bootstrap(component, element);
+        app
+          .then((appRef) => {
+            if (isLazyLoader(component)) {
+              const lazyComponent = component();
+              return lazyComponent.then((componentExports) => [appRef, componentExports.default] as const);
+            }
 
-            // Start the routing service.
-            appRef.injector.get(CoreRoutingService);
+            return [appRef, component] as const;
+          })
+          .then(([appRef, component]) => {
+            if (locals.active) {
+              const ref = appRef.bootstrap(component, element);
 
-            update(ref, props);
-            locals.component = ref;
-          }
-        });
+              // Start the routing service.
+              appRef.injector.get(CoreRoutingService);
+
+              update(ref, props);
+              locals.component = ref;
+            }
+          });
       },
       update(_1, props, _2, locals) {
         update(locals.component, props);

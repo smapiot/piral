@@ -130,13 +130,51 @@ export function setup(piral: PiletApi) {
 This mode works only with `piral-ng/standalone`, which has to be used in a pilet directly (as a replacement for `piral-ng/convert`). It does not mix with modules - as components need to be proper standalone entry points.
 
 ```ts
+import "core-js/proposals/reflect-metadata";
+import "zone.js";
 import { createConverter } from 'piral-ng/standalone';
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { PiletApi } from '<name-of-piral-instance>';
+import { AngularPage } from './AngularPage';
+
+const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter([
+      {
+        path: "sample",
+        component: AngularPage,
+      },
+    ]),
+  ],
+};
 
 export function setup(piral: PiletApi) {
-  // Just make sure that `AngularPage` exports the component as `default` export
-  piral.registerPage('/sample', piral.fromNg(() => import('./AngularPage')));
+  const fromNg = createConverter(appConfig);
+  
+  piral.registerPage('/sample', fromNg(AngularPage));
 }
+```
+
+Lazy loading is still possible, e.g., over the `loadComponent` from the routes definition or by supplying a callback to the `fromNg` function, e.g.:
+
+```ts
+import "core-js/proposals/reflect-metadata";
+import "zone.js";
+import { createConverter } from "piral-ng/standalone";
+import { ApplicationConfig } from "@angular/core";
+import type { PiletApi } from "sample-piral";
+
+const appConfig: ApplicationConfig = {
+  providers: [],
+};
+
+export function setup(app: PiletApi) {
+  const fromNg = createConverter(appConfig);
+
+  app.registerExtension('foo', fromNg(() => import('./app/extension.component')));
+}
+
 ```
 
 ### Angular Options
