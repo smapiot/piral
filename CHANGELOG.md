@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.5.6 (tbd)
+
+- Fixed issue with `piral-cli-webpack5` when modifying the config entry point
+
 ## 1.5.5 (May 10, 2024)
 
 - Fixed `piral-ng/extend-webpack` for MJS files using not fully specified references

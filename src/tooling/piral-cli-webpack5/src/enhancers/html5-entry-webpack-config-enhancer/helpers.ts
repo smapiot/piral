@@ -41,8 +41,8 @@ export function extractParts(content: cheerio.Root) {
 }
 
 export function getTemplates(entry: Entry): Array<string> {
-  if (typeof entry === 'string' && entry.endsWith('.html')) {
-    return [entry];
+  if (typeof entry === 'string') {
+    return getTemplates([entry]);
   } else if (Array.isArray(entry)) {
     return entry.filter((e) => e.endsWith('.html'));
   } else if (typeof entry !== 'function') {
