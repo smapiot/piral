@@ -250,6 +250,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
   }
+  
+  const maxListeners = Math.max(2 + allEntries.length * 2, 16);
+
+  process.stderr?.setMaxListeners(maxListeners);
+  process.stdout?.setMaxListeners(maxListeners);
+  process.stdin?.setMaxListeners(maxListeners);
 
   const buildRef = await watcherTask(async (watcherContext) => {
     const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
@@ -329,11 +335,6 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const watcherRef = await watcherTask(async (watcherContext) => {
     const { pilets } = buildRef.data;
-    const maxListeners = Math.max(2 + allEntries.length * 2, 16);
-
-    process.stderr?.setMaxListeners(maxListeners);
-    process.stdout?.setMaxListeners(maxListeners);
-    process.stdin?.setMaxListeners(maxListeners);
 
     await hooks.beforeApp?.({ appInstanceDir, pilets });
 
