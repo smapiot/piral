@@ -314,7 +314,7 @@ Critical is the correct definition of the `externals` and the output formatting.
 
 This specification was created by [smapiot](https://smapiot.com).
 
-The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The review was done by [Lothar Schöttner](https://smapiot.com). Suggestions from [Jens Thirmeyer](https://www.iotcloudarchitect.com) have been taken into consideration.
+The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The review was done by [Lothar Schöttner](https://smapiot.com). Suggestions from [Jens Thirmeyer](https://linkedin.com/in/jens-thirmeyer) have been taken into consideration.
 
 ## References
 

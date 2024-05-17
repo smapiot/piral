@@ -476,7 +476,7 @@ The maximum specified file size of a pilet is 16 MB. Anything larger is potentia
 
 This specification was created by [smapiot](https://smapiot.com).
 
-The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The review was done by [Lothar Schöttner](https://smapiot.com). Suggestions from [Jens Thirmeyer](https://www.iotcloudarchitect.com) have been taken into consideration.
+The initial author was [Florian Rappl](https://twitter.com/FlorianRappl). The review was done by [Lothar Schöttner](https://smapiot.com). Suggestions from [Jens Thirmeyer](https://de.linkedin.com/in/jens-thirmeyer) have been taken into consideration.
 
 ## References
 
