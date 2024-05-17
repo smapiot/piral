@@ -4,6 +4,8 @@
 
 - Fixed issue with `piral-cli-webpack5` when modifying the config entry point
 - Fixed issue with pre-TypeScript 5 versions with module resolution set to `bundler`
+- Fixed handling of max event listeners for `pilet debug`
+- Updated to latest version of `dets`
 
 ## 1.5.5 (May 10, 2024)
 
