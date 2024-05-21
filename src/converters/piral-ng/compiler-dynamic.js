@@ -1,17 +1,24 @@
 import info from '@angular/compiler/package.json';
 
-const url = new URL('.', __system_context__.meta.url);
-
 if (typeof window.ngVersions === 'undefined') {
   window.ngVersions = {};
 }
 
-window.ngVersions[url.href] = info.version;
-
+const defaultVersion = 'default';
 const existing = Object.getOwnPropertyDescriptor(window, 'ng');
 
+function setUrl(url, version) {
+  if (version) {
+    window.ngVersions[url] = version;
+    return version;
+  }
+
+  return defaultVersion;
+}
+
+setUrl(new URL('.', __system_context__.meta.url).href, info.version);
+
 if (existing?.get === undefined) {
-  const defaultVersion = 'default';
   const ngs = {
     [defaultVersion]: existing?.value,
   };
@@ -32,13 +39,19 @@ if (existing?.get === undefined) {
   }
 
   function getNgVersion(url) {
-    try {
-      const baseUrl = new URL('.', url);
-      const version = window.ngVersions[baseUrl];
-      return version || defaultVersion;
-    } catch {
-      return defaultVersion;
+    const version = window.ngVersions[url];
+
+    if (!version) {
+      try {
+        const baseUrl = new URL('.', url);
+        const baseVersion = window.ngVersions[baseUrl.href];
+        return setUrl(url, baseVersion);
+      } catch {
+        return defaultVersion;
+      }
     }
+    
+    return version;
   }
 
   Object.defineProperty(window, 'ng', {
