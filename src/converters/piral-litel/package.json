@@ -1,6 +1,6 @@
 {
   "name": "piral-litel",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Plugin for integrating Lit-Element components in Piral.",
   "keywords": [
     "piral",
@@ -66,6 +66,6 @@
   },
   "devDependencies": {
     "lit-element": "^2.2.1",
-    "piral-core": "^1.5.5"
+    "piral-core": "^1.5.6"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "piral-hooks-utils",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Hooks and HOC for pilets and Piral instances.",
   "keywords": [
     "piral",
