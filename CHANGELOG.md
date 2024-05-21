@@ -1,8 +1,17 @@
 # Piral Changelog
 
+## 1.5.6 (tbd)
+
+- Fixed issue with `piral-cli-webpack5` when modifying the config entry point
+- Fixed issue with pre-TypeScript 5 versions with module resolution set to `bundler`
+- Fixed handling of max event listeners for `pilet debug`
+- Updated to latest version of `dets`
+- Added dynamic compiler capability to `piral-ng`
+
 ## 1.5.5 (May 10, 2024)
 
 - Fixed `piral-ng/extend-webpack` for MJS files using not fully specified references
+- Updated TypeScript to use module resolution set to `bundler`
 - Added `piral-ng/standalone` to support pure modern Angular standalone (#690)
 
 ## 1.5.4 (April 23, 2024)

@@ -22,5 +22,5 @@
       "pattern": "^https://azure.microsoft.com/"
     }
   ],
-  "aliveStatusCodes": [429, 200]
+  "aliveStatusCodes": [401, 403, 429, 200]
 }

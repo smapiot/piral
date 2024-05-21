@@ -1,5 +1,5 @@
 import rimraf from 'rimraf';
-import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit } from 'typescript';
+import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit, version } from 'typescript';
 import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';
 import { mkdtemp, mkdir, constants } from 'fs';
@@ -492,6 +492,11 @@ export async function move(source: string, target: string, forceOverwrite = Forc
   return source;
 }
 
+function isVersion5OrHigher() {
+  const currentMajor = parseInt(version.split('.').shift());
+  return currentMajor >= 5;
+}
+
 export async function getSourceFiles(entry: string) {
   const dir = dirname(entry);
   log('generalDebug_0003', `Trying to get source files from "${dir}" ...`);
@@ -519,7 +524,7 @@ export async function getSourceFiles(entry: string) {
               checkJs: false,
               jsx: JsxEmit.React,
               module: ModuleKind.ESNext,
-              moduleResolution: ModuleResolutionKind.Bundler,
+              moduleResolution: isVersion5OrHigher() ? ModuleResolutionKind.Bundler : ModuleResolutionKind.Node10,
               target: ScriptTarget.ESNext,
             },
           }).outputText;

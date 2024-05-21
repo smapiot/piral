@@ -27,6 +27,9 @@
     "./common": {
       "import": "./common.js"
     },
+    "./compiler-dynamic": {
+      "import": "./compiler-dynamic.js"
+    },
     "./convert": {
       "import": "./convert.js"
     },
@@ -58,6 +61,7 @@
     "src",
     "common.d.ts",
     "common.js",
+    "compiler-dynamic.js",
     "convert.d.ts",
     "convert.js",
     "core-dynamic.js",
