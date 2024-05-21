@@ -6,6 +6,7 @@
 - Fixed issue with pre-TypeScript 5 versions with module resolution set to `bundler`
 - Fixed handling of max event listeners for `pilet debug`
 - Updated to latest version of `dets`
+- Added dynamic compiler capability to `piral-ng`
 
 ## 1.5.5 (May 10, 2024)
 

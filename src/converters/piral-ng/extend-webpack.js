@@ -101,18 +101,30 @@ module.exports =
     );
 
     if (jitMode) {
-      // The job of this plugin is to make angular-core depend on angular-compiler - this way
-      // angular-compiler does not need to be loaded separately and angular-compiler is present
-      // *before* angular-core
-      // this is only required in jit mode - as otherwise everything should be pre-compiled
+      // The job of this plugin is 
+      // (1)
+      // to make @angular/core depend on @angular/compiler - this way @angular/compiler
+      // does not need to be loaded separately and @angular/compiler is present *before*
+      // @angular/core; this is only required in jit mode - as otherwise everything should
+      // be pre-compiled.
+      // (2)
+      // to introduce a dynamic version of the window.ng global, which supports running
+      // with multiple versions of Angular.
       config.plugins.push({
         apply(compiler) {
           const { entry } = compiler.options;
-          const core = entry['angular-core'];
+          const coreEntry = entry['angular-core'];
 
-          if (typeof core !== 'undefined') {
+          if (typeof coreEntry !== 'undefined') {
             const compilerDependency = resolve(__dirname, 'core-dynamic.js');
-            core.import = [compilerDependency, ...core.import];
+            coreEntry.import = [compilerDependency, ...coreEntry.import];
+          }
+
+          const compilerEntry = entry['angular-compiler'];
+
+          if (typeof compilerEntry !== 'undefined') {
+            const compilerDependency = resolve(__dirname, 'compiler-dynamic.js');
+            compilerEntry.import = [compilerDependency, ...compilerEntry.import];
           }
         },
       });
