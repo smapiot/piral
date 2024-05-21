@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.5.6 (tbd)
+## 1.5.6 (May 21, 2024)
 
 - Fixed issue with `piral-cli-webpack5` when modifying the config entry point
 - Fixed issue with pre-TypeScript 5 versions with module resolution set to `bundler`
