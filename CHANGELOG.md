@@ -2,6 +2,7 @@
 
 ## 1.6.0 (tbd)
 
+- Improved fallback signature in `piral-translate`
 - Updated dependencies
 
 ## 1.5.6 (May 21, 2024)
