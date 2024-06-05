@@ -74,7 +74,7 @@ We think that Piral hits a sweet spot that makes development easy and fun while 
 | TypeScript Support   | ✔️      | ❌                | ✔️          | ✔️              | ❌      | ✔️        |
 | Stitching Location   | Client | Client            | Client     | Client         | Server   | Client  |
 | Free Deployments     | ✔️      | ✔️                 | ❌         | ✔️              | ✔️      | ✔️         |
-| Free Development     | ✔️      | ❌                | ❌         | ❌              | ✔️      | ❌        ||
+| Free Development     | ✔️      | ❌                | ❌         | ❌              | ✔️      | ❌        |
 | Decoupled Sharing    | ✔️      | ❌                | ❌         | ❌              | ❌      | ❌       |
 | Shared Dependencies  | ✔️      | ✔️                | ✔️          | ❌              | ❌      | ❌       |
 
@@ -100,6 +100,7 @@ There are more alternatives, which have not been listed for brevity. Some of the
 - [One App](https://github.com/americanexpress/one-app)
 - [PuzzleJs](https://github.com/puzzle-js/puzzle-js)
 - [NUT](https://github.com/nut-project/nut)
+- [Isomorphic Layout Composer (ILC)](https://github.com/namecheap/ilc/)
 
 ## Feature Explanation
 
