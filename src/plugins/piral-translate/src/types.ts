@@ -63,6 +63,10 @@ declare module 'piral-core/lib/types/custom' {
   }
 }
 
+export interface TranslationFallback {
+  (key: string, language: string, messages: LocalizationMessages, variables: any): string;
+}
+
 export interface PiralSelectLanguageEvent {
   /**
    * Gets the previously selected language.
