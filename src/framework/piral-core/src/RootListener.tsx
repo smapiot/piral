@@ -3,6 +3,10 @@ import { createPortal } from 'react-dom';
 import { useGlobalStateContext } from './hooks';
 import { renderElement } from './modules';
 
+const renderHtmlEvent = 'render-html';
+const renderContentEvent = 'render-content';
+const forwardEventEvent = 'forward-event';
+
 export const RootListener: React.FC = () => {
   const context = useGlobalStateContext();
 
@@ -23,12 +27,19 @@ export const RootListener: React.FC = () => {
         context.showPortal(portalId, portal);
         target.dispose = dispose;
       };
-      document.body.addEventListener('render-html', renderHtml, false);
-      window.addEventListener('render-content', renderContent, false);
+      const forwardEvent = (ev: CustomEvent) => {
+        ev.stopPropagation();
+        const { type, args } = ev.detail;
+        context.emit(type, args);
+      };
+      document.body.addEventListener(renderHtmlEvent, renderHtml, false);
+      document.body.addEventListener(forwardEventEvent, forwardEvent, false);
+      window.addEventListener(renderContentEvent, renderContent, false);
 
       return () => {
-        document.body.removeEventListener('render-html', renderHtml, false);
-        window.removeEventListener('render-content', renderContent, false);
+        document.body.removeEventListener(renderHtmlEvent, renderHtml, false);
+        document.body.removeEventListener(forwardEventEvent, forwardEvent, false);
+        window.removeEventListener(renderContentEvent, renderContent, false);
       };
     }
   }, [context]);

@@ -275,8 +275,10 @@ export function initialize(scriptUrl: string, publicPath: string, opts: WebAssem
 export function createBootLoader(scriptUrl: string, extraScriptUrls: Array<string>) {
   const publicPath = computePath();
 
-  return (opts?: WebAssemblyStartOptions) => {
-    if (typeof window.$blazorLoader === 'undefined') {
+  return async (opts?: WebAssemblyStartOptions) => {
+    const first = typeof window.$blazorLoader === 'undefined';
+
+    if (first) {
       window.dispatchEvent(new CustomEvent('loading-blazor-core'));
 
       // we load all satellite scripts before we initialize blazor
@@ -285,6 +287,10 @@ export function createBootLoader(scriptUrl: string, extraScriptUrls: Array<strin
       );
     }
 
-    return window.$blazorLoader;
+    const config = await window.$blazorLoader;
+    return {
+      config,
+      first,
+    };
   };
 }

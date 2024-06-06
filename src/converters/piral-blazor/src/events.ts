@@ -33,7 +33,7 @@ const globalEventNames = [
 const eventNames = {
   render: 'render-blazor-extension',
   navigate: 'navigate-blazor',
-  piral: 'piral-blazor',
+  forward: 'forward-event',
 };
 
 function isRooted(target: HTMLElement) {
@@ -123,7 +123,7 @@ export function emitRenderEvent(
 
 export function emitPiralEvent(type: string, args: any) {
   document.body.dispatchEvent(
-    new CustomEvent(eventNames.piral, {
+    new CustomEvent(eventNames.forward, {
       bubbles: false,
       detail: {
         type,
@@ -146,35 +146,20 @@ export function emitNavigateEvent(source: HTMLElement, to: string, replace = fal
   );
 }
 
-export function attachEvents(
+export function attachLocalEvents(
   host: HTMLElement,
   render: (ev: CustomEvent) => void,
   navigate: (ev: CustomEvent) => void,
-  forward: (ev: CustomEvent) => void,
 ) {
-  eventParents.push(host);
   host.addEventListener(eventNames.render, render, false);
   host.addEventListener(eventNames.navigate, navigate, false);
-
-  if (eventParents.length === 1) {
-    document.body.addEventListener(eventNames.piral, forward, false);
-  }
+  // install proxy handlers
+  globalEventNames.forEach((eventName) => host.addEventListener(eventName, dispatchToRoot));
 
   return () => {
-    eventParents.splice(eventParents.indexOf(host), 1);
     host.removeEventListener(eventNames.render, render, false);
     host.removeEventListener(eventNames.navigate, navigate, false);
-
-    if (eventParents.length === 0) {
-      document.body.removeEventListener(eventNames.piral, forward, false);
-    }
+    // uninstall proxy handlers
+    globalEventNames.forEach((eventName) => host.removeEventListener(eventName, dispatchToRoot));
   };
-}
-
-export function addGlobalEventListeners(el: HTMLElement) {
-  globalEventNames.forEach((eventName) => el.addEventListener(eventName, dispatchToRoot));
-}
-
-export function removeGlobalEventListeners(el: HTMLElement) {
-  globalEventNames.forEach((eventName) => el.removeEventListener(eventName, dispatchToRoot));
 }
