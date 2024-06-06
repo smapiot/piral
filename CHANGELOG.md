@@ -2,6 +2,7 @@
 
 ## 1.6.0 (tbd)
 
+- Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
 - Updated dependencies
 
