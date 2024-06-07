@@ -74,6 +74,15 @@ function dispatchToRoot(event: any) {
   }
 }
 
+function getFallback(fallbackComponent: string, params: any) {
+  if (  typeof fallbackComponent === 'string') {
+    const empty = undefined;
+    return () => createElement('piral-extension', { name: fallbackComponent, params, empty });
+  }
+  
+  return undefined;
+}
+
 export function emitRenderEvent(
   source: HTMLElement,
   name: string,
@@ -82,10 +91,7 @@ export function emitRenderEvent(
   fallbackComponent: string | null,
 ) {
   const target = findTarget(source);
-  const empty =
-    typeof fallbackComponent === 'string'
-      ? () => createElement('piral-extension', { name: fallbackComponent, params })
-      : undefined;
+  const empty = getFallback(fallbackComponent, params);
   const order =
     typeof sourceRef !== 'undefined'
       ? (elements: Array<ExtensionRegistration>) => {
@@ -155,11 +161,15 @@ export function attachLocalEvents(
   host.addEventListener(eventNames.navigate, navigate, false);
   // install proxy handlers
   globalEventNames.forEach((eventName) => host.addEventListener(eventName, dispatchToRoot));
+  // register host as event parent
+  eventParents.push(host);
 
   return () => {
     host.removeEventListener(eventNames.render, render, false);
     host.removeEventListener(eventNames.navigate, navigate, false);
     // uninstall proxy handlers
     globalEventNames.forEach((eventName) => host.removeEventListener(eventName, dispatchToRoot));
+    // unregister host as event parent
+    eventParents.splice(eventParents.indexOf(host), 1);
   };
 }
