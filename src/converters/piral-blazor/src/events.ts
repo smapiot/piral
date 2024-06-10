@@ -32,6 +32,7 @@ const globalEventNames = [
 
 const eventNames = {
   render: 'render-blazor-extension',
+  update: 'extension-props-changed',
   navigate: 'navigate-blazor',
   forward: 'forward-event',
 };
@@ -83,6 +84,32 @@ function getFallback(fallbackComponent: string, params: any) {
   return undefined;
 }
 
+function getOrder(sourceRef: any) {
+  return typeof sourceRef !== 'undefined'
+    ? (elements: Array<ExtensionRegistration>) => {
+        const oldItems = elements.map((el, id) => ({
+          id,
+          pilet: el.pilet,
+          defaults: el.defaults ?? {},
+        }));
+        const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
+        return newItems.map(({ id }) => elements[id]).filter(Boolean);
+      }
+    : undefined;
+}
+
+function getProps(name: string, params: any, sourceRef: any, fallbackComponent: string | null) {
+  const empty = getFallback(fallbackComponent, params);
+  const order = getOrder(sourceRef);
+
+  return {
+    name,
+    params,
+    empty,
+    order,
+  };
+}
+
 export function emitUpdateEvent(
   source: HTMLElement,
   name: string,
@@ -90,7 +117,12 @@ export function emitUpdateEvent(
   sourceRef: any,
   fallbackComponent: string | null,
 ) {
-  //TODO
+  const target = findTarget(source);
+  const eventInit = {
+    detail: getProps(name, params, sourceRef, fallbackComponent),
+  };
+
+  target.dispatchEvent(new CustomEvent(eventNames.update, eventInit));
 }
 
 export function emitRenderEvent(
@@ -101,20 +133,6 @@ export function emitRenderEvent(
   fallbackComponent: string | null,
 ) {
   const target = findTarget(source);
-  const empty = getFallback(fallbackComponent, params);
-  const order =
-    typeof sourceRef !== 'undefined'
-      ? (elements: Array<ExtensionRegistration>) => {
-          const oldItems = elements.map((el, id) => ({
-            id,
-            pilet: el.pilet,
-            defaults: el.defaults ?? {},
-          }));
-          const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
-          return newItems.map(({ id }) => elements[id]).filter(Boolean);
-        }
-      : undefined;
-
   const eventInit = {
     bubbles: true,
     detail: {
@@ -124,14 +142,10 @@ export function emitRenderEvent(
         });
       },
       target,
-      props: {
-        name,
-        params,
-        empty,
-        order,
-      },
+      props: getProps(name, params, sourceRef, fallbackComponent),
     },
   };
+
   const delayEmit = () =>
     requestAnimationFrame(() => {
       if (!isRooted(target)) {
@@ -140,6 +154,7 @@ export function emitRenderEvent(
         delayEmit();
       }
     });
+
   delayEmit();
 }
 

@@ -76,10 +76,12 @@ export function createConverter(
   language?: LanguageOptions,
   logLevel?: BlazorLogLevel,
 ) {
+  let configurable = false;
   const bootLoader = createBootLoader(bootConfig.url, bootConfig.satellites);
   const boot = (opts?: WebAssemblyStartOptions) =>
     bootLoader(opts).then(async ({ config, first }) => {
       const [_, capabilities] = config;
+      configurable = capabilities.includes('configurable');
 
       if (typeof logLevel === 'number' && capabilities.includes('logging')) {
         await setLogLevel(logLevel);
@@ -150,8 +152,9 @@ export function createConverter(
         el,
         (ev) => {
           ev.stopPropagation();
-          const { target, props } = ev.detail;
+          const { target, props, configure } = ev.detail;
           piral.renderHtmlExtension(target, props);
+          configurable && configure();
         },
         (ev) => {
           ev.stopPropagation();
