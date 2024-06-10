@@ -75,12 +75,22 @@ function dispatchToRoot(event: any) {
 }
 
 function getFallback(fallbackComponent: string, params: any) {
-  if (  typeof fallbackComponent === 'string') {
+  if (typeof fallbackComponent === 'string') {
     const empty = undefined;
     return () => createElement('piral-extension', { name: fallbackComponent, params, empty });
   }
-  
+
   return undefined;
+}
+
+export function emitUpdateEvent(
+  source: HTMLElement,
+  name: string,
+  params: any,
+  sourceRef: any,
+  fallbackComponent: string | null,
+) {
+  //TODO
 }
 
 export function emitRenderEvent(
@@ -104,9 +114,15 @@ export function emitRenderEvent(
           return newItems.map(({ id }) => elements[id]).filter(Boolean);
         }
       : undefined;
+
   const eventInit = {
     bubbles: true,
     detail: {
+      configure() {
+        sourceRef.invokeMethod('Configure', {
+          CanUpdate: true,
+        });
+      },
       target,
       props: {
         name,

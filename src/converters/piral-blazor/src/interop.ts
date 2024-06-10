@@ -1,5 +1,5 @@
 import { PiletApi } from 'piral-core';
-import { emitRenderEvent, emitNavigateEvent, emitPiralEvent } from './events';
+import { emitRenderEvent, emitUpdateEvent, emitNavigateEvent, emitPiralEvent } from './events';
 import type { BlazorLogLevel, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
@@ -261,6 +261,7 @@ export function initialize(scriptUrl: string, publicPath: string, opts: WebAssem
     script.onload = () => {
       Object.assign(window.Blazor, {
         emitRenderEvent,
+        emitUpdateEvent,
         emitNavigateEvent,
         emitPiralEvent,
       });
