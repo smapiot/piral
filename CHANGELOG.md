@@ -5,6 +5,7 @@
 - Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
 - Updated dependencies
+- Added `--strict-port` option to the `piral-cli` debug commands (#699)
 - Added update capabilities to `piral-blazor` extension boundaries
 
 ## 1.5.6 (May 21, 2024)

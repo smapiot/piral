@@ -9,8 +9,9 @@ import { getAvailablePort } from '../common/port';
 import { PlatformStartShellOptions, PlatformStartModuleOptions, NetworkSpec } from '../types';
 
 async function getPort(network: NetworkSpec) {
-  if (network.type === 'proposed') {
-    network.port = await getAvailablePort(network.port);
+  if (network.type !== 'fixed') {
+    const strict = network.type === 'wanted';
+    network.port = await getAvailablePort(network.port, strict);
     network.type = 'fixed';
   }
 

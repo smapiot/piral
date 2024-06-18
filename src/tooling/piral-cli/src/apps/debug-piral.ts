@@ -36,6 +36,11 @@ export interface DebugPiralOptions {
   port?: number;
 
   /**
+   * Forces the set port to be used, otherwise exists with an error.
+   */
+  strictPort?: boolean;
+
+  /**
    * Sets the publicUrl to use.
    * By default, the server is assumed to be at root "/".
    */
@@ -98,6 +103,7 @@ export const debugPiralDefaults: DebugPiralOptions = {
   entry: './',
   target: './dist',
   port: config.port,
+  strictPort: config.strictPort,
   publicUrl: '/',
   logLevel: LogLevels.info,
   open: config.openBrowser,
@@ -113,6 +119,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     open = debugPiralDefaults.open,
     hmr = debugPiralDefaults.hmr,
     port: originalPort = debugPiralDefaults.port,
+    strictPort = debugPiralDefaults.strictPort,
     publicUrl: originalPublicUrl = debugPiralDefaults.publicUrl,
     logLevel = debugPiralDefaults.logLevel,
     krasrc: customkrasrc = debugPiralDefaults.krasrc,
@@ -126,7 +133,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   const fullBase = resolve(process.cwd(), baseDir);
   const network: NetworkSpec = {
     port: originalPort,
-    type: 'proposed',
+    type: strictPort ? 'wanted' : 'proposed',
   };
   setLogLevel(logLevel);
 
