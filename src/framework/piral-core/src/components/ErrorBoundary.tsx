@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { findDOMNode } from 'react-dom';
 import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
+import { defer, generateId } from '../utils';
 import { Errors, PiletApi } from '../types';
 
 export interface ErrorBoundaryProps {
@@ -48,8 +50,21 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     const rest: any = renderProps;
 
     if (error) {
+      const errorId = `eid-${generateId()}`;
       const pilet = piral.meta.name;
-      return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} {...rest} />;
+
+      defer(() => {
+        const container = findDOMNode(this);
+        piral.emit('unhandled-error', {
+          container,
+          errorId,
+          errorType,
+          error,
+          pilet,
+        });
+      });
+
+      return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} errorId={errorId} {...rest} />;
     }
 
     return <React.Suspense fallback={<RegisteredLoadingIndicator />}>{children}</React.Suspense>;

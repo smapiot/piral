@@ -7,6 +7,8 @@
 - Updated dependencies
 - Added `--strict-port` option to the `piral-cli` debug commands (#699)
 - Added update capabilities to `piral-blazor` extension boundaries
+- Added `piral-error-overlay` to `piral-debug-utils`
+- Added `unhandled-error` event fired from the `ErrorBoundary`
 
 ## 1.5.6 (May 21, 2024)
 

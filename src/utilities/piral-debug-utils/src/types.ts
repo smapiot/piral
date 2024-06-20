@@ -12,6 +12,7 @@ export interface DefaultDebugSettings {
   viewOrigins?: boolean;
   extensionCatalogue?: boolean;
   clearConsole?: boolean;
+  errorOverlay?: boolean;
 }
 
 export interface EmulatorBaseOptions {

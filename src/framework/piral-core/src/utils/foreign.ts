@@ -64,3 +64,7 @@ export function renderInDom<TProps>(
 
   return attachDomPortal('root', context, element, component, props);
 }
+
+export function defer(cb: () => void) {
+  setTimeout(cb, 0);
+}

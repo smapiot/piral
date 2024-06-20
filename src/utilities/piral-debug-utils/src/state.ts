@@ -8,6 +8,7 @@ export const settingsKeys = {
   extensionCatalogue: 'dbg:extension-catalogue',
   clearConsole: 'dbg:clear-console',
   persistSettings: 'dbg:persist-settings-data',
+  errorOverlay: 'dbg:error-overlay',
 };
 
 const persistKey = settingsKeys.persistSettings;
@@ -87,6 +88,7 @@ export function getInitialSettings(defaultValues: DefaultDebugSettings) {
     viewOrigins: getValue(settingsKeys.viewOrigins, defaultValues.viewOrigins, false),
     extensionCatalogue: getValue(settingsKeys.extensionCatalogue, defaultValues.extensionCatalogue, true),
     clearConsole: getValue(settingsKeys.clearConsole, defaultValues.clearConsole, false),
+    errorOverlay: getValue(settingsKeys.errorOverlay, defaultValues.errorOverlay, true),
     persistSettings,
     cataloguePath: '/$debug-extension-catalogue',
   };
