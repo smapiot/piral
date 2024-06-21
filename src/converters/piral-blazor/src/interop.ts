@@ -1,5 +1,5 @@
 import { PiletApi } from 'piral-core';
-import { emitRenderEvent, emitUpdateEvent, emitNavigateEvent, emitPiralEvent } from './events';
+import { emitRenderEvent, emitUpdateEvent, emitNavigateEvent, emitPiralEvent, blazorRootId } from './events';
 import type { BlazorLogLevel, BlazorRootConfig, WebAssemblyStartOptions } from './types';
 
 const wasmLib = 'Microsoft.AspNetCore.Components.WebAssembly';
@@ -36,7 +36,7 @@ function createBase() {
   return document.head.appendChild(el);
 }
 
-function prepareForStartup() {
+async function prepareForStartup() {
   const originalApplyHotReload = window.Blazor._internal.applyHotReload;
   const queue = [];
 
@@ -56,17 +56,23 @@ function prepareForStartup() {
     queue.push(() => originalApplyHotReload.apply(this, args));
   };
 
-  return getCapabilities().then((capabilities) => ({
+  const capabilities = await getCapabilities();
+
+  if (capabilities.includes('custom-element')) {
+    document.getElementById(blazorRootId).setAttribute('render', 'modern');
+  }
+
+  return {
     capabilities,
     applyChanges,
-  }));
+  };
 }
 
 function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions) => Promise<BlazorRootConfig> {
   const root = document.body.appendChild(document.createElement('div'));
 
   root.style.display = 'contents';
-  root.id = 'blazor-root';
+  root.id = blazorRootId;
 
   if (publicPath) {
     const baseElement = document.head.querySelector('base') || createBase();

@@ -2,7 +2,8 @@ import type { ExtensionRegistration } from 'piral-core';
 import { createElement } from 'react';
 import { isInternalNavigation, performInternalNavigation } from './navigation';
 
-const blazorRootId = 'blazor-root';
+export const blazorRootId = 'blazor-root';
+
 const eventParents: Array<HTMLElement> = [];
 
 const globalEventNames = [
@@ -111,28 +112,28 @@ function getProps(name: string, params: any, sourceRef: any, fallbackComponent: 
 }
 
 export function emitUpdateEvent(
-  source: HTMLElement,
+  target: HTMLElement,
   name: string,
   params: any,
   sourceRef: any,
   fallbackComponent: string | null,
 ) {
-  const target = findTarget(source);
+  const container = findTarget(target);
   const eventInit = {
     detail: getProps(name, params, sourceRef, fallbackComponent),
   };
 
-  target.dispatchEvent(new CustomEvent(eventNames.update, eventInit));
+  container.dispatchEvent(new CustomEvent(eventNames.update, eventInit));
 }
 
 export function emitRenderEvent(
-  source: HTMLElement,
+  target: HTMLElement,
   name: string,
   params: any,
   sourceRef: any,
   fallbackComponent: string | null,
 ) {
-  const target = findTarget(source);
+  const container = findTarget(target);
   const eventInit = {
     bubbles: true,
     detail: {
@@ -148,11 +149,19 @@ export function emitRenderEvent(
 
   const delayEmit = () =>
     requestAnimationFrame(() => {
-      if (!isRooted(target)) {
-        target.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
-      } else {
-        delayEmit();
+      if (!isRooted(container)) {
+        return container.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
       }
+
+      const eventParent = eventParents[0];
+      const root = document.getElementById(blazorRootId);
+
+      // this would be used exclusively by providers
+      if (eventParent && root.getAttribute('render') === 'modern') {
+        return eventParent.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
+      }
+
+      delayEmit();
     });
 
   delayEmit();
@@ -170,8 +179,9 @@ export function emitPiralEvent(type: string, args: any) {
   );
 }
 
-export function emitNavigateEvent(source: HTMLElement, to: string, replace = false, state?: any) {
-  findTarget(source).dispatchEvent(
+export function emitNavigateEvent(target: HTMLElement, to: string, replace = false, state?: any) {
+  const container = findTarget(target);
+  container.dispatchEvent(
     new CustomEvent(eventNames.navigate, {
       bubbles: true,
       detail: {
