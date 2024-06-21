@@ -69,10 +69,6 @@ export interface PiralUnhandledErrorEvent {
    */
   container: any;
   /**
-   * The id of the error for tracking purposes.
-   */
-  errorId: string;
-  /**
    * The type of the error, i.e., the type of component that crashed.
    */
   errorType: string;

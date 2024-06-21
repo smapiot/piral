@@ -189,9 +189,7 @@ export interface Errors extends PiralCustomErrors {
 /**
  * The props for the ErrorInfo component.
  */
-export type ErrorInfoProps = UnionOf<Errors> & {
-  errorId: string;
-};
+export type ErrorInfoProps = UnionOf<Errors>;
 
 /**
  * The props of a Loading indicator component.

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
-import { defer, generateId } from '../utils';
+import { defer } from '../utils';
 import { Errors, PiletApi } from '../types';
 
 export interface ErrorBoundaryProps {
@@ -44,27 +44,33 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     });
   }
 
-  render() {
-    const { children, piral, errorType, ...renderProps } = this.props;
+  componentDidUpdate(_: ErrorBoundaryProps, prevState: ErrorBoundaryState) {
     const { error } = this.state;
-    const rest: any = renderProps;
 
-    if (error) {
-      const errorId = `eid-${generateId()}`;
+    if (error && !prevState.error) {
+      const { piral, errorType } = this.props;
       const pilet = piral.meta.name;
 
       defer(() => {
         const container = findDOMNode(this);
         piral.emit('unhandled-error', {
           container,
-          errorId,
           errorType,
           error,
           pilet,
         });
       });
+    }
+  }
 
-      return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} errorId={errorId} {...rest} />;
+  render() {
+    const { children, piral, errorType, ...renderProps } = this.props;
+    const { error } = this.state;
+    const rest: any = renderProps;
+
+    if (error) {
+      const pilet = piral.meta.name;
+      return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} {...rest} />;
     }
 
     return <React.Suspense fallback={<RegisteredLoadingIndicator />}>{children}</React.Suspense>;
