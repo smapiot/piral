@@ -3,6 +3,7 @@
 ## 1.6.0 (tbd)
 
 - Fixed event dispatching for providers in `piral-blazor`
+- Fixed navigation storm in angular pilets (#672)
 - Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
 - Updated dependencies

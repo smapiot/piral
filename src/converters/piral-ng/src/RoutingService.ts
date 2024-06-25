@@ -64,9 +64,11 @@ export class RoutingService implements OnDestroy {
 
       const skipIds: Array<number> = [];
       const nav = this.context.navigation;
+      let queueId: number;
 
       const queueNavigation = (url: string) => {
-        window.requestAnimationFrame(() => nav.push(url));
+        window.cancelAnimationFrame(queueId);
+        queueId = window.requestAnimationFrame(() => nav.push(url));
       };
 
       this.dispose = nav.listen(({ location }) => {
