@@ -1,4 +1,4 @@
-import { withKey, GlobalStateContext, PiletEntries, PiletMetadata } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletMetadata, PiletEntry } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
 interface HashEntry {
@@ -38,7 +38,7 @@ async function apply(ctx: GlobalStateContext) {
   const { added, removed, updated } = ctx.readState((s) => s.updatability);
 
   for (const pilet of removed) {
-    await ctx.removePilet(pilet);
+    await ctx.removePilet(pilet.name);
   }
 
   for (const pilet of updated) {
@@ -68,13 +68,13 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
   if (currentHash !== previousHash) {
     const currentModes = ctx.readState((s) => s.registry.updatability);
     const currentPiletNames = currentPilets.map((m) => m.name);
-    const isPending = (name: string) => currentModes[name]?.mode === 'ask';
-    const isNotBlocked = (name: string) => currentModes[name]?.mode !== 'block';
+    const isPending = (pilet: PiletEntry) => currentModes[pilet.name]?.mode === 'ask';
+    const isNotBlocked = (pilet: PiletEntry) => currentModes[pilet.name]?.mode !== 'block';
 
     const added = pilets.filter((m) => !currentPiletNames.includes(m.name));
-    const removed = currentPiletNames.filter((m) => !pilets.some((p) => p.name === m) && isNotBlocked(m));
-    const updated = pilets.filter((pilet, i) => {
-      if ('version' in pilet && isNotBlocked(pilet.name)) {
+    const removed = currentPilets.filter((m) => !pilets.some((p) => p.name === m.name) && isNotBlocked(m));
+    const updated = pilets.filter((pilet) => {
+      if ('version' in pilet && isNotBlocked(pilet)) {
         const version = currentPilets.find((m) => m.name)?.version;
         return !!version && version !== pilet.version;
       }
@@ -83,7 +83,7 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
     });
 
     ctx.dispatch((state) => {
-      const anyPendingDecision = removed.some((m) => isPending(m)) || updated.some((m) => isPending(m.name));
+      const anyPendingDecision = [...removed, ...updated].some(isPending);
 
       // no need to ask for approval
       if (!anyPendingDecision) {

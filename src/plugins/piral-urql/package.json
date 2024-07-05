@@ -21,29 +21,16 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "esm/index.js",
+  "module": "lib/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
-    },
-    "./esm/*": {
-      "import": "./esm/*"
-    },
-    "./lib/*": {
-      "require": "./lib/*"
-    },
-    "./_/*": {
-      "import": "./esm/*.js",
-      "require": "./lib/*.js"
-    },
+    ".": "./lib/index.js",
+    "./lib/*": "./lib/*",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "esm",
     "lib",
     "src",
     "piral-urql.min.js"
@@ -57,10 +44,9 @@
   },
   "scripts": {
     "cleanup": "rimraf esm lib piral-urql.min.js",
-    "build": "yarn build:bundle && yarn build:commonjs && yarn build:esnext",
+    "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-urql.min.js --bundle --external:piral-core --external:graphql --external:react --minify --global-name=piralUrql",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-urql.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

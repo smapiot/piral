@@ -41,7 +41,7 @@ export interface UpdatabilityState {
   active: boolean;
   lastHash: string;
   added: PiletEntries;
-  removed: Array<string>;
+  removed: PiletEntries;
   updated: PiletEntries;
 }
 

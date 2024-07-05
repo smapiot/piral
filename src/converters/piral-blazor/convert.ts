@@ -1,6 +1,6 @@
-import { createConverter } from './esm/converter';
-import { createDependencyLoader } from './esm/dependencies';
-import type { BlazorOptions } from './esm/types';
+import { createConverter } from './lib/converter';
+import { createDependencyLoader } from './lib/dependencies';
+import type { BlazorOptions } from './lib/types';
 
 export interface HtmlComponent<TProps> {
   component: {
