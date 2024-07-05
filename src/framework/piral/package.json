@@ -21,7 +21,10 @@
   "typings": "lib/index.d.ts",
   "exports": {
     ".": "./lib/index.js",
-    "./lib/*": "./lib/*",
+    "./lib/*": {
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
+    },
     "./polyfills": "./polyfills.js",
     "./package.json": "./package.json"
   },

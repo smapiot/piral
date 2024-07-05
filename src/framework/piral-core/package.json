@@ -27,7 +27,10 @@
   "typings": "lib/index.d.ts",
   "exports": {
     ".": "./lib/index.js",
-    "./lib/*": "./lib/*",
+    "./lib/*": {
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
+    },
     "./app.codegen": "./app.codegen",
     "./package.json": "./package.json"
   },

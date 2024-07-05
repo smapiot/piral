@@ -19,7 +19,10 @@
   "typings": "lib/index.d.ts",
   "exports": {
     ".": "./lib/index.js",
-    "./lib/*": "./lib/*",
+    "./lib/*": {
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
+    },
     "./debug": "./lib/debug.js",
     "./emulator": "./lib/emulator.js",
     "./package.json": "./package.json"

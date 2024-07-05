@@ -42,7 +42,7 @@
       "import": "./dist/piral-base-full.mjs",
       "types": "./lib/index.full.d.ts"
     },
-    "./lib/*": "./lib/*",
+    "./lib/*": "./lib/*.d.ts",
     "./package.json": "./package.json"
   },
   "sideEffects": false,

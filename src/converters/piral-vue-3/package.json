@@ -22,7 +22,10 @@
   "typings": "lib/index.d.ts",
   "exports": {
     ".": "./lib/index.js",
-    "./lib/*": "./lib/*",
+    "./lib/*": {
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
+    },
     "./convert": "./convert.js",
     "./extend-webpack": "./extend-webpack.js",
     "./package.json": "./package.json"

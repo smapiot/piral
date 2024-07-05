@@ -27,7 +27,10 @@
     "./core-dynamic": "./core-dynamic.js",
     "./extend-webpack": "./extend-webpack.js",
     "./standalone": "./lib/standalone.js",
-    "./lib/*": "./lib/*",
+    "./lib/*": {
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
