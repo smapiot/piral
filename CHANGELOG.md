@@ -4,7 +4,7 @@
 
 - Fixed event dispatching for providers in `piral-blazor`
 - Fixed navigation storm in angular pilets (#672)
-- Fixed declaration merging for `moduleResolution` set to `bundler`
+- Fixed declaration merging for `moduleResolution` set to `bundler` (#701)
 - Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
 - Updated dependencies
