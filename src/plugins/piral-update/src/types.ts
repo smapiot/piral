@@ -40,7 +40,9 @@ export interface UpdateModeRegistration {
 export interface UpdatabilityState {
   active: boolean;
   lastHash: string;
-  target: PiletEntries;
+  added: PiletEntries;
+  removed: Array<string>;
+  updated: PiletEntries;
 }
 
 export interface ListenCallback {

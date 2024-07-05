@@ -7,6 +7,7 @@
 - Fixed declaration merging for `moduleResolution` set to `bundler` (#701)
 - Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
+- Improved streaming update in `piral-update`
 - Updated dependencies
 - Added `--strict-port` option to the `piral-cli` debug commands (#699)
 - Added update capabilities to `piral-blazor` extension boundaries
