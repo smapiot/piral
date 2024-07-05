@@ -28,17 +28,21 @@
   "exports": {
     ".": {
       "import": "./esm/index.js",
-      "require": "./lib/index.js"
+      "require": "./lib/index.js",
+      "types": "./lib/index.d.ts"
     },
     "./esm/*": {
-      "import": "./esm/*"
+      "import": "./esm/*",
+      "types": "./lib/*.d.ts"
     },
     "./lib/*": {
-      "require": "./lib/*"
+      "require": "./lib/*",
+      "types": "./lib/*.d.ts"
     },
     "./_/*": {
       "import": "./esm/*.js",
-      "require": "./lib/*.js"
+      "require": "./lib/*.js",
+      "types": "./lib/*.d.ts"
     },
     "./package.json": "./package.json"
   },

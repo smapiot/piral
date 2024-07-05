@@ -1,9 +1,10 @@
 # Piral Changelog
 
-## 1.6.0 (tbd)
+## 1.6.0 (July 5, 2024)
 
 - Fixed event dispatching for providers in `piral-blazor`
 - Fixed navigation storm in angular pilets (#672)
+- Fixed declaration merging for `moduleResolution` set to `bundler`
 - Improved setup of event listeners in `piral-blazor` (#696)
 - Improved fallback signature in `piral-translate`
 - Updated dependencies
