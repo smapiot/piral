@@ -146,22 +146,22 @@ export function createDefaultState(imports: Array<string>, exports: Array<string
   const wrap = isolation === 'modern' ? 'true' : 'false';
 
   imports.push(
-    `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo';`,
-    `import { DefaultLoadingIndicator } from 'piral-core/${cat}/defaults/DefaultLoadingIndicator';`,
-    `import { DefaultLayout } from 'piral-core/${cat}/defaults/DefaultLayout';`,
+    `import { DefaultErrorInfo } from 'piral-core/${cat}/defaults/DefaultErrorInfo.js';`,
+    `import { DefaultLoadingIndicator } from 'piral-core/${cat}/defaults/DefaultLoadingIndicator.js';`,
+    `import { DefaultLayout } from 'piral-core/${cat}/defaults/DefaultLayout.js';`,
   );
 
   if (routerVersion < 6) {
     imports.push(
-      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5';`,
-      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5'`,
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5.js';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5.js';`,
+      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5.js'`,
     );
   } else {
     imports.push(
-      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6';`,
-      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6'`,
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6.js';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6.js';`,
+      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6.js'`,
     );
   }
 
@@ -213,7 +213,7 @@ export function createDebugHandler(imports: Array<string>, exports: Array<string
       emulator: ${JSON.stringify(emulator)},
       ...debug,
     })`;
-    imports.push(`import { integrateDebugger as originalDebugger } from "piral-core/${cat}/tools/debugger"`);
+    imports.push(`import { integrateDebugger as originalDebugger } from "piral-core/${cat}/tools/debugger.js"`);
     exports.push(`export function integrateDebugger(context, options, debug) { return ${originalCall}; }`);
   } else {
     exports.push(`export function integrateDebugger() {}`);
@@ -221,7 +221,7 @@ export function createDebugHandler(imports: Array<string>, exports: Array<string
 
   // if we build the emulator version of piral (shipped to pilets)
   if (emulator) {
-    imports.push(`import { integrateEmulator } from "piral-core/${cat}/tools/emulator"`);
+    imports.push(`import { integrateEmulator } from "piral-core/${cat}/tools/emulator.js"`);
     exports.push(`export { integrateEmulator }`);
   } else {
     exports.push(`export function integrateEmulator() {}`);
@@ -232,14 +232,14 @@ export function createRouteHandler(imports: Array<string>, exports: Array<string
   const { cat, emulator } = opts;
   const assignments = [];
 
-  imports.push(`import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState';`);
+  imports.push(`import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState.js';`);
 
   assignments.push(`
     useCurrentNavigation();
   `);
 
   if (emulator) {
-    imports.push(`import { useDebugRouteFilter } from 'piral-debug-utils';`);
+    imports.push(`import { useDebugRouteFilter } from 'piral-debug-utils.js';`);
     assignments.push('return useDebugRouteFilter(paths);');
   } else {
     assignments.push('return paths;');
