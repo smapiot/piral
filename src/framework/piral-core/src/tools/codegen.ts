@@ -239,7 +239,7 @@ export function createRouteHandler(imports: Array<string>, exports: Array<string
   `);
 
   if (emulator) {
-    imports.push(`import { useDebugRouteFilter } from 'piral-debug-utils.js';`);
+    imports.push(`import { useDebugRouteFilter } from 'piral-debug-utils';`);
     assignments.push('return useDebugRouteFilter(paths);');
   } else {
     assignments.push('return paths;');
