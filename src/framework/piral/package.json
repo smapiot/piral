@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -23,7 +23,7 @@
     ".": "./lib/index.js",
     "./lib/*": {
       "import": "./lib/*",
-      "types":  "./lib/*.d.ts"
+      "types": "./lib/*.d.ts"
     },
     "./polyfills": "./polyfills.js",
     "./package.json": "./package.json"
@@ -59,9 +59,9 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "piral-base": "^1.5.6",
-    "piral-core": "^1.5.6",
-    "piral-ext": "^1.5.6",
+    "piral-base": "^1.6.0",
+    "piral-core": "^1.6.0",
+    "piral-ext": "^1.6.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^5.2.0",
