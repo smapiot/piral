@@ -75,7 +75,7 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
     const removed = currentPilets.filter((m) => !pilets.some((p) => p.name === m.name) && isNotBlocked(m));
     const updated = pilets.filter((pilet) => {
       if ('version' in pilet && isNotBlocked(pilet)) {
-        const version = currentPilets.find((m) => m.name)?.version;
+        const version = currentPilets.find((m) => m.name === pilet.name)?.version;
         return !!version && version !== pilet.version;
       }
 
