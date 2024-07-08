@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.6.0 (July 5, 2024)
+## 1.6.0 (July 8, 2024)
 
 - Fixed event dispatching for providers in `piral-blazor`
 - Fixed navigation storm in angular pilets (#672)
