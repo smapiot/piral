@@ -1,14 +1,19 @@
-import { withKey, GlobalStateContext, PiletEntries, PiletMetadata } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletMetadata, PiletEntry } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
-function getPiletHash(pilet: PiletMetadata) {
+interface HashEntry {
+  name: string;
+  version: string;
+}
+
+function getPiletHash(pilet: PiletMetadata): HashEntry {
   return {
     name: pilet.name,
     version: pilet.version,
   };
 }
 
-function sortPilets(a: { name: string }, b: { name: string }) {
+function sortPilets(a: HashEntry, b: HashEntry) {
   return a.name.localeCompare(b.name);
 }
 
@@ -16,42 +21,72 @@ function computePiletHash(pilets: PiletEntries) {
   return JSON.stringify(pilets.map(getPiletHash).sort(sortPilets));
 }
 
-export function rejectUpdate(ctx: GlobalStateContext) {
+function reset(ctx: GlobalStateContext) {
   ctx.dispatch((state) => ({
     ...state,
     updatability: {
       ...state.updatability,
-      target: [],
+      added: [],
+      updated: [],
+      removed: [],
       active: false,
     },
   }));
 }
 
-export function approveUpdate(ctx: GlobalStateContext) {
-  const pilets = ctx.readState((s) => s.updatability.target);
+async function apply(ctx: GlobalStateContext) {
+  const { added, removed, updated } = ctx.readState((s) => s.updatability);
 
-  for (const pilet of pilets) {
-    ctx.addPilet(pilet);
+  for (const pilet of removed) {
+    await ctx.removePilet(pilet.name);
   }
 
-  ctx.rejectUpdate();
+  for (const pilet of updated) {
+    await ctx.removePilet(pilet.name);
+    await ctx.addPilet(pilet);
+  }
+
+  for (const pilet of added) {
+    await ctx.addPilet(pilet);
+  }
+}
+
+export function rejectUpdate(ctx: GlobalStateContext) {
+  reset(ctx);
+}
+
+export function approveUpdate(ctx: GlobalStateContext) {
+  apply(ctx);
+  reset(ctx);
 }
 
 export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
-  const checkHash = computePiletHash(pilets);
-  const lastHash = ctx.readState((s) => s.updatability.lastHash || computePiletHash(s.modules));
+  const currentHash = computePiletHash(pilets);
+  const currentPilets = ctx.readState((s) => s.modules);
+  const previousHash = ctx.readState((s) => s.updatability.lastHash || computePiletHash(currentPilets));
 
-  if (checkHash !== lastHash) {
+  if (currentHash !== previousHash) {
     const currentModes = ctx.readState((s) => s.registry.updatability);
-    const piletNames = Object.keys(currentModes);
-    const blocked = piletNames.filter((m) => currentModes[m].mode === 'block');
-    const ask = piletNames.filter((m) => currentModes[m].mode === 'ask');
-    const target = pilets.filter((pilet) => !blocked.includes(pilet.name));
-    const active = ask.length > 0;
+    const currentPiletNames = currentPilets.map((m) => m.name);
+    const isPending = (pilet: PiletEntry) => currentModes[pilet.name]?.mode === 'ask';
+    const isNotBlocked = (pilet: PiletEntry) => currentModes[pilet.name]?.mode !== 'block';
+
+    const added = pilets.filter((m) => !currentPiletNames.includes(m.name));
+    const removed = currentPilets.filter((m) => !pilets.some((p) => p.name === m.name) && isNotBlocked(m));
+    const updated = pilets.filter((pilet) => {
+      if ('version' in pilet && isNotBlocked(pilet)) {
+        const version = currentPilets.find((m) => m.name === pilet.name)?.version;
+        return !!version && version !== pilet.version;
+      }
+
+      return false;
+    });
 
     ctx.dispatch((state) => {
+      const anyPendingDecision = [...removed, ...updated].some(isPending);
+
       // no need to ask for approval
-      if (!active) {
+      if (!anyPendingDecision) {
         // automatically start the update in the next cycle
         setTimeout(ctx.approveUpdate, 0);
       }
@@ -59,9 +94,11 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
       return {
         ...state,
         updatability: {
-          active,
-          lastHash: checkHash,
-          target,
+          active: anyPendingDecision,
+          lastHash: currentHash,
+          added,
+          removed,
+          updated,
         },
       };
     });

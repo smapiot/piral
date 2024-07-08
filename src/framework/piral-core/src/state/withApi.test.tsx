@@ -82,12 +82,15 @@ StubComponent.displayName = 'StubComponent';
 
 describe('withApi Module', () => {
   it('wraps a component and forwards the API as piral', () => {
+    const { context } = createMockContainer();
     const api: any = {
       meta: {
         name: 'foo',
       },
+      on: context.on,
+      off: context.off,
+      emit: context.emit,
     };
-    const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = render(
       <StateContext.Provider value={context}>
@@ -99,12 +102,15 @@ describe('withApi Module', () => {
 
   it('is protected against a component crash', () => {
     console.error = vitest.fn();
+    const { context } = createMockContainer();
     const api: any = {
       meta: {
         name: 'foo',
       },
+      on: context.on,
+      off: context.off,
+      emit: context.emit,
     };
-    const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
     const node = render(
       <StateContext.Provider value={context}>
@@ -116,12 +122,15 @@ describe('withApi Module', () => {
 
   it('reports to console.error when an error is hit', () => {
     console.error = vitest.fn();
+    const { context } = createMockContainer();
     const api: any = {
       meta: {
         name: 'my pilet',
       },
+      on: context.on,
+      off: context.off,
+      emit: context.emit,
     };
-    const { context } = createMockContainer();
     const Component = withApi(context, StubComponent, api, 'feed' as any);
     render(
       <StateContext.Provider value={context}>
@@ -132,12 +141,15 @@ describe('withApi Module', () => {
   });
 
   it('Wraps component of type object', () => {
+    const { context } = createMockContainer();
     const api: any = {
       meta: {
         name: 'foo',
       },
+      on: context.on,
+      off: context.off,
+      emit: context.emit,
     };
-    const { context } = createMockContainer();
     context.converters = {
       html: ({ component }) => component,
     };
@@ -153,12 +165,15 @@ describe('withApi Module', () => {
   });
 
   it('Wraps component which is object == null.', () => {
+    const { context } = createMockContainerWithNoWrappers();
     const api: any = {
       meta: {
         name: 'foo',
       },
+      on: context.on,
+      off: context.off,
+      emit: context.emit,
     };
-    const { context } = createMockContainerWithNoWrappers();
     context.converters = {
       html: ({ component }) => component,
     };

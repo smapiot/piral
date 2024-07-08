@@ -22,30 +22,20 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "esm/index.js",
+  "module": "lib/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
-    },
-    "./esm/*": {
-      "import": "./esm/*"
-    },
+    ".": "./lib/index.js",
     "./lib/*": {
-      "require": "./lib/*"
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
     },
-    "./_/*": {
-      "import": "./esm/*.js",
-      "require": "./lib/*.js"
-    },
+    "./app.codegen": "./app.codegen",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "dist",
-    "esm",
     "lib",
     "src",
     "app.codegen",
@@ -64,10 +54,9 @@
   },
   "scripts": {
     "cleanup": "rimraf dist esm lib",
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:codegen",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
-    "build:codegen": "esbuild src/tools/codegen.ts --bundle --outfile=dist/codegen.js --format=cjs --platform=node --external:pnpapi",
+    "build": "yarn build:esnext && yarn build:codegen",
+    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
+    "build:codegen": "esbuild src/tools/codegen.ts --bundle --outfile=lib/codegen.js --format=cjs --platform=node --external:pnpapi",
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

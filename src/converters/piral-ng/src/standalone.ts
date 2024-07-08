@@ -10,7 +10,7 @@ import {
 import type { BaseComponentProps, HtmlComponent } from 'piral-core';
 import { CoreRoutingService } from './CoreRoutingService';
 
-function isLazyLoader<TProps>(thing: NgStandaloneComponent<TProps>): thing is NgStandaloneComponentLoader<TProps> {
+function isLazyLoader(thing: NgStandaloneComponent): thing is NgStandaloneComponentLoader {
   return typeof thing === 'function' && thing.hasOwnProperty('prototype') && thing.hasOwnProperty('arguments');
 }
 
@@ -18,12 +18,12 @@ export interface DefaultExport<T> {
   default: T;
 }
 
-export type NgStandaloneComponentLoader<TProps> = () => Promise<DefaultExport<Type<TProps>>>;
+export type NgStandaloneComponentLoader = () => Promise<DefaultExport<Type<any>>>;
 
-export type NgStandaloneComponent<TProps> = Type<TProps> | NgStandaloneComponentLoader<TProps>;
+export type NgStandaloneComponent = Type<any> | NgStandaloneComponentLoader;
 
 export interface NgStandaloneConverter {
-  <TProps extends BaseComponentProps>(component: NgStandaloneComponent<TProps>): HtmlComponent<TProps>;
+  <TProps extends BaseComponentProps>(component: NgStandaloneComponent): HtmlComponent<TProps>;
 }
 
 export function createConverter(options: ApplicationConfig): NgStandaloneConverter {

@@ -16,29 +16,19 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "esm/index.js",
+  "module": "lib/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
-    },
-    "./esm/*": {
-      "import": "./esm/*"
-    },
+    ".": "./lib/index.js",
     "./lib/*": {
-      "require": "./lib/*"
-    },
-    "./_/*": {
-      "import": "./esm/*.js",
-      "require": "./lib/*.js"
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
     },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "esm",
     "lib",
     "src"
   ],
@@ -51,9 +41,8 @@
   },
   "scripts": {
     "cleanup": "rimraf esm lib",
-    "build": "yarn build:commonjs && yarn build:esnext",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build": "yarn build:esnext",
+    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

@@ -11,11 +11,8 @@ import type {
   Localizable,
   PiralSelectLanguageEvent,
   AnyLocalizationMessages,
+  TranslationFallback,
 } from './types';
-
-export interface TranslationFallback {
-  (key: string, language: string): string;
-}
 
 export interface RetrieveCurrentLanguage {
   /**

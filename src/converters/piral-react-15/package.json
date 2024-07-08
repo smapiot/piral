@@ -16,32 +16,20 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "esm/index.js",
+  "module": "lib/index.js",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
-    },
-    "./convert": {
-      "import": "./convert.js"
-    },
-    "./esm/*": {
-      "import": "./esm/*"
-    },
+    ".": "./lib/index.js",
+    "./convert":"./convert.js",
     "./lib/*": {
-      "require": "./lib/*"
-    },
-    "./_/*": {
-      "import": "./esm/*.js",
-      "require": "./lib/*.js"
+      "import": "./lib/*",
+      "types":  "./lib/*.d.ts"
     },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [
-    "esm",
     "lib",
     "src",
     "convert.d.ts",
@@ -56,10 +44,9 @@
   },
   "scripts": {
     "cleanup": "rimraf esm lib convert.d.ts convert.js",
-    "build": "yarn build:commonjs && yarn build:esnext && yarn build:convert",
+    "build": "yarn build:esnext && yarn build:convert",
     "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
-    "build:commonjs": "tsc --project tsconfig.json --outDir lib --module commonjs",
-    "build:esnext": "tsc --project tsconfig.json --outDir esm --module esnext",
+    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
     "typedoc": "typedoc --json ../../../docs/types/piral-react-15.json src --exclude \"src/**/*.test.*\"",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

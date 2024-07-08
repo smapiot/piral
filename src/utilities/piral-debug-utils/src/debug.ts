@@ -1,5 +1,6 @@
 import { ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
+import { overlayId } from './overlay';
 import { createVisualizer, destroyVisualizer, toggleVisualizer } from './visualizer';
 import { getInitialSettings, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
@@ -75,6 +76,15 @@ export function installPiralDebug(options: DebuggerOptions) {
         if (prev !== value) {
           updateVisualize(value);
         }
+      },
+    },
+    errorOverlay: {
+      value: initialSettings.errorOverlay,
+      type: 'boolean',
+      label: 'Show error overlay',
+      group: 'extensions',
+      onChange(value) {
+        setValue(settingsKeys.errorOverlay, value ? 'on' : 'off');
       },
     },
     extensionCatalogue: {
@@ -353,12 +363,25 @@ export function installPiralDebug(options: DebuggerOptions) {
 
   document.body.dispatchEvent = function (ev: CustomEvent) {
     if (ev.type.startsWith('piral-')) {
+      const name = ev.type.replace('piral-', '');
+      const args = ev.detail.arg;
+
       events.unshift({
         id: events.length.toString(),
-        name: ev.type.replace('piral-', ''),
-        args: decycle(ev.detail.arg),
+        name,
+        args: decycle(args),
         time: Date.now(),
       });
+
+      if (
+        name === 'unhandled-error' &&
+        args.errorType &&
+        typeof customElements !== 'undefined' &&
+        sessionStorage.getItem(settingsKeys.errorOverlay) !== 'off'
+      ) {
+        const ErrorOverlay = customElements.get(overlayId);
+        document.body.appendChild(new ErrorOverlay(args));
+      }
 
       sendMessage({
         events,
@@ -379,6 +402,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         viewOrigins: sessionStorage.getItem(settingsKeys.viewOrigins) === 'on',
         extensionCatalogue: sessionStorage.getItem(settingsKeys.extensionCatalogue) !== 'off',
         clearConsole: sessionStorage.getItem(settingsKeys.clearConsole) === 'on',
+        errorOverlay: sessionStorage.getItem(settingsKeys.errorOverlay) !== 'off',
       });
     }
   });

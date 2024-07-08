@@ -4,12 +4,17 @@ import { PiralUpdateDialog } from './components';
 
 export const UpdateDialog: React.FC = () => {
   const actions = useActions();
-  const { active, target } = useGlobalState((m) => m.updatability);
+  const { active, updated, removed } = useGlobalState((m) => m.updatability);
+  const piletsToUpdate = [...updated, ...removed];
 
   return (
     <>
       {active && (
-        <PiralUpdateDialog piletsToUpdate={target} onApprove={actions.approveUpdate} onReject={actions.rejectUpdate} />
+        <PiralUpdateDialog
+          piletsToUpdate={piletsToUpdate}
+          onApprove={actions.approveUpdate}
+          onReject={actions.rejectUpdate}
+        />
       )}
     </>
   );

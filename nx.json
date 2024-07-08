@@ -6,10 +6,7 @@
         "cacheableOperations": [
           "build",
           "build:convert",
-          "build:commonjs",
           "build:esnext",
-          "build:commonjs:tsc",
-          "build:commonjs:system",
           "build:esnext:tsc",
           "build:esnext:system",
           "build:codegen",
@@ -35,14 +32,9 @@
         "{projectRoot}/convert.d.ts"
       ]
     },
-    "build:commonjs": {
-      "outputs": [
-        "{projectRoot}/lib"
-      ]
-    },
     "build:esnext": {
       "outputs": [
-        "{projectRoot}/esm"
+        "{projectRoot}/lib"
       ]
     },
     "build:docs": {

@@ -1,5 +1,20 @@
 # Piral Changelog
 
+## 1.6.0 (July 5, 2024)
+
+- Fixed event dispatching for providers in `piral-blazor`
+- Fixed navigation storm in angular pilets (#672)
+- Fixed declaration merging for `moduleResolution` set to `bundler` (#701)
+- Removed legacy `require` (CommonJS) output in `piral-core` and related libs
+- Improved setup of event listeners in `piral-blazor` (#696)
+- Improved fallback signature in `piral-translate`
+- Improved streaming update in `piral-update`
+- Updated dependencies
+- Added `--strict-port` option to the `piral-cli` debug commands (#699)
+- Added update capabilities to `piral-blazor` extension boundaries
+- Added `piral-error-overlay` to `piral-debug-utils`
+- Added `unhandled-error` event fired from the `ErrorBoundary`
+
 ## 1.5.6 (May 21, 2024)
 
 - Fixed issue with `piral-cli-webpack5` when modifying the config entry point

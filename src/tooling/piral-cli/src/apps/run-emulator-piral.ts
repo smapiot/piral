@@ -41,6 +41,11 @@ export interface RunEmulatorPiralOptions {
   port?: number;
 
   /**
+   * Forces the set port to be used, otherwise exists with an error.
+   */
+  strictPort?: boolean;
+
+  /**
    * The URL of a pilet feed(s) used to include locally missing pilets.
    */
   feed?: string | Array<string>;
@@ -61,6 +66,7 @@ export const runEmulatorPiralDefaults: RunEmulatorPiralOptions = {
   logLevel: LogLevels.info,
   open: config.openBrowser,
   port: config.port,
+  strictPort: config.strictPort,
   registry: config.registry,
   npmClient: undefined,
 };
@@ -83,6 +89,7 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
   const {
     open = runEmulatorPiralDefaults.open,
     port: originalPort = runEmulatorPiralDefaults.port,
+    strictPort = runEmulatorPiralDefaults.strictPort,
     logLevel = runEmulatorPiralDefaults.logLevel,
     npmClient: defaultNpmClient = runEmulatorPiralDefaults.npmClient,
     registry = runEmulatorPiralDefaults.registry,
@@ -120,7 +127,7 @@ always-auth=true`,
   const piral = await findPiralInstance(packageName, appRoot, {
     port: originalPort,
   });
-  const port = await getAvailablePort(piral.port);
+  const port = await getAvailablePort(piral.port, strictPort);
 
   const krasBaseConfig = resolve(fullBase, krasrc);
   const krasRootConfig = resolve(appRoot, krasrc);

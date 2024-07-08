@@ -120,7 +120,7 @@ export interface Bundler {
 
 export interface NetworkSpec {
   port: number;
-  type: 'proposed' | 'fixed';
+  type: 'proposed' | 'wanted' | 'fixed';
 }
 
 export interface PlatformStartModuleOptions {

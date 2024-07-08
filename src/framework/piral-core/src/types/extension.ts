@@ -19,7 +19,7 @@ export interface BaseExtensionSlotProps<TName, TParams> {
    * Defines what should be rendered when no components are available
    * for the specified extension.
    */
-  empty?(): ReactNode;
+  empty?(props: TParams): ReactNode;
   /**
    * Determines if the `render` function should be called in case no
    * components are available for the specified extension.

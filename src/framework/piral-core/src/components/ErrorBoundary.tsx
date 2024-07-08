@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { findDOMNode } from 'react-dom';
 import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
+import { defer } from '../utils';
 import { Errors, PiletApi } from '../types';
 
 export interface ErrorBoundaryProps {
@@ -40,6 +42,25 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     this.setState({
       error,
     });
+  }
+
+  componentDidUpdate(_: ErrorBoundaryProps, prevState: ErrorBoundaryState) {
+    const { error } = this.state;
+
+    if (error && !prevState.error) {
+      const { piral, errorType } = this.props;
+      const pilet = piral.meta.name;
+
+      defer(() => {
+        const container = findDOMNode(this);
+        piral.emit('unhandled-error', {
+          container,
+          errorType,
+          error,
+          pilet,
+        });
+      });
+    }
   }
 
   render() {

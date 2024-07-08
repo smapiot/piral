@@ -2,7 +2,8 @@ import type { ExtensionRegistration } from 'piral-core';
 import { createElement } from 'react';
 import { isInternalNavigation, performInternalNavigation } from './navigation';
 
-const blazorRootId = 'blazor-root';
+export const blazorRootId = 'blazor-root';
+
 const eventParents: Array<HTMLElement> = [];
 
 const globalEventNames = [
@@ -32,8 +33,9 @@ const globalEventNames = [
 
 const eventNames = {
   render: 'render-blazor-extension',
+  update: 'extension-props-changed',
   navigate: 'navigate-blazor',
-  piral: 'piral-blazor',
+  forward: 'forward-event',
 };
 
 function isRooted(target: HTMLElement) {
@@ -74,56 +76,100 @@ function dispatchToRoot(event: any) {
   }
 }
 
-export function emitRenderEvent(
-  source: HTMLElement,
+function getFallback(fallbackComponent: string, params: any) {
+  if (typeof fallbackComponent === 'string') {
+    const empty = undefined;
+    return () => createElement('piral-extension', { name: fallbackComponent, params, empty });
+  }
+
+  return undefined;
+}
+
+function getOrder(sourceRef: any) {
+  return typeof sourceRef !== 'undefined'
+    ? (elements: Array<ExtensionRegistration>) => {
+        const oldItems = elements.map((el, id) => ({
+          id,
+          pilet: el.pilet,
+          defaults: el.defaults ?? {},
+        }));
+        const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
+        return newItems.map(({ id }) => elements[id]).filter(Boolean);
+      }
+    : undefined;
+}
+
+function getProps(name: string, params: any, sourceRef: any, fallbackComponent: string | null) {
+  const empty = getFallback(fallbackComponent, params);
+  const order = getOrder(sourceRef);
+
+  return {
+    name,
+    params,
+    empty,
+    order,
+  };
+}
+
+export function emitUpdateEvent(
+  target: HTMLElement,
   name: string,
   params: any,
   sourceRef: any,
   fallbackComponent: string | null,
 ) {
-  const target = findTarget(source);
-  const empty =
-    typeof fallbackComponent === 'string'
-      ? () => createElement('piral-extension', { name: fallbackComponent, params })
-      : undefined;
-  const order =
-    typeof sourceRef !== 'undefined'
-      ? (elements: Array<ExtensionRegistration>) => {
-          const oldItems = elements.map((el, id) => ({
-            id,
-            pilet: el.pilet,
-            defaults: el.defaults ?? {},
-          }));
-          const newItems: Array<{ id: number }> = sourceRef.invokeMethod('Order', oldItems);
-          return newItems.map(({ id }) => elements[id]).filter(Boolean);
-        }
-      : undefined;
+  const container = findTarget(target);
+  const eventInit = {
+    detail: getProps(name, params, sourceRef, fallbackComponent),
+  };
+
+  container.dispatchEvent(new CustomEvent(eventNames.update, eventInit));
+}
+
+export function emitRenderEvent(
+  target: HTMLElement,
+  name: string,
+  params: any,
+  sourceRef: any,
+  fallbackComponent: string | null,
+) {
+  const container = findTarget(target);
   const eventInit = {
     bubbles: true,
     detail: {
-      target,
-      props: {
-        name,
-        params,
-        empty,
-        order,
+      configure() {
+        sourceRef.invokeMethod('Configure', {
+          CanUpdate: true,
+        });
       },
+      target,
+      props: getProps(name, params, sourceRef, fallbackComponent),
     },
   };
+
   const delayEmit = () =>
     requestAnimationFrame(() => {
-      if (!isRooted(target)) {
-        target.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
-      } else {
-        delayEmit();
+      if (!isRooted(container)) {
+        return container.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
       }
+
+      const eventParent = eventParents[0];
+      const root = document.getElementById(blazorRootId);
+
+      // this would be used exclusively by providers
+      if (eventParent && root.getAttribute('render') === 'modern') {
+        return eventParent.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
+      }
+
+      delayEmit();
     });
+
   delayEmit();
 }
 
 export function emitPiralEvent(type: string, args: any) {
   document.body.dispatchEvent(
-    new CustomEvent(eventNames.piral, {
+    new CustomEvent(eventNames.forward, {
       bubbles: false,
       detail: {
         type,
@@ -133,8 +179,9 @@ export function emitPiralEvent(type: string, args: any) {
   );
 }
 
-export function emitNavigateEvent(source: HTMLElement, to: string, replace = false, state?: any) {
-  findTarget(source).dispatchEvent(
+export function emitNavigateEvent(target: HTMLElement, to: string, replace = false, state?: any) {
+  const container = findTarget(target);
+  container.dispatchEvent(
     new CustomEvent(eventNames.navigate, {
       bubbles: true,
       detail: {
@@ -146,35 +193,24 @@ export function emitNavigateEvent(source: HTMLElement, to: string, replace = fal
   );
 }
 
-export function attachEvents(
+export function attachLocalEvents(
   host: HTMLElement,
   render: (ev: CustomEvent) => void,
   navigate: (ev: CustomEvent) => void,
-  forward: (ev: CustomEvent) => void,
 ) {
-  eventParents.push(host);
   host.addEventListener(eventNames.render, render, false);
   host.addEventListener(eventNames.navigate, navigate, false);
-
-  if (eventParents.length === 1) {
-    document.body.addEventListener(eventNames.piral, forward, false);
-  }
+  // install proxy handlers
+  globalEventNames.forEach((eventName) => host.addEventListener(eventName, dispatchToRoot));
+  // register host as event parent
+  eventParents.push(host);
 
   return () => {
-    eventParents.splice(eventParents.indexOf(host), 1);
     host.removeEventListener(eventNames.render, render, false);
     host.removeEventListener(eventNames.navigate, navigate, false);
-
-    if (eventParents.length === 0) {
-      document.body.removeEventListener(eventNames.piral, forward, false);
-    }
+    // uninstall proxy handlers
+    globalEventNames.forEach((eventName) => host.removeEventListener(eventName, dispatchToRoot));
+    // unregister host as event parent
+    eventParents.splice(eventParents.indexOf(host), 1);
   };
-}
-
-export function addGlobalEventListeners(el: HTMLElement) {
-  globalEventNames.forEach((eventName) => el.addEventListener(eventName, dispatchToRoot));
-}
-
-export function removeGlobalEventListeners(el: HTMLElement) {
-  globalEventNames.forEach((eventName) => el.removeEventListener(eventName, dispatchToRoot));
 }

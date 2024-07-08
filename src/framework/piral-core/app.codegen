@@ -1,4 +1,4 @@
-const cg = require('./dist/codegen');
+const cg = require('./lib/codegen');
 
 function getConfig(root) {
   try {
@@ -13,12 +13,11 @@ module.exports = function () {
   const imports = [];
   const root = process.cwd();
   const cfg = getConfig(root);
-  const cat = process.env.PIRAL_PACKAGE_CAT || '_';
   const debug = typeof cfg.debugTools === 'boolean' ? cfg.debugTools : !!process.env.DEBUG_PIRAL;
   const opts = {
     root,
     origin: __dirname,
-    cat: process.env.NODE_ENV === 'test' ? 'src' : cat,
+    cat: process.env.NODE_ENV === 'test' ? 'src' : 'lib',
     appName: process.env.BUILD_PCKG_NAME || '',
     externals: (process.env.SHARED_DEPENDENCIES || '').split(',').filter(Boolean),
     publicPath: process.env.PIRAL_PUBLIC_PATH || '/',

@@ -60,8 +60,31 @@ export interface PiralStoreDataEvent<TValue = any> {
   expires: number;
 }
 
+/**
+ * Gets fired when an unhandled error in a component has been prevented.
+ */
+export interface PiralUnhandledErrorEvent {
+  /**
+   * The container showing the error / containing the component.
+   */
+  container: any;
+  /**
+   * The type of the error, i.e., the type of component that crashed.
+   */
+  errorType: string;
+  /**
+   * The actual error that was emitted.
+   */
+  error: Error;
+  /**
+   * The name of the pilet containing the problematic component.
+   */
+  pilet: string;
+}
+
 declare module 'piral-base/lib/types/api' {
   interface PiralEventMap extends PiralCustomEventMap {
     'store-data': PiralStoreDataEvent;
+    'unhandled-error': PiralUnhandledErrorEvent;
   }
 }

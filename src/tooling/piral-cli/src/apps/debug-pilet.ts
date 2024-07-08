@@ -65,6 +65,11 @@ export interface DebugPiletOptions {
   port?: number;
 
   /**
+   * Forces the set port to be used, otherwise exists with an error.
+   */
+  strictPort?: boolean;
+
+  /**
    * Sets the publicUrl to use.
    * By default, the server is assumed to be at root "/".
    */
@@ -132,6 +137,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
   entry: './src/index',
   open: config.openBrowser,
   port: config.port,
+  strictPort: config.strictPort,
   publicUrl: '/',
   hmr: true,
   krasrc: undefined,
@@ -215,6 +221,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     open = debugPiletDefaults.open,
     hmr = debugPiletDefaults.hmr,
     port: originalPort = debugPiletDefaults.port,
+    strictPort = debugPiletDefaults.strictPort,
     publicUrl: originalPublicUrl = debugPiletDefaults.publicUrl,
     logLevel = debugPiletDefaults.logLevel,
     concurrency = debugPiletDefaults.concurrency,
@@ -355,7 +362,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
         if (networks.length === i) {
           networks.push({
             port: appPort || originalPort + i,
-            type: 'proposed',
+            type: strictPort ? 'wanted' : 'proposed',
           });
         }
 

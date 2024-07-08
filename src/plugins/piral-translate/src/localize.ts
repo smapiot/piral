@@ -1,4 +1,4 @@
-import { LocalizationMessages, Localizable, NestedLocalizationMessages } from './types';
+import { LocalizationMessages, Localizable, NestedLocalizationMessages, TranslationFallback } from './types';
 import { flattenTranslations } from './flatten-translations';
 
 function defaultFallback(key: string, language: string): string {
@@ -30,7 +30,7 @@ export class Localizer implements Localizable {
     messages: LocalizationMessages | NestedLocalizationMessages,
     public language: string,
     public languages: Array<string>,
-    private fallback = defaultFallback,
+    private fallback: TranslationFallback = defaultFallback,
   ) {
     this.messages = flattenTranslations(messages);
   }
@@ -65,7 +65,7 @@ export class Localizer implements Localizable {
     const message = this.translateMessage(this.messages, key, variables);
 
     if (message === undefined) {
-      return this.fallback(key, this.language);
+      return this.fallback(key, this.language, this.messages, variables);
     }
 
     return message;

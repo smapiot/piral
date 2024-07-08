@@ -1,5 +1,5 @@
 import { version, ComponentType } from 'react';
-import { createConverter } from './esm/converter';
+import { createConverter } from './lib/converter';
 
 export interface HtmlComponent<TProps> {
   component: {

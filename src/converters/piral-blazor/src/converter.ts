@@ -1,5 +1,5 @@
 import type { BaseComponentProps, Disposable, ForeignComponent } from 'piral-core';
-import { addGlobalEventListeners, attachEvents, removeGlobalEventListeners } from './events';
+import { attachLocalEvents } from './events';
 import {
   activate,
   deactivate,
@@ -76,18 +76,18 @@ export function createConverter(
   language?: LanguageOptions,
   logLevel?: BlazorLogLevel,
 ) {
+  let configurable = false;
   const bootLoader = createBootLoader(bootConfig.url, bootConfig.satellites);
   const boot = (opts?: WebAssemblyStartOptions) =>
-    bootLoader(opts).then(async (res) => {
-      const [_, capabilities] = res;
+    bootLoader(opts).then(async ({ config, first }) => {
+      const [_, capabilities] = config;
+      configurable = capabilities.includes('configurable');
 
-      if (capabilities.includes('logging')) {
-        if (typeof logLevel === 'number') {
-          await setLogLevel(logLevel);
-        }
+      if (typeof logLevel === 'number' && capabilities.includes('logging')) {
+        await setLogLevel(logLevel);
       }
 
-      if (capabilities.includes('events')) {
+      if (first && capabilities.includes('events')) {
         const eventDispatcher = document.body.dispatchEvent;
 
         // listen to all events for forwarding them
@@ -119,7 +119,7 @@ export function createConverter(
       }
 
       window.dispatchEvent(new CustomEvent('loaded-blazor-core'));
-      return res;
+      return config;
     });
   let loader = !lazy && boot(opts);
   let listener: Disposable = undefined;
@@ -146,26 +146,20 @@ export function createConverter(
       const nav = ctx.navigation;
       el.setAttribute('data-blazor-pilet-root', 'true');
 
-      addGlobalEventListeners(el);
-
       locals.state = 'fresh';
       locals.next = noop;
-      locals.dispose = attachEvents(
+      locals.dispose = attachLocalEvents(
         el,
         (ev) => {
           ev.stopPropagation();
-          const { target, props } = ev.detail;
+          const { target, props, configure } = ev.detail;
           piral.renderHtmlExtension(target, props);
+          configurable && configure();
         },
         (ev) => {
           ev.stopPropagation();
           const { to, state, replace } = ev.detail;
           replace ? nav.replace(to, state) : nav.push(to, state);
-        },
-        (ev) => {
-          ev.stopPropagation();
-          const { type, args } = ev.detail;
-          piral.emit(type, args);
         },
       );
 
@@ -243,7 +237,6 @@ export function createConverter(
       });
     },
     unmount(el, locals: BlazorLocals) {
-      removeGlobalEventListeners(el);
       el.removeAttribute('data-blazor-pilet-root');
       locals.dispose();
       enqueueChange(locals, locals.unmount);

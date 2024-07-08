@@ -26,7 +26,7 @@ export function ExtensionSlot<T extends string>(props: ExtensionSlotProps<T>) {
   const extensions = useGlobalState((s) => s.registry.extensions[name] || none);
   const isEmpty = extensions.length === 0 && isfunc(empty);
   const content = isEmpty
-    ? [defaultRender(empty(), 'empty')]
+    ? [defaultRender(empty(params), 'empty')]
     : order(extensions).map(({ component: Component, reference, defaults = {} }, i) => (
         <Component
           key={`${reference?.displayName || '_'}${i}`}

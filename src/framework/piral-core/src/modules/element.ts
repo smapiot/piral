@@ -12,6 +12,7 @@ import {
   isSame,
   contentName,
   componentName,
+  defer,
 } from '../utils';
 
 export interface Updatable {
@@ -275,7 +276,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       const ev = new CustomEvent(eventName, {
         detail: { name: this.name, origin: this.origin },
       });
-      setTimeout(() => window.dispatchEvent(ev), 0);
+      defer(() => window.dispatchEvent(ev));
     }
   }
 

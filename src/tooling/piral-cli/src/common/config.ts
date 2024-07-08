@@ -58,6 +58,10 @@ export interface PiralCliConfig {
    */
   port?: number;
   /**
+   * Forces the set port to be used, otherwise exists with an error.
+   */
+  strictPort?: boolean;
+  /**
    * Template language.
    */
   language?: SourceLanguage;
@@ -86,6 +90,7 @@ export const config: PiralCliConfig = rc(
     schemaVersion: 'v2' as const,
     openBrowser: false,
     port: 1234,
+    strictPort: false,
     language: 'ts' as const,
     host: 'localhost',
     registry: defaultRegistry,

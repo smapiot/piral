@@ -72,6 +72,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiralDefaults.port)
+        .boolean('strict-port')
+        .describe('strict-port', 'Forces the defined port to be used or exists with an error.')
+        .default('strict-port', apps.debugPiralDefaults.strictPort)
         .string('public-url')
         .describe('public-url', 'Sets the public URL (path) of the bundle.')
         .default('public-url', apps.debugPiralDefaults.publicUrl)
@@ -104,6 +107,7 @@ const allCommands: Array<ToolCommand<any>> = [
         entry: args.source as string,
         target: args.target as string,
         port: args.port as number,
+        strictPort: args['strict-port'] as boolean,
         hmr: args.hmr as boolean,
         krasrc: args.krasrc as string,
         optimizeModules: args['optimize-modules'] as boolean,
@@ -461,6 +465,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.debugPiletDefaults.port)
+        .boolean('strict-port')
+        .describe('strict-port', 'Forces the defined port to be used or exists with an error.')
+        .default('strict-port', apps.debugPiletDefaults.strictPort)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.debugPiletDefaults.logLevel)
@@ -501,6 +508,7 @@ const allCommands: Array<ToolCommand<any>> = [
         target: args.target as string,
         publicUrl: args['public-url'] as string,
         port: args.port as number,
+        strictPort: args['strict-port'] as boolean,
         hmr: args.hmr as boolean,
         bundlerName: args.bundler as string,
         krasrc: args.krasrc as string,
@@ -975,6 +983,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('port')
         .describe('port', 'Sets the port of the local development server.')
         .default('port', apps.runEmulatorPiralDefaults.port)
+        .boolean('strict-port')
+        .describe('strict-port', 'Forces the defined port to be used or exists with an error.')
+        .default('strict-port', apps.runEmulatorPiralDefaults.strictPort)
         .string('registry')
         .describe('registry', 'Sets the package registry to use for resolving the emulator.')
         .default('registry', apps.runEmulatorPiralDefaults.registry)
@@ -997,6 +1008,7 @@ const allCommands: Array<ToolCommand<any>> = [
     run(args) {
       return apps.runEmulatorPiral(args.base as string, {
         port: args.port as number,
+        strictPort: args['strict-port'] as boolean,
         app: args.source as string,
         npmClient: args['npm-client'] as NpmClientType,
         registry: args.registry as string,
