@@ -1,6 +1,8 @@
 import { createConverter } from './lib/converter';
 import type { Type, LazyType, NgModuleFlags, NgOptions } from './lib/types';
 
+export * from './lib/injection';
+
 export interface HtmlComponent<TProps> {
   component: {
     mount(element: HTMLElement, props: TProps, ctx: any, locals: any): void;

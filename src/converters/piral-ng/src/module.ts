@@ -16,6 +16,7 @@ import { PIRAL, PROPS } from './injection';
 import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
 import { findComponents, getAnnotations } from './utils';
+import { piralName, propsName } from './constants';
 import { SharedModule } from '../common';
 
 interface ModuleDefinition {
@@ -40,9 +41,9 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
     });
   const providers = [
     RoutingService,
-    { provide: 'Props', useFactory: createProxy, deps: [] },
+    { provide: propsName, useFactory: createProxy, deps: [] },
     { provide: PROPS, useFactory: createProxy, deps: [] },
-    { provide: 'piral', useFactory: () => piral, deps: [] },
+    { provide: piralName, useFactory: () => piral, deps: [] },
     { provide: PIRAL, useFactory: () => piral, deps: [] },
   ];
 

@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
-import { ComponentContext, PiletApi } from 'piral-core';
+import type { ComponentContext, PiletApi } from 'piral-core';
+import { contextName, piralName, propsName } from './constants';
 
-export const PROPS = new InjectionToken<any>('Props');
-export const PIRAL = new InjectionToken<PiletApi>('piral');
-export const CONTEXT = new InjectionToken<ComponentContext>('Context');
+export const PROPS = new InjectionToken<any>(propsName);
+export const PIRAL = new InjectionToken<PiletApi>(piralName);
+export const CONTEXT = new InjectionToken<ComponentContext>(contextName);

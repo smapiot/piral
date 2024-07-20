@@ -14,6 +14,8 @@ import {
   ɵplatformCoreDynamic as platformCoreDynamic,
   ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS as INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
 } from '@angular/platform-browser-dynamic';
+import { contextName } from './constants';
+import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
 
 function getVersionHandler(versions: Record<string, () => void>) {
@@ -35,7 +37,8 @@ const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
   const path = context.publicPath || '/';
   const platform = customPlatformDynamicFactory([
-    { provide: 'Context', useValue: context },
+    { provide: contextName, useValue: context },
+    { provide: CONTEXT, useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
     { provide: 'NgFlags', useValue: ngFlags },
   ]);
