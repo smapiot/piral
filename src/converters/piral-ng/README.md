@@ -429,7 +429,14 @@ Depending on the mounted component different services are injected. the followin
 | Extension | `Props` | `piral` | `Context` |
 | Menu      | `Props` | `piral` | `Context` |
 
-To use such a service the `@Inject` decorator should be used with the explicit name.
+`piral-ng` also exports typed `InjectionToken` constants compatible with Angular's `inject` function:
+- `PROPS`
+- `PIRAL`
+- `CONTEXT`
+
+To use such a service you should:
+- either use the `@Inject` parameter decorator with the explicit name
+- or use the `inject` function with the imported token
 
 The following code snippet illustrates the injection of the `Props` service from an `TileProps` interface into a sample tile component.
 
