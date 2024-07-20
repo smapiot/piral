@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.6.1 (TBD)
+
+- Added `InjectionToken` constants `PIRAL`, `CONTEXT` and `PROPS` for compatibility with Angular's `inject` function to `piral-ng` (#703)  
+
 ## 1.6.0 (July 5, 2024)
 
 - Fixed event dispatching for providers in `piral-blazor`

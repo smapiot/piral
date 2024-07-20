@@ -12,6 +12,7 @@ import {
   NgModule,
   NgZone,
 } from '@angular/core';
+import { PIRAL, PROPS } from './injection';
 import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
 import { findComponents, getAnnotations } from './utils';
@@ -40,7 +41,9 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
   const providers = [
     RoutingService,
     { provide: 'Props', useFactory: createProxy, deps: [] },
+    { provide: PROPS, useFactory: createProxy, deps: [] },
     { provide: 'piral', useFactory: () => piral, deps: [] },
+    { provide: PIRAL, useFactory: () => piral, deps: [] },
   ];
 
   @NgModule({
