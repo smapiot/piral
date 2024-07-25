@@ -3,7 +3,7 @@ title: Vercel
 description: How to deploy your Piral instance to the web on Vercel.
 ---
 
-# ![Vercel Logo](../logos/vercel.svg){height=24px} Deploy your Piral instance to Vercel
+# ![Vercel Logo](../logos/vercel.svg){height=24px .auto} Deploy your Piral instance to Vercel
 
 You can use [Vercel](http://vercel.com/) to deploy an Piral instance to their global edge network with zero configuration.
 
