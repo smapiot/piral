@@ -104,10 +104,24 @@ exports.build = function (entry, options) {
   fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const head = `
-    import { ImageCard, PageContent } from '@pidoc/components';
+    import { Link } from 'react-router-dom';
+    import { PageContent } from '@pidoc/components';
+
+    const ImageCard = ({ image, title, description, details, link }) => (
+      <Link to={link} className={\`card image-card text-center\${details ? ' details' : ''}\`}>
+        <div className="image">
+          <img className="auto" src={image} alt={title} />
+        </div>
+        <h5>{title}</h5>
+        <div>
+          <p>{description}</p>
+        </div>
+        {details && <div className="card-details">{details}</div>}
+      </Link>
+    );
   `;
 
-  const body = `
+  const body = `  
       <PageContent>
         <div className="plugin-info markdown-body">
           <h1>Plugins Overview</h1>

@@ -127,7 +127,7 @@ npx piral build --type emulator
 
 The *emulator package* is a tarball containing the application shell, in our case, it will be named `my-app-1.0.0.tgz`. Usually, the tarball will be published to a (private) npm registry, so that all development teams will be able to reference and use the same Piral instance for developing their pilets.
 
-![Folder structure of the application shell](../diagrams/my-app-structure.png){.auto}
+![Folder structure of the application shell](../diagrams/my-app-structure.png)
 
 For local development (or this tutorial) we can refer to the Piral instance locally.
 
@@ -147,7 +147,7 @@ pilet new ./my-app/dist/emulator/my-app-1.0.0.tgz --target my-pilet
 
 With the `pilet new` command, a new pilet with pre-defined content is created. The first parameter `./my-app/dist/emulator/my-app-1.0.0.tgz` specifies the application shell, which the pilet will be built for. Make sure that you adjust the path to the Piral instance located in your local directory structure.
 
-![Folder structure of the pilet](../diagrams/my-pilet-structure.png){.auto}
+![Folder structure of the pilet](../diagrams/my-pilet-structure.png)
 
 If you navigate into the folder `my-pilet`, you'll find the files for the newly created pilet.
 

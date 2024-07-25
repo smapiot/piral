@@ -169,3 +169,11 @@ h2.plugin {
     }
   }
 }
+
+body.dark .image-card .image > img.auto {
+  filter: #{"grayscale(100%) invert() hue-rotate(180deg)"};
+
+  &:hover {
+    filter: #{"invert() hue-rotate(180deg)"};
+  }
+}
