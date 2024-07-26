@@ -20,6 +20,7 @@ import {
   config,
   initNpmProject,
   piralJson,
+  ensure,
 } from '../common';
 
 export interface NewPiralOptions {
@@ -128,6 +129,15 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     name = newPiralDefaults.name,
     npmClient: defaultNpmClient = newPiralDefaults.npmClient,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('framework', framework, 'string');
+  ensure('version', version, 'string');
+  ensure('target', target, 'string');
+  ensure('app', app, 'string');
+  ensure('template', template, 'string');
+  ensure('variables', variables, 'string');
+  
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
 

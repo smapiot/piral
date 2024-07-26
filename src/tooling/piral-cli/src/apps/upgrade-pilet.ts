@@ -25,6 +25,7 @@ import {
   isMonorepoPackageRef,
   getPiletScaffoldData,
   retrievePiletData,
+  ensure,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -90,6 +91,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     variables = upgradePiletDefaults.variables,
     npmClient: defaultNpmClient = upgradePiletDefaults.npmClient,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('variables', variables, 'object');
+  ensure('target', target, 'string');
+  
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);

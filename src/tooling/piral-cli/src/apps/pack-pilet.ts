@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { createPiletPackage, logDone, setLogLevel, progress } from '../common';
+import { createPiletPackage, logDone, setLogLevel, progress, ensure } from '../common';
 import { LogLevels } from '../types';
 
 export interface PackPiletOptions {
@@ -31,6 +31,11 @@ export async function packPilet(baseDir = process.cwd(), options: PackPiletOptio
     target = packPiletDefaults.target,
     logLevel = packPiletDefaults.logLevel,
   } = options;
+
+  ensure('baseDir', baseDir, 'string');
+  ensure('source', source, 'string');
+  ensure('target', target, 'string');
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

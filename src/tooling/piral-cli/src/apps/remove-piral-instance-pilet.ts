@@ -13,6 +13,7 @@ import {
   determineNpmClient,
   uninstallNpmPackage,
   piletJson,
+  ensure,
 } from '../common';
 
 export interface RemovePiralInstancePiletOptions {
@@ -52,6 +53,11 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
     source = removePiralInstancePiletDefaults.source,
     app = removePiralInstancePiletDefaults.app,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('source', source, 'string');
+  ensure('app', app, 'string');
+  
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

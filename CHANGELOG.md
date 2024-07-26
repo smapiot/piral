@@ -2,6 +2,7 @@
 
 ## 1.6.1 (tbd)
 
+- Improved CLI flag validation and documentation (#705)
 - Added `InjectionToken` constants for compatibility with Angular's `inject` to `piral-ng` (#703)
 
 ## 1.6.0 (July 8, 2024)

@@ -37,6 +37,7 @@ export * from './shell';
 export * from './spec';
 export * from './template';
 export * from './url';
+export * from './validate';
 export * from './version';
 export * from './watcher';
 export * from './website';

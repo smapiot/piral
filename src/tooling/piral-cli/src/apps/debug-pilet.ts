@@ -23,6 +23,7 @@ import {
   packageJson,
   piletJson,
   defaultSchemaVersion,
+  ensure,
 } from '../common';
 
 export interface DebugPiletOptions {
@@ -235,6 +236,14 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     appInstanceDir,
     feed,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+  ensure('target', target, 'string');
+  ensure('publicUrl', originalPublicUrl, 'string');
+  ensure('port', originalPort, ['number', 'undefined']);
+  
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const networks: Array<NetworkSpec> = [];
