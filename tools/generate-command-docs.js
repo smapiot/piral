@@ -4,10 +4,12 @@ const { writeFileSync, readFileSync, readdirSync } = require('fs');
 const projectRoot = resolve(__dirname, '..');
 const rootFolder = resolve(projectRoot, 'docs', 'commands');
 const commandFolder = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'lib', 'commands');
+const constantsFolder = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'lib', 'common', 'constants');
 const validationFolder = resolve(projectRoot, 'src', 'tooling', 'piral-cli', 'src', 'rules');
 const nl = '\n';
 
 const { commands } = require(commandFolder);
+const { bundlerNames } = require(constantsFolder);
 
 function generateHead(command) {
   const parts = command.split('-');
@@ -141,27 +143,35 @@ function getCommandData(retrieve) {
       return this;
     },
     choices(name, choices) {
+      if (name === 'bundler') {
+        choices = bundlerNames;
+      }
+      
       return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
+        examples: [`--${name} "${printValue(choices[0])}"`],
         values: choices.map(printValue),
       }));
     },
     option(name) {
       return this.swap(name, (flag) => ({
         ...flag,
+        examples: [`--${name}.foo bar`],
         type: 'options',
       }));
     },
     string(name) {
       return this.swap(name, (flag) => ({
         ...flag,
+        examples: [`--${name} "some value"`],
         type: 'string',
       }));
     },
     boolean(name) {
       return this.swap(name, (flag) => ({
         ...flag,
+        examples: [`--${name}`, `--no-${name}`],
         type: 'boolean',
       }));
     },
@@ -180,6 +190,7 @@ function getCommandData(retrieve) {
     number(name) {
       return this.swap(name, (flag) => ({
         ...flag,
+        examples: [`--${name} 42`],
         type: 'number',
       }));
     },
@@ -198,7 +209,7 @@ function getCommandData(retrieve) {
   return data;
 }
 
-function details(args) {
+function details(command, args) {
   if (args.length === 0) {
     return 'Not applicable.';
   }
@@ -211,7 +222,12 @@ ${arg.describe || 'No description available.'}
 
 ${!arg.alts || arg.alts.length === 0 ? '' : `- Aliases: \`${arg.alts.map((m) => `--${m}`).join('`, `')}\``}
 - Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('`, `')}\`` : ''}
-- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}`,
+- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}
+${Array.isArray(arg.examples) && arg.examples.length > 0 ? `
+Examples:
+
+${arg.examples.map(example => shell(`${getCall(command)} ${example}`)).join(nl + nl)}
+` : ''}`,
     )
     .join(nl + nl);
 }
@@ -223,6 +239,11 @@ ${validator.description}
 
 **Options**: \`${validator.options}\`
 `;
+}
+
+function getCall(command) {
+  const parts = command.name.split('-');
+  return `${parts.pop()} ${parts.join('-')}`;
 }
 
 function generateBody(command, validators) {
@@ -240,7 +261,6 @@ function generateBody(command, validators) {
     }
   }
 
-  const parts = command.name.split('-');
   const content = `
 ${command.description || 'No description available.'}
 
@@ -248,7 +268,7 @@ ${command.description || 'No description available.'}
 
 From the command line:
 
-${shell(`${parts.pop()} ${parts.join('-')} ${command.arguments.join(' ')}`)}
+${shell(`${getCall(command)} ${command.arguments.join(' ')}`)}
 
 Alternative:
 
@@ -262,11 +282,11 @@ ${printAlias(command.alias)}
 
 ## Positionals
 
-${details(positionals)}
+${details(command, positionals)}
 
 ## Flags
 
-${details(flags.map((flag) => ({ ...flag, name: `--${flag.name}` })))}
+${details(command, flags.map((flag) => ({ ...flag, name: `--${flag.name}` })))}
 `;
 
   if (['validate-piral', 'validate-pilet'].includes(command.name)) {
