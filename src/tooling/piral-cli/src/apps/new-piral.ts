@@ -136,7 +136,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   ensure('target', target, 'string');
   ensure('app', app, 'string');
   ensure('template', template, 'string');
-  ensure('variables', variables, 'string');
+  ensure('variables', variables, 'object');
   
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);

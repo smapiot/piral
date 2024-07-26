@@ -132,7 +132,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   ensure('source', source, 'string');
   ensure('target', target, 'string');
   ensure('template', template, ['string', 'undefined']);
-  ensure('variables', variables, 'string');
+  ensure('variables', variables, 'object');
   
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
