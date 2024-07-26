@@ -66,6 +66,7 @@ exports.find = function (basePath, docsFolder, options) {
       content: `
         <ImageCard
           link="/plugins/${name}"
+          imageClass="auto"
           image={require('${relative(generated, assetsPath)}/${image}')}
           description="${data.description}"
           title="${data.name}"
@@ -104,21 +105,7 @@ exports.build = function (entry, options) {
   fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const head = `
-    import { Link } from 'react-router-dom';
-    import { PageContent } from '@pidoc/components';
-
-    const ImageCard = ({ image, title, description, details, link }) => (
-      <Link to={link} className={\`card image-card text-center\${details ? ' details' : ''}\`}>
-        <div className="image">
-          <img className="auto" src={image} alt={title} />
-        </div>
-        <h5>{title}</h5>
-        <div>
-          <p>{description}</p>
-        </div>
-        {details && <div className="card-details">{details}</div>}
-      </Link>
-    );
+    import { PageContent, ImageCard } from '@pidoc/components';
   `;
 
   const body = `  

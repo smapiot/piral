@@ -54,7 +54,7 @@
     "@testing-library/react": "^14.1.0",
     "caniuse-lite": "^1.0.30001341",
     "esbuild": "^0.13.6",
-    "lerna": "^6.0.1",
+    "lerna": "^8.1.7",
     "prettier": "^2.1.1",
     "sass": "^1.34.0",
     "tslint": "^5.12.1",
@@ -64,33 +64,5 @@
     "typescript": "5.2.2",
     "vitest": "^1.0.4"
   },
-  "resolutions": {
-    "ansi-html": "0.0.9",
-    "ansi-regex": "5.0.1",
-    "chalk": "^4.0.0",
-    "glob-parent": "5.1.2",
-    "hermes-engine": "0.10.0",
-    "highlight.js": "10.7.1",
-    "jsdom": "^20.0.0",
-    "json-schema": "0.4.0",
-    "node-fetch": "2.6.7",
-    "node-forge": "1.3.0",
-    "node-notifier": "8.0.1",
-    "normalize-url": "4.5.1",
-    "nth-check": "2.0.1",
-    "underscore": "1.12.1",
-    "parse-url": "8.1.0",
-    "postcss": "8.4.31",
-    "pug": "^3.0.3",
-    "rc": "1.2.8",
-    "rxjs": "7.5.6",
-    "set-value": "4.0.1",
-    "socks": "2.7.3",
-    "shell-quote": "1.7.3",
-    "ssri": "8.0.1",
-    "tar": "^6.2.0",
-    "trim-newlines": "3.0.1",
-    "tslib": "2.5.2",
-    "ws": "7.5.10"
-  }
+  "resolutions": {}
 }

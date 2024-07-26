@@ -44,6 +44,7 @@ yarn.lock
 coverage
 .cache
 .nyc_output
+.nx
 
 # Generated Typings
 docs/types/*.json
