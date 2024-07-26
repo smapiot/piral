@@ -146,11 +146,11 @@ function getCommandData(retrieve) {
       if (name === 'bundler') {
         choices = bundlerNames;
       }
-      
+
       return this.swap(name, (flag) => ({
         ...flag,
         type: 'string',
-        examples: [`--${name} "${printValue(choices[0])}"`],
+        examples: [`--${name} ${printValue(choices[0])}`],
         values: choices.map(printValue),
       }));
     },
@@ -220,14 +220,18 @@ function details(command, args) {
 
 ${arg.describe || 'No description available.'}
 
-${!arg.alts || arg.alts.length === 0 ? '' : `- Aliases: \`${arg.alts.map((m) => `--${m}`).join('`, `')}\``}
-- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('`, `')}\`` : ''}
-- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}
-${Array.isArray(arg.examples) && arg.examples.length > 0 ? `
+${
+  !arg.alts || arg.alts.length === 0 ? '' : `- Aliases: \`${arg.alts.map((m) => `--${m}`).join('`, `')}\`${nl}`
+}- Type: \`${arg.type}\`${arg.values ? nl + `- Choices: \`${arg.values.join('`, `')}\`` : ''}
+- Default: \`${arg.default}\`${arg.required ? nl + '- **Caution: This flag is required!**' : ''}${
+  Array.isArray(arg.examples) && arg.examples.length > 0
+    ? `
+
 Examples:
 
-${arg.examples.map(example => shell(`${getCall(command)} ${example}`)).join(nl + nl)}
-` : ''}`,
+${arg.examples.map((example) => shell(`${getCall(command)} ${example}`)).join(nl + nl)}`
+    : ''
+}`,
     )
     .join(nl + nl);
 }
@@ -286,7 +290,10 @@ ${details(command, positionals)}
 
 ## Flags
 
-${details(command, flags.map((flag) => ({ ...flag, name: `--${flag.name}` })))}
+${details(
+  command,
+  flags.map((flag) => ({ ...flag, name: `--${flag.name}` })),
+)}
 `;
 
   if (['validate-piral', 'validate-pilet'].includes(command.name)) {

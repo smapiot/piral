@@ -1,34 +1,32 @@
-# `piral declaration`
+# `pilet declaration`
 
-Creates the TypeScript declaration file (index.d.ts) for a Piral instance.
+Creates the TypeScript declaration file (index.d.ts) for a pilet.
 
 ## Syntax
 
 From the command line:
 
 ```sh
-piral declaration [source]
+pilet declaration [source]
 ```
 
 Alternative:
 
 ```sh
-pb declaration-piral [source]
+pb declaration-pilet [source]
 ```
 
 ## Aliases
 
-Instead of `declaration-piral` you can also use:
+Instead of `declaration-pilet` you can also use:
 
-- `declare-piral`
-- `declaration-portal`
-- `declare-portal`
+- `declare-pilet`
 
 ## Positionals
 
 ### `source`
 
-Sets the source Piral instance path for collecting all the information.
+Sets the source pilet path for collecting all the information.
 
 - Type: `string`
 - Default: `./`
@@ -45,7 +43,7 @@ Sets the target directory for the generated .d.ts file.
 Examples:
 
 ```sh
-piral declaration --target "some value"
+pilet declaration --target "some value"
 ```
 
 ### `--log-level`
@@ -58,7 +56,7 @@ Sets the log level to use (1-5).
 Examples:
 
 ```sh
-piral declaration --log-level 42
+pilet declaration --log-level 42
 ```
 
 ### `--force-overwrite`
@@ -72,7 +70,7 @@ Determines if files should be overwritten by the command.
 Examples:
 
 ```sh
-piral declaration --force-overwrite "no"
+pilet declaration --force-overwrite "no"
 ```
 
 ### `--base`
@@ -85,5 +83,5 @@ Sets the base directory. By default the current directory is used.
 Examples:
 
 ```sh
-piral declaration --base "some value"
+pilet declaration --base "some value"
 ```
