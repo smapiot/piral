@@ -54,6 +54,7 @@
     "@testing-library/react": "^14.1.0",
     "caniuse-lite": "^1.0.30001341",
     "esbuild": "^0.13.6",
+    "jsdom": "^20.0.0",
     "lerna": "^8.1.7",
     "prettier": "^2.1.1",
     "sass": "^1.34.0",
