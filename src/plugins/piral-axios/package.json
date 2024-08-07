@@ -1,6 +1,6 @@
 {
   "name": "piral-axios",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Plugin for the integration of axios in Piral.",
   "keywords": [
     "piral",
@@ -55,6 +55,6 @@
     "axios": "^1.6.0"
   },
   "devDependencies": {
-    "piral-core": "^1.6.0"
+    "piral-core": "^1.6.1"
   }
 }
