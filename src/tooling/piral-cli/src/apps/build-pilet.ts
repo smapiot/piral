@@ -24,6 +24,7 @@ import {
   triggerBuildPilet,
   readText,
   writeText,
+  ensure,
 } from '../common';
 
 interface PiletData {
@@ -199,6 +200,14 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
     bundlerName,
     app,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('publicUrl', originalPublicUrl, 'string');
+  ensure('entry', entry, 'string');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+  ensure('target', target, 'string');
+  
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const entryList = Array.isArray(entry) ? entry : [entry];

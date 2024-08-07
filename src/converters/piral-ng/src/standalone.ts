@@ -9,10 +9,14 @@ import {
 } from '@angular/core';
 import type { BaseComponentProps, HtmlComponent } from 'piral-core';
 import { CoreRoutingService } from './CoreRoutingService';
+import { contextName, piralName } from './constants';
+import { CONTEXT, PIRAL } from './injection';
 
 function isLazyLoader(thing: NgStandaloneComponent): thing is NgStandaloneComponentLoader {
   return typeof thing === 'function' && thing.hasOwnProperty('prototype') && thing.hasOwnProperty('arguments');
 }
+
+export * from './injection';
 
 export interface DefaultExport<T> {
   default: T;
@@ -52,8 +56,10 @@ export function createConverter(options: ApplicationConfig): NgStandaloneConvert
               ...options.providers,
               CoreRoutingService,
               { provide: APP_BASE_HREF, useValue: ctx.publicPath },
-              { provide: 'Context', useValue: ctx },
-              { provide: 'piral', useValue: piral },
+              { provide: contextName, useValue: ctx },
+              { provide: CONTEXT, useValue: ctx },
+              { provide: piralName, useValue: piral },
+              { provide: PIRAL, useValue: piral },
             ],
           });
 

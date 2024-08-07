@@ -29,7 +29,6 @@ Instead of `validate-piral` you can also use:
 
 Sets the source Piral instance path for collecting all the information.
 
-
 - Type: `string`
 - Default: `./`
 
@@ -39,17 +38,27 @@ Sets the source Piral instance path for collecting all the information.
 
 Sets the log level to use (1-5).
 
-
 - Type: `number`
 - Default: `3`
+
+Examples:
+
+```sh
+piral validate --log-level 42
+```
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
-
 - Type: `string`
 - Default: `process.cwd()`
+
+Examples:
+
+```sh
+piral validate --base "some value"
+```
 
 ## Validators
 

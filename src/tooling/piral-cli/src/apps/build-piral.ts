@@ -19,6 +19,7 @@ import {
   releaseName,
   triggerBuildEmulator,
   triggerBuildShell,
+  ensure,
 } from '../common';
 
 export interface BuildPiralOptions {
@@ -140,6 +141,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     hooks = {},
     bundlerName,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('publicUrl', originalPublicUrl, 'string');
+  ensure('entry', entry, 'string');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+  ensure('target', target, 'string');
+  
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const useSubdir = type === 'all' || subdir;

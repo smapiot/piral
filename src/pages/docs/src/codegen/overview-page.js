@@ -66,6 +66,7 @@ exports.find = function (basePath, docsFolder, options) {
       content: `
         <ImageCard
           link="/plugins/${name}"
+          imageClass="auto"
           image={require('${relative(generated, assetsPath)}/${image}')}
           description="${data.description}"
           title="${data.name}"
@@ -104,10 +105,10 @@ exports.build = function (entry, options) {
   fragments.sort((a, b) => (a.category > b.category ? 1 : -1));
 
   const head = `
-    import { ImageCard, PageContent } from '@pidoc/components';
+    import { PageContent, ImageCard } from '@pidoc/components';
   `;
 
-  const body = `
+  const body = `  
       <PageContent>
         <div className="plugin-info markdown-body">
           <h1>Plugins Overview</h1>

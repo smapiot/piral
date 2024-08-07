@@ -24,6 +24,7 @@ import {
   packageJson,
   triggerBuildShell,
   publishPackageEmulator,
+  ensure,
 } from '../common';
 
 export interface PublishPiralOptions {
@@ -128,6 +129,12 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     hooks = {},
     bundlerName,
   } = options;
+
+  ensure('baseDir', baseDir, 'string');
+  ensure('headers', headers, 'object');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');
@@ -150,7 +157,10 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
   } = await retrievePiletsInfo(entryFiles);
 
   if (type === 'emulator' && ![emulatorPackageName, emulatorWebsiteName].includes(emulator)) {
-    fail('generalError_0002', `The emulator type "${emulator}" is not supported. Select one of these types to use the publish command: "${emulatorWebsiteName}", "${emulatorPackageName}".`);
+    fail(
+      'generalError_0002',
+      `The emulator type "${emulator}" is not supported. Select one of these types to use the publish command: "${emulatorWebsiteName}", "${emulatorPackageName}".`,
+    );
   }
 
   const dir = type === 'release' ? releaseName : emulatorName;
@@ -225,7 +235,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     }
 
     progress(`Published successfully!`);
-  
+
     logDone(`Release artifacts published successfully!`);
   } else if (emulator === emulatorWebsiteName) {
     const { version } = await readJson(targetDir, emulatorJson);
@@ -250,7 +260,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     }
 
     progress(`Published successfully!`);
-  
+
     logDone(`Emulator published successfully!`);
   } else if (emulator === emulatorPackageName) {
     log('generalInfo_0000', `Using npm registry "${url}".`);
@@ -271,7 +281,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     } catch {
       fail('failedUploading_0064');
     }
-  
+
     logDone(`Emulator published successfully!`);
   } else {
     // we should not enter here - anyway let's do nothing

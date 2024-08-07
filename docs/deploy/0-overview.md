@@ -9,7 +9,7 @@ We have a few guides for some of the most popular hosting services online.
 
 <div class="deploy-guides">
 
-[![AWS Amplify](../logos/aws-amplify.svg)](./aws-amplify.md)
+[![AWS Amplify](../logos/aws-amplify.svg){.auto}](./aws-amplify.md)
 
 [![Buddy](../logos/buddy.svg)](./buddy.md)
 
@@ -17,7 +17,7 @@ We have a few guides for some of the most popular hosting services online.
 
 [![Edge.io](../logos/edgio.svg)](./edgio.md)
 
-[![GitHub Pages](../logos/github.svg)](./github.md)
+[![GitHub Pages](../logos/github.svg){.auto}](./github.md)
 
 [![GitLab Pages](../logos/gitlab.svg)](./gitlab.md)
 
@@ -25,7 +25,7 @@ We have a few guides for some of the most popular hosting services online.
 
 [![Google Firebase](../logos/google-firebase.svg)](./google-firebase.md)
 
-[![Heroku](../logos/heroku.svg)](./heroku.md)
+[![Heroku](../logos/heroku.svg){.auto}](./heroku.md)
 
 [![Microsoft Azure Static Web Apps](../logos/ms-azure.svg)](./ms-azure.md)
 
@@ -33,7 +33,7 @@ We have a few guides for some of the most popular hosting services online.
 
 [![Render](../logos/render.svg)](./render.md)
 
-[![Vercel](../logos/vercel.svg)](./vercel.md)
+[![Vercel](../logos/vercel.svg){.auto}](./vercel.md)
 
 </div>
 

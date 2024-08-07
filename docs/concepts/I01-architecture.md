@@ -10,7 +10,7 @@ Overall, Piral can be considered a cure for the common frontend monolith. The fr
 
 Piral allows you to layout your application with modularization in mind. Instead of having to deal with one giant codebase, a Piral instance is usually just a very thin layer. This layer is what is primarily delivered to the end-user. The Piral instance is then responsible for gathering the (user-relevant) modules (called pilets) at runtime. These pilets can be developed in different repositories, e.g., owned by different teams.
 
-![Modularization of the Monolith](../diagrams/modularization.svg)
+![Modularization of the Monolith](../diagrams/modularization.svg){.auto}
 
 To make creating instances of Piral effective, the architecture of Piral needs to deliver. Let's start with the used building blocks.
 
@@ -20,7 +20,7 @@ Piral does not start from zero. The stack that is used by Piral is React-based. 
 
 Piral itself is based on **React** and its eco-system, e.g., **React DOM** (to render on a website), **React Router** (for routing), **Zustand** (global state container), and a React independent building block **Piral Base** (which allows loading modules at runtime via SystemJS).
 
-![Building blocks of Piral](../diagrams/blocks.svg)
+![Building blocks of Piral](../diagrams/blocks.svg){.auto}
 
 As far as `piral` is concerned we take `piral-core` (main library without any backend or specialized API) and a set of standard plugins aggregated in `piral-ext` into account to become a single package. `piral` can be thought of as a framework, while the other building blocks are just ordinary libraries.
 
@@ -30,7 +30,7 @@ A (technically speaking: inaccurate) analogy to illustrate what this means is th
 
 A pilet is just an npm package containing a library. The library (JS file) is consumed by Piral, while the package is inspected and unpacked by a service (pilet feed service). The package contains some metadata, one or more JS files, and potentially some other assets.
 
-![Layers of a pilet package](../diagrams/pilet-layers.svg)
+![Layers of a pilet package](../diagrams/pilet-layers.svg){.auto}
 
 The previous diagram shows the different layers contained in a pilet package. More information on the pilet format can be found in the specification.
 
@@ -38,7 +38,7 @@ The previous diagram shows the different layers contained in a pilet package. Mo
 
 The initial loading of a Piral instance is a multi-stage process. Essentially, compared to a standard React/JavaScript app we inserted the middle three boxes, which render the Piral instance triggering the pilet loading and their eventual integration.
 
-![Loading a Piral instance](../diagrams/loading.svg)
+![Loading a Piral instance](../diagrams/loading.svg){.auto}
 
 Note that while pilets can be loaded from cache as well, we usually require at least one communication with a server to ensure that the cached pilets are the ones that should be loaded for the user. Updates on the pilets, different feature flags, and other factors may influence this decision.
 
@@ -64,7 +64,7 @@ When pilets are set up, they receive a special kind of object called the `Pilet 
 
 Setting up components may involve setting up dedicated (routes to) pages, tiles on a dashboard, general extensions, modal dialogs, and other components that need to be managed by the Piral instance.
 
-![Pilet API registration methods](../diagrams/piral-api.svg)
+![Pilet API registration methods](../diagrams/piral-api.svg){.auto}
 
 For every `register*` API there should be an `unregister*` API (actually there *is*, but for some third-party plugins this might not be true even though we don't recommend this). All registrations can only be modified by their owners, i.e., if pilet A registered page A it cannot be unregistered by pilet B. The unregistration can be, however, performed at any time. Removing, e.g., a route will immediately remove it from the router. Thus if the page is currently shown we will instead see the not found page.
 

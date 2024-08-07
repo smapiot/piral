@@ -31,7 +31,6 @@ Instead of `validate-pilet` you can also use:
 
 Sets the source file containing the pilet root module.
 
-
 - Type: `string`
 - Default: `./src/index`
 
@@ -41,31 +40,46 @@ Sets the source file containing the pilet root module.
 
 Sets the log level to use (1-5).
 
-
 - Type: `number`
 - Default: `3`
+
+Examples:
+
+```sh
+pilet validate --log-level 42
+```
 
 ### `--app`
 
 Sets the name of the Piral instance.
 
-
 - Type: `string`
 - Default: `undefined`
+
+Examples:
+
+```sh
+pilet validate --app "some value"
+```
 
 ### `--base`
 
 Sets the base directory. By default the current directory is used.
 
-
 - Type: `string`
 - Default: `process.cwd()`
+
+Examples:
+
+```sh
+pilet validate --base "some value"
+```
 
 ## Validators
 
 ### `has-externals-as-peers`
 
-Checks that "externals" dependencies have been specified in "peerDependencies".
+Checks that "externals" dependencies have been specified in "peerDependencies". This is legacy and only used if no importmap has been specified. Importmap inherited dependencies are auto-checked.
 
 **Options**: `'ignore' | 'active' | 'only-used'`
 

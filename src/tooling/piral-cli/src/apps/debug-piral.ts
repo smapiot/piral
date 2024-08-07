@@ -17,6 +17,7 @@ import {
   piralJson,
   packageJson,
   flattenExternals,
+  ensure,
 } from '../common';
 
 export interface DebugPiralOptions {
@@ -129,6 +130,15 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
     hooks = {},
     bundlerName,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('publicUrl', originalPublicUrl, 'string');
+  ensure('port', originalPort, ['number', 'undefined']);
+  ensure('entry', entry, 'string');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+  ensure('target', target, 'string');
+  
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const network: NetworkSpec = {

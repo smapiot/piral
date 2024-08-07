@@ -16,6 +16,7 @@ import {
   matchAnyPilet,
   triggerBuildPilet,
   getCertificate,
+  ensure,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -212,6 +213,13 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     hooks = {},
     bundlerName,
   } = options;
+
+  ensure('baseDir', baseDir, 'string');
+  ensure('headers', headers, 'object');
+  ensure('fields', fields, 'object');
+  ensure('_', _, 'object');
+  ensure('hooks', hooks, 'object');
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

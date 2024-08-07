@@ -14,6 +14,7 @@ import {
   repositoryUrl,
   findSpecificVersion,
   determineNpmClient,
+  ensure,
 } from '../common';
 
 export interface UpgradePiralOptions {
@@ -82,6 +83,10 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
     install = upgradePiralDefaults.install,
     npmClient: defaultNpmClient = upgradePiralDefaults.npmClient,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('target', target, 'string');
+  
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);

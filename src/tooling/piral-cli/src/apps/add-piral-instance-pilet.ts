@@ -6,13 +6,12 @@ import {
   log,
   matchAnyPilet,
   findFile,
-  readJson,
-  writeJson,
   logDone,
   installPiralInstance,
   determineNpmClient,
   findPiletRoot,
   piletJson,
+  ensure,
 } from '../common';
 
 export interface AddPiralInstancePiletOptions {
@@ -59,6 +58,10 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     selected = addPiralInstancePiletDefaults.selected,
     app = addPiralInstancePiletDefaults.app,
   } = options;
+
+  ensure('baseDir', baseDir, 'string');
+  ensure('source', source, 'string');
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

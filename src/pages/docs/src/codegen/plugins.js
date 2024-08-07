@@ -121,7 +121,7 @@ exports.build = function (entry, options) {
   const body = `
     <PageContent>
       <div className="plugin-info">
-        <img src={require('${relative(generated, assetsPath)}/${image}')} />
+        <img className="auto" src={require('${relative(generated, assetsPath)}/${image}')} />
         <h1>${name}</h1>
       </div>
       <Tabs titles={["Overview", "Types", "Info"]}>

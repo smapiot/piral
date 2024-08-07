@@ -17,6 +17,7 @@ import {
   ForceOverwrite,
   findPiralInstance,
   determineNpmClient,
+  ensure,
 } from '../common';
 
 export interface RunEmulatorPiralOptions {
@@ -96,6 +97,10 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
     app,
     feed,
   } = options;
+  
+  ensure('baseDir', baseDir, 'string');
+  ensure('app', app, 'string');
+  
   const publicUrl = '/';
   const api = config.piletApi;
   const fullBase = resolve(process.cwd(), baseDir);

@@ -3,7 +3,7 @@ title: Heroku
 description: How to deploy your Piral instance to the web using Heroku.
 ---
 
-# ![Heroku Logo](../logos/heroku.svg){height=24px} Deploy your Piral instance to Heroku
+# ![Heroku Logo](../logos/heroku.svg){height=24px .auto} Deploy your Piral instance to Heroku
 
 [Heroku](https://www.heroku.com/) is a platform-as-a-service for building, running, and managing modern apps in the cloud. You can deloy an Piral instance to Heroku using this guide.
 
