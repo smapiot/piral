@@ -1,6 +1,6 @@
 {
   "name": "piral-axios",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Plugin for the integration of axios in Piral.",
   "keywords": [
     "piral",
@@ -52,9 +52,9 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "axios": "^1.6.0"
+    "axios": "^1.7.7"
   },
   "devDependencies": {
-    "piral-core": "^1.6.0"
+    "piral-core": "^1.6.1"
   }
 }

@@ -96,7 +96,7 @@ export function runWebpack(wpConfig: webpack.Configuration, logLevel: LogLevels)
 
         if (process) {
           // process is undefined in case of an error
-          const compilation = process.createCompilation();
+          const compilation = process.createCompilation(undefined);
           preset.current = compilation.createStatsOptions(getPreset(logLevel));
         }
       });
