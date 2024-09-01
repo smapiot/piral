@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.6.2 (tbd)
+
+- Updated dependencies
+
 ## 1.6.1 (August 7, 2024)
 
 - Improved CLI flag validation and documentation (#705)
