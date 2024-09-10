@@ -3,6 +3,7 @@
 ## 1.6.2 (tbd)
 
 - Updated dependencies
+- Removed dependency to `path-to-regexp` package
 
 ## 1.6.1 (August 7, 2024)
 
