@@ -61,7 +61,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "path-to-regexp": "^1.8.0",
+    "path-to-regexp": "^8.0.0",
     "piral-base": "^1.6.1",
     "piral-debug-utils": "^1.6.1",
     "zustand": "^3.0.0"
