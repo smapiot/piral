@@ -36,7 +36,7 @@ npm install --global yarn
 Once you cloned the repository make sure to bootstrap it (installs all dependencies and more).
 
 ```sh
-npx lerna bootstrap
+yarn install
 ```
 
 Now you are ready to build all contained modules:
