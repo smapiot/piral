@@ -4,6 +4,7 @@
 
 - Updated dependencies
 - Removed dependency to `path-to-regexp` package
+- Added `loading-pilets` and `loaded-pilets` events
 
 ## 1.6.1 (August 7, 2024)
 

@@ -1,4 +1,4 @@
-import type {} from 'piral-base';
+import type { Pilet, LoadPiletsOptions } from 'piral-base';
 import type { PiralCustomEventMap } from './custom';
 
 /**
@@ -82,9 +82,35 @@ export interface PiralUnhandledErrorEvent {
   pilet: string;
 }
 
+/**
+ * Gets fired when all pilets have been loaded.
+ */
+export interface PiralLoadedPiletsEvent {
+  /**
+   * The pilets that have been loaded.
+   */
+  pilets: Array<Pilet>;
+  /**
+   * The loading error, if any.
+   */
+  error?: Error;
+}
+
+/**
+ * Gets fired when the loading of pilets is triggered.
+ */
+export interface PiralLoadingPiletsEvent {
+  /**
+   * The options that have been supplied for loading the pilets.
+   */
+  options: LoadPiletsOptions;
+}
+
 declare module 'piral-base/lib/types/api' {
   interface PiralEventMap extends PiralCustomEventMap {
     'store-data': PiralStoreDataEvent;
     'unhandled-error': PiralUnhandledErrorEvent;
+    'loading-pilets': PiralLoadingPiletsEvent;
+    'loaded-pilets': PiralLoadedPiletsEvent;
   }
 }
