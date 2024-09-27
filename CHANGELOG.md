@@ -2,6 +2,7 @@
 
 ## 1.6.2 (tbd)
 
+- Fixed `registerBreadcrumbs` in `piral-breadcrumbs` failing when no matcher was specified
 - Updated dependencies
 - Removed dependency to `path-to-regexp` package
 - Added `loading-pilets` and `loaded-pilets` events
