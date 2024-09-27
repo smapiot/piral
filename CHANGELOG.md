@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.7.0 (tbd)
+
+- ...
+
 ## 1.6.2 (September 27, 2024)
 
 - Fixed `registerBreadcrumbs` in `piral-breadcrumbs` failing when no matcher was specified
