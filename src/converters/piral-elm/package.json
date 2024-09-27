@@ -1,6 +1,6 @@
 {
   "name": "piral-elm",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Plugin for integrating Elm components in Piral.",
   "keywords": [
     "piral",
@@ -51,6 +51,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.6.1"
+    "piral-core": "^1.6.2"
   }
 }
