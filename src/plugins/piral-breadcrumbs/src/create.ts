@@ -68,22 +68,35 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
       withAll(withBreadcrumbs(getBreadcrumbs(breadcrumbs)), withRootExtension('piral-breadcrumbs', Breadcrumbs)),
     );
 
+    const registerBcs = (bcs: Dict<BreadcrumbRegistration>) => {
+      context.registerBreadcrumbs(bcs);
+      return () => context.unregisterBreadcrumbs(Object.keys(bcs));
+    };
+
     return (_, target) => {
       const pilet = target.name;
       let next = 0;
 
+      const appendBc = (bcs: Dict<BreadcrumbRegistration>, name: string | number, settings: BreadcrumbSettings) => {
+        const id = buildName(pilet, name);
+        bcs[id] = {
+          pilet,
+          matcher: getMatcher(settings),
+          settings,
+        };
+        return bcs;
+      };
+
       return {
         registerBreadcrumbs(values) {
-          const bc = {};
+          const bcs: Dict<BreadcrumbRegistration> = {};
 
           for (const value of values) {
             const { name = next++, ...settings } = value;
-            const id = buildName(pilet, name);
-            bc[id] = settings;
+            appendBc(bcs, name, settings);
           }
 
-          context.registerBreadcrumbs(bc);
-          return () => context.unregisterBreadcrumbs(Object.keys(bc));
+          return registerBcs(bcs);
         },
         registerBreadcrumb(name, settings?) {
           if (typeof name !== 'string') {
@@ -91,15 +104,8 @@ export function createBreadcrumbsApi(config: DashboardConfig = {}): PiralPlugin<
             name = next++;
           }
 
-          const id = buildName(pilet, name);
-          context.registerBreadcrumbs({
-            [id]: {
-              pilet,
-              matcher: getMatcher(settings),
-              settings,
-            },
-          });
-          return () => context.unregisterBreadcrumbs([id]);
+          const bcs = appendBc({}, name, settings);
+          return registerBcs(bcs);
         },
         unregisterBreadcrumb(name) {
           const id = buildName(pilet, name);

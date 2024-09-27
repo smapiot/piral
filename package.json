@@ -12,8 +12,8 @@
     "src/utilities/*"
   ],
   "scripts": {
-    "bootstrap": "lerna clean --yes && lerna bootstrap",
-    "setup": "yarn bootstrap",
+    "bootstrap": "lerna clean --yes && yarn install",
+    "setup": "yarn install",
     "build": "lerna run build",
     "build:docs": "lerna run build:docs --stream",
     "watch:docs": "lerna run watch:docs --stream",

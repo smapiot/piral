@@ -58,7 +58,7 @@
     "@types/rimraf": "^2.0.2",
     "@types/tar": "^4.0.0",
     "@types/yargs": "^15.0.4",
-    "axios": "^1.6.0",
+    "axios": "^1.7.7",
     "chalk": "^4.0.0",
     "enhanced-resolve": "^5.10.0",
     "form-data": "^3.0.0",
@@ -76,7 +76,7 @@
   "dependencies": {
     "css-conflict-inspector": "^0.2.1",
     "dets": "^0.16.0",
-    "kras": "^0.16.1",
+    "kras": "^0.17.0",
     "rimraf": "^3.0.0",
     "typescript": "^5.0.0",
     "yargs": "^15.0.0"
