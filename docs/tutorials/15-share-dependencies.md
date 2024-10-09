@@ -12,7 +12,9 @@ Sharing dependencies is one of the selling points of Piral. The key, however, is
 
 Our recommendation is to keep the sharing of dependencies from the app shell as practical as possible.
 
-## Declarative Sharing from the App Shell
+## Sharing from the App Shell
+
+### Declarative Sharing from the App Shell
 
 The easiest way to share dependencies from the app shell is to declare them in the `importmap` section of the *package.json*.
 
@@ -58,7 +60,7 @@ you get automatically `tslib` as a shared dependency. If you would also add `pir
 
 You can remove inherited importmaps and replace them by explicit `imports` declarations, too.
 
-## Imperative Sharing from the App Shell
+### Imperative Sharing from the App Shell
 
 Dependencies can also be "defined" or explicitly mentioned in the program code of the app shell. The mechanism for this works via the `shareDependencies` option of the `createInstance` function.
 
@@ -101,7 +103,7 @@ const instance = createInstance({
 
 By default, we do not recommend exporting functionality from the app shell. A Piral instance should **only deliver types** to the pilets. However, sometimes having a dedicated package for extra functionality would either complicate things or is just not feasible.
 
-## Type Declarations
+### Type Declarations
 
 While the explicit way is great for gaining flexibility it comes with one caveat: For this kind of sharing types are not automatically inferred and generated. As a result, we need to place additional typings for our offerings.
 
@@ -135,6 +137,18 @@ declare module 'my-app-shell' {
 **Important**: These are just type-declarations. We could, of course, declare a module like `foo-bar`, however, if that is indeed used in a pilet the build will potentially fail. As long as no module with the given name exists, the bundler will not be able to resolve it - no matter what TypeScript assumes.
 
 The rule of thumb for sharing the type declarations is: Everything exported top-level will be associated with the app shell, and everything exported from an explicitly declared module will be associated with that module.
+
+### Exported Modules
+
+To simplify the process illustrated in the previous two sections you can use a special key called `shared` in your *pilet.json*, e.g.:
+
+```json
+{
+  "shared": ["./src/externals.ts"]
+}
+```
+
+This will use the exports from the given modules (in the previous example *./src/externals.ts*) to be available in pilets. Moreover, the given modules will be added to the types, i.e., work as if they had been defined as `extraTypes`, too.
 
 ## Sharing from Pilets
 

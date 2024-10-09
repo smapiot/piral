@@ -2,7 +2,7 @@
 
 ## 1.7.0 (tbd)
 
-- ...
+- Added support for `shared` key in *piral.json*
 
 ## 1.6.2 (September 27, 2024)
 

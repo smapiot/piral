@@ -614,6 +614,7 @@ export async function retrievePiletsInfo(entryFile: string) {
     name: packageInfo.name,
     version: packageInfo.version,
     emulator: piralJsonPkg.emulator,
+    shared: piralJsonPkg.shared,
     framework,
     dependencies,
     scripts: packageInfo.scripts,

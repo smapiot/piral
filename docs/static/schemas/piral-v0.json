@@ -83,6 +83,14 @@
       ],
       "description": "Defines what isolation / component wrapper is used for components of micro frontends. By default, the 'classic' isolation mode is used."
     },
+    "shared": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Path to the file to consider for sharing from the app shell."
+      },
+      "description": "Defines what files to share directly as exports from the app shell."
+    },
     "pilets": {
       "type": "object",
       "description": "Determines the scaffolding and upgrading behavior of pilets using this Piral instance.",
