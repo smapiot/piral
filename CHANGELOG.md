@@ -2,6 +2,7 @@
 
 ## 1.7.0 (tbd)
 
+- Updated to latest version of `dets`
 - Added support for `shared` key in *piral.json*
 
 ## 1.6.2 (September 27, 2024)
