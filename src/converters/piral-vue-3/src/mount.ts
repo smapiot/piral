@@ -2,21 +2,25 @@ import type { BaseComponentProps, ComponentContext } from 'piral-core';
 import { createApp, Component, h } from 'vue';
 
 export function mountVue<T extends BaseComponentProps>(
-  root: Component<T>,
+  component: Component<T>,
   props: T,
   ctx: ComponentContext,
   captured?: Record<string, any>,
 ) {
-  return createApp({
+  const data = {
+    ...captured,
+    ...props,
+  };
+  const root: Component = {
     provide: {
       piral: props.piral,
       ...ctx,
     },
+    props: Object.keys(data),
     render() {
-      return h(root as any, {
-        ...captured,
-        ...props,
-      });
+      return h(component, this.$props);
     },
-  });
+  };
+
+  return createApp(root, data);
 }

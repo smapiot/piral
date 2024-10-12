@@ -2,6 +2,7 @@
 
 ## 1.7.0 (tbd)
 
+- Fixed issue in `piral-vue3` concerning reactivity of props (#720)
 - Updated to latest version of `dets`
 - Added support for `shared` key in *piral.json*
 
