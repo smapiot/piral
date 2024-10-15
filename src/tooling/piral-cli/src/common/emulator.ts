@@ -60,7 +60,7 @@ async function makeExternals(sourceDir: string, piralPkg: any, externals: Array<
   return [externalDependencies, importmapEntries, optionalDependencies] as const;
 }
 
-async function createScaffoldingTarballs(sourceDir: string, targetDir: string, files: Array<TemplateFileLocation>) {
+async function createScaffoldingTarballs(sourceDir: string, targetDir: string, files: Array<string | TemplateFileLocation> = []) {
   const filesDir = resolve(targetDir, filesTar);
   const filesOnceDir = resolve(targetDir, filesOnceTar);
 
@@ -70,14 +70,14 @@ async function createScaffoldingTarballs(sourceDir: string, targetDir: string, f
   await copyScaffoldingFiles(
     sourceDir,
     filesDir,
-    files.filter((m) => !m.once),
+    files.filter((m) => typeof m === 'string' || !m.once),
   );
 
   // also to avoid information loss we should store the once-only files separately
   await copyScaffoldingFiles(
     sourceDir,
     filesOnceDir,
-    files.filter((m) => m.once),
+    files.filter((m) => typeof m !== 'string' && m.once),
   );
 
   // since things like .gitignore are not properly treated by npm we pack the files (for standard and once only)
@@ -103,7 +103,6 @@ export async function createEmulatorSources(
     ...piralPkg.pilets,
     ...piralJsonPkg.pilets,
   };
-  const files = makeFilesMap(pilets.files);
   const allDeps = {
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
@@ -134,7 +133,7 @@ export async function createEmulatorSources(
     },
     pilets: {
       ...pilets,
-      files,
+      files: makeFilesMap(pilets.files),
     },
     piralCLI: {
       version: cliVersion,
@@ -172,7 +171,7 @@ export async function createEmulatorSources(
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
   // generate the files.tar and files_once.tar files
-  await createScaffoldingTarballs(sourceDir, rootDir, files);
+  await createScaffoldingTarballs(sourceDir, rootDir, pilets.files);
 
   return rootDir;
 }
@@ -190,7 +189,6 @@ export async function createEmulatorWebsite(
     ...piralPkg.pilets,
     ...piralJsonPkg.pilets,
   };
-  const files = makeFilesMap(pilets.files);
   const allDeps = {
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
@@ -211,7 +209,7 @@ export async function createEmulatorWebsite(
     scaffolding: {
       pilets: {
         ...pilets,
-        files,
+        files: makeFilesMap(pilets.files),
       },
       cli: cliVersion,
     },
@@ -241,7 +239,7 @@ export async function createEmulatorWebsite(
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
   // generate the files.tar and files_once.tar files
-  await createScaffoldingTarballs(sourceDir, targetDir, files);
+  await createScaffoldingTarballs(sourceDir, targetDir, pilets.files);
 
   return targetDir;
 }
