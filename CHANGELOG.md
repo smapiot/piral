@@ -5,6 +5,7 @@
 - Fixed issue in `piral-vue3` concerning reactivity of props (#720)
 - Updated to latest version of `dets`
 - Updated website emulator to contain scaffolding tarballs
+- Updated pilets to automatically treat defined app shells as shared
 - Added support for `shared` key in *piral.json*
 
 ## 1.6.2 (September 27, 2024)

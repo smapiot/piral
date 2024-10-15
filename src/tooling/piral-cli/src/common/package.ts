@@ -751,7 +751,7 @@ export function combinePiletExternals(
   peerModules: Array<string>,
   importmap: Array<SharedDependency>,
 ) {
-  const externals = [...Object.keys(peerDependencies), ...peerModules];
+  const externals = [...Object.keys(peerDependencies), ...peerModules, ...appShells];
 
   for (let i = importmap.length; i--; ) {
     const entry = importmap[i];
