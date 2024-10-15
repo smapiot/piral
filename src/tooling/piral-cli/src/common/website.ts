@@ -37,16 +37,18 @@ async function downloadEmulatorFiles(
   files: EmulatorWebsiteManifestFiles,
   httpsAgent?: Agent,
 ) {
-  const requiredFiles = [files.typings, files.main, files.app];
+  const requiredFiles = [files.typings, files.main, files.app, files.always, files.once];
   const opts = getAxiosOptions(manifestUrl);
 
   await Promise.all(
-    requiredFiles.map(async (file) => {
-      const url = new URL(file, manifestUrl);
-      const res = await axios.default.get(url.href, { ...opts, httpsAgent, responseType: 'arraybuffer' });
-      const data: Buffer = res.data;
-      await writeBinary(target, file, data);
-    }),
+    requiredFiles
+      .filter((file) => file && typeof file === 'string')
+      .map(async (file) => {
+        const url = new URL(file, manifestUrl);
+        const res = await axios.default.get(url.href, { ...opts, httpsAgent, responseType: 'arraybuffer' });
+        const data: Buffer = res.data;
+        await writeBinary(target, file, data);
+      }),
   );
 }
 

@@ -9,6 +9,8 @@ export interface EmulatorWebsiteManifestFiles {
   main: string;
   app: string;
   assets: Array<string>;
+  always?: string;
+  once?: string;
 }
 
 export interface EmulatorWebsiteManifest {

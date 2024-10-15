@@ -1,4 +1,4 @@
-import { join, resolve, relative, basename } from 'path';
+import { join, resolve, relative, basename, extname } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar, packageJson, piralJson, emulatorJson } from './constants';
@@ -11,25 +11,19 @@ import { createDirectory, removeDirectory, matchFiles, removeAny, getFileNames }
 import { updateExistingJson, readJson, writeJson, createFileIfNotExists } from './io';
 import { EmulatorWebsiteManifest, LogLevels, SharedDependency, PiletsInfo, TemplateFileLocation } from '../types';
 
-export async function createEmulatorSources(
-  sourceDir: string,
-  externals: Array<SharedDependency>,
-  targetDir: string,
-  targetFile: string,
-  logLevel: LogLevels,
-) {
-  const piralPkg = await readJson(sourceDir, packageJson);
-  const piralJsonPkg = await readJson(sourceDir, piralJson);
-  const pilets: PiletsInfo = {
-    ...piralPkg.pilets,
-    ...piralJsonPkg.pilets,
-  };
-  const files: Array<string | TemplateFileLocation> = pilets.files ?? [];
-  const allDeps = {
-    ...piralPkg.devDependencies,
-    ...piralPkg.dependencies,
-  };
+function makeFilesMap(files: Array<string | TemplateFileLocation> = []): Array<TemplateFileLocation> {
+  return files
+    .filter((file) => file && (typeof file === 'string' || typeof file === 'object'))
+    .map((file) => (typeof file === 'string' ? { from: file, to: file } : file))
+    .filter((file) => typeof file.to === 'string' && typeof file.from === 'string')
+    .map((file) => ({
+      ...file,
+      to: file.to.replace(/\\/g, '/'),
+      from: join('files', file.to).replace(/\\/g, '/'),
+    }));
+}
 
+async function makeExternals(sourceDir: string, piralPkg: any, externals: Array<SharedDependency>) {
   const externalPackages = await Promise.all(
     externals
       .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
@@ -63,20 +57,66 @@ export async function createEmulatorSources(
     return deps;
   }, {} as Record<string, string>);
 
+  return [externalDependencies, importmapEntries, optionalDependencies] as const;
+}
+
+async function createScaffoldingTarballs(sourceDir: string, targetDir: string, files: Array<TemplateFileLocation>) {
+  const filesDir = resolve(targetDir, filesTar);
+  const filesOnceDir = resolve(targetDir, filesOnceTar);
+
+  await Promise.all([createDirectory(filesDir), createDirectory(filesOnceDir)]);
+
+  // for scaffolding we need to keep the files also available in the new package
+  await copyScaffoldingFiles(
+    sourceDir,
+    filesDir,
+    files.filter((m) => !m.once),
+  );
+
+  // also to avoid information loss we should store the once-only files separately
+  await copyScaffoldingFiles(
+    sourceDir,
+    filesOnceDir,
+    files.filter((m) => m.once),
+  );
+
+  // since things like .gitignore are not properly treated by npm we pack the files (for standard and once only)
+  await Promise.all([
+    createTarball(filesDir, targetDir, `${filesTar}.tar`),
+    createTarball(filesOnceDir, targetDir, `${filesOnceTar}.tar`),
+  ]);
+
+  // ... and remove the directory
+  await Promise.all([removeDirectory(filesDir), removeDirectory(filesOnceDir)]);
+}
+
+export async function createEmulatorSources(
+  sourceDir: string,
+  externals: Array<SharedDependency>,
+  targetDir: string,
+  targetFile: string,
+  logLevel: LogLevels,
+) {
+  const piralPkg = await readJson(sourceDir, packageJson);
+  const piralJsonPkg = await readJson(sourceDir, piralJson);
+  const pilets: PiletsInfo = {
+    ...piralPkg.pilets,
+    ...piralJsonPkg.pilets,
+  };
+  const files = makeFilesMap(pilets.files);
+  const allDeps = {
+    ...piralPkg.devDependencies,
+    ...piralPkg.dependencies,
+  };
+
   const rootDir = resolve(targetDir, '..');
   const appDir = relative(rootDir, targetDir);
-  const filesDir = resolve(rootDir, filesTar);
-  const filesOnceDir = resolve(rootDir, filesOnceTar);
 
-  const filesMap = files
-    .filter((file) => file && (typeof file === 'string' || typeof file === 'object'))
-    .map((file) => (typeof file === 'string' ? { from: file, to: file } : file))
-    .filter((file) => typeof file.to === 'string' && typeof file.from === 'string')
-    .map((file) => ({
-      ...file,
-      to: file.to.replace(/\\/g, '/'),
-      from: join('files', file.to).replace(/\\/g, '/'),
-    }));
+  const [externalDependencies, importmapEntries, optionalDependencies] = await makeExternals(
+    sourceDir,
+    piralPkg,
+    externals,
+  );
 
   // do not modify an existing JSON
   await createFileIfNotExists(rootDir, packageJson, '{}');
@@ -94,7 +134,7 @@ export async function createEmulatorSources(
     },
     pilets: {
       ...pilets,
-      files: filesMap,
+      files,
     },
     piralCLI: {
       version: cliVersion,
@@ -119,22 +159,6 @@ export async function createEmulatorSources(
     publishConfig: piralPkg.publishConfig,
   });
 
-  await Promise.all([createDirectory(filesDir), createDirectory(filesOnceDir)]);
-
-  // for scaffolding we need to keep the files also available in the new package
-  await copyScaffoldingFiles(
-    sourceDir,
-    filesDir,
-    files.filter((m) => typeof m === 'string' || !m.once),
-  );
-
-  // also to avoid information loss we should store the once-only files separately
-  await copyScaffoldingFiles(
-    sourceDir,
-    filesOnceDir,
-    files.filter((m) => typeof m !== 'string' && m.once),
-  );
-
   // we just want to make sure that "files" mentioned in the original package.json are respected in the package
   await copyScaffoldingFiles(sourceDir, rootDir, piralPkg.files ?? []);
 
@@ -147,14 +171,8 @@ export async function createEmulatorSources(
   // generate the associated index.d.ts
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
 
-  // since things like .gitignore are not properly treated by npm we pack the files (for standard and once only)
-  await Promise.all([
-    createTarball(filesDir, rootDir, `${filesTar}.tar`),
-    createTarball(filesOnceDir, rootDir, `${filesOnceTar}.tar`),
-  ]);
-
-  // ... and remove the directory
-  await Promise.all([removeDirectory(filesDir), removeDirectory(filesOnceDir)]);
+  // generate the files.tar and files_once.tar files
+  await createScaffoldingTarballs(sourceDir, rootDir, files);
 
   return rootDir;
 }
@@ -172,43 +190,17 @@ export async function createEmulatorWebsite(
     ...piralPkg.pilets,
     ...piralJsonPkg.pilets,
   };
+  const files = makeFilesMap(pilets.files);
   const allDeps = {
     ...piralPkg.devDependencies,
     ...piralPkg.dependencies,
   };
 
-  const externalPackages = await Promise.all(
-    externals
-      .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
-      .map(async (external) => ({
-        name: external.name,
-        version: await findDependencyVersion(piralPkg, sourceDir, external),
-        optional: external.isAsync,
-      })),
+  const [externalDependencies, importmapEntries, optionalDependencies] = await makeExternals(
+    sourceDir,
+    piralPkg,
+    externals,
   );
-  const externalDependencies = externalPackages.reduce((deps, dep) => {
-    if (!dep.optional) {
-      deps[dep.name] = dep.version;
-    }
-
-    return deps;
-  }, {} as Record<string, string>);
-
-  const importmapEntries = externalPackages.reduce((deps, dep) => {
-    if (!dep.optional) {
-      deps[dep.name] = dep.name;
-    }
-
-    return deps;
-  }, {} as Record<string, string>);
-
-  const optionalDependencies = externalPackages.reduce((deps, dep) => {
-    if (dep.optional) {
-      deps[dep.name] = dep.name;
-    }
-
-    return deps;
-  }, {} as Record<string, string>);
 
   const allFiles = await matchFiles(targetDir, '*');
   const data: EmulatorWebsiteManifest = {
@@ -217,13 +209,18 @@ export async function createEmulatorWebsite(
     version: piralPkg.version,
     timestamp: new Date().toISOString(),
     scaffolding: {
-      pilets,
+      pilets: {
+        ...pilets,
+        files,
+      },
       cli: cliVersion,
     },
     files: {
       typings: 'index.d.ts',
       main: basename(targetFile),
       app: 'index.html',
+      always: `${filesTar}.tar`,
+      once: `${filesOnceTar}.tar`,
       assets: allFiles.map((file) => relative(targetDir, file)),
     },
     importmap: {
@@ -242,6 +239,9 @@ export async function createEmulatorWebsite(
 
   // generate the associated index.d.ts
   await createPiralDeclaration(sourceDir, piralPkg.app ?? `./src/index.html`, targetDir, ForceOverwrite.yes, logLevel);
+
+  // generate the files.tar and files_once.tar files
+  await createScaffoldingTarballs(sourceDir, targetDir, files);
 
   return targetDir;
 }
