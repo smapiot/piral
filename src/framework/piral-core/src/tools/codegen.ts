@@ -82,6 +82,7 @@ interface CodegenOptions {
   origin: string;
   cat: string;
   appName: string;
+  shared: Array<string>;
   externals: Array<string>;
   publicPath: string;
   isolation: 'classic' | 'modern';
@@ -97,12 +98,23 @@ interface CodegenOptions {
 }
 
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
-  const { root, appName, externals, origin } = opts;
+  const { root, appName, externals, shared, origin } = opts;
   const assignments: Array<string> = [];
   const asyncAssignments: Array<string> = [];
 
   if (appName) {
-    assignments.push(`deps['${appName}']={}`);
+    const parts = [];
+
+    for (const item of shared) {
+      if (typeof item === 'string') {
+        const path = getModulePathOrDefault(root, origin, item);
+        const ref = `_${imports.length}`;
+        parts.push(`...${ref}`);
+        imports.push(`import * as ${ref} from ${JSON.stringify(path)}`);
+      }
+    }
+
+    assignments.push(`deps['${appName}']={${parts.join(',')}}`);
   }
 
   for (const external of externals) {

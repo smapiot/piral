@@ -23,6 +23,7 @@ module.exports = function () {
     publicPath: process.env.PIRAL_PUBLIC_PATH || '/',
     debug: debug && (cfg.debugSettings || {}),
     emulator: !!process.env.DEBUG_PILET,
+    shared: Array.isArray(cfg.shared) ? cfg.shared : [],
     isolation: cfg.isolation || 'classic',
   };
 

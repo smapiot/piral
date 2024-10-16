@@ -35,12 +35,13 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
       middlewares.forEach((middleware) => middleware(app));
       app.component(selector, createExtension(rootName));
       app.mount(el);
-      !app._props && (app._props = {});
       locals.instance = app;
     },
     update(parent, data, ctx, locals: Vue3State) {
+      const appInstance = locals.instance._instance;
+
       for (const prop in data) {
-        locals.instance._props[prop] = data[prop];
+        appInstance.props[prop] = data[prop];
       }
     },
     unmount(parent, locals: Vue3State) {

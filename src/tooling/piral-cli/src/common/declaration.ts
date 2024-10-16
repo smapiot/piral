@@ -69,24 +69,31 @@ function findPiralBaseApi(root: string, framework: string) {
   }
 }
 
-function findDeclaredTypings(root: string) {
+function isString(n: any) {
+  return typeof n === 'string';
+}
+
+function findDeclaredTypings(root: string, shared: Array<string> = []) {
+  const types = shared.filter(isString).map((file) => resolve(root, file));
+
   try {
     const { typings, extraTypes } = require(resolve(root, 'package.json'));
 
     if (extraTypes) {
-      if (typeof extraTypes === 'string') {
-        return [resolve(root, extraTypes)];
+      if (isString(extraTypes)) {
+        return [resolve(root, extraTypes), ...types];
       } else if (Array.isArray(extraTypes)) {
-        return extraTypes.filter((types) => typeof types === 'string').map((types) => resolve(root, types));
+        const items = extraTypes.filter(isString).map((file) => resolve(root, file));
+        return [...items, ...types];
       }
     }
 
     if (typings) {
-      return [resolve(root, typings)];
+      return [resolve(root, typings), ...types];
     }
   } catch {}
 
-  return [];
+  return types;
 }
 
 async function getAllFiles(entryModules: Array<string>) {
@@ -128,11 +135,7 @@ function createLogger(): Logger {
   };
 }
 
-async function createDeclarationFile(
-  options: DeclOptions,
-  target: string,
-  forceOverwrite: ForceOverwrite,
-) {
+async function createDeclarationFile(options: DeclOptions, target: string, forceOverwrite: ForceOverwrite) {
   progress('Bundling declaration file ...');
   const result = await generateDeclaration(options);
 
@@ -190,14 +193,14 @@ export async function createPiralDeclaration(
 ) {
   progress('Reading configuration ...');
   const entryFiles = await retrievePiralRoot(baseDir, entry);
-  const { name, root, externals, framework } = await retrievePiletsInfo(entryFiles);
+  const { name, root, externals, framework, shared } = await retrievePiletsInfo(entryFiles);
   const entryModules = await getEntryModules(entryFiles);
   const files = await getAllFiles(entryModules);
   const options: DeclOptions = {
     name,
     root,
     files,
-    types: findDeclaredTypings(root),
+    types: findDeclaredTypings(root, shared),
     apis: findPiralBaseApi(root, framework),
     noModuleDeclaration: true,
     imports: flattenExternals(externals, true),

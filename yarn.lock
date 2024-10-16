@@ -4751,10 +4751,10 @@ cookie-signature@1.0.6:
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
   integrity sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==
 
-cookie@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.6.0.tgz#2798b04b071b0ecbff0dbb62a505a8efa4e19051"
-  integrity sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==
+cookie@0.6.0, cookie@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.7.0.tgz#2148f68a77245d5c2c0005d264bc3e08cfa0655d"
+  integrity sha512-qCf+V4dtlNhSRXGAZatc1TasyFO6GjohcOul807YOb5ik3+kQSnb4d7iajeCL8QHaJ4uZEjCgiCJerKXwdRVlQ==
 
 core-js-compat@^3.31.0, core-js-compat@^3.32.2:
   version "3.33.0"
@@ -5179,10 +5179,10 @@ detect-libc@^1.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
 
-dets@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/dets/-/dets-0.16.0.tgz#f0fbc7955e90ef602e3ee42b49f10fd27542ad70"
-  integrity sha512-sqnrRoOHnexPnXY596j89DHu1BEfCD7WBWYKsahdpT85ajWbuJzpWl9HGtwgHmG94dLszSvBp4DvFuRAuuh25Q==
+dets@^0.16.4:
+  version "0.16.4"
+  resolved "https://registry.yarnpkg.com/dets/-/dets-0.16.4.tgz#53531ebe800ede19238b80df601712b60bcc9ab0"
+  integrity sha512-2ZQ6qA3cBLZTzmmSud1qrbc1vARfPTpYcHwWOo1bYISYUuobSr3xDBESUKvTY2+rMxyMj2rDeSslrZJo1FvFJw==
 
 diff-sequences@^29.6.3:
   version "29.6.3"

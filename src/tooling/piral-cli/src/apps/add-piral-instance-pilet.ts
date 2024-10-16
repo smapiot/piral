@@ -12,6 +12,10 @@ import {
   findPiletRoot,
   piletJson,
   ensure,
+  readPiralPackage,
+  checkAppShellPackage,
+  ForceOverwrite,
+  copyPiralFiles,
 } from '../common';
 
 export interface AddPiralInstancePiletOptions {
@@ -76,7 +80,14 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     if (piletJsonPath) {
       const piletJsonDir = dirname(piletJsonPath);
       const root = await findPiletRoot(piletJsonDir);
-      await installPiralInstance(app, fullBase, root, npmClient, selected);
+      const packageName = await installPiralInstance(app, fullBase, root, npmClient, selected);
+      const piralInfo = await readPiralPackage(root, packageName);
+      const isEmulator = checkAppShellPackage(piralInfo);
+
+      if (isEmulator) {
+        // in the emulator case we get the files (and files_once) from the contained tarballs
+        await copyPiralFiles(root, packageName, piralInfo, ForceOverwrite.yes, {});
+      }
     } else {
       log('piletJsonNotAvailable_0180', targetDir);
     }

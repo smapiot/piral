@@ -157,6 +157,12 @@ The API can be much more dynamic and powerful (e.g., even coupling to the global
 
 This way is our recommendation for dynamic data and functions that require protection. Besides building convenience wrappers around the global state container it can also leverage pilet specific behavior.
 
+## Extending the App Shell Exports
+
+Our recommendation is to only use the Piral instance from your pilets as a type construct / for development purposes. At runtime no significant exports should be used within a pilet. However, if you really want your pilet to strongly depend on the app shell you can also use full exports using the `shared` key in the *piral.json*.
+
+For more information on this look at the [documentation for sharing dependencies](./15-share-dependencies.md).
+
 ## Conclusion
 
 Sharing information from the Piral instance can be done in multiple ways. Depending on the needs of the application and its pilets one way or another may be the best. Usually, an app shell uses all these ways to build an outstanding experience for both - users and developers.
