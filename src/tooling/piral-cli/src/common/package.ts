@@ -284,7 +284,6 @@ async function getAvailableFiles(
   root: string,
   name: string,
   dirName: string,
-  fileMap: Array<TemplateFileLocation>,
 ): Promise<Array<FileDescriptor>> {
   const source = getPiralPath(root, name);
   const tgz = `${dirName}.tar`;
@@ -305,8 +304,8 @@ async function getAvailableFiles(
   }));
 }
 
-export async function getFileStats(root: string, name: string, fileMap: Array<TemplateFileLocation> = []) {
-  const files = await getAvailableFiles(root, name, filesTar, fileMap);
+export async function getFileStats(root: string, name: string) {
+  const files = await getAvailableFiles(root, name, filesTar);
 
   return await Promise.all(
     files.map(async (file) => {
@@ -414,12 +413,10 @@ export async function copyPiralFiles(
   originalFiles?: Array<FileInfo>,
 ) {
   log('generalDebug_0003', `Copying the Piral files ...`);
-  const { files: _files } = getPiletsInfo(piralInfo);
-  const fileMap = _files.filter(isTemplateFileLocation);
-  const files = await getAvailableFiles(root, name, filesTar, fileMap);
+  const files = await getAvailableFiles(root, name, filesTar);
 
   if (originalFiles === undefined) {
-    const initialFiles = await getAvailableFiles(root, name, filesOnceTar, fileMap);
+    const initialFiles = await getAvailableFiles(root, name, filesOnceTar);
     files.push(...initialFiles);
     originalFiles = [];
   }

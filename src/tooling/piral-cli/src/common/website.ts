@@ -33,23 +33,31 @@ async function requestManifest(url: string, interactive: boolean, httpsAgent?: A
 
 async function downloadEmulatorFiles(
   manifestUrl: string,
-  target: string,
+  targetDir: string,
+  appDir: string,
   files: EmulatorWebsiteManifestFiles,
   httpsAgent?: Agent,
 ) {
-  const requiredFiles = [files.typings, files.main, files.app, files.always, files.once];
-  const opts = getAxiosOptions(manifestUrl);
+  const requiredFiles = [files.typings, files.main, files.app];
+  const optionalFiles = [files.always, files.once];
+  const opts = {
+    ...getAxiosOptions(manifestUrl),
+    httpsAgent,
+    responseType: 'arraybuffer' as const,
+  };
 
-  await Promise.all(
-    requiredFiles
+  const downloadFiles = (files: Array<string>, target: string) => {
+    return files
       .filter((file) => file && typeof file === 'string')
       .map(async (file) => {
         const url = new URL(file, manifestUrl);
-        const res = await axios.default.get(url.href, { ...opts, httpsAgent, responseType: 'arraybuffer' });
+        const res = await axios.default.get(url.href, opts);
         const data: Buffer = res.data;
         await writeBinary(target, file, data);
-      }),
-  );
+      });
+  };
+
+  await Promise.all([...downloadFiles(requiredFiles, appDir), ...downloadFiles(optionalFiles, targetDir)]);
 }
 
 async function createEmulatorFiles(
@@ -94,7 +102,7 @@ async function createEmulatorFiles(
     outFile: emulatorJson.files.main,
   });
 
-  await downloadEmulatorFiles(manifestUrl, appDir, emulatorJson.files, httpsAgent);
+  await downloadEmulatorFiles(manifestUrl, targetDir, appDir, emulatorJson.files, httpsAgent);
 }
 
 export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string, interactive: boolean) {
