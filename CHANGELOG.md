@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.7.0 (tbd)
+## 1.7.0 (October 16, 2024)
 
 - Fixed issue in `piral-vue3` concerning reactivity of props (#720)
 - Updated to latest version of `dets`
