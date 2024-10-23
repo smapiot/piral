@@ -1,5 +1,5 @@
 import type { ForeignComponent, BaseComponentProps } from 'piral-core';
-import { Component, App } from 'vue';
+import { Component, App, reactive } from 'vue';
 import { createExtension } from './extension';
 import { mountVue } from './mount';
 import { Vue3MiddlewareHandler } from './types';
@@ -19,6 +19,7 @@ export interface Vue3ConverterOptions {
 
 interface Vue3State {
   instance: App;
+  props: any;
 }
 
 export function createConverter(config: Vue3ConverterOptions = {}) {
@@ -27,27 +28,31 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
   const middlewares: Array<Vue3MiddlewareHandler> = [];
   const convert = <TProps extends BaseComponentProps>(
     root: Component<TProps>,
-    captured?: Record<string, any>,
+    captured: Record<string, any> = {},
   ): ForeignComponent<TProps> => ({
     mount(parent, data, ctx, locals: Vue3State) {
       const el = parent.appendChild(document.createElement(rootName));
-      const app = mountVue(root, data, ctx, captured);
+      const props = reactive({
+          ...captured,
+          ...data,
+      });
+      const app = mountVue(root, props, ctx);
       middlewares.forEach((middleware) => middleware(app));
       app.component(selector, createExtension(rootName));
       app.mount(el);
       locals.instance = app;
+      locals.props = props;
     },
     update(parent, data, ctx, locals: Vue3State) {
-      const appInstance = locals.instance._instance;
-
       for (const prop in data) {
-        appInstance.props[prop] = data[prop];
+          locals.props[prop] = data[prop];
       }
     },
     unmount(parent, locals: Vue3State) {
       locals.instance.unmount();
       parent.innerHTML = '';
       locals.instance = undefined;
+      locals.props = undefined;
     },
   });
   convert.Extension = Extension;

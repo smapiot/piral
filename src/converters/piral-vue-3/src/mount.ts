@@ -5,22 +5,16 @@ export function mountVue<T extends BaseComponentProps>(
   component: Component<T>,
   props: T,
   ctx: ComponentContext,
-  captured?: Record<string, any>,
 ) {
-  const data = {
-    ...captured,
-    ...props,
-  };
   const root: Component = {
     provide: {
       piral: props.piral,
       ...ctx,
     },
-    props: Object.keys(data),
     render() {
-      return h(component, this.$props);
+      return h(component, props);
     },
   };
 
-  return createApp(root, data);
+  return createApp(root);
 }
