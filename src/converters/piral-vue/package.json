@@ -55,6 +55,6 @@
   },
   "devDependencies": {
     "piral-core": "^1.7.0",
-    "vue": "^2.6.10"
+    "vue": "^3.0.0"
   }
 }
