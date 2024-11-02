@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.7.1 (tbd)
+## 1.7.1 (November 2, 2024)
 
 - Fixed `engines` field to have a constraint for Node.js >=18.17
 - Fixed release mode behavior of `piral-vue3` reactivity (#720)
