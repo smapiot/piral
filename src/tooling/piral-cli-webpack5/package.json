@@ -19,7 +19,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.17"
   },
   "files": [
     "lib",
