@@ -67,7 +67,7 @@ function dispatchToRoot(event: any) {
     performInternalNavigation(event);
   }
 
-  if (!event.processed) {
+  if ((typeof MutationEvent === 'undefined' || !(event instanceof MutationEvent)) && !event.processed) {
     const eventClone = new event.constructor(event.type, event);
     document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
     // make sure to only process every event once; even though multiple boundaries might be active
