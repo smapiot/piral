@@ -67,8 +67,7 @@ function dispatchToRoot(event: any) {
     performInternalNavigation(event);
   }
 
-  // the mutation event cannot be cloned (at least in Webkit-based browsers)
-  if (!(event instanceof MutationEvent) && !event.processed) {
+  if (!event.processed) {
     const eventClone = new event.constructor(event.type, event);
     document.getElementById(blazorRootId)?.dispatchEvent(eventClone);
     // make sure to only process every event once; even though multiple boundaries might be active
