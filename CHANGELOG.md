@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.8.0 (tbd)
+
+- ?
+
 ## 1.7.1 (November 2, 2024)
 
 - Fixed `engines` field to have a constraint for Node.js >=18.17
