@@ -2,7 +2,7 @@
 
 ## 1.8.0 (tbd)
 
-- ?
+- Fixed removal of `MutationEvent` in recent Chrome in `piral-blazor` (#724) by @dheid
 
 ## 1.7.1 (November 2, 2024)
 
