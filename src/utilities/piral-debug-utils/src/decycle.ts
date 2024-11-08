@@ -13,6 +13,8 @@ export function decycle(obj: Record<string, any>) {
       return `<error>`;
     } else if (_value instanceof Node) {
       return `<node>`;
+    } else if (_value['$$typeof'] === Symbol.for('react.element')) {
+      return '<react.element>';
     } else if (typeof _value === 'object') {
       for (let i = 0; i < objects.length; i++) {
         if (objects[i] === _value) {
