@@ -1,8 +1,9 @@
 # Piral Changelog
 
-## 1.8.0 (tbd)
+## 1.7.2 (tbd)
 
 - Fixed removal of `MutationEvent` in recent Chrome in `piral-blazor` (#724) by @dheid
+- Fixed inclusion of React components in serialized dev tools message (#726)
 
 ## 1.7.1 (November 2, 2024)
 
