@@ -1,6 +1,6 @@
 {
   "name": "piral-ng",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Plugin for integrating Angular components in Piral.",
   "keywords": [
     "piral",
@@ -71,7 +71,7 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "piral-core": "^1.7.1",
+    "piral-core": "^1.7.2",
     "piral-ng-common": "^16.0.0",
     "rxjs": "^7.3.0"
   }
