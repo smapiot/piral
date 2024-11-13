@@ -144,7 +144,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     if (!monorepoRef) {
       // only install the latest if the shell does come from remote
       progress(`Updating npm package to %s ...`, packageRef);
-      await installNpmPackage(npmClient, packageRef, root, '--no-save');
+      await installNpmPackage(npmClient, packageRef, root);
     }
 
     const piralInfo = await readPiralPackage(root, sourceName);

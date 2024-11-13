@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.7.3 (tbd)
+
+- Fixed `pilet upgrade` command with `npm` client not changing *package.json*
+
 ## 1.7.2 (November 8, 2024)
 
 - Fixed removal of `MutationEvent` in recent Chrome in `piral-blazor` (#724) by @dheid
