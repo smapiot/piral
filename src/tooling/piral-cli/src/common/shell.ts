@@ -1,3 +1,4 @@
+import { Agent } from 'https';
 import { progress } from './log';
 import { packageJson, piletJson } from './constants';
 import { readJson, updateExistingJson, writeJson } from './io';
@@ -55,12 +56,13 @@ export async function installPiralInstance(
   baseDir: string,
   rootDir: string,
   npmClient: NpmClientType,
+  agent: Agent,
   selected?: boolean,
 ): Promise<string> {
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource);
 
   if (type === 'remote') {
-    const emulator = await scaffoldFromEmulatorWebsite(rootDir, sourceName);
+    const emulator = await scaffoldFromEmulatorWebsite(rootDir, sourceName, agent);
     const packageName = emulator.name;
     await updatePiletJson(rootDir, packageName, {
       selected,

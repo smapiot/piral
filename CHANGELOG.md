@@ -3,6 +3,7 @@
 ## 1.7.3 (tbd)
 
 - Fixed `pilet upgrade` command with `npm` client not changing *package.json*
+- Added `--allow-self-signed` flag to `piral-cli` commands using HTTP requests
 
 ## 1.7.2 (November 8, 2024)
 

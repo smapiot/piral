@@ -29,6 +29,8 @@ import {
   defaultSchemaVersion,
   piletJsonSchemaUrl,
   ensure,
+  getCertificate,
+  getAgent,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -46,6 +48,16 @@ export interface NewPiletOptions {
    * The source package containing a Piral instance for templating the scaffold process.
    */
   source?: string;
+
+  /**
+   * Defines a custom certificate for the website emulator.
+   */
+  cert?: string;
+  
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
 
   /**
    * Determines if files should be overwritten by the scaffolding.
@@ -110,6 +122,8 @@ export const newPiletDefaults: NewPiletOptions = {
   bundlerName: 'none',
   variables: {},
   name: undefined,
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions = {}) {
@@ -126,6 +140,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     variables = newPiletDefaults.variables,
     npmClient: defaultNpmClient = newPiletDefaults.npmClient,
     name = newPiletDefaults.name,
+    cert = newPiletDefaults.cert,
+    allowSelfSigned = newPiletDefaults.allowSelfSigned,
   } = options;
   
   ensure('baseDir', baseDir, 'string');
@@ -142,6 +158,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 
   if (success) {
     const npmClient = await determineNpmClient(root, defaultNpmClient);
+    const ca = await getCertificate(cert);
+    const agent = getAgent({ ca, allowSelfSigned });
     const projectName = name || basename(root);
 
     progress(`Scaffolding new pilet in %s ...`, root);
@@ -196,7 +214,7 @@ always-auth=true`,
     );
 
     const sourceName = source || `empty-piral@${cliVersion}`;
-    const packageName = await installPiralInstance(sourceName, fullBase, root, npmClient, true);
+    const packageName = await installPiralInstance(sourceName, fullBase, root, npmClient, agent, true);
     const piralInfo = await readPiralPackage(root, packageName);
     const isEmulator = checkAppShellPackage(piralInfo);
     const { preScaffold, postScaffold, files, template: preSelectedTemplate } = getPiletsInfo(piralInfo);

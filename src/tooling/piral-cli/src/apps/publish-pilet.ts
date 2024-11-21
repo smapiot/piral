@@ -1,3 +1,4 @@
+import { Agent } from 'https';
 import { relative, resolve } from 'path';
 import { LogLevels, PiletSchemaVersion, PiletPublishSource, PublishScheme } from '../types';
 import {
@@ -17,6 +18,7 @@ import {
   triggerBuildPilet,
   getCertificate,
   ensure,
+  getAgent,
 } from '../common';
 
 export interface PublishPiletOptions {
@@ -52,6 +54,11 @@ export interface PublishPiletOptions {
    * Defines a custom certificate for the feed service.
    */
   cert?: string;
+  
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
 
   /**
    * Sets the schema version of the pilet. Usually, the default one should be picked.
@@ -110,7 +117,6 @@ export const publishPiletDefaults: PublishPiletOptions = {
   url: undefined,
   apiKey: undefined,
   fresh: false,
-  cert: undefined,
   logLevel: LogLevels.info,
   schemaVersion: undefined,
   mode: 'basic',
@@ -118,6 +124,8 @@ export const publishPiletDefaults: PublishPiletOptions = {
   fields: {},
   headers: {},
   interactive: false,
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 async function getFiles(
@@ -129,7 +137,7 @@ async function getFiles(
   logLevel: LogLevels,
   bundlerName: string,
   _?: Record<string, any>,
-  ca?: Buffer,
+  agent?: Agent,
   hooks?: PublishPiletOptions['hooks'],
 ): Promise<Array<string>> {
   if (fresh) {
@@ -181,14 +189,14 @@ async function getFiles(
       }
       case 'remote': {
         log('generalDebug_0003', `Download file from "${sources.join('", "')}".`);
-        const allFiles = await Promise.all(sources.map((s) => downloadFile(s, ca)));
+        const allFiles = await Promise.all(sources.map((s) => downloadFile(s, agent)));
         return allFiles.reduce((result, files) => [...result, ...files], []);
       }
       case 'npm': {
         log('generalDebug_0003', `View npm package "${sources.join('", "')}".`);
         const allUrls = await Promise.all(sources.map((s) => findNpmTarball(s)));
         log('generalDebug_0003', `Download file from "${allUrls.join('", "')}".`);
-        const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, ca)));
+        const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, agent)));
         return allFiles.reduce((result, files) => [...result, ...files], []);
       }
     }
@@ -204,11 +212,12 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
-    cert = publishPiletDefaults.cert,
     fields = publishPiletDefaults.fields,
     headers = publishPiletDefaults.headers,
     mode = publishPiletDefaults.mode,
     interactive = publishPiletDefaults.interactive,
+    cert = publishPiletDefaults.cert,
+    allowSelfSigned = publishPiletDefaults.allowSelfSigned,
     _ = {},
     hooks = {},
     bundlerName,
@@ -229,10 +238,11 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   }
 
   const ca = await getCertificate(cert);
+  const agent = getAgent({ ca, allowSelfSigned });
 
   log('generalDebug_0003', 'Getting the tgz files ...');
   const sources = Array.isArray(source) ? source : [source];
-  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, ca, hooks);
+  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, agent, hooks);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
@@ -249,7 +259,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" to "%s" ...`, file, url);
-      const result = await postFile(url, mode, apiKey, content, fields, headers, ca, interactive);
+      const result = await postFile(url, mode, apiKey, content, fields, headers, agent, interactive);
 
       if (result.success) {
         successfulUploads.push(file);

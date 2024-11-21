@@ -16,6 +16,9 @@ import {
   checkAppShellPackage,
   ForceOverwrite,
   copyPiralFiles,
+  config,
+  getCertificate,
+  getAgent,
 } from '../common';
 
 export interface AddPiralInstancePiletOptions {
@@ -40,6 +43,16 @@ export interface AddPiralInstancePiletOptions {
   selected?: boolean;
 
   /**
+   * Defines a custom certificate for the website emulator.
+   */
+  cert?: string;
+  
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
+
+  /**
    * The npm client to be used when scaffolding.
    * @example 'yarn'
    */
@@ -52,6 +65,8 @@ export const addPiralInstancePiletDefaults: AddPiralInstancePiletOptions = {
   source: '.',
   selected: false,
   npmClient: undefined,
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 export async function addPiralInstancePilet(baseDir = process.cwd(), options: AddPiralInstancePiletOptions = {}) {
@@ -61,6 +76,8 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     source = addPiralInstancePiletDefaults.source,
     selected = addPiralInstancePiletDefaults.selected,
     app = addPiralInstancePiletDefaults.app,
+    cert = addPiralInstancePiletDefaults.cert,
+    allowSelfSigned = addPiralInstancePiletDefaults.allowSelfSigned,
   } = options;
 
   ensure('baseDir', baseDir, 'string');
@@ -72,6 +89,8 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
 
   const npmClient = await determineNpmClient(fullBase, defaultNpmClient);
   const allEntries = await matchAnyPilet(fullBase, [source]);
+  const ca = await getCertificate(cert);
+  const agent = getAgent({ ca, allowSelfSigned });
 
   const tasks = allEntries.map(async (entryModule) => {
     const targetDir = dirname(entryModule);
@@ -80,7 +99,7 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     if (piletJsonPath) {
       const piletJsonDir = dirname(piletJsonPath);
       const root = await findPiletRoot(piletJsonDir);
-      const packageName = await installPiralInstance(app, fullBase, root, npmClient, selected);
+      const packageName = await installPiralInstance(app, fullBase, root, npmClient, agent, selected);
       const piralInfo = await readPiralPackage(root, packageName);
       const isEmulator = checkAppShellPackage(piralInfo);
 
