@@ -92,6 +92,7 @@ async function createEmulatorFiles(
       peerDependencies: {},
       optionalDependencies: emulatorJson.dependencies.optional,
       devDependencies: emulatorJson.dependencies.included,
+      sharedDependencies: [Object.keys(emulatorJson.importmap.imports)],
     },
     true,
   );
