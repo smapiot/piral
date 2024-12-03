@@ -4,6 +4,7 @@
 
 - Fixed `pilet upgrade` command with `npm` client not changing *package.json*
 - Fixed shared dependency list from website emulator to exclude legacy dependencies
+- Fixed issue with relative app path in emulator package generated on Windows
 - Added `--allow-self-signed` flag to `piral-cli` commands using HTTP requests
 - Added support for `react-router` v7
 
