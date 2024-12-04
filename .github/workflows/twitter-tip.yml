@@ -23,3 +23,9 @@ jobs:
           consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
           access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      - uses: smapiot/send-bluesky-post-action@v1
+        name: Bluesky post daily tip
+        with:
+          status: "${{ steps.tweet.outputs.TIP }} #piral #dailytips #microfrontends"
+          bluesky-email: ${{ secrets.BLUESKY_EMAIL }}
+          bluesky-password: ${{ secrets.BLUESKY_PASSWORD }}
