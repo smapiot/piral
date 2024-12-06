@@ -17,7 +17,7 @@ jobs:
           consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
           access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-      - uses: smapiot/send-bluesky-post-action@v1
+      - uses: smapiot/send-bluesky-post-action@v2
         name: Bluesky post new release
         with:
           status: "New ${{ github.event.repository.name }} release ${{ github.event.release.tag_name }}! ${{ github.event.release.html_url }} #microfrontends #piral #react #release"
