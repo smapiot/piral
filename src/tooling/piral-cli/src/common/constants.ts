@@ -29,6 +29,7 @@ export const bundlerNames = [
   'webpack5' as const,
   'vite' as const,
   'vite5' as const,
+  'vite6' as const,
   'xbuild' as const,
 ];
 export const declarationEntryExtensions = ['.html', '.pug', ...entryModuleExtensions];
