@@ -5,7 +5,7 @@ import { readJson, updateExistingJson, writeJson } from './io';
 import { scaffoldFromEmulatorWebsite } from './website';
 import { combinePackageRef, getPackageName, getPackageVersion } from './npm';
 import { dissectPackageName, installNpmPackage, isLinkedPackage } from './npm';
-import { NpmClientType, PackageType, PiralInstanceDetails } from '../types';
+import { NpmClient, PackageType, PiralInstanceDetails } from '../types';
 
 async function updatePiletJson(target: string, appName: string, appDetails: PiralInstanceDetails) {
   const oldContent = await readJson(target, piletJson);
@@ -30,7 +30,7 @@ async function setupPiralInstance(
   hadVersion: boolean,
   rootDir: string,
   sourceVersion: string,
-  npmClient: NpmClientType,
+  npmClient: NpmClient,
 ) {
   if (!isLinkedPackage(sourceName, type, hadVersion, rootDir)) {
     const packageRef = combinePackageRef(sourceName, sourceVersion, type);
@@ -55,7 +55,7 @@ export async function installPiralInstance(
   usedSource: string,
   baseDir: string,
   rootDir: string,
-  npmClient: NpmClientType,
+  npmClient: NpmClient,
   agent: Agent,
   selected?: boolean,
 ): Promise<string> {
