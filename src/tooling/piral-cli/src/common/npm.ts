@@ -218,7 +218,7 @@ export async function installNpmPackage(
 }
 
 export function initNpmProject(client: NpmClient, projectName: string, target: string) {
-  const { initProject } = clients[client.wrapper];
+  const { initProject } = clients[client.wrapper || client.direct];
   return initProject(projectName, target);
 }
 
