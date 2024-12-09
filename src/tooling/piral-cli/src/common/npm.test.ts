@@ -202,39 +202,39 @@ describe('npm Module', () => {
 
   it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
-    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmPackage('npm', 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool without a version', async () => {
     wrongCase = false;
-    await installNpmPackage('npm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmPackage('npm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Yarn command line tool without a version', async () => {
     wrongCase = false;
-    await installNpmPackage('yarn', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'yarn' }, 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmPackage('yarn', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'yarn' }, 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the Pnpm command line tool without a version', async () => {
     wrongCase = false;
-    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'pnpm' }, 'foo').then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmPackage('pnpm', 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'pnpm' }, 'foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('installs a package using the npm command line tool with some flag', async () => {
     wrongCase = false;
-    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+    await installNpmPackage({ direct: 'pnpm' }, 'foo', '1.3', '.', '--a=b').then((result) =>
       expect(result).toEqual(jsonValueString),
     );
     wrongCase = true;
-    await installNpmPackage('npm', 'foo', '1.3', '.', '--a=b').then((result) =>
+    await installNpmPackage({ direct: 'pnpm' }, 'foo', '1.3', '.', '--a=b').then((result) =>
       expect(result).not.toEqual(jsonValueString),
     );
   });
@@ -281,23 +281,23 @@ describe('npm Module', () => {
 
   it('install dependencies with npm client', async () => {
     wrongCase = false;
-    await installNpmDependencies('npm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'npm' }).then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmDependencies('npm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'npm' }).then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with pnpm client', async () => {
     wrongCase = false;
-    await installNpmDependencies('pnpm').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'pnpm' }).then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmDependencies('pnpm').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'pnpm' }).then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('install dependencies with yarn client', async () => {
     wrongCase = false;
-    await installNpmDependencies('yarn').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'yarn' }).then((result) => expect(result).toEqual(jsonValueString));
     wrongCase = true;
-    await installNpmDependencies('yarn').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmDependencies({ direct: 'yarn' }).then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
   it('create npm package', async () => {

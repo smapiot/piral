@@ -1,5 +1,13 @@
 # Piral Changelog
 
+## 1.7.3 (tbd)
+
+- Fixed `pilet upgrade` command with `npm` client not changing *package.json*
+- Fixed shared dependency list from website emulator to exclude legacy dependencies
+- Fixed issue with relative app path in emulator package generated on Windows
+- Added `--allow-self-signed` flag to `piral-cli` commands using HTTP requests
+- Added support for `react-router` v7
+
 ## 1.7.2 (November 8, 2024)
 
 - Fixed removal of `MutationEvent` in recent Chrome in `piral-blazor` (#724) by @dheid

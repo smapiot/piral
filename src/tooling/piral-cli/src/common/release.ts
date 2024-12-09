@@ -1,3 +1,4 @@
+import { Agent } from 'https';
 import { basename, dirname, relative } from 'path';
 import { readBinary } from './io';
 import { publishNpmPackage } from './npm';
@@ -39,7 +40,7 @@ export async function publishWebsiteEmulator(
   files: Array<string>,
   interactive: boolean,
   headers?: Record<string, string>,
-  ca?: Buffer,
+  agent?: Agent,
 ) {
   const data: FormDataObj = {
     version,
@@ -53,5 +54,5 @@ export async function publishWebsiteEmulator(
     data[relPath] = [content, fileName];
   }
 
-  return await postForm(url, mode, apiKey, data, headers, ca, interactive);
+  return await postForm(url, mode, apiKey, data, headers, agent, interactive);
 }

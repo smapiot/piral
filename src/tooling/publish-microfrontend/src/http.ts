@@ -34,10 +34,22 @@ export interface PostFormResult {
 
 export type FormDataObj = Record<string, string | [Buffer, string]>;
 
+export interface AgentOptions {
+  ca?: Buffer;
+  allowSelfSigned?: boolean;
+}
 
-export async function downloadFile(url: string, ca?: Buffer): Promise<Array<string>> {
-  const httpsAgent = ca ? new Agent({ ca }) : undefined;
+export function getAgent({ allowSelfSigned, ca }: AgentOptions) {
+  if (ca) {
+    return new Agent({ ca });
+  } else if (allowSelfSigned) {
+    return new Agent({ rejectUnauthorized: false });
+  } else {
+    return undefined;
+  }
+}
 
+export async function downloadFile(url: string, httpsAgent?: Agent): Promise<Array<string>> {
   try {
     const res = await axios.get<Stream>(url, {
       responseType: 'stream',
@@ -58,10 +70,9 @@ export function postForm(
   key: string,
   formData: FormDataObj,
   customHeaders: Record<string, string> = {},
-  ca?: Buffer,
+  httpsAgent?: Agent,
   interactive = false,
 ): Promise<PostFormResult> {
-  const httpsAgent = ca ? new Agent({ ca }) : undefined;
   const form = new FormData();
 
   Object.keys(formData).forEach((key) => {
@@ -124,7 +135,7 @@ export function postForm(
 
             if (typeof interactiveAuth === 'string') {
               return getTokenInteractively(interactiveAuth, httpsAgent).then(({ mode, token }) =>
-                postForm(target, mode, token, formData, customHeaders, ca, false),
+                postForm(target, mode, token, formData, customHeaders, httpsAgent, false),
               );
             }
           }
@@ -173,9 +184,9 @@ export function postFile(
   file: Buffer,
   customFields: Record<string, string> = {},
   customHeaders: Record<string, string> = {},
-  ca?: Buffer,
+  agent?: Agent,
   interactive = false,
 ): Promise<PostFormResult> {
   const data: FormDataObj = { ...customFields, file: [file, 'microfrontend.tgz'] };
-  return postForm(target, scheme, key, data, customHeaders, ca, interactive);
+  return postForm(target, scheme, key, data, customHeaders, agent, interactive);
 }

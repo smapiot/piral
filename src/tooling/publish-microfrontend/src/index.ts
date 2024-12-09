@@ -7,13 +7,14 @@ import { basename } from 'path';
 import { readFile } from 'fs/promises';
 import { progress, fail, logDone, logFail, logInfo } from './log';
 import { getCa, getFiles } from './utils';
-import { postFile } from './http';
+import { getAgent, postFile } from './http';
 
 const current = process.cwd();
 const defaultArgs = rc('microfrontend', {
   url: undefined,
   apiKey: undefined,
   cert: undefined,
+  allowSelfSigned: false,
   mode: 'basic',
   from: 'local',
   fields: {},
@@ -34,6 +35,9 @@ const args = yargs
   .string('cert')
   .describe('cert', 'Sets a custom certificate authority to use, if any.')
   .default('cert', defaultArgs.cert)
+  .boolean('allow-self-signed')
+  .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+  .default('allow-self-signed', defaultArgs.allowSelfSigned)
   .choices('mode', publishModeKeys)
   .describe('mode', 'Sets the authorization mode to use.')
   .default('mode', defaultArgs.mode)
@@ -52,10 +56,11 @@ const args = yargs
   .default('interactive', defaultArgs.interactive).argv;
 
 async function run() {
-  const { cert, source, from, url, 'api-key': apiKey, headers, fields, interactive, mode } = args;
+  const { cert, source, from, url, 'api-key': apiKey, 'allow-self-signed': allowSelfSigned, headers, fields, interactive, mode } = args;
   const sources = Array.isArray(source) ? source : [source];
   const ca = await getCa(cert);
-  const files = await getFiles(current, sources, from, ca);
+  const agent = getAgent({ ca, allowSelfSigned });
+  const files = await getFiles(current, sources, from, agent);
   const successfulUploads: Array<string> = [];
 
   if (files.length === 0) {
@@ -76,7 +81,7 @@ async function run() {
         content,
         fields,
         headers,
-        ca,
+        agent,
         interactive,
       );
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vitest } from 'vitest';
-import { postFile, downloadFile } from './http';
+import { postFile, downloadFile, getAgent } from './http';
 
 const apiUrl = 'http://sample.fooo.com/api/v1/pilet';
 
@@ -80,7 +80,7 @@ vitest.mock('../external', async () => {
         },
       },
     },
-    FormData: (await vitest.importActual('form-data') as any).default,
+    FormData: ((await vitest.importActual('form-data')) as any).default,
   };
 });
 
@@ -155,10 +155,11 @@ describe('HTTP Module', () => {
 
   it('downloadFile calls results in error', async () => {
     errorOther = true;
-    let result = await downloadFile('http://sample.com/', Buffer.from('example'));
+    const agent = getAgent({ ca: Buffer.from('example') });
+    let result = await downloadFile('http://sample.com/', agent);
     expect(result.length).toBe(0);
     errorOther = false;
-    result = await downloadFile('http://sample.com/', Buffer.from('example'));
+    result = await downloadFile('http://sample.com/', agent);
     expect(result.length).toBe(0);
   });
 });

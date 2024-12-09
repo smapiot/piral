@@ -100,8 +100,28 @@ export function getAuthorizationHeaders(scheme: PublishScheme, key: string) {
   return {};
 }
 
-export function downloadFile(target: string, ca?: Buffer): Promise<Array<string>> {
-  const httpsAgent = ca ? new Agent({ ca }) : undefined;
+export interface AgentOptions {
+  ca?: Buffer;
+  allowSelfSigned?: boolean;
+}
+
+export async function getDefaultAgent() {
+  const ca = await getCertificate();
+  const allowSelfSigned = config.allowSelfSigned;
+  return getAgent({ ca, allowSelfSigned });
+}
+
+export function getAgent({ allowSelfSigned, ca }: AgentOptions) {
+  if (ca) {
+    return new Agent({ ca });
+  } else if (allowSelfSigned) {
+    return new Agent({ rejectUnauthorized: false });
+  } else {
+    return undefined;
+  }
+}
+
+export function downloadFile(target: string, httpsAgent: Agent): Promise<Array<string>> {
   return axios.default
     .get<Stream>(target, {
       responseType: 'stream',
@@ -206,10 +226,9 @@ export async function postForm(
   key: string,
   formData: FormDataObj,
   customHeaders: Record<string, string> = {},
-  ca?: Buffer,
+  httpsAgent?: Agent,
   interactive = false,
 ): Promise<PostFormResult> {
-  const httpsAgent = ca ? new Agent({ ca }) : undefined;
   const form = createAxiosForm(formData);
 
   const headers: Record<string, string> = {
@@ -237,7 +256,7 @@ export async function postForm(
       error,
       interactive,
       httpsAgent,
-      (mode, token) => postForm(target, mode, token, formData, customHeaders, ca, false),
+      (mode, token) => postForm(target, mode, token, formData, customHeaders, httpsAgent, false),
       (status, statusText, response) => {
         if (status === 500) {
           log('failedHttpPost_0065', response);
@@ -266,9 +285,9 @@ export function postFile(
   file: Buffer,
   customFields: Record<string, string> = {},
   customHeaders: Record<string, string> = {},
-  ca?: Buffer,
+  agent?: Agent,
   interactive = false,
 ): Promise<PostFormResult> {
   const data: FormDataObj = { ...customFields, file: [file, 'pilet.tgz'] };
-  return postForm(target, scheme, key, data, customHeaders, ca, interactive);
+  return postForm(target, scheme, key, data, customHeaders, agent, interactive);
 }

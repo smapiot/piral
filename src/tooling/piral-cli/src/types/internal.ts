@@ -1,5 +1,11 @@
 import type { LogLevels } from './common';
-import type { ImportmapVersions, PiletSchemaVersion } from './public';
+import type {
+  ImportmapVersions,
+  NpmClientType,
+  NpmDirectClientType,
+  NpmWapperClientType,
+  PiletSchemaVersion,
+} from './public';
 
 export interface PiralInstanceDetails {
   selected?: boolean;
@@ -34,3 +40,21 @@ export interface FileInfo {
  * 2. The (short) error message
  */
 export type QuickMessage = [LogLevels, string, string];
+
+/**
+ * Result of identifying an npm client in a project.
+ */
+export interface NpmClient {
+  /**
+   * The proposed client - can be anything.
+   */
+  proposed?: NpmClientType;
+  /**
+   * The direct npm client.
+   */
+  direct: NpmDirectClientType;
+  /**
+   * The wrapper npm client, if any.
+   */
+  wrapper?: NpmWapperClientType;
+}

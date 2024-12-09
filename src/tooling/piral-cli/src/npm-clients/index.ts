@@ -1,5 +1,6 @@
 import { dirname, resolve } from 'path';
 import { findFile } from '../common/io';
+import type { NpmClientType, NpmDirectClientType, NpmWapperClientType } from '../types';
 
 import * as lerna from './lerna';
 import * as npm from './npm';
@@ -19,20 +20,26 @@ export const clients = {
   bun,
 };
 
-type ClientName = keyof typeof clients;
+const directClients: Array<NpmDirectClientType> = ['npm', 'pnp', 'yarn', 'pnpm', 'bun'];
+const wrapperClients: Array<NpmWapperClientType> = ['lerna', 'rush'];
 
-const directClients = ['npm', 'pnp', 'yarn', 'pnpm', 'bun'];
-
-export function isWrapperClient(client: ClientName) {
-  return !directClients.includes(client);
+export function isWrapperClient(client: NpmClientType): client is NpmWapperClientType {
+  return wrapperClients.includes(client as any);
 }
 
-export async function detectClients(root: string) {
+export function isDirectClient(client: NpmClientType): client is NpmDirectClientType {
+  return directClients.includes(client as any);
+}
+
+async function detectClients<T extends NpmClientType>(
+  root: string,
+  clientNames: Array<T>,
+): Promise<Array<{ client: T; result: boolean }>> {
   const packageJson = await findFile(resolve(root, '..'), 'package.json');
   const stopDir = packageJson ? dirname(packageJson) : undefined;
 
   return await Promise.all(
-    Object.keys(clients).map(async (client: ClientName) => {
+    clientNames.map(async (client) => {
       const result = await clients[client].detectClient(root, stopDir);
       return {
         client,
@@ -40,4 +47,12 @@ export async function detectClients(root: string) {
       };
     }),
   );
+}
+
+export function detectDirectClients(root: string) {
+  return detectClients<NpmDirectClientType>(root, directClients);
+}
+
+export function detectWrapperClients(root: string) {
+  return detectClients<NpmWapperClientType>(root, wrapperClients);
 }

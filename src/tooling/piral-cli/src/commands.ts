@@ -218,6 +218,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .string('ca-cert')
         .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
         .default('ca-cert', apps.publishPiralDefaults.cert)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.publishPiralDefaults.allowSelfSigned)
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.publishPiralDefaults.logLevel)
@@ -250,6 +253,7 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         apiKey: args['api-key'] as string,
         cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
         url: args.url as string,
         interactive: args.interactive as boolean,
         mode: args.mode as PublishScheme,
@@ -687,6 +691,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('interactive')
         .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
         .default('interactive', apps.publishPiletDefaults.interactive)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.publishPiletDefaults.allowSelfSigned)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -698,6 +705,7 @@ const allCommands: Array<ToolCommand<any>> = [
         url: args.url as string,
         logLevel: args['log-level'] as LogLevels,
         cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
         bundlerName: args.bundler as string,
         fresh: args.fresh as boolean,
         from: args.from as PiletPublishSource,
@@ -787,6 +795,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('bundler', bundlerKeys)
         .describe('bundler', 'Sets the default bundler to install.')
         .default('bundler', apps.newPiletDefaults.bundlerName)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.newPiletDefaults.cert)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.newPiletDefaults.allowSelfSigned)
         .option('vars', undefined)
         .describe('vars', 'Sets additional variables to be used when scaffolding.')
         .default('vars', apps.newPiletDefaults.variables)
@@ -811,6 +825,8 @@ const allCommands: Array<ToolCommand<any>> = [
         bundlerName: args.bundler as string,
         variables: args.vars as Record<string, string>,
         name: args['name'] as string,
+        cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
       });
     },
   },
@@ -819,7 +835,7 @@ const allCommands: Array<ToolCommand<any>> = [
     alias: ['upgrade'],
     description: 'Upgrades an existing pilet to the latest version of the used Piral instance.',
     arguments: ['[target-version]'],
-    flags(argv) {
+    flags(argv: any) {
       return argv
         .positional('target-version', {
           type: 'string',
@@ -842,6 +858,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the npm client to be used when upgrading.')
         .default('npm-client', apps.upgradePiletDefaults.npmClient)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.upgradePiletDefaults.cert)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.upgradePiletDefaults.allowSelfSigned)
         .option('vars', undefined)
         .describe('vars', 'Sets additional variables to be used when scaffolding.')
         .default('vars', apps.upgradePiletDefaults.variables)
@@ -858,6 +880,8 @@ const allCommands: Array<ToolCommand<any>> = [
         install: args.install as boolean,
         npmClient: args['npm-client'] as NpmClientType,
         variables: args.vars as Record<string, string>,
+        cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
       });
     },
   },
@@ -916,6 +940,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .boolean('selected')
         .describe('selected', 'Defines if the provided Piral instance should be selected initially.')
         .default('selected', apps.addPiralInstancePiletDefaults.selected)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.addPiralInstancePiletDefaults.cert)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.addPiralInstancePiletDefaults.allowSelfSigned)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
@@ -927,6 +957,8 @@ const allCommands: Array<ToolCommand<any>> = [
         npmClient: args['npm-client'] as NpmClientType,
         app: args.app as string,
         source: args.source as string,
+        cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
       });
     },
   },
@@ -995,6 +1027,12 @@ const allCommands: Array<ToolCommand<any>> = [
         .choices('npm-client', clientTypeKeys)
         .describe('npm-client', 'Sets the npm client to be used when installing the emulator.')
         .default('npm-client', apps.runEmulatorPiralDefaults.npmClient)
+        .string('ca-cert')
+        .describe('ca-cert', 'Sets a custom certificate authority to use, if any.')
+        .default('ca-cert', apps.runEmulatorPiralDefaults.cert)
+        .boolean('allow-self-signed')
+        .describe('allow-self-signed', 'Indicates that self-signed certificates should be allowed.')
+        .default('allow-self-signed', apps.runEmulatorPiralDefaults.allowSelfSigned)
         .boolean('open')
         .describe('open', 'Opens the Piral instance directly in the browser.')
         .default('open', apps.runEmulatorPiralDefaults.open)
@@ -1014,6 +1052,8 @@ const allCommands: Array<ToolCommand<any>> = [
         logLevel: args['log-level'] as LogLevels,
         open: args.open as boolean,
         feed: args.feed as string,
+        cert: args['ca-cert'] as string,
+        allowSelfSigned: args['allow-self-signed'] as boolean,
       });
     },
   },

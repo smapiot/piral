@@ -25,6 +25,7 @@ import {
   triggerBuildShell,
   publishPackageEmulator,
   ensure,
+  getAgent,
 } from '../common';
 
 export interface PublishPiralOptions {
@@ -58,6 +59,11 @@ export interface PublishPiralOptions {
    * Defines a custom certificate for the feed service.
    */
   cert?: string;
+  
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
 
   /**
    * Places additional headers that should be posted to the feed service.
@@ -107,10 +113,11 @@ export const publishPiralDefaults: PublishPiralOptions = {
   interactive: false,
   apiKey: undefined,
   fresh: false,
-  cert: undefined,
   mode: 'basic',
   headers: {},
   type: 'emulator',
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 export async function publishPiral(baseDir = process.cwd(), options: PublishPiralOptions = {}) {
@@ -121,10 +128,11 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     fresh = publishPiralDefaults.fresh,
     url = config.url ?? publishPiralDefaults.url,
     apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiralDefaults.apiKey,
-    cert = publishPiralDefaults.cert,
     headers = publishPiralDefaults.headers,
     mode = publishPiralDefaults.mode,
     type = publishPiralDefaults.type,
+    cert = publishPiralDefaults.cert,
+    allowSelfSigned = publishPiralDefaults.allowSelfSigned,
     _ = {},
     hooks = {},
     bundlerName,
@@ -144,6 +152,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
   }
 
   const ca = await getCertificate(cert);
+  const agent = getAgent({ ca, allowSelfSigned });
 
   log('generalDebug_0003', 'Getting the files ...');
   const entryFiles = await retrievePiralRoot(fullBase, './');
@@ -224,7 +233,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const files = await matchFiles(targetDir, '**/*');
 
     progress(`Publishing release artifacts to "%s" ...`, url);
-    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, ca);
+    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, agent);
 
     if (!result.success) {
       fail('failedUploading_0064');
@@ -249,7 +258,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const files = await matchFiles(targetDir, '**/*');
 
     progress(`Publishing emulator to "%s" ...`, url);
-    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, ca);
+    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, agent);
 
     if (!result.success) {
       fail('failedUploading_0064');

@@ -164,16 +164,25 @@ export function createDefaultState(imports: Array<string>, exports: Array<string
   );
 
   if (routerVersion < 6) {
+    // React Router v5
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5.js';`,
       `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5.js'`,
     );
-  } else {
+  } else if (routerVersion === 6) {
+    // React Router v6
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6.js';`,
       `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6.js'`,
+    );
+  } else {
+    // React Router v7
+    imports.push(
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v7.js';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v7.js';`,
+      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v7.js'`,
     );
   }
 

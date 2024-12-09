@@ -73,6 +73,10 @@ export interface PiralCliConfig {
    * Npm registry.
    */
   registry?: string;
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
 }
 
 export const config: PiralCliConfig = rc(
@@ -89,6 +93,7 @@ export const config: PiralCliConfig = rc(
     validators: {},
     schemaVersion: 'v2' as const,
     openBrowser: false,
+    allowSelfSigned: false,
     port: 1234,
     strictPort: false,
     language: 'ts' as const,

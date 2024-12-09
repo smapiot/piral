@@ -26,6 +26,9 @@ import {
   getPiletScaffoldData,
   retrievePiletData,
   ensure,
+  config,
+  getCertificate,
+  getAgent,
 } from '../common';
 
 export interface UpgradePiletOptions {
@@ -59,6 +62,16 @@ export interface UpgradePiletOptions {
   install?: boolean;
 
   /**
+   * Defines a custom certificate for the website emulator.
+   */
+  cert?: string;
+  
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
+
+  /**
    * Defines the used npm client. By default, "npm" is used
    * if no other client is autodetected. The autodetection
    * works against Lerna, pnpm, and Yarn.
@@ -79,6 +92,8 @@ export const upgradePiletDefaults: UpgradePiletOptions = {
   install: true,
   npmClient: undefined,
   variables: {},
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 export async function upgradePilet(baseDir = process.cwd(), options: UpgradePiletOptions = {}) {
@@ -90,6 +105,8 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     install = upgradePiletDefaults.install,
     variables = upgradePiletDefaults.variables,
     npmClient: defaultNpmClient = upgradePiletDefaults.npmClient,
+    cert = upgradePiletDefaults.cert,
+    allowSelfSigned = upgradePiletDefaults.allowSelfSigned,
   } = options;
   
   ensure('baseDir', baseDir, 'string');
@@ -106,10 +123,12 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   }
 
   const npmClient = await determineNpmClient(root, defaultNpmClient);
+  const ca = await getCertificate(cert);
+  const agent = getAgent({ ca, allowSelfSigned });
 
   // in case we run from a user's CLI we want to allow updating
   const interactive = isInteractive();
-  const { apps, piletPackage } = await retrievePiletData(root, undefined, interactive);
+  const { apps, piletPackage } = await retrievePiletData(root, undefined, agent, interactive);
   const { devDependencies = {}, dependencies = {}, source } = piletPackage;
 
   if (apps.length === 0) {
@@ -144,7 +163,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     if (!monorepoRef) {
       // only install the latest if the shell does come from remote
       progress(`Updating npm package to %s ...`, packageRef);
-      await installNpmPackage(npmClient, packageRef, root, '--no-save');
+      await installNpmPackage(npmClient, packageRef, root);
     }
 
     const piralInfo = await readPiralPackage(root, sourceName);

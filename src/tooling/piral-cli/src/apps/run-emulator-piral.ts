@@ -18,6 +18,8 @@ import {
   findPiralInstance,
   determineNpmClient,
   ensure,
+  getCertificate,
+  getAgent,
 } from '../common';
 
 export interface RunEmulatorPiralOptions {
@@ -61,6 +63,16 @@ export interface RunEmulatorPiralOptions {
    * The package registry to use for resolving the specified Piral app.
    */
   registry?: string;
+
+  /**
+   * Defines a custom certificate for the website emulator.
+   */
+  cert?: string;
+
+  /**
+   * Allow self-signed certificates.
+   */
+  allowSelfSigned?: boolean;
 }
 
 export const runEmulatorPiralDefaults: RunEmulatorPiralOptions = {
@@ -70,6 +82,8 @@ export const runEmulatorPiralDefaults: RunEmulatorPiralOptions = {
   strictPort: config.strictPort,
   registry: config.registry,
   npmClient: undefined,
+  cert: undefined,
+  allowSelfSigned: config.allowSelfSigned,
 };
 
 function createTempDir() {
@@ -94,13 +108,15 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
     logLevel = runEmulatorPiralDefaults.logLevel,
     npmClient: defaultNpmClient = runEmulatorPiralDefaults.npmClient,
     registry = runEmulatorPiralDefaults.registry,
+    cert = runEmulatorPiralDefaults.cert,
+    allowSelfSigned = runEmulatorPiralDefaults.allowSelfSigned,
     app,
     feed,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('app', app, 'string');
-  
+
   const publicUrl = '/';
   const api = config.piletApi;
   const fullBase = resolve(process.cwd(), baseDir);
@@ -114,6 +130,8 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
   process.stdin?.setMaxListeners(16);
 
   const appRoot = await createTempDir();
+  const ca = await getCertificate(cert);
+  const agent = getAgent({ ca, allowSelfSigned });
 
   if (registry !== runEmulatorPiralDefaults.registry) {
     progress(`Setting up npm registry (%s) ...`, registry);
@@ -128,10 +146,8 @@ always-auth=true`,
   }
 
   const npmClient = await determineNpmClient(appRoot, defaultNpmClient);
-  const packageName = await installPiralInstance(app, fullBase, appRoot, npmClient);
-  const piral = await findPiralInstance(packageName, appRoot, {
-    port: originalPort,
-  });
+  const packageName = await installPiralInstance(app, fullBase, appRoot, npmClient, agent);
+  const piral = await findPiralInstance(packageName, appRoot, { port: originalPort }, agent);
   const port = await getAvailablePort(piral.port, strictPort);
 
   const krasBaseConfig = resolve(fullBase, krasrc);
