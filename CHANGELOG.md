@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.7.3 (tbd)
+## 1.7.3 (December 11, 2024)
 
 - Fixed `pilet upgrade` command with `npm` client not changing *package.json*
 - Fixed shared dependency list from website emulator to exclude legacy dependencies
