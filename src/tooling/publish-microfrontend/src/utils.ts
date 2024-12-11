@@ -1,4 +1,5 @@
 import glob from 'glob';
+import { Agent } from 'https';
 import { existsSync, statSync } from 'fs';
 import { stat, readFile, readdir, copyFile, rm } from 'fs/promises';
 import { dirname, basename, resolve } from 'path';
@@ -83,7 +84,7 @@ export async function getFiles(
   baseDir: string,
   sources: Array<string>,
   from: string,
-  ca: Buffer,
+  agent: Agent,
 ): Promise<Array<string>> {
   switch (from) {
     case 'local': {
@@ -127,12 +128,12 @@ export async function getFiles(
       return allMatches.filter(isFile);
     }
     case 'remote': {
-      const allFiles = await Promise.all(sources.map((s) => downloadFile(s, ca)));
+      const allFiles = await Promise.all(sources.map((s) => downloadFile(s, agent)));
       return allFiles.reduce((result, files) => [...result, ...files], []);
     }
     case 'npm': {
       const allUrls = await Promise.all(sources.map((s) => findTarball(s)));
-      const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, ca)));
+      const allFiles = await Promise.all(allUrls.map((url) => downloadFile(url, agent)));
       return allFiles.reduce((result, files) => [...result, ...files], []);
     }
   }

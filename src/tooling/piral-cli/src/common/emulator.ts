@@ -1,4 +1,4 @@
-import { join, resolve, relative, basename, extname } from 'path';
+import { join, resolve, relative, basename, posix } from 'path';
 import { findDependencyVersion, copyScaffoldingFiles, isValidDependency, flattenExternals } from './package';
 import { createPiralStubIndexIfNotExists } from './template';
 import { filesTar, filesOnceTar, packageJson, piralJson, emulatorJson } from './constants';
@@ -139,9 +139,9 @@ export async function createEmulatorSources(
       version: cliVersion,
       generated: true,
     },
-    main: `./${join(appDir, 'index.js')}`,
-    typings: `./${join(appDir, 'index.d.ts')}`,
-    app: `./${join(appDir, 'index.html')}`,
+    main: `./${posix.join(appDir, 'index.js')}`,
+    typings: `./${posix.join(appDir, 'index.d.ts')}`,
+    app: `./${posix.join(appDir, 'index.html')}`,
     peerDependencies: {},
     optionalDependencies,
     devDependencies: {

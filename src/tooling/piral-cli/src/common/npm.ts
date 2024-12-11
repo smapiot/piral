@@ -5,10 +5,10 @@ import { config } from './config';
 import { legacyCoreExternals, frameworkLibs, defaultRegistry, packageJson } from './constants';
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
-import { clients, detectClients, isWrapperClient } from '../npm-clients';
+import { clients, detectDirectClients, detectWrapperClients, isDirectClient, isWrapperClient } from '../npm-clients';
 import { clientTypeKeys } from '../helpers';
 import { getModulePath } from '../external';
-import { PackageType, NpmClientType } from '../types';
+import { PackageType, NpmClientType, NpmClient, NpmDirectClientType, NpmWapperClientType } from '../types';
 
 const gitPrefix = 'git+';
 const filePrefix = 'file:';
@@ -63,56 +63,88 @@ async function detectMonorepoRoot(root: string): Promise<[] | [string, NpmClient
   return [];
 }
 
+async function determineWrapperClient(root: string): Promise<NpmWapperClientType | undefined> {
+  const searchedClients = await detectWrapperClients(root);
+  const foundClients = searchedClients.filter((m) => m.result).map((m) => m.client);
+
+  if (foundClients.length > 0) {
+    const [client] = foundClients;
+
+    if (foundClients.length > 1) {
+      log(
+        'generalWarning_0001',
+        `Found multiple clients via their lock or config files: "${foundClients.join('", "')}".`,
+      );
+    }
+
+    log('generalDebug_0003', `Found valid direct client via lock or config file: "${client}".`);
+    return client;
+  }
+
+  const defaultClient = config.npmClient;
+
+  if (isWrapperClient(defaultClient)) {
+    log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
+    return defaultClient;
+  }
+
+  return undefined;
+}
+
+async function determineDirectClient(root: string): Promise<NpmDirectClientType> {
+  const searchedClients = await detectDirectClients(root);
+  const foundClients = searchedClients.filter((m) => m.result).map((m) => m.client);
+
+  if (foundClients.length > 0) {
+    const [client] = foundClients;
+
+    if (foundClients.length > 1) {
+      log(
+        'generalWarning_0001',
+        `Found multiple clients via their lock or config files: "${foundClients.join('", "')}".`,
+      );
+    }
+
+    log('generalDebug_0003', `Found valid direct client via lock or config file: "${client}".`);
+    return client;
+  }
+
+  const defaultClient = config.npmClient;
+
+  if (isDirectClient(defaultClient)) {
+    log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
+    return defaultClient;
+  }
+
+  log('generalDebug_0003', 'Using the fallback "npm" client.');
+  return 'npm';
+}
+
 /**
  * For details about how this works consult issue
  * https://github.com/smapiot/piral/issues/203
  * @param root The project's root directory.
  */
-export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClientType> {
+export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClient> {
   if (!selected || !clientTypeKeys.includes(selected)) {
     log('generalDebug_0003', 'No npm client selected. Checking for lock or config files ...');
-
-    const searchedClients = await detectClients(root);
-    const foundClients = searchedClients.filter((m) => m.result);
-
-    log(
-      'generalDebug_0003',
-      `Results of the lock file check: ${searchedClients.map((m) => `${m.client}=${m.result}`).join(', ')}`,
-    );
-
-    if (foundClients.length > 1) {
-      const wrapperClient = foundClients.find((m) => isWrapperClient(m.client));
-
-      if (wrapperClient) {
-        const { client } = wrapperClient;
-        log('generalDebug_0003', `Found valid wrapper client via lock or config file: "${client}".`);
-      }
-    }
-
-    if (foundClients.length > 0) {
-      const { client } = foundClients[0];
-
-      if (foundClients.length > 1) {
-        const clientStr = `"${foundClients.map((m) => m.client).join('", "')}"`;
-        log('generalWarning_0001', `Found multiple clients via their lock or config files: ${clientStr}.`);
-      }
-
-      log('generalDebug_0003', `Found valid direct client via lock or config file: "${client}".`);
-      return client;
-    }
-
-    const defaultClient = config.npmClient;
-
-    if (clientTypeKeys.includes(defaultClient)) {
-      log('generalDebug_0003', `Using the default client: "${defaultClient}".`);
-      return defaultClient;
-    }
-
-    log('generalDebug_0003', 'Using the fallback "npm" client.');
-    return 'npm';
+    const [direct, wrapper] = await Promise.all([determineDirectClient(root), determineWrapperClient(root)]);
+    return {
+      direct,
+      wrapper,
+    };
+  } else if (isDirectClient(selected)) {
+    return {
+      proposed: selected,
+      direct: selected,
+    };
+  } else {
+    return {
+      proposed: selected,
+      direct: await determineDirectClient(root),
+      wrapper: selected,
+    };
   }
-
-  return selected;
 }
 
 export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
@@ -126,35 +158,37 @@ export async function isMonorepoPackageRef(refName: string, root: string): Promi
   return false;
 }
 
-export function installNpmDependencies(client: NpmClientType, target = '.'): Promise<string> {
-  const { installDependencies } = clients[client];
+export function installNpmDependencies(client: NpmClient, target = '.'): Promise<string> {
+  const { installDependencies } = clients[client.direct];
   return installDependencies(target);
 }
 
 export async function installNpmPackageFromOptionalRegistry(
   packageRef: string,
-  target = '.',
+  target: string,
   registry: string,
 ): Promise<void> {
+  const client = await determineNpmClient(target, 'npm');
+
   try {
-    await installNpmPackage('npm', packageRef, target, '--registry', registry);
+    await installNpmPackage(client, packageRef, target, '--registry', registry);
   } catch (e) {
     if (registry === defaultRegistry) {
       throw e;
     }
 
-    await installNpmPackage('npm', packageRef, target, '--registry', defaultRegistry);
+    await installNpmPackage(client, packageRef, target, '--registry', defaultRegistry);
   }
 }
 
 export async function uninstallNpmPackage(
-  client: NpmClientType,
+  client: NpmClient,
   packageRef: string,
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
   try {
-    const { uninstallPackage } = clients[client];
+    const { uninstallPackage } = clients[client.direct];
     return await uninstallPackage(packageRef, target, ...flags);
   } catch (ex) {
     log(
@@ -166,13 +200,13 @@ export async function uninstallNpmPackage(
 }
 
 export async function installNpmPackage(
-  client: NpmClientType,
+  client: NpmClient,
   packageRef: string,
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
   try {
-    const { installPackage } = clients[client];
+    const { installPackage } = clients[client.direct];
     return await installPackage(packageRef, target, ...flags);
   } catch (ex) {
     log(
@@ -183,8 +217,8 @@ export async function installNpmPackage(
   }
 }
 
-export function initNpmProject(client: NpmClientType, projectName: string, target: string) {
-  const { initProject } = clients[client];
+export function initNpmProject(client: NpmClient, projectName: string, target: string) {
+  const { initProject } = clients[client.wrapper || client.direct];
   return initProject(projectName, target);
 }
 

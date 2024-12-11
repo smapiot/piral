@@ -1,3 +1,4 @@
+import { Agent } from 'https';
 import { resolve, join, extname, basename, dirname, relative } from 'path';
 import { log, fail } from './log';
 import { cliVersion } from './info';
@@ -161,7 +162,8 @@ async function loadPiralInstance(root: string, details?: PiralInstanceDetails): 
 export async function findPiralInstance(
   proposedApp: string,
   rootDir: string,
-  details?: PiralInstanceDetails,
+  details: PiralInstanceDetails,
+  agent: Agent,
   interactive = false,
 ) {
   const path = findPackageRoot(proposedApp, rootDir);
@@ -172,13 +174,13 @@ export async function findPiralInstance(
 
     if (url) {
       log('generalDebug_0003', `Updating the emulator from remote "${url}" ...`);
-      await updateFromEmulatorWebsite(root, url, interactive);
+      await updateFromEmulatorWebsite(root, url, agent, interactive);
     }
 
     return await loadPiralInstance(root, details);
   } else if (url) {
     log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
-    const emulator = await scaffoldFromEmulatorWebsite(rootDir, url);
+    const emulator = await scaffoldFromEmulatorWebsite(rootDir, url, agent);
     return await loadPiralInstance(emulator.path, details);
   }
 
@@ -190,6 +192,7 @@ export async function findPiralInstances(
   piletPackage: PiletPackageData,
   piletDefinition: undefined | PiletDefinition,
   rootDir: string,
+  agent: Agent,
   interactive?: boolean,
 ) {
   if (proposedApps) {
@@ -208,7 +211,7 @@ export async function findPiralInstances(
   if (proposedApps.length > 0) {
     return Promise.all(
       proposedApps.map((proposedApp) =>
-        findPiralInstance(proposedApp, rootDir, piletDefinition?.piralInstances?.[proposedApp], interactive),
+        findPiralInstance(proposedApp, rootDir, piletDefinition?.piralInstances?.[proposedApp], agent, interactive),
       ),
     );
   }
@@ -280,11 +283,7 @@ export async function getPiralPackage(app: string, data: PiralInstanceData, vers
   };
 }
 
-async function getAvailableFiles(
-  root: string,
-  name: string,
-  dirName: string,
-): Promise<Array<FileDescriptor>> {
+async function getAvailableFiles(root: string, name: string, dirName: string): Promise<Array<FileDescriptor>> {
   const source = getPiralPath(root, name);
   const tgz = `${dirName}.tar`;
   log('generalDebug_0003', `Checking if "${tgz}" exists in "${source}" ...`);
@@ -780,13 +779,13 @@ export async function findPiletRoot(proposedRoot: string) {
   return dirname(packageJsonPath);
 }
 
-export async function retrievePiletData(target: string, app?: string, interactive?: boolean) {
+export async function retrievePiletData(target: string, app?: string, agent?: Agent, interactive?: boolean) {
   const piletJsonPath = await findFile(target, piletJson);
   const proposedRoot = piletJsonPath ? dirname(piletJsonPath) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, packageJson);
   const piletDefinition: PiletDefinition = piletJsonPath && (await readJson(proposedRoot, piletJson));
-  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, root, interactive);
+  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, root, agent, interactive);
   const apps: Array<AppDefinition> = [];
 
   for (const appPackage of appPackages) {
