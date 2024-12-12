@@ -14,7 +14,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: "20.10.0"
+          node-version: "20.12.2"
       - run: yarn install
       - name: Report changes
         run: node ./tools/size-reporter.mjs
