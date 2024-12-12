@@ -53,7 +53,7 @@
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.21",
     "cors": "^2.8.5",
-    "express": "^4.20.0",
+    "express": "^4.21.2",
     "piral-core": "^1.7.3",
     "whatwg-fetch": "^3.0.0"
   }

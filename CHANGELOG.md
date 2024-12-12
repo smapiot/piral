@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.8.0 (tbd)
+
+- Added configuration for internal styles (#731)
+
 ## 1.7.3 (December 11, 2024)
 
 - Fixed `pilet upgrade` command with `npm` client not changing *package.json*

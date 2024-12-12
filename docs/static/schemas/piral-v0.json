@@ -83,6 +83,15 @@
       ],
       "description": "Defines what isolation / component wrapper is used for components of micro frontends. By default, the 'classic' isolation mode is used."
     },
+    "internalStyles": {
+      "type": "string",
+      "enum": [
+        "inline",
+        "sheet",
+        "none"
+      ],
+      "description": "Defines how the styles for the web components are transported. 'inline' puts them on the web components when rendering, 'sheet' includes a stylesheet when bundling, 'none' requires you to include them somewhere. By default, 'inline' is used."
+    },
     "shared": {
       "type": "array",
       "items": {

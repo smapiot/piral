@@ -39,7 +39,8 @@
     "lib",
     "src",
     "app.codegen",
-    "app.codegen.d.ts"
+    "app.codegen.d.ts",
+    "style.css"
   ],
   "funding": {
     "type": "github",

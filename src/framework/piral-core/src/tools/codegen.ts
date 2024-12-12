@@ -86,6 +86,7 @@ interface CodegenOptions {
   externals: Array<string>;
   publicPath: string;
   isolation: 'classic' | 'modern';
+  internalStyles: 'inline' | 'sheet' | 'none';
   debug?: {
     viewState?: boolean;
     loadPilets?: boolean;
@@ -95,6 +96,27 @@ interface CodegenOptions {
     clearConsole?: boolean;
   };
   emulator: boolean;
+}
+
+export function createBasicAppFunc(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+  switch (opts.internalStyles) {
+    case 'sheet':
+      imports.push(`import 'piral-core/style.css';`);
+      // no return - we fall through and also include the dummy applyStyle for "none"
+    case 'none':
+      exports.push(`
+        export function applyStyle(element) {}
+      `);
+      return;
+    case 'inline':
+    default:
+      exports.push(`
+        export function applyStyle(element) {
+          element.style.display = 'contents';
+        }
+      `);
+      return;
+  }
 }
 
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
@@ -142,7 +164,6 @@ export function createDependencies(imports: Array<string>, exports: Array<string
   if (asyncAssignments.length) {
     imports.push(`import { registerModule } from 'piral-base'`);
     assignments.push(...asyncAssignments);
-
   }
 
   exports.push(`
