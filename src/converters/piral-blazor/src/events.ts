@@ -67,6 +67,8 @@ function dispatchToRoot(event: any) {
     performInternalNavigation(event);
   }
 
+  const MutationEvent = window.MutationEvent;
+
   if ((typeof MutationEvent === 'undefined' || !(event instanceof MutationEvent)) && !event.processed) {
     const eventClone = new event.constructor(event.type, event);
     document.getElementById(blazorRootId)?.dispatchEvent(eventClone);

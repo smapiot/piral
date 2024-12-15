@@ -2,6 +2,7 @@
 
 ## 1.8.0 (tbd)
 
+- Updated `kras` to latest `v1.0` release
 - Added configuration for internal styles (#731)
 
 ## 1.7.3 (December 11, 2024)
