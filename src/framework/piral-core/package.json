@@ -33,7 +33,7 @@
     },
     "./app.codegen": "./app.codegen",
     "./package.json": "./package.json",
-    "./style.css": "./style.css"
+    "./styles/sheet.css": "./styles/sheet.css"
   },
   "sideEffects": false,
   "files": [
@@ -41,7 +41,7 @@
     "src",
     "app.codegen",
     "app.codegen.d.ts",
-    "style.css"
+    "styles"
   ],
   "funding": {
     "type": "github",
