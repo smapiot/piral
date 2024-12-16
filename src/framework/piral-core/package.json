@@ -32,7 +32,8 @@
       "types": "./lib/*.d.ts"
     },
     "./app.codegen": "./app.codegen",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./style.css": "./style.css"
   },
   "sideEffects": false,
   "files": [
