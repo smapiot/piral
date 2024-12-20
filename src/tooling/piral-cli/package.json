@@ -76,7 +76,7 @@
   "dependencies": {
     "css-conflict-inspector": "^0.2.1",
     "dets": "^0.16.4",
-    "kras": "1.0.0-pre.92",
+    "kras": "1.0.0",
     "rimraf": "^3.0.0",
     "typescript": "^5",
     "yargs": "^17"
