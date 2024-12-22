@@ -37,11 +37,9 @@
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "devDependencies": {
-    "@types/inquirer": "^6.0.0"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "inquirer": "^6.2.2",
+    "inquirer": "^12",
     "piral-cli": "^1.7.3"
   }
 }

@@ -60,7 +60,7 @@ export function unpackTarball(sourceDir: string, sourceFile: string) {
 }
 
 export function unpackGzTar(stream: NodeJS.ReadableStream): Promise<PackageFiles> {
-  const TarParser = tar.Parse as any;
+  const TarParser = tar.Parser;
 
   return new Promise((resolve, reject) => {
     const files: PackageFiles = {};

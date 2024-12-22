@@ -38,7 +38,7 @@ export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResu
   if (!(url in tokenRetrievers)) {
     const logResume = logSuspend();
 
-    tokenRetrievers[url] = axios.default
+    tokenRetrievers[url] = axios
       .post(
         url,
         {
@@ -69,7 +69,7 @@ export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResu
 
         try {
           while (true) {
-            const { data, status } = await axios.default.get(callbackUrl, { httpsAgent, headers: standardHeaders });
+            const { data, status } = await axios.get(callbackUrl, { httpsAgent, headers: standardHeaders });
 
             if (status === 202) {
               await new Promise((resolve) => setTimeout(resolve, 5000));

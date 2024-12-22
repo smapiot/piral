@@ -122,7 +122,7 @@ export function getAgent({ allowSelfSigned, ca }: AgentOptions) {
 }
 
 export function downloadFile(target: string, httpsAgent: Agent): Promise<Array<string>> {
-  return axios.default
+  return axios
     .get<Stream>(target, {
       responseType: 'stream',
       headers: standardHeaders,
@@ -239,7 +239,7 @@ export async function postForm(
   };
 
   try {
-    const res = await axios.default.post(target, form, {
+    const res = await axios.post(target, form, {
       headers,
       httpsAgent,
       maxContentLength: Infinity,

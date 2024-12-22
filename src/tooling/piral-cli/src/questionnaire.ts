@@ -149,14 +149,13 @@ export function runQuestionnaireFor(
       name: instruction.name,
       default: instruction.values ? instruction.values.indexOf(instruction.default) : instruction.default,
       message: instruction.describe,
-      type: getType(instruction),
+      type: getType(instruction) as 'list' | 'input' | 'confirm',
       choices: instruction.values,
       validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
     }));
 
-
   return inquirer.prompt(questions).then((answers) => {
-    const parameters: any = {};
+    const parameters: Record<string, any> = {};
 
     for (const instruction of instructions) {
       const name = instruction.name;
