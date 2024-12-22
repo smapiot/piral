@@ -8,10 +8,10 @@ import { createActions } from '../state';
 import { renderElement } from './element';
 
 vitest.mock('../../app.codegen', () => ({
-  applyStyle: vitest.fn(element => {
+  applyStyle: vitest.fn((element) => {
     element.style.display = 'contents';
   }),
-  createNavigation: vitest.fn(publicPath => ({
+  createNavigation: vitest.fn((publicPath) => ({
     publicPath,
   })),
   publicPath: '/',

@@ -22,7 +22,7 @@ const mockState = {
 };
 
 vitest.mock('react', async () => ({
-  ...(await vitest.importActual('react') as any),
+  ...((await vitest.importActual('react')) as any),
   useMemo: (cb) => cb(),
 }));
 

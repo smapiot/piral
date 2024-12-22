@@ -54,7 +54,7 @@ export interface PublishPiletOptions {
    * Defines a custom certificate for the feed service.
    */
   cert?: string;
-  
+
   /**
    * Allow self-signed certificates.
    */

@@ -34,7 +34,7 @@ interface ExtractOptions {
 }
 
 vitest.mock('path', async () => {
-  const original = await vitest.importActual('path') as any;
+  const original = (await vitest.importActual('path')) as any;
 
   return {
     ...original,
@@ -99,7 +99,7 @@ vitest.mock('../external', () => ({
         },
       } as any;
     },
-  }
+  },
 }));
 
 describe('Archive Module', () => {

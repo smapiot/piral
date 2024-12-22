@@ -10,8 +10,8 @@ const messages = {
     greeting: 'Hi {{name}}, welcome back',
     secretNumber: 'The secret number is {{number}}.',
     header: {
-      title: 'Hello world'
-    }
+      title: 'Hello world',
+    },
   },
   de: {
     hi: 'hallo',

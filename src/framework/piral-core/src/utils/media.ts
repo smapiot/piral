@@ -10,7 +10,11 @@ const mm =
     ? () => ({ matches: undefined })
     : (q: string) => window.matchMedia(q);
 
-export function getCurrentLayout<T>(breakpoints: Array<string> = defaultBreakpoints, layouts: Array<T>, defaultLayout: T) {
+export function getCurrentLayout<T>(
+  breakpoints: Array<string> = defaultBreakpoints,
+  layouts: Array<T>,
+  defaultLayout: T,
+) {
   const query = breakpoints.findIndex((q) => mm(q).matches);
   const layout = layouts[query];
   return layout !== undefined ? layout : defaultLayout;

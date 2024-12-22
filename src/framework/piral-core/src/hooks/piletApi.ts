@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useGlobalStateContext } from "./globalState";
+import { useState } from 'react';
+import { useGlobalStateContext } from './globalState';
 
 /**
  * Uses the global state context to retrieve the pilet API stored

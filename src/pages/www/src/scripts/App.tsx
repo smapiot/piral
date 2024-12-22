@@ -9,7 +9,7 @@ const Page = location.pathname === '/oss-friends' ? OssFriends : Home;
 export const App: React.FC = () => (
   <>
     <GitHubCat url="https://github.com/smapiot/piral" />
-    <React.Suspense fallback={<div className='loader' />}>
+    <React.Suspense fallback={<div className="loader" />}>
       <Page />
     </React.Suspense>
     <Footer />

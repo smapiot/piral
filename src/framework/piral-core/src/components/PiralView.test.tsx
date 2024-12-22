@@ -48,39 +48,39 @@ const state = {
 
 (hooks as any).useGlobalState = (select: any) => select(state);
 
-(routes as any).PiralRoutes = ({ }) => <StubDashboard />;
+(routes as any).PiralRoutes = ({}) => <StubDashboard />;
 
 describe('Portal Module', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('renders the dashboard / content in layout if loaded without error', () => {
     state.app.loading = false;
     state.app.error = undefined;
     const node = render(<PiralView />);
-    expect(node.queryAllByRole("loader").length).toBe(0);
-    expect(node.queryAllByRole("error").length).toBe(0);
-    expect(node.queryAllByRole("dashboard").length).toBe(1);
+    expect(node.queryAllByRole('loader').length).toBe(0);
+    expect(node.queryAllByRole('error').length).toBe(0);
+    expect(node.queryAllByRole('dashboard').length).toBe(1);
   });
 
   it('just renders the loader if not loaded yet', () => {
     state.app.loading = true;
     state.app.error = undefined;
     const node = render(<PiralView />);
-    expect(node.queryAllByRole("loader").length).toBe(1);
-    expect(node.queryAllByRole("error").length).toBe(0);
-    expect(node.queryAllByRole("dashboard").length).toBe(0);
+    expect(node.queryAllByRole('loader').length).toBe(1);
+    expect(node.queryAllByRole('error').length).toBe(0);
+    expect(node.queryAllByRole('dashboard').length).toBe(0);
   });
 
   it('renders the error outside layout if errored when loading', () => {
     state.app.loading = false;
     state.app.error = new Error('Test');
     const node = render(<PiralView />);
-    expect(node.queryAllByRole("loader").length).toBe(0);
-    expect(node.queryAllByRole("error").length).toBe(1);
-    expect(node.getByRole("error").textContent).toBe('loading');
-    expect(node.queryAllByRole("dashboard").length).toBe(0);
+    expect(node.queryAllByRole('loader').length).toBe(0);
+    expect(node.queryAllByRole('error').length).toBe(1);
+    expect(node.getByRole('error').textContent).toBe('loading');
+    expect(node.queryAllByRole('dashboard').length).toBe(0);
   });
 
   it('renders the not found error in layout', () => {
@@ -88,9 +88,9 @@ describe('Portal Module', () => {
     state.app.error = undefined;
     (routes as any).PiralRoutes = ({ NotFound }) => <NotFound />;
     const node = render(<PiralView />);
-    expect(node.queryAllByRole("loader").length).toBe(0);
-    expect(node.queryAllByRole("error").length).toBe(1);
-    expect(node.getByRole("error").textContent).toBe('not_found');
-    expect(node.queryAllByRole("dashboard").length).toBe(0);
+    expect(node.queryAllByRole('loader').length).toBe(0);
+    expect(node.queryAllByRole('error').length).toBe(1);
+    expect(node.getByRole('error').textContent).toBe('not_found');
+    expect(node.queryAllByRole('dashboard').length).toBe(0);
   });
 });

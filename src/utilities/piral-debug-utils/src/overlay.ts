@@ -233,9 +233,9 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       codeframeRE.lastIndex = 0;
       const hasFrame = error.frame && codeframeRE.test(error.frame);
       const message = hasFrame ? error.message.replace(codeframeRE, '') : error.message;
-      
+
       if (pilet) {
-        this.text('.plugin', `[${pilet}] `)
+        this.text('.plugin', `[${pilet}] `);
       }
 
       this.text('.message-body', message.trim());

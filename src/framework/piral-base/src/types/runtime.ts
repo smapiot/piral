@@ -41,7 +41,7 @@ export interface PiletMetadata {
    * and override the public path.
    */
   basePath: string;
-};
+}
 
 /**
  * Defines the API accessible from pilets.

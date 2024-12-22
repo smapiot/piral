@@ -31,7 +31,7 @@ function getKeys(template: string) {
   const keys: Array<string> = [];
   let result: RegExpExecArray;
 
-  while (result = getKey.exec(template)) {
+  while ((result = getKey.exec(template))) {
     keys.push(result[2]);
   }
 
@@ -52,7 +52,6 @@ function getParams(current: BreadcrumbRegistration, path: string) {
         params[keys[i]] = data[i + 1];
       }
     }
-    
   }
 
   return params;

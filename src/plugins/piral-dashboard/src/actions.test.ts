@@ -34,7 +34,7 @@ describe('Dashboard Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     registerTile(ctx, 'foo', 10);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -44,7 +44,7 @@ describe('Dashboard Actions Module', () => {
       },
     });
     unregisterTile(ctx, 'foo');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,

@@ -81,5 +81,8 @@ export async function listProjects(target: string) {
   }
 
   log('generalDebug_0003', `Bun workspaces result: ${ms.value}`);
-  return ms.value.split('\n').filter(m => m.startsWith('├──')).map(m => m.replace('├── ', ''));
+  return ms.value
+    .split('\n')
+    .filter((m) => m.startsWith('├──'))
+    .map((m) => m.replace('├── ', ''));
 }

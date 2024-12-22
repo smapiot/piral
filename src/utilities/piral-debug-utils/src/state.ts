@@ -34,7 +34,7 @@ function getValue(key: string, defaultValue: boolean, fallbackValue: boolean) {
   }
 
   const currentValue = typeof defaultValue === 'boolean' ? defaultValue : fallbackValue;
-  
+
   if (actualValue !== currentValue) {
     sessionStorage.setItem(key, currentValue ? 'on' : 'off');
   }

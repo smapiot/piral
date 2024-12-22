@@ -8,11 +8,11 @@ describe('Flatten translations', () => {
   it('flattenTranslations can handle flat keys', () => {
     const messages = {
       en: {
-        key: 'value'
+        key: 'value',
       },
       fr: {
-        key: 'value (fr)'
-      }
+        key: 'value (fr)',
+      },
     };
     const flatMessages = flattenTranslations(messages);
     expect(flatMessages.fr.key).toEqual('value (fr)');
@@ -21,8 +21,8 @@ describe('Flatten translations', () => {
   it('flattenTranslations can handle flat dot keys', () => {
     const messages = {
       en: {
-        'header.title': 'Hello world'
-      }
+        'header.title': 'Hello world',
+      },
     };
     const flatMessages = flattenTranslations(messages);
     expect(flatMessages.en['header.title']).toBe('Hello world');
@@ -32,9 +32,9 @@ describe('Flatten translations', () => {
     const messages = {
       en: {
         header: {
-          title: 'Hello world'
-        }
-      }
+          title: 'Hello world',
+        },
+      },
     };
     const flatMessages = flattenTranslations(messages);
     expect(flatMessages.en['header.title']).toBe('Hello world');
@@ -45,10 +45,10 @@ describe('Flatten translations', () => {
       en: {
         header: {
           title: {
-            subtitle: 'Hello world'
-          }
-        }
-      }
+            subtitle: 'Hello world',
+          },
+        },
+      },
     };
     const flatMessages = flattenTranslations(messages);
     expect(flatMessages.en['header.title.subtitle']).toBe('Hello world');

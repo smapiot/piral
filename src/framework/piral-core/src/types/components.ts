@@ -232,7 +232,7 @@ export interface PiralPageMeta extends PiralCustomPageMeta {}
 /**
  * Represents a path in the app registration.
  */
- export interface AppPath {
+export interface AppPath {
   /**
    * The exact path to use.
    */

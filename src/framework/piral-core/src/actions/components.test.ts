@@ -8,7 +8,7 @@ import { registerExtension, registerPage, unregisterExtension, unregisterPage } 
 import { createActions } from '../state';
 
 vitest.mock('../../app.codegen', () => ({
-  createNavigation: vitest.fn(publicPath => ({
+  createNavigation: vitest.fn((publicPath) => ({
     publicPath,
   })),
   publicPath: '/',

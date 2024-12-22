@@ -50,11 +50,9 @@ declare global {
   }
 }
 
-export type GenericComponents<T> = Partial<
-  {
-    [P in keyof T]: T[P] extends ComponentType<infer C> ? AnyComponent<C> : T[P];
-  }
->;
+export type GenericComponents<T> = Partial<{
+  [P in keyof T]: T[P] extends ComponentType<infer C> ? AnyComponent<C> : T[P];
+}>;
 
 export interface SitelessOptions {
   /**

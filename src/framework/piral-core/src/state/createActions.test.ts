@@ -15,7 +15,7 @@ vitest.mock('../actions', () => ({
 }));
 
 vitest.mock('../../app.codegen', () => ({
-  createNavigation: vitest.fn(publicPath => ({
+  createNavigation: vitest.fn((publicPath) => ({
     publicPath,
   })),
   publicPath: '/',
@@ -25,7 +25,18 @@ describe('Create Actions Module', () => {
   it('createActions works with all actions', () => {
     const events = createListener(undefined);
     const actions = createActions('abc' as any, events);
-    expect(Object.keys(actions)).toEqual(['on', 'once', 'off', 'emit', 'apis', 'converters', 'navigation', 'state', 'a', 'b']);
+    expect(Object.keys(actions)).toEqual([
+      'on',
+      'once',
+      'off',
+      'emit',
+      'apis',
+      'converters',
+      'navigation',
+      'state',
+      'a',
+      'b',
+    ]);
   });
 
   it('createActions binds against given context', () => {

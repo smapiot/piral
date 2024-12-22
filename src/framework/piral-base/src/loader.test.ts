@@ -186,7 +186,7 @@ describe('Standard Module Loader', () => {
     const fallback = vitest.fn();
     const fooLoader = vitest.fn();
     const loader = extendLoader(fallback, {
-      'foo': fooLoader,
+      foo: fooLoader,
     });
 
     await loader({ spec: 'foo' } as any);
@@ -199,7 +199,7 @@ describe('Standard Module Loader', () => {
     const fallback = vitest.fn();
     const fooLoader = vitest.fn();
     const loader = extendLoader(fallback, {
-      'foo': fooLoader,
+      foo: fooLoader,
     });
 
     await loader({ spec: 'bar' } as any);
@@ -212,7 +212,7 @@ describe('Standard Module Loader', () => {
     const fallback = vitest.fn();
     const fooLoader = vitest.fn();
     const loader = extendLoader(fallback, {
-      'foo': fooLoader,
+      foo: fooLoader,
     });
 
     await loader({ spec: 23 } as any);

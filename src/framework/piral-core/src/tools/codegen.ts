@@ -102,7 +102,7 @@ export function createBasicAppFunc(imports: Array<string>, exports: Array<string
   switch (opts.internalStyles) {
     case 'sheet':
       imports.push(`import 'piral-core/styles/sheet.css';`);
-      // no return - we fall through and also include the dummy applyStyle for "none"
+    // no return - we fall through and also include the dummy applyStyle for "none"
     case 'none':
       exports.push(`
         export function applyStyle(element) {}

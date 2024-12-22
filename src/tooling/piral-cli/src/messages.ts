@@ -2630,7 +2630,7 @@ export function requiredEmulatorAssetDownloadSkipped_0123(url: string): QuickMes
  * Only an emulator website can be published using `piral publish`. Other artifacts such as
  * standard release artifacts or the package emulator (tgz) need to be published using other
  * mechanisms such as `npm publish`.
- * 
+ *
  * If no emulator website exists you can either build one using the `--fresh` flag with
  * `piral publish` (i.e., `piral publish --fresh`) or preparing the build using `piral build`
  * with the `--type emulator-website` flag.
@@ -2699,7 +2699,7 @@ export function failedToOpenBrowser_0170(error: string): QuickMessage {
  * The v2 version uses a SystemJS format for the pilet. It has the broadest browser support
  * but requires the custom format as output. Most bundlers support SystemJS directly or
  * indirectly, making it a quite broad choice.
- * 
+ *
  * In bundlers that support Module Federation (e.g., Webpack 5) the "mf" format may be
  * the best choice. Keep in mind that "mf" is only supported by applications using
  * Piral 1.4.0 or higher.

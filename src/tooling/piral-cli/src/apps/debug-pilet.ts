@@ -236,14 +236,14 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
     appInstanceDir,
     feed,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('_', _, 'object');
   ensure('hooks', hooks, 'object');
   ensure('target', target, 'string');
   ensure('publicUrl', originalPublicUrl, 'string');
   ensure('port', originalPort, ['number', 'undefined']);
-  
+
   const publicUrl = normalizePublicUrl(originalPublicUrl);
   const fullBase = resolve(process.cwd(), baseDir);
   const networks: Array<NetworkSpec> = [];
@@ -255,10 +255,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
   const entryList = Array.isArray(entry) ? entry : [entry];
   const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
-  log(
-    'generalDebug_0003',
-    `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`,
-  );
+  log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
   const allEntries = await matchAnyPilet(fullBase, entryList);
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
@@ -266,7 +263,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
   }
-  
+
   const maxListeners = Math.max(2 + allEntries.length * 2, 16);
 
   process.stderr?.setMaxListeners(maxListeners);
@@ -393,13 +390,13 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
             return watcherContext.watch(file);
           },
         });
-    
+
         const handleUpdate = () => {
           const { pilets } = buildRef.data;
           pilets.forEach((p) => p.bundler.start());
           update({ pilets });
         };
-    
+
         buildRef.on(handleUpdate);
 
         watcherContext.onClean(() => buildRef.off(handleUpdate));

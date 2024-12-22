@@ -106,7 +106,12 @@ async function createEmulatorFiles(
   await downloadEmulatorFiles(manifestUrl, targetDir, appDir, emulatorJson.files, httpsAgent);
 }
 
-export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string, httpsAgent: Agent, interactive: boolean) {
+export async function updateFromEmulatorWebsite(
+  targetDir: string,
+  manifestUrl: string,
+  httpsAgent: Agent,
+  interactive: boolean,
+) {
   progress(`Updating emulator from %s ...`, manifestUrl);
 
   try {

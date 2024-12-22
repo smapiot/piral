@@ -22,7 +22,7 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
 
   const disposers: Array<() => void | Promise<void>> = [];
   const triggers: Array<() => void> = [];
-  const end = new Promise<void>(resolve => {
+  const end = new Promise<void>((resolve) => {
     notify = resolve;
   });
   const ref: WatcherRef<T> = {

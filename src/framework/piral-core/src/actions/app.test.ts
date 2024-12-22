@@ -19,7 +19,7 @@ import { createActions } from '../state';
 import { RootListener } from '../RootListener';
 
 vitest.mock('../../app.codegen', () => ({
-  createNavigation: vitest.fn(publicPath => ({
+  createNavigation: vitest.fn((publicPath) => ({
     publicPath,
   })),
   fillDependencies: vitest.fn(),

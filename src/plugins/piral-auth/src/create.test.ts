@@ -15,7 +15,7 @@ function createMockContainer() {
       defineActions() {},
       state,
       readState(read) {
-        return read((state.getState()));
+        return read(state.getState());
       },
       dispatch(update) {
         state.setState(update(state.getState()));

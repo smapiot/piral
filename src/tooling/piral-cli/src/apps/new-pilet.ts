@@ -53,7 +53,7 @@ export interface NewPiletOptions {
    * Defines a custom certificate for the website emulator.
    */
   cert?: string;
-  
+
   /**
    * Allow self-signed certificates.
    */
@@ -143,13 +143,13 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     cert = newPiletDefaults.cert,
     allowSelfSigned = newPiletDefaults.allowSelfSigned,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('source', source, 'string');
   ensure('target', target, 'string');
   ensure('template', template, ['string', 'undefined']);
   ensure('variables', variables, 'object');
-  
+
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);

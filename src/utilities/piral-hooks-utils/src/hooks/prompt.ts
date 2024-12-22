@@ -8,11 +8,11 @@ import type { History, Location } from 'history';
  * @param history The history of the currently used router.
  * @param message The message to display when the prompt is shown.
  */
- export function usePrompt(
+export function usePrompt(
   active: boolean,
   history: History,
   message: string,
-  onTransition?: (location: Location) => void
+  onTransition?: (location: Location) => void,
 ) {
   useEffect(() => {
     if (active) {

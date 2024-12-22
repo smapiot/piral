@@ -13,7 +13,7 @@ vitest.mock('../hooks/globalState', () => ({
 }));
 
 vitest.mock('react', async () => ({
-  ...(await vitest.importActual('react') as any),
+  ...((await vitest.importActual('react')) as any),
   useMemo: (cb) => cb(),
 }));
 
@@ -34,7 +34,7 @@ describe('SwitchErrorInfo Module', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('is able to render StubComponent1 component', () => {
     const node = render(<SwitchErrorInfo type="stubComponent1" />);
     expect(node.queryAllByRole('stub').length).toBe(1);
