@@ -2,6 +2,9 @@
  * @vitest-environment jsdom
  */
 import create from 'zustand';
+import getPort from 'get-port';
+import cors from 'cors';
+import express from 'express';
 import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
 import { createAxiosApi } from './create';
 
@@ -27,9 +30,6 @@ describe('Piral-Axios create module', () => {
   let port;
 
   beforeAll(async () => {
-    const express = require('express');
-    const cors = require('cors');
-    const getPort = require('get-port');
     const app = express();
     port = await getPort();
 

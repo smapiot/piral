@@ -37,8 +37,11 @@
   },
   "scripts": {
     "cleanup": "rimraf lib",
-    "build": "esbuild src/index.ts --bundle --outfile=lib/index.js --format=cjs --platform=node",
+    "build": "esbuild src/index.ts --bundle --outfile=lib/index.js --format=cjs --external:open --platform=node",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "open": "^10"
   },
   "devDependencies": {
     "@types/express": "^4",
@@ -58,7 +61,6 @@
     "is-interactive": "^2",
     "jju": "^1",
     "mime": "^4",
-    "open": "^10",
     "ora": "^8",
     "rc": "^1",
     "rimraf": "^6",

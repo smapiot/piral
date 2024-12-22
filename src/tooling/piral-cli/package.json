@@ -65,7 +65,6 @@
     "is-interactive": "^2",
     "jju": "^1",
     "mime": "^4",
-    "open": "^10",
     "ora": "^8",
     "rimraf": "^6",
     "rc": "^1",
@@ -75,6 +74,7 @@
     "css-conflict-inspector": "^0.2",
     "dets": "^0.16",
     "kras": "^1",
+    "open": "^10",
     "typescript": "^5",
     "yargs": "^17"
   }
