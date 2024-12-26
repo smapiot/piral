@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { Compilation } from 'webpack';
+import { Compilation, Compiler } from 'webpack';
 import { RawSource } from 'webpack-sources';
 
 export default class SheetPlugin {
@@ -9,7 +9,7 @@ export default class SheetPlugin {
     this.loaderPath = resolve(__dirname, `SheetLoader?cssName=${cssName}&piletName=${piletName}!`);
   }
 
-  apply(compiler) {
+  apply(compiler: Compiler) {
     const { entry } = compiler.options;
 
     entry[this.entryName].import = [this.loaderPath, ...entry[this.entryName].import];

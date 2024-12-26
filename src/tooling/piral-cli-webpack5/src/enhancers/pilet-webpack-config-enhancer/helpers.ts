@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { SharedDependency } from 'piral-cli';
-import { Configuration } from 'webpack';
+import type { SharedDependency } from 'piral-cli';
+import type { Configuration } from 'webpack';
 
 export function getVariables(name: string, version: string, env: string): Record<string, string> {
   return {
