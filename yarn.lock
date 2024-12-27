@@ -10234,9 +10234,9 @@ param-case@^3.0.4:
     tslib "^2.0.3"
 
 parcel-codegen-loader@^2:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-2.0.0.tgz#bdd25afcd085dfa55f10e618953396337705d499"
-  integrity sha512-/s/AobrxeVdoeKfAvoeTLNSUqU6aQb2rGD+X+tc0LbBagp6ydlXwfofmm8KIhgQL8o3l/no1Q+9PZ5pACoGAjQ==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/parcel-codegen-loader/-/parcel-codegen-loader-2.1.0.tgz#9affefebb085c9848c633c962a75021c8786f1e4"
+  integrity sha512-6WigF76clk06LEGZ8j3NsgKCOaMmm02YNrsgEhXg5i0gnX/UBwnpQC0fu61keGvMH2S9V2JEmqWk8Uo19cQMHw==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
