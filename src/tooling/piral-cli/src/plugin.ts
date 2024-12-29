@@ -30,12 +30,16 @@ async function getLocalPackageDir() {
   for (const dir of proposedDirs.filter(Boolean)) {
     log('generalDebug_0003', `Checking for potential plugin directory "${dir}" ...`);
 
-    if (await isDirectory(dir)) {
+    if (await isValidModulesDirectory(dir)) {
       return dir;
     }
   }
 
   return undefined;
+}
+
+function isValidModulesDirectory(dir: string) {
+  return isDirectory(resolve(dir, 'piral-cli'));
 }
 
 function isDirectory(dir: string) {
