@@ -2,6 +2,7 @@
 
 ## 1.8.0 (tbd)
 
+- Fixed pinning of dependencies in `piral-configs` (#733)
 - Updated `kras` to latest `v1.0` release
 - Updated `dets` to latest `v1.0` release
 - Updated dependencies
