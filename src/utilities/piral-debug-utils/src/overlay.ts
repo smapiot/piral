@@ -223,6 +223,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   class ErrorOverlay extends HTMLElement {
     root: ShadowRoot;
     closeOnEsc: (e: KeyboardEvent) => void;
+    closeOnReload: () => void;
 
     constructor(props: ErrorOverlayProps, links = true) {
       super();
@@ -274,6 +275,9 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         }
       };
 
+      this.closeOnReload = () => this.close();
+
+      window.addEventListener('pilets-reloaded', this.closeOnReload);
       document.addEventListener('keydown', this.closeOnEsc);
     }
 
@@ -308,6 +312,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
 
     close() {
       this.parentNode?.removeChild(this);
+      window.removeEventListener('pilets-reloaded', this.closeOnReload);
       document.removeEventListener('keydown', this.closeOnEsc);
     }
   }
