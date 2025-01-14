@@ -191,7 +191,7 @@ const createTemplate = () =>
     h('style', {}, templateStyle),
   );
 
-const fileRE = /(?:[a-zA-Z]:\\|\/).*?:\d+:\d+/g;
+const fileRE = /(?:[a-zA-Z]:\\|\/).*?:\d+:\d*/g;
 const codeframeRE = /^(?:>?\s*\d+\s+\|.*|\s+\|\s*\^.*)\r?\n/gm;
 
 interface ExtendedError {
