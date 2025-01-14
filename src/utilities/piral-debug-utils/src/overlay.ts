@@ -1,3 +1,5 @@
+import { convertError } from './stack';
+
 // Create an element with provided attributes and optional children
 function h(e: string, attrs: Record<string, string> = {}, ...children: (string | Node)[]) {
   const elem = document.createElement(e);
@@ -252,7 +254,11 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         this.text('.frame', error.frame!.trim());
       }
 
-      this.text('.stack', error.stack, links);
+      this.text('.stack', error.stack.split('\n').slice(0, 15).join('\n'), links);
+
+      convertError(error, 0, 15).then((newStack) => {
+        this.text('.stack', newStack, links);
+      });
 
       this.root.querySelector('.window')!.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -273,6 +279,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
 
     text(selector: string, text: string, linkFiles = false) {
       const el = this.root.querySelector(selector)!;
+      el.textContent = '';
 
       if (linkFiles) {
         let curIndex = 0;
