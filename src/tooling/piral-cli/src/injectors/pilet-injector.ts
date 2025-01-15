@@ -144,7 +144,7 @@ export default class PiletInjector implements KrasInjector {
       this.indexPath = `${publicUrl}index.html`;
 
       // If we end with "/app" or "\app" we might have a proper emulator
-      if (basename(app) === 'app') {
+      if (app && basename(app) === 'app') {
         const path = resolve(app, '..', 'package.json');
 
         if (existsSync(path)) {
