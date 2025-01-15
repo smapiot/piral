@@ -1,11 +1,10 @@
+import { open } from '../external';
 import { log } from './log';
 import { config } from './config';
 
 export async function openBrowserAt(address: string) {
   try {
-    const name = 'open';
-    const open = await import(name).then((c) => c.default);
-    await open(address, undefined);
+    await open(address);
   } catch (err) {
     log('failedToOpenBrowser_0170', err);
   }

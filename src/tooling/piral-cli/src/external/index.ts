@@ -13,6 +13,12 @@ import chalk from 'chalk';
 import { rimraf } from 'rimraf';
 import { getModulePath } from './resolve';
 
+export async function open(address: string) {
+  const name = 'open';
+  const openBrowser = await import(name).then((c) => c.default);
+  await openBrowser(address, undefined);
+}
+
 export {
   chalk,
   inquirer,

@@ -220,26 +220,23 @@ export interface PostFormResult {
   response?: object;
 }
 
-export async function postForm(
+export async function postData(
   target: string,
   scheme: PublishScheme,
   key: string,
-  formData: FormDataObj,
+  data: any,
   customHeaders: Record<string, string> = {},
   httpsAgent?: Agent,
   interactive = false,
 ): Promise<PostFormResult> {
-  const form = createAxiosForm(formData);
-
   const headers: Record<string, string> = {
-    ...form.getHeaders(),
     ...standardHeaders,
     ...customHeaders,
     ...getAuthorizationHeaders(scheme, key),
   };
 
   try {
-    const res = await axios.post(target, form, {
+    const res = await axios.post(target, data, {
       headers,
       httpsAgent,
       maxContentLength: Infinity,
@@ -256,7 +253,7 @@ export async function postForm(
       error,
       interactive,
       httpsAgent,
-      (mode, token) => postForm(target, mode, token, formData, customHeaders, httpsAgent, false),
+      (mode, token) => postData(target, mode, token, data, customHeaders, httpsAgent, false),
       (status, statusText, response) => {
         if (status === 500) {
           log('failedHttpPost_0065', response);
@@ -276,6 +273,20 @@ export async function postForm(
       },
     );
   }
+}
+
+export function postForm(
+  target: string,
+  scheme: PublishScheme,
+  key: string,
+  formData: FormDataObj,
+  customHeaders: Record<string, string> = {},
+  httpsAgent?: Agent,
+  interactive = false,
+): Promise<PostFormResult> {
+  const form = createAxiosForm(formData);
+  const headers = form.getHeaders();
+  return postData(target, scheme, key, DataTransfer, { ...customHeaders, ...headers }, httpsAgent, interactive);
 }
 
 export function postFile(

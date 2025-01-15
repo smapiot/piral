@@ -44,7 +44,7 @@
     "cleanup": "rimraf lib",
     "build": "yarn build:source && rimraf lib/external && yarn build:external",
     "build:source": "tsc --declaration",
-    "build:external": "esbuild src/external/index.ts --bundle --outfile=lib/external/index.js --format=cjs --platform=node --external:pnpapi",
+    "build:external": "esbuild src/external/index.ts --bundle --outfile=lib/external/index.js --format=cjs --platform=node --external:pnpapi --external:open",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
