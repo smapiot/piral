@@ -286,7 +286,7 @@ export function postForm(
 ): Promise<PostFormResult> {
   const form = createAxiosForm(formData);
   const headers = form.getHeaders();
-  return postData(target, scheme, key, DataTransfer, { ...customHeaders, ...headers }, httpsAgent, interactive);
+  return postData(target, scheme, key, form, { ...customHeaders, ...headers }, httpsAgent, interactive);
 }
 
 export function postFile(
