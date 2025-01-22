@@ -6,7 +6,7 @@ import { NavigationApi } from '../types';
 let _nav: any;
 const _noop = () => {};
 
-export function useRouterContext() {
+function useRouterContext() {
   return React.useContext(RouterContext);
 }
 

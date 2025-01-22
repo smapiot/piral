@@ -9,6 +9,7 @@
 - Updated `kras` to latest `v1.0` release
 - Updated `dets` to latest `v1.0` release
 - Updated dependencies
+- Added support for `wouter` as a `react-router` drop-in replacement
 - Added automatic creation of a feed in the `create-piral-instance` initializer survey
 - Added configuration for internal styles (#731)
 
