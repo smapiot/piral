@@ -6,12 +6,11 @@
 - Fixed the plugin detection of the `piral-cli` using pnpm (#734)
 - Fixed issue with most recent version of `open` in the `piral-cli`
 - Improved error overlay with source maps and auto-close on reload
-- Updated `kras` to latest `v1.0` release
-- Updated `dets` to latest `v1.0` release
+- Updated `kras` and `dets` to latest release
 - Updated dependencies
 - Added support for `wouter` as a `react-router` drop-in replacement
 - Added automatic creation of a feed in the `create-piral-instance` initializer survey
-- Added configuration for internal styles (#731)
+- Added configuration option for internal styles (#731)
 
 ## 1.7.3 (December 11, 2024)
 
