@@ -429,9 +429,8 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'emit-event':
           return fireEvent(content.name, content.args);
         case 'goto-route':
-          if (content.route === initialSettings.cataloguePath) {
+          if (content.route === initialSettings.cataloguePath && content.state) {
             changeExtensionCatalogueStore(content.state);
-            return navigate(content.route);
           }
 
           return navigate(content.route, content.state);
