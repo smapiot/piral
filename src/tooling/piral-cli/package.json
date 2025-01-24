@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "css-conflict-inspector": "^0.2",
-    "dets": "^0.16",
+    "dets": "^0.16.7",
     "kras": "^1",
     "open": "^10",
     "typescript": "^5",
