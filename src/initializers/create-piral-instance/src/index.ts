@@ -57,6 +57,7 @@ const flags: Array<Flag> = [
         data,
         { 'content-type': 'application/json' },
         undefined,
+        false,
         true,
       );
       return result.success;

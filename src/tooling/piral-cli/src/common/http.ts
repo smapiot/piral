@@ -220,23 +220,46 @@ export interface PostFormResult {
   response?: object;
 }
 
+function createPayload(
+  data: any,
+  scheme: PublishScheme,
+  key: string,
+  customHeaders: Record<string, string>,
+  isForm: boolean,
+): [any, Record<string, string>] {
+  if (isForm) {
+    const form = createAxiosForm(data);
+    const extraHeaders = form.getHeaders();
+    const headers: Record<string, string> = {
+      ...standardHeaders,
+      ...customHeaders,
+      ...getAuthorizationHeaders(scheme, key),
+      ...extraHeaders,
+    };
+    return [form, headers];
+  } else {
+    const headers: Record<string, string> = {
+      ...standardHeaders,
+      ...customHeaders,
+      ...getAuthorizationHeaders(scheme, key),
+    };
+    return [data, headers];
+  }
+}
+
 export async function postData(
   target: string,
   scheme: PublishScheme,
   key: string,
   data: any,
   customHeaders: Record<string, string> = {},
-  httpsAgent?: Agent,
+  httpsAgent: Agent = undefined,
+  isForm = false,
   interactive = false,
 ): Promise<PostFormResult> {
-  const headers: Record<string, string> = {
-    ...standardHeaders,
-    ...customHeaders,
-    ...getAuthorizationHeaders(scheme, key),
-  };
-
   try {
-    const res = await axios.post(target, data, {
+    const [body, headers] = createPayload(data, scheme, key, customHeaders, isForm);
+    const res = await axios.post(target, body, {
       headers,
       httpsAgent,
       maxContentLength: Infinity,
@@ -253,7 +276,7 @@ export async function postData(
       error,
       interactive,
       httpsAgent,
-      (mode, token) => postData(target, mode, token, data, customHeaders, httpsAgent, false),
+      (mode, token) => postData(target, mode, token, data, customHeaders, httpsAgent, isForm, false),
       (status, statusText, response) => {
         if (status === 500) {
           log('failedHttpPost_0065', response);
@@ -281,12 +304,10 @@ export function postForm(
   key: string,
   formData: FormDataObj,
   customHeaders: Record<string, string> = {},
-  httpsAgent?: Agent,
+  httpsAgent: Agent = undefined,
   interactive = false,
 ): Promise<PostFormResult> {
-  const form = createAxiosForm(formData);
-  const headers = form.getHeaders();
-  return postData(target, scheme, key, form, { ...customHeaders, ...headers }, httpsAgent, interactive);
+  return postData(target, scheme, key, formData, customHeaders, httpsAgent, true, interactive);
 }
 
 export function postFile(
@@ -296,7 +317,7 @@ export function postFile(
   file: Buffer,
   customFields: Record<string, string> = {},
   customHeaders: Record<string, string> = {},
-  agent?: Agent,
+  agent: Agent = undefined,
   interactive = false,
 ): Promise<PostFormResult> {
   const data: FormDataObj = { ...customFields, file: [file, 'pilet.tgz'] };
