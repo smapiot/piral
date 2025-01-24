@@ -1,4 +1,4 @@
-import { ExtensionCatalogue } from './ExtensionCatalogue';
+import { changeExtensionCatalogueStore, ExtensionCatalogue } from './ExtensionCatalogue';
 import { decycle } from './decycle';
 import { overlayId } from './overlay';
 import { createVisualizer, destroyVisualizer, toggleVisualizer } from './visualizer';
@@ -429,6 +429,11 @@ export function installPiralDebug(options: DebuggerOptions) {
         case 'emit-event':
           return fireEvent(content.name, content.args);
         case 'goto-route':
+          if (content.route === initialSettings.cataloguePath) {
+            changeExtensionCatalogueStore(content.state);
+            return navigate(content.route);
+          }
+
           return navigate(content.route, content.state);
         case 'visualize-all':
           return toggleVisualizer();
