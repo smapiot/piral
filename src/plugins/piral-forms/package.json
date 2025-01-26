@@ -1,6 +1,6 @@
 {
   "name": "piral-forms",
-  "version": "1.7.3",
+  "version": "1.8.0",
   "description": "Plugin for providing advanced form support in Piral.",
   "keywords": [
     "piral",
@@ -52,7 +52,7 @@
     "@types/history": "^4.7.8",
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "piral-core": "^1.7.3",
+    "piral-core": "^1.8.0",
     "react": "^18.0.0",
     "react-router-dom": "^5.2.0"
   }

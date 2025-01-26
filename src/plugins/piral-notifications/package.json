@@ -1,6 +1,6 @@
 {
   "name": "piral-notifications",
-  "version": "1.7.3",
+  "version": "1.8.0",
   "description": "Plugin for triggering notifications in Piral.",
   "keywords": [
     "piral",
@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^1.7.3",
+    "piral-core": "^1.8.0",
     "react": "^18.0.0"
   }
 }

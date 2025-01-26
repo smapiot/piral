@@ -1,6 +1,6 @@
 {
   "name": "create-piral-instance",
-  "version": "1.7.3",
+  "version": "1.8.0",
   "description": "The NPM initializer to scaffold a new Piral instance.",
   "keywords": [
     "scaffold",
@@ -37,9 +37,8 @@
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "devDependencies": {},
   "dependencies": {
     "inquirer": "^12",
-    "piral-cli": "^1.7.3"
+    "piral-cli": "^1.8.0"
   }
 }
