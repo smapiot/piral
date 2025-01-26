@@ -4,6 +4,7 @@
 
 - Fixed pinning of dependencies in `piral-configs` (#733)
 - Fixed the plugin detection of the `piral-cli` using pnpm (#734)
+- Fixed redirect loop in `piral-ng` (#738)
 - Fixed issue with most recent version of `open` in the `piral-cli`
 - Improved error overlay with source maps and auto-close on reload
 - Updated `kras` and `dets` to latest release
