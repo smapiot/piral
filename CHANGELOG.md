@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.0 (tbd)
+## 1.8.0 (January 26, 2025)
 
 - Fixed pinning of dependencies in `piral-configs` (#733)
 - Fixed the plugin detection of the `piral-cli` using pnpm (#734)
