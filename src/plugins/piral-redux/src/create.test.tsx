@@ -13,8 +13,8 @@ function createMockContainer() {
       on: vitest.fn(),
       off: vitest.fn(),
       emit: vitest.fn(),
-      includeProvider() { },
-      defineActions() { },
+      includeProvider() {},
+      defineActions() {},
       state,
       readState(read) {
         return read(state.getState());
@@ -37,6 +37,6 @@ describe('Piral-Redux create module', () => {
     const api = apiCreator(undefined, {
       name: 'test',
     });
-    api.createReduxStore(() => { })(MyComponent);
+    api.createReduxStore(() => {})(MyComponent);
   });
 });

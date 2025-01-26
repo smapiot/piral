@@ -110,7 +110,7 @@ type FeedResponse = { items?: Array<PiletMetadata> } | Array<PiletMetadata> | Pi
 
 async function loadFeed(feed: string, headers: any) {
   try {
-    const response = await axios.default.get<FeedResponse>(feed, { headers });
+    const response = await axios.get<FeedResponse>(feed, { headers });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -144,7 +144,7 @@ export default class PiletInjector implements KrasInjector {
       this.indexPath = `${publicUrl}index.html`;
 
       // If we end with "/app" or "\app" we might have a proper emulator
-      if (basename(app) === 'app') {
+      if (app && basename(app) === 'app') {
         const path = resolve(app, '..', 'package.json');
 
         if (existsSync(path)) {
@@ -394,7 +394,7 @@ export default class PiletInjector implements KrasInjector {
     const manifestUrl = this.proxyInfo.source;
     const url = new URL(path, manifestUrl);
     const opts = getAxiosOptions(manifestUrl);
-    return axios.default.get(url.href, { ...opts, responseType: 'arraybuffer' });
+    return axios.get(url.href, { ...opts, responseType: 'arraybuffer' });
   }
 
   private async shouldLoad(target: string, path: string) {

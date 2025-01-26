@@ -6,7 +6,10 @@ import { runPilet } from './aggregate';
 
 describe('Piral-Base aggregate module', () => {
   it('createPilet calls the setup method of the pilet', async () => {
-    const create: any = vitest.fn(() => ({}));
+    const create: any = vitest.fn(() => ({
+      on: vitest.fn(),
+      off: vitest.fn(),
+    }));
     const setup = vitest.fn();
     await runPilet(
       create,

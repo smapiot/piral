@@ -102,22 +102,22 @@ describe('Piral-Oidc setup module', () => {
   it('login() should signInRedirect on the UserManager', async () => {
     const client = setupOidcClient(oidcConfig);
     const settings = client._.settings;
-    Object.defineProperty(settings, "popup_redirect_uri", {
+    Object.defineProperty(settings, 'popup_redirect_uri', {
       get() {
         return settings.popup_redirect_uri || settings.redirect_uri;
       },
     });
-    Object.defineProperty(settings, "post_logout_redirect_uri", {
+    Object.defineProperty(settings, 'post_logout_redirect_uri', {
       get() {
         return settings.post_logout_redirect_uri;
       },
     });
-    Object.defineProperty(settings, "redirect_uri", {
+    Object.defineProperty(settings, 'redirect_uri', {
       get() {
         return settings.redirect_uri;
       },
     });
-    Object.defineProperty(settings, "silent_redirect_uri", {
+    Object.defineProperty(settings, 'silent_redirect_uri', {
       get() {
         return settings.silent_redirect_uri || settings.redirect_uri;
       },

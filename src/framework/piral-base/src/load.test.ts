@@ -54,12 +54,12 @@ describe('Loading Modules', () => {
     const data: any = {
       foo: 'bar',
     };
-    const result = await loadMetadata(() =>
-      Promise.resolve([data]),
-    );
-    expect(result).toEqual([{
-      foo: 'bar',
-    }]);
+    const result = await loadMetadata(() => Promise.resolve([data]));
+    expect(result).toEqual([
+      {
+        foo: 'bar',
+      },
+    ]);
   });
 
   it('Fetching with an immutable response works', async () => {
@@ -67,14 +67,14 @@ describe('Loading Modules', () => {
       foo: 'bar',
     };
     Object.preventExtensions(data);
-    const result = await loadMetadata(() =>
-      Promise.resolve([data]),
-    );
+    const result = await loadMetadata(() => Promise.resolve([data]));
     // @ts-ignore
-    result[0].bar = 'qxz'
-    expect(result).toEqual([{
-      foo: 'bar',
-      bar: 'qxz',
-    }]);
+    result[0].bar = 'qxz';
+    expect(result).toEqual([
+      {
+        foo: 'bar',
+        bar: 'qxz',
+      },
+    ]);
   });
 });

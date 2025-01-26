@@ -1,7 +1,6 @@
 export const debugRouteCache = {
   active: 0,
   paths: [],
-  refresh: undefined,
 };
 
 export function freezeRouteRefresh() {
@@ -11,7 +10,7 @@ export function freezeRouteRefresh() {
     debugRouteCache.active--;
 
     if (!debugRouteCache.active) {
-      debugRouteCache.refresh?.((s: number) => s + 1);
+      window.dispatchEvent(new CustomEvent('pilets-reloaded'));
     }
   };
 }

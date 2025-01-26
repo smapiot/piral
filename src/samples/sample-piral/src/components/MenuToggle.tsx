@@ -20,7 +20,8 @@ export const MenuToggle: React.ComponentType = withRouter(({ history }) => {
     <button
       className={withClass('hamburger hamburger--arrow', active && 'is-active')}
       type="button"
-      onClick={() => setActive(!active)}>
+      onClick={() => setActive(!active)}
+    >
       <span className="hamburger-box">
         <span className="hamburger-inner" />
       </span>

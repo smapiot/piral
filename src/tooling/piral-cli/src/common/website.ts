@@ -15,7 +15,7 @@ async function requestManifest(url: string, httpsAgent: Agent, interactive: bool
   const opts = getAxiosOptions(url);
 
   try {
-    return await axios.default.get(url, { ...opts, httpsAgent });
+    return await axios.get(url, { ...opts, httpsAgent });
   } catch (error) {
     return await handleAxiosError(error, interactive, httpsAgent, async (mode, key) => {
       const headers = getAuthorizationHeaders(mode, key);
@@ -51,7 +51,7 @@ async function downloadEmulatorFiles(
       .filter((file) => file && typeof file === 'string')
       .map(async (file) => {
         const url = new URL(file, manifestUrl);
-        const res = await axios.default.get(url.href, opts);
+        const res = await axios.get(url.href, opts);
         const data: Buffer = res.data;
         await writeBinary(target, file, data);
       });
@@ -106,7 +106,12 @@ async function createEmulatorFiles(
   await downloadEmulatorFiles(manifestUrl, targetDir, appDir, emulatorJson.files, httpsAgent);
 }
 
-export async function updateFromEmulatorWebsite(targetDir: string, manifestUrl: string, httpsAgent: Agent, interactive: boolean) {
+export async function updateFromEmulatorWebsite(
+  targetDir: string,
+  manifestUrl: string,
+  httpsAgent: Agent,
+  interactive: boolean,
+) {
   progress(`Updating emulator from %s ...`, manifestUrl);
 
   try {

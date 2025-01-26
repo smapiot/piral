@@ -1,17 +1,37 @@
-import inquirer = require('inquirer');
-import jju = require('jju');
-import glob = require('glob');
-import tar = require('tar');
-import FormData = require('form-data');
+import * as jju from 'jju';
+import * as tar from 'tar';
+import glob from 'glob';
+import FormData from 'form-data';
 import rc = require('rc');
-import axios = require('axios');
-import mime = require('mime');
-import getPort = require('get-port');
-import open = require('open');
-import chalk = require('chalk');
-
+import mime from 'mime';
+import axios from 'axios';
+import inquirer from 'inquirer';
 import isInteractive from 'is-interactive';
+import getPort from 'get-port';
 import ora from 'ora';
+import chalk from 'chalk';
+import { rimraf } from 'rimraf';
 import { getModulePath } from './resolve';
 
-export { chalk, inquirer, isInteractive, ora, glob, tar, FormData, rc, axios, mime, getPort, open, jju, getModulePath };
+export async function open(address: string) {
+  const name = 'open';
+  const openBrowser = await import(name).then((c) => c.default);
+  await openBrowser(address, undefined);
+}
+
+export {
+  chalk,
+  inquirer,
+  isInteractive,
+  ora,
+  glob,
+  tar,
+  rimraf,
+  FormData,
+  rc,
+  axios,
+  mime,
+  getPort,
+  jju,
+  getModulePath,
+};

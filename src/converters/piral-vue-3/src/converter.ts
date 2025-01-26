@@ -33,8 +33,8 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
     mount(parent, data, ctx, locals: Vue3State) {
       const el = parent.appendChild(document.createElement(rootName));
       const props = reactive({
-          ...captured,
-          ...data,
+        ...captured,
+        ...data,
       });
       const app = mountVue(root, props, ctx);
       middlewares.forEach((middleware) => middleware(app));
@@ -45,7 +45,7 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
     },
     update(parent, data, ctx, locals: Vue3State) {
       for (const prop in data) {
-          locals.props[prop] = data[prop];
+        locals.props[prop] = data[prop];
       }
     },
     unmount(parent, locals: Vue3State) {

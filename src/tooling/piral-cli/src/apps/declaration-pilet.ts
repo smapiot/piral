@@ -48,11 +48,11 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
     forceOverwrite = declarationPiletDefaults.forceOverwrite,
     logLevel = declarationPiletDefaults.logLevel,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('entry', entry, 'string');
   ensure('target', target, 'string');
-  
+
   const entryList = Array.isArray(entry) ? entry : [entry];
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);

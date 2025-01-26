@@ -46,7 +46,7 @@ export interface AddPiralInstancePiletOptions {
    * Defines a custom certificate for the website emulator.
    */
   cert?: string;
-  
+
   /**
    * Allow self-signed certificates.
    */

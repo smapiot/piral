@@ -24,9 +24,11 @@ module.exports = function () {
     debug: debug && (cfg.debugSettings || {}),
     emulator: !!process.env.DEBUG_PILET,
     shared: Array.isArray(cfg.shared) ? cfg.shared : [],
+    internalStyles: cfg.internalStyles || 'inline',
     isolation: cfg.isolation || 'classic',
   };
 
+  cg.createBasicAppFunc(imports, exports, opts);
   cg.createDependencies(imports, exports, opts);
   cg.createDefaultState(imports, exports, opts);
   cg.createDebugHandler(imports, exports, opts);

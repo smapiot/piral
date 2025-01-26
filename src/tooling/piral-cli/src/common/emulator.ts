@@ -60,7 +60,11 @@ async function makeExternals(sourceDir: string, piralPkg: any, externals: Array<
   return [externalDependencies, importmapEntries, optionalDependencies] as const;
 }
 
-async function createScaffoldingTarballs(sourceDir: string, targetDir: string, files: Array<string | TemplateFileLocation> = []) {
+async function createScaffoldingTarballs(
+  sourceDir: string,
+  targetDir: string,
+  files: Array<string | TemplateFileLocation> = [],
+) {
   const filesDir = resolve(targetDir, filesTar);
   const filesOnceDir = resolve(targetDir, filesOnceTar);
 

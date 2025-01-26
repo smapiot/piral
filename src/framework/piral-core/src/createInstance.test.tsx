@@ -29,10 +29,10 @@ describe('Piral-Core createInstance module', () => {
   it('createInstance with empty actions and plugins uses the standard strategy', () => {
     const instance = createInstance({ plugins: {}, actions: {} });
     expect(instance.options.strategy).toBe(standardStrategy);
-  })
+  });
 
   it('createInstance with async function uses the blazing strategy', () => {
-    const instance = createInstance({ async: () => { } });
+    const instance = createInstance({ async: () => {} });
     expect(instance.options.strategy).not.toBe(blazingStrategy);
-  })
+  });
 });

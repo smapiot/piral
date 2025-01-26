@@ -31,7 +31,7 @@ vitest.mock('piral-core', () => ({
 }));
 
 vitest.mock('react', async () => ({
-  ...(await vitest.importActual('react') as any),
+  ...((await vitest.importActual('react')) as any),
   useMemo: (cb) => cb(),
 }));
 
@@ -52,7 +52,7 @@ describe('Default Breadcrumbs Component', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('renders the react fragment in the default case', () => {
     (state.registry.tiles as any).a = {
       component: StubBreadcrumbItem,

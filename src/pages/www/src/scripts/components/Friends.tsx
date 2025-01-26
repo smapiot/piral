@@ -16,7 +16,8 @@ export const Friends: React.FC<FriendsProps> = () => (
             <a href={friend.href} target="_blank" rel="noopener noreferrer" className="btn atlas-cta cta-blue">
               Learn more
             </a>
-          }>
+          }
+        >
           {friend.description}
         </Capability>
       ))}

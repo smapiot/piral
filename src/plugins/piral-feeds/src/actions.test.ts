@@ -37,7 +37,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     destroyFeed(ctx, 'foo');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         bar: 10,
@@ -54,7 +54,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     createFeed(ctx, 'bar');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -77,7 +77,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     loadedFeed(ctx, 'bar', 'test', 'errror');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -106,7 +106,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFeed(ctx, 'bar', 15, (data, item) => [...data, item]);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -135,7 +135,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     await updateFeed(ctx, 'bar', 15, (data, item) => Promise.resolve([...data, item]));
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -164,7 +164,7 @@ describe('Feeds Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     await updateFeed(ctx, 'bar', 15, () => Promise.reject('Failed'));
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -205,7 +205,7 @@ describe('Feeds Actions Module', () => {
         return [...data, item];
       },
     });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -218,7 +218,7 @@ describe('Feeds Actions Module', () => {
       },
     });
     await promise;
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -231,7 +231,7 @@ describe('Feeds Actions Module', () => {
       },
     });
     cb(4);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,
@@ -267,7 +267,7 @@ describe('Feeds Actions Module', () => {
       connect() {},
       update() {},
     });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       feeds: {
         foo: 5,

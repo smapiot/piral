@@ -11,10 +11,9 @@ export const Testimonials: React.FC = () => {
         listening to our users. Any feedback appreciated!
       </p>
       <div className="testimonials">
-        {testimonials
-          .map((t) => (
-            <Testimonial key={t.id} firstName={t.firstName} lastName={t.lastName} phrase={t.phrase} face={t.face} />
-          ))}
+        {testimonials.map((t) => (
+          <Testimonial key={t.id} firstName={t.firstName} lastName={t.lastName} phrase={t.phrase} face={t.face} />
+        ))}
       </div>
     </div>
   );

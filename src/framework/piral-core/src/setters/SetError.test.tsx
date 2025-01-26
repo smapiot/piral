@@ -43,7 +43,7 @@ describe('Piral-Core SetError component', () => {
         <SetError type="loading" component={FakeError} />
       </StateContext.Provider>,
     );
-    expect((context.state.getState()).errorComponents).toEqual({
+    expect(context.state.getState().errorComponents).toEqual({
       loading: FakeError,
     });
   });

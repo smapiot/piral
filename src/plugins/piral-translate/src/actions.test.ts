@@ -47,7 +47,7 @@ describe('Translation Action Module', () => {
     const actions = createActions(localizer);
     const ctx = ca(state, createListener());
     actions.selectLanguage(ctx, 'de');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       language: {
         foo: 10,

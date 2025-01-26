@@ -23,10 +23,10 @@ export const validatePiralDefaults: ValidatPiralOptions = {
 
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {
   const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('entry', entry, 'string');
-  
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

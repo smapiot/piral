@@ -75,15 +75,15 @@ describe('Create Localize API', () => {
 
   it('createApi can translate from local-global translations using the current language and passed nested translations', () => {
     const config = {
-      language: 'en'
+      language: 'en',
     };
     const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
     api.setTranslations({
       en: {
         header: {
-          title: 'Hello world'
-        }
-      }
+          title: 'Hello world',
+        },
+      },
     });
     const result = api.translate('header.title');
     expect(result).toBe('Hello world');
@@ -172,9 +172,7 @@ describe('Create Localize API', () => {
       },
     };
     const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
-    api.addTranslations([
-      messagesToAdd
-    ]);
+    api.addTranslations([messagesToAdd]);
     const result = api.translate('baz');
 
     expect(result).toEqual(messagesToAdd.fr.baz);
@@ -198,9 +196,7 @@ describe('Create Localize API', () => {
       },
     };
     const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
-    api.addTranslations([
-      messagesToAdd
-    ]);
+    api.addTranslations([messagesToAdd]);
     const result = api.translate('bar');
 
     expect(result).toEqual(messagesToAdd.fr.bar);
@@ -224,12 +220,7 @@ describe('Create Localize API', () => {
       },
     };
     const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
-    api.addTranslations(
-      [
-        messagesToAdd
-      ],
-      false
-    );
+    api.addTranslations([messagesToAdd], false);
     const result = api.translate('bar');
 
     expect(result).toEqual(config.messages.fr.bar);

@@ -31,6 +31,7 @@ export const bundlerNames = [
   'vite5' as const,
   'vite6' as const,
   'xbuild' as const,
+  'netpack' as const,
 ];
 export const declarationEntryExtensions = ['.html', '.pug', ...entryModuleExtensions];
 export const legacyCoreExternals = [

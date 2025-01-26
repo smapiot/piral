@@ -5,7 +5,7 @@ import { describe, it, expect, vitest } from 'vitest';
 import { createListener } from './events';
 
 function nextCycle(time = 0) {
-  return new Promise<void>(resolve => setTimeout(resolve, 0));
+  return new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
 
 describe('Events Module', () => {
@@ -16,7 +16,7 @@ describe('Events Module', () => {
     events.emit('init', undefined);
 
     await nextCycle(10);
-    
+
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 
@@ -64,7 +64,7 @@ describe('Events Module', () => {
     events.emit('init', undefined);
 
     await nextCycle(10);
-    
+
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 });

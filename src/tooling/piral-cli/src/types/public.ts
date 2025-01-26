@@ -1,6 +1,23 @@
 import { Argv, Arguments } from 'yargs';
 import { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency } from './common';
 
+export type FlagType = 'string' | 'number' | 'boolean' | 'object';
+
+export interface Flag {
+  name: string;
+  type?: FlagType;
+  alias: Array<string>;
+  values?: Array<any>;
+  describe?: string;
+  default?: any;
+  required?: boolean;
+  ignore?: boolean;
+  filter?: (answer: any, others: Record<string, any>) => any;
+  validate?: (input: any) => boolean | string | Promise<boolean | string>;
+  when?: (answers: Record<string, any>) => boolean;
+  convert?: (answer: any) => any;
+}
+
 export interface ToolCommandRunner<U = {}> {
   (args: Arguments<U>): void | Promise<void>;
 }
@@ -253,9 +270,7 @@ export type PiralBuildType =
   | 'emulator-sources'
   | 'emulator-website';
 
-export type PiralPublishType =
-  | 'release'
-  | 'emulator';
+export type PiralPublishType = 'release' | 'emulator';
 
 export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 

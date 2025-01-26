@@ -45,7 +45,7 @@ export function createUpdateApi(config: UpdateConfig = {}): PiralPlugin<PiletUpd
     return (_, target) => {
       const pilet = target.name;
 
-      target.config
+      target.config;
 
       return {
         canUpdate(mode) {

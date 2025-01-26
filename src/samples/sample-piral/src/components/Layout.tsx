@@ -24,9 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => (
       <Languages />
       <User />
     </div>
-    <div className="app-content">
-      {children}
-    </div>
+    <div className="app-content">{children}</div>
     <div className="app-footer">
       <Menu type="footer" />
     </div>

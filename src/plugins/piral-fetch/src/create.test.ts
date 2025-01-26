@@ -3,6 +3,9 @@
  */
 import 'whatwg-fetch';
 import { describe, it, expect, vitest, beforeAll, afterAll } from 'vitest';
+import getPort from 'get-port';
+import cors from 'cors';
+import express from 'express';
 import { createFetchApi } from './create';
 
 describe('Create fetch API Module', () => {
@@ -10,9 +13,6 @@ describe('Create fetch API Module', () => {
   let port;
 
   beforeAll(async () => {
-    const express = require('express');
-    const cors = require('cors');
-    const getPort = require('get-port');
     const app = express();
     port = await getPort();
 

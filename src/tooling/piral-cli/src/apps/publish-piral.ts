@@ -59,7 +59,7 @@ export interface PublishPiralOptions {
    * Defines a custom certificate for the feed service.
    */
   cert?: string;
-  
+
   /**
    * Allow self-signed certificates.
    */
@@ -233,7 +233,17 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const files = await matchFiles(targetDir, '**/*');
 
     progress(`Publishing release artifacts to "%s" ...`, url);
-    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, agent);
+    const result = await publishWebsiteEmulator(
+      version,
+      url,
+      apiKey,
+      mode,
+      targetDir,
+      files,
+      interactive,
+      headers,
+      agent,
+    );
 
     if (!result.success) {
       fail('failedUploading_0064');
@@ -258,7 +268,17 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const files = await matchFiles(targetDir, '**/*');
 
     progress(`Publishing emulator to "%s" ...`, url);
-    const result = await publishWebsiteEmulator(version, url, apiKey, mode, targetDir, files, interactive, headers, agent);
+    const result = await publishWebsiteEmulator(
+      version,
+      url,
+      apiKey,
+      mode,
+      targetDir,
+      files,
+      interactive,
+      headers,
+      agent,
+    );
 
     if (!result.success) {
       fail('failedUploading_0064');

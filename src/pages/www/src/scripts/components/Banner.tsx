@@ -19,7 +19,8 @@ export const Banner: React.FC = () => (
       <a
         href="https://stackblitz.com/edit/my-first-pilet?file=README.md"
         className="btn atlas-cta cta-blue"
-        target="_blank">
+        target="_blank"
+      >
         Open Playground
       </a>
     </div>

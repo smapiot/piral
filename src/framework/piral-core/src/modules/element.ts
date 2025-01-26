@@ -1,4 +1,5 @@
 import { ExtensionSlot } from '../components';
+import { applyStyle } from '../../app.codegen';
 import { Disposable, GlobalStateContext, BaseExtensionSlotProps } from '../types';
 import {
   tryParseJson,
@@ -20,8 +21,6 @@ export interface Updatable {
 }
 
 if (typeof window !== 'undefined' && 'customElements' in window) {
-  const contents = 'contents';
-
   /**
    * This is a nice abstraction allowing anyone to actually use the extension system
    * brought by Piral. Not all props of the extension system are actually exposed.
@@ -113,7 +112,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     connectedCallback() {
-      this.style.display = contents;
+      applyStyle(this);
 
       if (this.isConnected) {
         this.dispatchEvent(
@@ -168,7 +167,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    */
   class PiralPortal extends HTMLElement {
     connectedCallback() {
-      this.style.display = contents;
+      applyStyle(this);
     }
   }
 
@@ -187,7 +186,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    */
   class PiralSlot extends HTMLElement {
     connectedCallback() {
-      this.style.display = contents;
+      applyStyle(this);
     }
   }
 
@@ -220,7 +219,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     static contentAssignments = {};
 
     connectedCallback() {
-      this.style.display = contents;
+      applyStyle(this);
       const cid = this.getAttribute('cid');
       const content = PiralContent.contentAssignments[cid];
       const portal = this.closest('piral-portal');
@@ -264,7 +263,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     connectedCallback() {
-      this.style.display = contents;
+      applyStyle(this);
       this.deferEvent('add-component');
     }
 

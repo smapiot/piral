@@ -1,4 +1,5 @@
-import { Configuration, Entry } from 'webpack';
+import type { CheerioAPI } from 'cheerio';
+import type { Configuration, Entry } from 'webpack';
 
 export function isLocal(path: string) {
   if (path) {
@@ -18,15 +19,15 @@ export function isLocal(path: string) {
   return false;
 }
 
-export function extractParts(content: cheerio.Root) {
+export function extractParts(content: CheerioAPI) {
   const sheets = content('link[href][rel=stylesheet]')
-    .filter((_, e: cheerio.TagElement) => isLocal(e.attribs.href))
+    .filter((_, e) => isLocal(e.attribs.href))
     .remove()
-    .toArray() as Array<cheerio.TagElement>;
+    .toArray();
   const scripts = content('script[src]')
-    .filter((_, e: cheerio.TagElement) => isLocal(e.attribs.src))
+    .filter((_, e) => isLocal(e.attribs.src))
     .remove()
-    .toArray() as Array<cheerio.TagElement>;
+    .toArray();
   const files: Array<string> = [];
 
   for (const sheet of sheets) {

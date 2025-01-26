@@ -32,10 +32,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     logLevel = validatePiletDefaults.logLevel,
     app = validatePiletDefaults.app,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('entry', entry, 'string');
-  
+
   const fullBase = resolve(process.cwd(), baseDir);
   setLogLevel(logLevel);
   progress('Reading configuration ...');

@@ -30,7 +30,7 @@ vitest.mock('../hooks/globalState', () => ({
 }));
 
 vitest.mock('react', async () => ({
-  ...(await vitest.importActual('react') as any),
+  ...((await vitest.importActual('react')) as any),
   useMemo(cb) {
     return cb();
   },
@@ -80,51 +80,51 @@ describe('Extension Module', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('is able to default render not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
+    expect(node.queryAllByRole('stub1').length).toBe(0);
   });
 
   it('is able to (default) render empty extension', () => {
     const node = render(<ExtensionSlot name="foo" />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
+    expect(node.queryAllByRole('stub1').length).toBe(0);
   });
 
   it('is able to custom render not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" render={() => <StubComponent1 />} />);
-    expect(node.queryAllByRole("stub1").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(1);
   });
 
   it('is able to (custom) render empty extension', () => {
     const node = render(<ExtensionSlot name="foo" render={() => <StubComponent1 />} />);
-    expect(node.queryAllByRole("stub1").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(1);
   });
 
   it('is able to render extension with multiple entries', () => {
     const node = render(<ExtensionSlot name="bar" />);
-    expect(node.queryAllByRole("stub1").length).toBe(2);
-    expect(node.queryAllByRole("stub2").length).toBe(1);
-    expect(node.queryAllByRole("stub3").length).toBe(0);
+    expect(node.queryAllByRole('stub1').length).toBe(2);
+    expect(node.queryAllByRole('stub2').length).toBe(1);
+    expect(node.queryAllByRole('stub3').length).toBe(0);
   });
 
   it('is able to render extension without displayName', () => {
     const node = render(<ExtensionSlot name="bla" />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
-    expect(node.queryAllByRole("stub2").length).toBe(0);
-    expect(node.queryAllByRole("stub3").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(0);
+    expect(node.queryAllByRole('stub2').length).toBe(0);
+    expect(node.queryAllByRole('stub3').length).toBe(1);
   });
 
   it('overrides the empty renderer on not available extension', () => {
     const node = render(<ExtensionSlot name="qxz" empty={() => <StubComponent1 key="empty" />} />);
-    expect(node.queryAllByRole("stub1").length).toBe(1);
-    expect(node.queryAllByRole("stub2").length).toBe(0);
+    expect(node.queryAllByRole('stub1').length).toBe(1);
+    expect(node.queryAllByRole('stub2').length).toBe(0);
   });
 
   it('overrides the empty renderer on an available extension', () => {
     const node = render(<ExtensionSlot name="foo" empty={() => <StubComponent2 key="empty" />} />);
-    expect(node.queryAllByRole("stub1").length).toBe(0);
-    expect(node.queryAllByRole("stub2").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(0);
+    expect(node.queryAllByRole('stub2').length).toBe(1);
   });
 
   it('overrides the empty and default renderer on an available extension', () => {
@@ -135,8 +135,8 @@ describe('Extension Module', () => {
         render={(nodes) => <StubComponent1 children={nodes} />}
       />,
     );
-    expect(node.queryAllByRole("stub1").length).toBe(1);
-    expect(node.queryAllByRole("stub2").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(1);
+    expect(node.queryAllByRole('stub2').length).toBe(1);
   });
 
   it('does not use the render function with empty when emptySkipsRender is set', () => {
@@ -148,8 +148,8 @@ describe('Extension Module', () => {
         render={(nodes) => <StubComponent1 children={nodes} />}
       />,
     );
-    expect(node.queryAllByRole("stub1").length).toBe(0);
-    expect(node.queryAllByRole("stub2").length).toBe(1);
+    expect(node.queryAllByRole('stub1').length).toBe(0);
+    expect(node.queryAllByRole('stub2').length).toBe(1);
   });
 
   it('does use the render function without empty independent if emptySkipsRender is set', () => {
@@ -161,7 +161,7 @@ describe('Extension Module', () => {
         render={(nodes) => <StubComponent1 children={nodes} />}
       />,
     );
-    expect(node.queryAllByRole("stub1").length).toBe(2);
-    expect(node.queryAllByRole("stub2").length).toBe(0);
+    expect(node.queryAllByRole('stub1').length).toBe(2);
+    expect(node.queryAllByRole('stub2').length).toBe(0);
   });
 });

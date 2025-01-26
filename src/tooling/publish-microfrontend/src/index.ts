@@ -56,7 +56,18 @@ const args = yargs
   .default('interactive', defaultArgs.interactive).argv;
 
 async function run() {
-  const { cert, source, from, url, 'api-key': apiKey, 'allow-self-signed': allowSelfSigned, headers, fields, interactive, mode } = args;
+  const {
+    cert,
+    source,
+    from,
+    url,
+    'api-key': apiKey,
+    'allow-self-signed': allowSelfSigned,
+    headers,
+    fields,
+    interactive,
+    mode,
+  } = args;
   const sources = Array.isArray(source) ? source : [source];
   const ca = await getCa(cert);
   const agent = getAgent({ ca, allowSelfSigned });

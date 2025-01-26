@@ -31,7 +31,7 @@ vitest.mock('piral-core', () => ({
 }));
 
 vitest.mock('react', async () => ({
-  ...(await vitest.importActual('react') as any),
+  ...((await vitest.importActual('react')) as any),
   useMemo: (cb) => cb(),
 }));
 
@@ -63,8 +63,8 @@ describe('Default Dashboard Component', () => {
         <StubTile />
       </DefaultContainer>,
     );
-    expect(node.queryByRole("dashboard")).toBe(null);
-    expect(node.getAllByRole("tile").length).toBe(1);
+    expect(node.queryByRole('dashboard')).toBe(null);
+    expect(node.getAllByRole('tile').length).toBe(1);
   });
 
   it('renders the provided extension in the default case', () => {
@@ -78,7 +78,7 @@ describe('Default Dashboard Component', () => {
         <StubTile />
       </DefaultContainer>,
     );
-    expect(node.queryByRole("tile")).toBe(null);
-    expect(node.getAllByRole("dashboard").length).toBe(1);
+    expect(node.queryByRole('tile')).toBe(null);
+    expect(node.getAllByRole('dashboard').length).toBe(1);
   });
 });

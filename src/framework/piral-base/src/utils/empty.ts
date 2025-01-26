@@ -1,4 +1,4 @@
-import type { SinglePiletApp } from "../types";
+import type { SinglePiletApp } from '../types';
 
 /**
  * Represents an empty pilet app.

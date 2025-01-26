@@ -32,14 +32,16 @@
       "types": "./lib/*.d.ts"
     },
     "./app.codegen": "./app.codegen",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./styles/sheet.css": "./styles/sheet.css"
   },
   "sideEffects": false,
   "files": [
     "lib",
     "src",
     "app.codegen",
-    "app.codegen.d.ts"
+    "app.codegen.d.ts",
+    "styles"
   ],
   "funding": {
     "type": "github",

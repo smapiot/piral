@@ -187,13 +187,15 @@ export async function uninstallNpmPackage(
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
+  const name = client.direct;
+
   try {
-    const { uninstallPackage } = clients[client.direct];
+    const { uninstallPackage } = clients[name];
     return await uninstallPackage(packageRef, target, ...flags);
   } catch (ex) {
     log(
       'generalError_0002',
-      `Could not uninstall the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+      `Could not uninstall the package "${packageRef}" using ${name}. Make sure ${name} is correctly installed and accessible: ${ex}`,
     );
     throw ex;
   }
@@ -205,13 +207,15 @@ export async function installNpmPackage(
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
+  const name = client.direct;
+
   try {
-    const { installPackage } = clients[client.direct];
+    const { installPackage } = clients[name];
     return await installPackage(packageRef, target, ...flags);
   } catch (ex) {
     log(
       'generalError_0002',
-      `Could not install the package "${packageRef}" using ${client}. Make sure ${client} is correctly installed and accessible: ${ex}`,
+      `Could not install the package "${packageRef}" using ${name}. Make sure ${name} is correctly installed and accessible: ${ex}`,
     );
     throw ex;
   }

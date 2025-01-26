@@ -32,17 +32,25 @@ function getPackageJson(root: string, packageName: string) {
   }
 }
 
-function getRouterVersion(root: string) {
-  const router = 'react-router';
+const reactRouters = ['react-router', 'react-router-dom'];
 
-  try {
-    const { version } = getPackageJson(root, router);
-    const [major] = version.split('.');
-    return parseInt(major, 10);
-  } catch {
-    console.warn(`⚠ Could not determine version of ${router}. Falling back to v5.`);
-    return 5;
+function getRouter(root: string) {
+  const routers = [...reactRouters, 'wouter'];
+
+  for (const name of routers) {
+    try {
+      const { version } = getPackageJson(root, name);
+      const [major] = version.split('.');
+      const compat = parseInt(major, 10);
+      return { name, compat };
+    } catch {}
   }
+
+  console.warn(`⚠ Could not determine the used router. Falling back to "react-router" v5.`);
+  return {
+    name: routers[0],
+    compat: 5,
+  };
 }
 
 function getIdentifiers(root: string, packageName: string) {
@@ -86,6 +94,7 @@ interface CodegenOptions {
   externals: Array<string>;
   publicPath: string;
   isolation: 'classic' | 'modern';
+  internalStyles: 'inline' | 'sheet' | 'none';
   debug?: {
     viewState?: boolean;
     loadPilets?: boolean;
@@ -95,6 +104,27 @@ interface CodegenOptions {
     clearConsole?: boolean;
   };
   emulator: boolean;
+}
+
+export function createBasicAppFunc(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
+  switch (opts.internalStyles) {
+    case 'sheet':
+      imports.push(`import 'piral-core/styles/sheet.css';`);
+    // no return - we fall through and also include the dummy applyStyle for "none"
+    case 'none':
+      exports.push(`
+        export function applyStyle(element) {}
+      `);
+      return;
+    case 'inline':
+    default:
+      exports.push(`
+        export function applyStyle(element) {
+          element.style.display = 'contents';
+        }
+      `);
+      return;
+  }
 }
 
 export function createDependencies(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
@@ -142,7 +172,6 @@ export function createDependencies(imports: Array<string>, exports: Array<string
   if (asyncAssignments.length) {
     imports.push(`import { registerModule } from 'piral-base'`);
     assignments.push(...asyncAssignments);
-
   }
 
   exports.push(`
@@ -154,7 +183,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
 
 export function createDefaultState(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { root, cat, publicPath, isolation } = opts;
-  const routerVersion = getRouterVersion(root);
+  const router = getRouter(root);
   const wrap = isolation === 'modern' ? 'true' : 'false';
 
   imports.push(
@@ -163,31 +192,38 @@ export function createDefaultState(imports: Array<string>, exports: Array<string
     `import { DefaultLayout } from 'piral-core/${cat}/defaults/DefaultLayout.js';`,
   );
 
-  if (routerVersion < 6) {
+  if (router.name === 'wouter') {
+    // Wouter Router
+    imports.push(
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_wouter.js';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_wouter.js';`,
+      `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_wouter.js'`,
+    );
+  } else if (router.compat < 6) {
     // React Router v5
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v5.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v5.js';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v5.js'`,
+      `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v5.js'`,
     );
-  } else if (routerVersion === 6) {
+  } else if (router.compat === 6) {
     // React Router v6
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v6.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6.js';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v6.js'`,
+      `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v6.js'`,
     );
   } else {
     // React Router v7
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v7.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v7.js';`,
-      `import { createRedirect, createNavigation, useCurrentNavigation, useRouterContext } from 'piral-core/${cat}/defaults/navigator_v7.js'`,
+      `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v7.js'`,
     );
   }
 
   exports.push(`
-    export { createRedirect, createNavigation, useRouterContext };
+    export { createRedirect, createNavigation };
   `);
 
   exports.push(`

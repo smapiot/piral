@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-export function createEvaluatedPilet(meta: Omit<PiletMetadata, "basePath">, mod: any): Pilet {
+export function createEvaluatedPilet(meta: Omit<PiletMetadata, 'basePath'>, mod: any): Pilet {
   const basePath = getBasePath(meta.link);
   const app = checkPiletApp(meta.name, mod);
   return { ...meta, ...app, basePath };

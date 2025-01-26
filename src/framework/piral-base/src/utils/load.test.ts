@@ -6,7 +6,7 @@ import { loadFrom } from './load';
 
 vitest.mock('./dependency', async () => ({
   includeScriptDependency: vitest.fn(() => Promise.resolve()),
-  createEvaluatedPilet: (await vitest.importActual('./dependency') as any).createEvaluatedPilet,
+  createEvaluatedPilet: ((await vitest.importActual('./dependency')) as any).createEvaluatedPilet,
   emptyApp: {
     setup: vitest.fn(),
   },
@@ -54,7 +54,7 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom with empty dependencies works', async () => {
-    const loader: any = vitest.fn(() =>({ a: 'foo' }));
+    const loader: any = vitest.fn(() => ({ a: 'foo' }));
     const meta: any = { b: 'bar', link: '', dependencies: {} };
     const pilet = await loadFrom(meta, loader);
     expect(pilet).toEqual({
@@ -67,7 +67,7 @@ describe('Load utility module', () => {
   });
 
   it('loadFrom with non-empty dependencies works', async () => {
-    const loader: any = vitest.fn(() =>({ a: 'foo' }));
+    const loader: any = vitest.fn(() => ({ a: 'foo' }));
     const dependencies = {
       a: 'foo.js',
       b: 'bar.js',

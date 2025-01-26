@@ -212,7 +212,7 @@ function piletMfWebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
         './pilet': compiler.entry[entry],
       },
       shared: getShared(importmap, externals),
-    })
+    }),
   ];
 
   compiler.entry = {};

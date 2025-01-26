@@ -8,7 +8,7 @@ describe('Externals module', () => {
   });
 
   it('exports axios as a function', () => {
-    const axios = externals.axios.default;
+    const axios = externals.axios;
     expect(typeof axios).toBe('function');
   });
 
@@ -45,10 +45,5 @@ describe('Externals module', () => {
   it('exports the tar module', () => {
     const tar = externals.tar;
     expect(tar).not.toBeUndefined();
-  });
-
-  it('exports the open module', () => {
-    const open = externals.open;
-    expect(open).not.toBeUndefined();
   });
 });

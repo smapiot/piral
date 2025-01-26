@@ -41,7 +41,7 @@ export async function detectClient(root: string, stopDir = resolve(root, '/')) {
 
 export async function isProject(root: string, packageRef: string) {
   const details = await listPackage(packageRef, root);
-  const packageDetails =  details?.dependencies?.[packageRef];
+  const packageDetails = details?.dependencies?.[packageRef];
 
   if (packageDetails && typeof packageDetails.resolved === 'string') {
     return packageDetails.resolved.startsWith('file:');

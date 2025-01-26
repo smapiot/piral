@@ -31,7 +31,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'Bar' });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {
         a: {
@@ -53,7 +53,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, {});
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {
         a: {
@@ -75,7 +75,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', active: true }, { name: 'bazeol' });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {
         a: {
@@ -97,7 +97,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo' }, { active: false });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {},
     });
@@ -114,7 +114,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', submitting: true }, { active: false });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {
         a: {
@@ -137,7 +137,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', changed: true }, { submitting: false, active: '' });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {
         a: {
@@ -161,7 +161,7 @@ describe('Forms Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     updateFormState(ctx, 'a', { name: 'Foo', changed: false, active: '' }, { submitting: false });
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       forms: {},
     });

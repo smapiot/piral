@@ -65,7 +65,7 @@ export interface UpgradePiletOptions {
    * Defines a custom certificate for the website emulator.
    */
   cert?: string;
-  
+
   /**
    * Allow self-signed certificates.
    */
@@ -108,11 +108,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     cert = upgradePiletDefaults.cert,
     allowSelfSigned = upgradePiletDefaults.allowSelfSigned,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('variables', variables, 'object');
   ensure('target', target, 'string');
-  
+
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
   setLogLevel(logLevel);
@@ -151,13 +151,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     const monorepoRef = await isMonorepoPackageRef(sourceName, fullBase);
-    const [packageRef] = await getCurrentPackageDetails(
-      fullBase,
-      sourceName,
-      currentVersion,
-      version,
-      root,
-    );
+    const [packageRef] = await getCurrentPackageDetails(fullBase, sourceName, currentVersion, version, root);
     const originalFiles = await getFileStats(root, sourceName);
 
     if (!monorepoRef) {

@@ -8,6 +8,11 @@ import { render, act } from '@testing-library/react';
 import { StateContext } from 'piral-core';
 import { createLazyApi } from './create';
 
+vitest.mock('piral-core/app.codegen', () => ({
+  applyStyle: vitest.fn(),
+  fillDependencies: vitest.fn(),
+}));
+
 function createMockContainer() {
   const state = create(() => ({
     app: {

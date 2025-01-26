@@ -83,7 +83,8 @@ export const Pilet1: Pilet = {
                   </span>,
                   { autoClose: 1500, type: 'warning' },
                 )
-              }>
+              }
+            >
               Notify me! (longer, formatted text 1.5s)
             </button>
           </li>
@@ -103,7 +104,8 @@ export const Pilet1: Pilet = {
               piral.unregisterPage('/example2');
               e.preventDefault();
             }}
-            href="#">
+            href="#"
+          >
             THIS LINK
           </a>
           .

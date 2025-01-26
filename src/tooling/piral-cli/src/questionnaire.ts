@@ -1,18 +1,6 @@
 import { inquirer } from './external';
 import { commands } from './commands';
-import { ToolCommand } from './types';
-
-type FlagType = 'string' | 'number' | 'boolean' | 'object';
-
-interface Flag {
-  name: string;
-  type?: FlagType;
-  alias: Array<string>;
-  values?: Array<any>;
-  describe?: string;
-  default?: any;
-  required?: boolean;
-}
+import type { ToolCommand, Flag, FlagType } from './types';
 
 function getCommandData(retrieve: any) {
   const instructions: Array<Flag> = [];
@@ -115,7 +103,7 @@ function getValue(type: FlagType, value: string) {
   }
 }
 
-function getType(flag: Flag) {
+function getType(flag: Flag): 'list' | 'input' | 'confirm' {
   switch (flag.type) {
     case 'string':
       if (flag.values) {
@@ -136,9 +124,10 @@ export function runQuestionnaireFor(
   command: ToolCommand<any, any>,
   args: Record<string, any>,
   ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+  extraInstructions: Array<Flag> = [],
 ) {
   const acceptAll = args.y === true || args.defaults === true;
-  const instructions = getCommandData(command.flags);
+  const instructions = [...getCommandData(command.flags), ...extraInstructions];
   const ignored = Array.isArray(ignoredInstructions) ? ignoredInstructions : Object.keys(ignoredInstructions);
   const questions = instructions
     .filter((instruction) => !ignored.includes(instruction.name))
@@ -151,20 +140,30 @@ export function runQuestionnaireFor(
       message: instruction.describe,
       type: getType(instruction),
       choices: instruction.values,
-      validate: instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true,
+      validate: instruction.validate || (instruction.type === 'number' ? (input: string) => !isNaN(+input) : () => true),
+      filter: instruction.filter,
+      when: instruction.when,
     }));
 
-
   return inquirer.prompt(questions).then((answers) => {
-    const parameters: any = {};
+    const parameters: Record<string, any> = {};
 
     for (const instruction of instructions) {
-      const name = instruction.name;
-      const value =
-        answers[name] ??
-        ignoredInstructions[name] ??
-        [...instruction.alias, instruction.name].map((m) => args[m]).find((v) => v !== undefined);
-      parameters[name] = value !== undefined ? getValue(instruction.type, value as any) : instruction.default;
+      if (!instruction.ignore && (!instruction.when || instruction.when(answers))) {
+        const name = instruction.name;
+        const value =
+          answers[name] ??
+          ignoredInstructions[name] ??
+          [...instruction.alias, instruction.name].map((m) => args[m]).find((v) => v !== undefined);
+        const convert = instruction.convert || ((value) => value);
+        const result = convert(value !== undefined ? getValue(instruction.type, value as any) : instruction.default);
+
+        if (typeof result === 'object' && typeof parameters[name] === 'object') {
+          Object.assign(parameters[name], result);
+        } else {
+          parameters[name] = result;
+        }
+      }
     }
 
     return command.run(parameters);
@@ -174,8 +173,9 @@ export function runQuestionnaireFor(
 export function runQuestionnaire(
   commandName: string,
   ignoredInstructions: IgnoredInstructions = ['base', 'log-level'],
+  extraInstructions: Array<Flag> = [],
 ) {
   const { argv } = require('yargs');
   const [command] = commands.all.filter((m) => m.name === commandName);
-  return runQuestionnaireFor(command, argv, ignoredInstructions);
+  return runQuestionnaireFor(command, argv, ignoredInstructions, extraInstructions);
 }

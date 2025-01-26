@@ -48,7 +48,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.getAllByRole("error").length).toBe(1);
+    expect(node.getAllByRole('error').length).toBe(1);
   });
 
   it('shows data component if nothing is loading and data is available', () => {
@@ -65,7 +65,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.getAllByRole("component").length).toBe(1);
+    expect(node.getAllByRole('component').length).toBe(1);
   });
 
   it('shows loading component if it is loading', () => {
@@ -82,7 +82,7 @@ describe('withForm Module', () => {
     (usePromise as any).usePromise = usedPromise;
     const Component: any = withForm(StubComponent, options);
     const node = mountWithRouter(<Component />);
-    expect(node.getAllByRole("loader").length).toBe(1);
+    expect(node.getAllByRole('loader').length).toBe(1);
   });
 
   it('calls load data if its there', () => {

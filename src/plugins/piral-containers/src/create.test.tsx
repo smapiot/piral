@@ -52,7 +52,11 @@ describe('Piral-Containers create module', () => {
       },
     });
 
-    const MyComponent = ({ state, actions }) => <button role="button" onClick={actions.increment}>{state.count}</button>;
+    const MyComponent = ({ state, actions }) => (
+      <button role="button" onClick={actions.increment}>
+        {state.count}
+      </button>
+    );
     MyComponent.displayName = 'MyComponent';
     const ConnectedComponent = connect(MyComponent);
     const node = render(
@@ -60,7 +64,7 @@ describe('Piral-Containers create module', () => {
         <ConnectedComponent />
       </StateContext.Provider>,
     );
-    const button = node.getByRole("button");
+    const button = node.getByRole('button');
     expect(button.textContent).toEqual('0');
     fireEvent.click(button);
     expect(button.textContent).toEqual('1');

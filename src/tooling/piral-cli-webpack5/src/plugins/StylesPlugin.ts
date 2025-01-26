@@ -1,11 +1,11 @@
 import { posix, resolve } from 'path';
-import { Compilation } from 'webpack';
+import { Compilation, Compiler } from 'webpack';
 import { RawSource } from 'webpack-sources';
 
 export default class StylesPlugin {
   constructor(private cssName: string, private entryName: string) {}
 
-  apply(compiler) {
+  apply(compiler: Compiler) {
     const { entry } = compiler.options;
 
     const entries = entry[this.entryName].import.map((e: string) => e.split('\\').join(posix.sep));

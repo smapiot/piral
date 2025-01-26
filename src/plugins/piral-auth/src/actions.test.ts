@@ -40,7 +40,7 @@ describe('Auth Actions Module', () => {
       permissions: { allow: true },
     };
     setUser(ctx, user);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       user,
     });
@@ -61,7 +61,7 @@ describe('Auth Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     setUser(ctx, undefined, {}, {});
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       user: undefined,
     });

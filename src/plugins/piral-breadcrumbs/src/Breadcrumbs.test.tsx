@@ -50,7 +50,7 @@ describe('Piral-Breadcrumb Container component', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('breadcrumbs empty', () => {
     const { context } = createMockContainer();
     const node = render(
@@ -98,18 +98,21 @@ describe('Piral-Breadcrumb Container component', () => {
   });
 
   it('dynamic title function replaces wildcard with route param', () => {
-    const { context } = createMockContainer({
-      example: {
-        matcher: /^\/([a-zA-Z]+)$/,
-        settings: {
-          path: '/:example*',
-          title: ({ path }) => {
-            return path;
+    const { context } = createMockContainer(
+      {
+        example: {
+          matcher: /^\/([a-zA-Z]+)$/,
+          settings: {
+            path: '/:example*',
+            title: ({ path }) => {
+              return path;
+            },
+            parent: '/',
           },
-          parent: '/',
         },
       },
-    }, '/replacedWildcard');
+      '/replacedWildcard',
+    );
     const node = render(
       <StateContext.Provider value={context}>
         <Breadcrumbs />

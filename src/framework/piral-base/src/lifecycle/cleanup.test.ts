@@ -57,7 +57,7 @@ describe('Cleaning up Modules', () => {
       } as any,
       {} as any,
       {
-        cleanupPilet
+        cleanupPilet,
       },
     );
     expect(cleanupPilet).toHaveBeenCalled();

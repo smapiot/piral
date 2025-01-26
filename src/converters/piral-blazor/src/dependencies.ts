@@ -107,7 +107,8 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
             name: meta.name || '(unknown)',
             version: meta.version || '0.0.0',
             config: JSON.stringify(meta.config || {}),
-            baseUrl: meta.basePath || assemblyUrl.substring(0, assemblyUrl.lastIndexOf('/')).replace('/_framework/', '/'),
+            baseUrl:
+              meta.basePath || assemblyUrl.substring(0, assemblyUrl.lastIndexOf('/')).replace('/_framework/', '/'),
             dependencies,
             dependencySymbols: capabilities.includes('dependency-symbols') ? dependencySymbols : undefined,
             sharedDependencies: supportsCore ? sharedDependencies : undefined,

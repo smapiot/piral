@@ -1,4 +1,4 @@
-import { Compiler, WebpackPluginInstance } from 'webpack';
+import type { Compiler, WebpackPluginInstance } from 'webpack';
 
 export class HotModuleServerPlugin implements WebpackPluginInstance {
   constructor(private hmrPort: number) {}

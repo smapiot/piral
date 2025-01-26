@@ -1,3 +1,5 @@
+import { convertError } from './stack';
+
 // Create an element with provided attributes and optional children
 function h(e: string, attrs: Record<string, string> = {}, ...children: (string | Node)[]) {
   const elem = document.createElement(e);
@@ -189,7 +191,7 @@ const createTemplate = () =>
     h('style', {}, templateStyle),
   );
 
-const fileRE = /(?:[a-zA-Z]:\\|\/).*?:\d+:\d+/g;
+const fileRE = /(?:[a-zA-Z]:\\|\/).*?:\d+:\d*/g;
 const codeframeRE = /^(?:>?\s*\d+\s+\|.*|\s+\|\s*\^.*)\r?\n/gm;
 
 interface ExtendedError {
@@ -221,6 +223,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
   class ErrorOverlay extends HTMLElement {
     root: ShadowRoot;
     closeOnEsc: (e: KeyboardEvent) => void;
+    closeOnReload: () => void;
 
     constructor(props: ErrorOverlayProps, links = true) {
       super();
@@ -233,9 +236,9 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       codeframeRE.lastIndex = 0;
       const hasFrame = error.frame && codeframeRE.test(error.frame);
       const message = hasFrame ? error.message.replace(codeframeRE, '') : error.message;
-      
+
       if (pilet) {
-        this.text('.plugin', `[${pilet}] `)
+        this.text('.plugin', `[${pilet}] `);
       }
 
       this.text('.message-body', message.trim());
@@ -252,7 +255,11 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         this.text('.frame', error.frame!.trim());
       }
 
-      this.text('.stack', error.stack, links);
+      this.text('.stack', error.stack.split('\n').slice(0, 15).join('\n'), links);
+
+      convertError(error, 0, 15).then((newStack) => {
+        this.text('.stack', newStack, links);
+      });
 
       this.root.querySelector('.window')!.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -268,11 +275,15 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
         }
       };
 
+      this.closeOnReload = () => this.close();
+
+      window.addEventListener('pilets-reloaded', this.closeOnReload);
       document.addEventListener('keydown', this.closeOnEsc);
     }
 
     text(selector: string, text: string, linkFiles = false) {
       const el = this.root.querySelector(selector)!;
+      el.textContent = '';
 
       if (linkFiles) {
         let curIndex = 0;
@@ -301,6 +312,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
 
     close() {
       this.parentNode?.removeChild(this);
+      window.removeEventListener('pilets-reloaded', this.closeOnReload);
       document.removeEventListener('keydown', this.closeOnEsc);
     }
   }

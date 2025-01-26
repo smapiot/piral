@@ -1,5 +1,5 @@
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
-import { Configuration } from 'webpack';
+import type { Configuration } from 'webpack';
 import { load } from 'cheerio';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';

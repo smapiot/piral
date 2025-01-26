@@ -129,7 +129,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     name = newPiralDefaults.name,
     npmClient: defaultNpmClient = newPiralDefaults.npmClient,
   } = options;
-  
+
   ensure('baseDir', baseDir, 'string');
   ensure('framework', framework, 'string');
   ensure('version', version, 'string');
@@ -137,7 +137,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   ensure('app', app, 'string');
   ensure('template', template, 'string');
   ensure('variables', variables, 'object');
-  
+
   const fullBase = resolve(process.cwd(), baseDir);
   const root = resolve(fullBase, target);
 

@@ -202,9 +202,13 @@ describe('npm Module', () => {
 
   it('installs a package using the npm command line tool without a target', async () => {
     wrongCase = false;
-    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) => expect(result).toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) =>
+      expect(result).toEqual(jsonValueString),
+    );
     wrongCase = true;
-    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) => expect(result).not.toEqual(jsonValueString));
+    await installNpmPackage({ direct: 'npm' }, 'foo', 'latest').then((result) =>
+      expect(result).not.toEqual(jsonValueString),
+    );
   });
 
   it('installs a package using the npm command line tool without a version', async () => {

@@ -40,6 +40,7 @@ export interface WebAssemblyStartOptions {
 
 declare global {
   interface Window {
+    MutationEvent: any;
     Blazor: {
       start(options?: Partial<WebAssemblyStartOptions>): Promise<void>;
       emitPiralEvent(type: string, args: any): void;

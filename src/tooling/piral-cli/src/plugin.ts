@@ -3,7 +3,7 @@ import { join, resolve, sep, posix } from 'path';
 import { cliName, cliVersion, log } from './common';
 import { inject } from './inject';
 
-var rx = new RegExp(`/\\.pnpm/${cliName}@${cliVersion}(_[a-z0-9]+)?/node_modules/${cliName}/`);
+var rx = new RegExp(`/\\.pnpm/${cliName}@${cliVersion}(_[a-z0-9@_\\-\\.]+)?/node_modules/${cliName}/`);
 
 function getContainerDir() {
   const currentDir = __dirname.split(sep).join(posix.sep);
@@ -30,12 +30,16 @@ async function getLocalPackageDir() {
   for (const dir of proposedDirs.filter(Boolean)) {
     log('generalDebug_0003', `Checking for potential plugin directory "${dir}" ...`);
 
-    if (await isDirectory(dir)) {
+    if (await isValidModulesDirectory(dir)) {
       return dir;
     }
   }
 
   return undefined;
+}
+
+function isValidModulesDirectory(dir: string) {
+  return isDirectory(resolve(dir, 'piral-cli'));
 }
 
 function isDirectory(dir: string) {

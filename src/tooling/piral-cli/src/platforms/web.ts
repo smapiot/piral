@@ -63,7 +63,7 @@ async function startModule(options: PlatformStartModuleOptions) {
       configs.unshift(resolve(dirname(appPackageJson), krasrc));
     }
   }
-  
+
   configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
@@ -93,7 +93,7 @@ async function startModule(options: PlatformStartModuleOptions) {
 
   registerEnd(() => krasServer.stop());
   return (options: any) => {
-    const injector = krasServer.injectors.find(m => m.name === 'pilet-injector');
+    const injector = krasServer.injectors.find((m) => m.name === 'pilet-injector');
     injector?.setOptions(options);
   };
 }
@@ -136,7 +136,7 @@ async function startShell(options: PlatformStartShellOptions) {
       },
     },
   };
-  
+
   configs.push(resolve(process.cwd(), krasrc));
 
   if (customkrasrc) {
@@ -165,7 +165,7 @@ async function startShell(options: PlatformStartShellOptions) {
 
   registerEnd(async () => krasServer.stop());
   return (options: any) => {
-    const injector = krasServer.injectors.find(m => m.name === 'piral-injector');
+    const injector = krasServer.injectors.find((m) => m.name === 'piral-injector');
     injector?.setOptions(options);
   };
 }

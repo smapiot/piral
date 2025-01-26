@@ -155,3 +155,80 @@ The optional `template` field makes it possible to override the default template
 The core requirement for a template package is that it either resolves to a local package name (i.e., using a local file path), to a custom npm package (using a scoped package name such as `@my-company/...`), or an official template such as `empty`, `default`, etc.
 
 The official template names are all shortcuts to `@smapiot/pilet-template-X`, where `X` would be the name of the official template. For instance, `empty` is a shortcut to `@smapiot/pilet-template-empty`.
+
+## Instance Definition
+
+The instance definition found in the *piral.json* files allows further configuration.
+
+## Debug Tools Integraion
+
+The `debugTools` property allows to configure if the debug tools should be always attached or not. If the value is set to `false` (default) then the debug tools are only available in the emulator. If the value is set to `true` then the debug tools will always be integrated.
+
+The debug tools provide the bridge to the [Piral Inspector](https://github.com/smapiot/piral-inspector) and add a couple of properties to the `window` object exposing internal functionality.
+
+Example:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "debugTools": true
+}
+```
+
+## Debug Tools Customization
+
+The `debugSettings` property defines how the [Piral Inspector](https://github.com/smapiot/piral-inspector) behaves and looks like. It is an object with a couple of properties for confiuguring the Piral Inspector.
+
+- `viewState` defines the initial state of the view state debug option.
+- `loadPilets` defines the initial state of the load pilets debug option.
+- `hardRefresh` defines the initial state of the hard refresh debug option.
+- `viewOrigin` defines the initial state of the view origin debug option.
+- `extensionCatalogue` defines the initial state of the extension catalogue debug option.
+- `clearConsole` defines the initial state of the clear console debug option.
+
+### Component Isolation
+
+When components from micro frontends are rendered they will either be placed directly in the React render tree (case: React components using the shared version of React) or they will be placed in the render tree by inserting a container element, which is then used to create a new render tree below (case: any other framework, incl. React components using a different version / instance of React). With the modern component isolation the latter case applies for alls scenarios.
+
+By default, the two cases are distinguished in the `classic` setting of the `isolation` property - which allows setting Piral into one of the two modes.
+
+Example:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "isolation": "modern"
+}
+```
+
+### Shared Files
+
+The `shared` property allows you to define a set of files which are directly shared from the app shell. This makes it possible to import functionality at runtime from the app shell.
+
+Example:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "shared": ["./src/externals.tsx"]
+}
+```
+
+### Configuring Internal Styles
+
+The internal styles setting found in the `internalStyles` property defines how styles for the custom elements (such as `piral-extension`, `piral-component` etc.) are receiving their styles.
+
+The options include:
+
+- `inline`: Styles are defined via a `style` attribute on the element.
+- `sheet`: An additional stylesheet is injected when bundling.
+- `none`: There are no styles applied (in this case you will need to set them, or the resulting rendering might look odd).
+
+Example:
+
+```json
+{
+  "$schema": "https://docs.piral.io/schemas/piral-v0.json",
+  "internalStyles": "inline"
+}
+```

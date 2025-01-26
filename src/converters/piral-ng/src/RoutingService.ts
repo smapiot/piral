@@ -64,14 +64,19 @@ export class RoutingService implements OnDestroy {
 
       const skipIds: Array<number> = [];
       const nav = this.context.navigation;
+      const routedFromNg = { _navOrigin_: 'ng' };
       let queueId: number;
 
       const queueNavigation = (url: string) => {
         window.cancelAnimationFrame(queueId);
-        queueId = window.requestAnimationFrame(() => nav.push(url));
+        queueId = window.requestAnimationFrame(() => nav.push(url, routedFromNg));
       };
 
       this.dispose = nav.listen(({ location }) => {
+        if (location.state === routedFromNg) {
+          return;
+        }
+
         const path = location.pathname;
 
         if (!this.invalidRoutes.includes(path)) {

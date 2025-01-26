@@ -1,4 +1,3 @@
-import rimraf from 'rimraf';
 import { transpileModule, ModuleKind, ModuleResolutionKind, ScriptTarget, JsxEmit, version } from 'typescript';
 import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';
@@ -10,7 +9,7 @@ import { deepMerge } from './merge';
 import { computeHash } from './hash';
 import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
-import { glob } from '../external';
+import { glob, rimraf } from '../external';
 
 function promptOverwrite(file: string) {
   const message = `The file ${file} exists already. Do you want to overwrite it?`;
@@ -54,7 +53,7 @@ export async function removeAny(target: string) {
 
 export function removeDirectory(targetDir: string) {
   log('generalDebug_0003', `Removing the directory "${targetDir}" ...`);
-  return new Promise<void>((resolve, reject) => rimraf(targetDir, (err) => (err ? reject(err) : resolve())));
+  return rimraf(targetDir);
 }
 
 export async function createDirectory(targetDir: string) {

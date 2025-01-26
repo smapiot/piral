@@ -26,7 +26,8 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
           columns={initialColumns}
           rows={initialRows}
           resizable={resizable}
-          meta={preferences}>
+          meta={preferences}
+        >
           <Component columns={initialColumns} rows={initialRows} />
         </PiralDashboardTile>
       );

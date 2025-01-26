@@ -34,7 +34,7 @@ describe('Tracker Actions Module', () => {
     }));
     const ctx = createActions(state, createListener());
     registerTracker(ctx, 'foo', 10 as any);
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,
@@ -44,7 +44,7 @@ describe('Tracker Actions Module', () => {
       },
     });
     unregisterTracker(ctx, 'foo');
-    expect((state.getState())).toEqual({
+    expect(state.getState()).toEqual({
       foo: 5,
       registry: {
         foo: 5,

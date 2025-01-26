@@ -6,9 +6,12 @@ export function useDebugRouteFilter(paths: Array<RouteRegistration>) {
   const [_, triggerChange] = useState(0);
 
   useEffect(() => {
-    debugRouteCache.refresh = triggerChange;
+    const handler = () => {
+      triggerChange(s => s + 1);
+    };
+    window.addEventListener('pilets-reloaded', handler);
     return () => {
-      debugRouteCache.refresh = undefined;
+      window.removeEventListener('pilets-reloaded', handler);
     };
   }, []);
 

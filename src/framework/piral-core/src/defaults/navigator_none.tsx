@@ -2,10 +2,6 @@ import { NavigationApi } from '../types';
 
 const _noop = () => {};
 
-export function useRouterContext() {
-  return undefined;
-}
-
 export function useCurrentNavigation() {}
 
 export function createRedirect() {

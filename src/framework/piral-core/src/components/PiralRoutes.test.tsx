@@ -63,7 +63,7 @@ describe('Routes Module', () => {
   afterEach(() => {
     cleanup();
   });
-  
+
   it('always goes to the given home on "/"', () => {
     const node = mountWithRouter(<PiralRoutes NotFound={StubNotFound} RouteSwitch={DefaultRouteSwitch} />, '/');
     expect(node.queryAllByRole('home').length).toBe(1);

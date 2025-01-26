@@ -18,7 +18,7 @@ const usedExternalsToFail = usedExternalPrefixesToFail
   .reduce((acc, val) => acc.concat(val), []);
 
 vitest.mock('../common', async () => ({
-  ...(await vitest.importActual('../common') as any),
+  ...((await vitest.importActual('../common')) as any),
   getSourceFiles() {
     return usedExternalPrefixes.map((prefix) => ({
       read() {
@@ -39,13 +39,15 @@ describe('Rule pilet-has-externals-as-peers', () => {
 
   function createContext(externals: string[]): PiletRuleContext {
     return {
-      apps: [{
-        appPackage: {
-          pilets: {
-            externals,
+      apps: [
+        {
+          appPackage: {
+            pilets: {
+              externals,
+            },
           },
         },
-      }],
+      ],
       piletPackage: {},
       peerDependencies,
       peerModules,

@@ -142,3 +142,100 @@ Following is a short guide on how to make a valid Pull Request.
    request.
 
 You may merge the Pull Request once you have the sign-off of at least one other (core) developer, or if you do not have permission to do that, you may request the reviewer to merge it for you.
+
+## Quick Code Structure Overview
+
+```mermaid
+flowchart TB
+    subgraph Core["Core Framework Layer"]
+        Base["Base Infrastructure"]
+        Core_["Core Framework"]
+        Main["Main Framework"]
+        Base --> Core_
+        Core_ --> Main
+    end
+
+    subgraph Plugins["Plugin Architecture"]
+        subgraph Auth["Authentication"]
+            ADAL["ADAL Plugin"]
+            OAuth["OAuth2 Plugin"]
+            OIDC["OIDC Plugin"]
+        end
+
+        subgraph UI["UI Components"]
+            Dashboard["Dashboard"]
+            Menu["Menu"]
+            Modals["Modals"]
+        end
+
+        subgraph State["State Management"]
+            Containers["Containers"]
+            Feeds["Feeds"]
+        end
+
+        subgraph Utils["Utilities"]
+            Translate["Translation"]
+            Tracking["Tracking"]
+        end
+    end
+
+    subgraph Converters["Converter System"]
+        React["React"]
+        Angular["Angular"]
+        Vue["Vue"]
+        Vue3["Vue 3"]
+        Svelte["Svelte"]
+        Solid["Solid"]
+    end
+
+    subgraph DevTools["Development Tooling"]
+        CLI["CLI Tools"]
+        Build["Build System"]
+        Debug["Debug Utilities"]
+    end
+
+    Core --> Plugins
+    Core --> Converters
+    Core --> DevTools
+
+    %% Click events for Core Layer
+    click Base "https://github.com/smapiot/piral/tree/develop/src/framework/piral-base"
+    click Core_ "https://github.com/smapiot/piral/tree/develop/src/framework/piral-core"
+    click Main "https://github.com/smapiot/piral/tree/develop/src/framework/piral"
+
+    %% Click events for Plugins
+    click ADAL "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-adal"
+    click OAuth "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-oauth2"
+    click OIDC "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-oidc"
+    click Dashboard "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-dashboard"
+    click Menu "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-menu"
+    click Modals "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-modals"
+    click Containers "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-containers"
+    click Feeds "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-feeds"
+    click Translate "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-translate"
+    click Tracking "https://github.com/smapiot/piral/tree/develop/src/plugins/piral-tracking"
+
+    %% Click events for Converters
+    click React "https://github.com/smapiot/piral/tree/develop/src/converters/piral-react"
+    click Angular "https://github.com/smapiot/piral/tree/develop/src/converters/piral-ng"
+    click Vue "https://github.com/smapiot/piral/tree/develop/src/converters/piral-vue"
+    click Vue3 "https://github.com/smapiot/piral/tree/develop/src/converters/piral-vue-3"
+    click Svelte "https://github.com/smapiot/piral/tree/develop/src/converters/piral-svelte"
+    click Solid "https://github.com/smapiot/piral/tree/develop/src/converters/piral-solid"
+
+    %% Click events for DevTools
+    click CLI "https://github.com/smapiot/piral/tree/develop/src/tooling/piral-cli"
+    click Build "https://github.com/smapiot/piral/tree/develop/src/tooling/piral-cli-webpack5"
+    click Debug "https://github.com/smapiot/piral/tree/develop/src/utilities/piral-debug-utils"
+
+    %% Styling
+    classDef core fill:#blue,stroke:#333,stroke-width:2px
+    classDef plugin fill:#green,stroke:#333,stroke-width:2px
+    classDef converter fill:#purple,stroke:#333,stroke-width:2px
+    classDef devtool fill:#orange,stroke:#333,stroke-width:2px
+
+    class Base,Core_,Main core
+    class ADAL,OAuth,OIDC,Dashboard,Menu,Modals,Containers,Feeds,Translate,Tracking plugin
+    class React,Angular,Vue,Vue3,Svelte,Solid converter
+    class CLI,Build,Debug devtool
+```
