@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import rc from 'rc';
 import { fromKeys, publishModeKeys } from 'piral-cli/src/helpers';
 import { basename } from 'path';
@@ -22,7 +22,7 @@ const defaultArgs = rc('microfrontend', {
   interactive: false,
 });
 
-const args = yargs
+const y = yargs(process.argv.slice(2), current)
   .string('source')
   .describe('source', 'Sets the source of either the previously packed *.tgz bundle or the directory to publish.')
   .default('source', current)
@@ -53,9 +53,10 @@ const args = yargs
   .default('headers', defaultArgs.headers)
   .boolean('interactive')
   .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
-  .default('interactive', defaultArgs.interactive).argv;
+  .default('interactive', defaultArgs.interactive);
 
 async function run() {
+  const args = await y.argv;
   const {
     cert,
     source,

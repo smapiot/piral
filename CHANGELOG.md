@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.8.1 (tbd)
+
+- Fixed build issue in `publish-microfrontend`
+
 ## 1.8.0 (January 26, 2025)
 
 - Fixed pinning of dependencies in `piral-configs` (#733)
