@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.1 (tbd)
+## 1.8.1 (January 27, 2025)
 
 - Fixed build issue in `publish-microfrontend`
 
