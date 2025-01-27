@@ -1,6 +1,6 @@
 {
   "name": "piral-aurelia",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Plugin for integrating Aurelia components in Piral.",
   "keywords": [
     "piral",
@@ -57,6 +57,6 @@
     "aurelia-pal-browser": "1.8.1",
     "aurelia-templating-binding": "1.5.3",
     "aurelia-templating-resources": "1.13.1",
-    "piral-core": "^1.8.0"
+    "piral-core": "^1.8.1"
   }
 }
