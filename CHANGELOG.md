@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.8.2 (tbd)
+
+- Fixed issue with command line parsing in the `piral-cli` on Windows
+
 ## 1.8.1 (January 27, 2025)
 
 - Fixed build issue in `publish-microfrontend`

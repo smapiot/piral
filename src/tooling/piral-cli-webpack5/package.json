@@ -47,7 +47,7 @@
     "@types/mini-css-extract-plugin": "^2",
     "@types/node": "^18",
     "@types/terser-webpack-plugin": "^5.2.0",
-    "@types/yargs": "^17",
+    "@types/yargs": "^15",
     "piral-cli": "^1.8.1",
     "strip-ansi": "^6"
   },

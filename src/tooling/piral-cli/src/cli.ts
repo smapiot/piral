@@ -1,7 +1,6 @@
-import yargs from 'yargs';
-import { detailed } from 'yargs-parser';
 import { caterpillerIcon, zapIcon, butterflyIcon, cliName, cliVersion } from './common';
 import { runQuestionnaireFor } from './questionnaire';
+import { yargs, detailed } from './external';
 import { ToolCommand } from './types';
 
 let argv = yargs;

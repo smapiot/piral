@@ -54,7 +54,7 @@
     "@types/mime": "^4",
     "@types/node": "^18",
     "@types/rc": "^1",
-    "@types/yargs": "^17",
+    "@types/yargs": "^15",
     "axios": "^1",
     "chalk": "^5",
     "enhanced-resolve": "^5",
@@ -68,14 +68,14 @@
     "ora": "^8",
     "rc": "^1",
     "rimraf": "^6",
-    "tar": "^7"
+    "tar": "^7",
+    "yargs": "^15"
   },
   "dependencies": {
     "css-conflict-inspector": "^0.2",
     "dets": "^0.16.7",
     "kras": "^1",
     "open": "^10",
-    "typescript": "^5",
-    "yargs": "^17"
+    "typescript": "^5"
   }
 }

@@ -22,7 +22,7 @@ const defaultArgs = rc('microfrontend', {
   interactive: false,
 });
 
-const y = yargs(process.argv.slice(2), current)
+const args = yargs
   .string('source')
   .describe('source', 'Sets the source of either the previously packed *.tgz bundle or the directory to publish.')
   .default('source', current)
@@ -53,10 +53,9 @@ const y = yargs(process.argv.slice(2), current)
   .default('headers', defaultArgs.headers)
   .boolean('interactive')
   .describe('interactive', 'Defines if authorization tokens can be retrieved interactively.')
-  .default('interactive', defaultArgs.interactive);
+  .default('interactive', defaultArgs.interactive).argv;
 
 async function run() {
-  const args = await y.argv;
   const {
     cert,
     source,

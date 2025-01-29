@@ -1,5 +1,5 @@
-import { Argv, Arguments } from 'yargs';
-import { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency } from './common';
+import type { Argv, Arguments } from 'yargs';
+import type { RuleRunner, PiletRuleContext, PiralRuleContext, LogLevels, SharedDependency } from './common';
 
 export type FlagType = 'string' | 'number' | 'boolean' | 'object';
 

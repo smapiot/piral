@@ -1,5 +1,7 @@
 import * as jju from 'jju';
 import * as tar from 'tar';
+import yargs from 'yargs';
+import { detailed } from 'yargs-parser';
 import glob from 'glob';
 import FormData from 'form-data';
 import rc = require('rc');
@@ -34,4 +36,6 @@ export {
   getPort,
   jju,
   getModulePath,
+  yargs,
+  detailed,
 };

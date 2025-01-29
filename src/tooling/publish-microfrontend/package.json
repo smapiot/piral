@@ -50,7 +50,7 @@
     "@types/mime": "^4",
     "@types/node": "^18",
     "@types/rc": "^1",
-    "@types/yargs": "^17",
+    "@types/yargs": "^15",
     "axios": "^1.7.7",
     "chalk": "^5",
     "enhanced-resolve": "^5",
@@ -66,6 +66,6 @@
     "rimraf": "^6",
     "tar": "^7",
     "typescript": "^5",
-    "yargs": "^17"
+    "yargs": "^15"
   }
 }
