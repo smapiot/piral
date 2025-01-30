@@ -81,6 +81,12 @@ In our case, we will see at least the feed, which we just have created.
 
 Before we can publish our first pilet to our newly created feed, we need to obtain an API key.
 
+::: tip: Use the interactive flow
+For publishing a pilet from your local machine you could also avoid creating an API key. Instead of using the `--api-key` flag you could then use `--interactive`, which triggers the interactive flow - requiring you to log in to the Piral Feed Service using your browser.
+
+It's still good to get acquainted with the mechanism of creating an API key. This way, you are already prepared to set up your CI/CD pipelines accordingly. In such pipelines, you would not be able to use the `--interactive` option.
+:::
+
 ### Create an API Key
 
 To see a list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the feed bar of the current feed. As we did not create an API key, the list will be empty.
