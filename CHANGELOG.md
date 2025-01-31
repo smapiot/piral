@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.2 (tbd)
+## 1.8.2 (January 31, 2025)
 
 - Fixed issue with command line parsing in the `piral-cli` on Windows
 
