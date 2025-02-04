@@ -1,7 +1,7 @@
 {
   "name": "empty-piral",
   "private": true,
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "An empty app shell with no dependencies.",
   "keywords": [
     "portal",
@@ -34,11 +34,11 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "dependencies": {
-    "piral-base": "^1.8.1"
+    "piral-base": "^1.8.2"
   },
   "devDependencies": {
-    "piral-cli": "^1.8.1",
-    "piral-cli-webpack5": "^1.8.1"
+    "piral-cli": "^1.8.2",
+    "piral-cli-webpack5": "^1.8.2"
   },
   "pilets": {},
   "scripts": {
