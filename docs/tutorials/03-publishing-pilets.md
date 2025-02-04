@@ -81,6 +81,12 @@ In our case, we will see at least the feed, which we just have created.
 
 Before we can publish our first pilet to our newly created feed, we need to obtain an API key.
 
+::: tip: Use the interactive flow
+For publishing a pilet from your local machine you could also avoid creating an API key. Instead of using the `--api-key` flag you could then use `--interactive`, which triggers the interactive flow - requiring you to log in to the Piral Feed Service using your browser.
+
+It's still good to get acquainted with the mechanism of creating an API key. This way, you are already prepared to set up your CI/CD pipelines accordingly. In such pipelines, you would not be able to use the `--interactive` option.
+:::
+
 ### Create an API Key
 
 To see a list of all available API keys, invoke the link `Manage API Keys` or press the "key" icon on the right-hand side of the feed bar of the current feed. As we did not create an API key, the list will be empty.
@@ -154,6 +160,27 @@ const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
 ```
 
 Please assign your individual feed URL accordingly. When you now launch your Piral instance using the piral-cli (`piral debug`), the newly published pilet will be loaded into the application shell.
+
+Note that the `feedUrl` is used in the `requestPilets` function, which allows you to customize it even further:
+
+```jsx
+const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/my-tutorial-feed';
+
+const instance = createInstance({
+  // ... configure your instance as you like
+  requestPilets() {
+    // if you need custom headers or want to adjust just how the discovery service is
+    // invoked then change the logic below
+    // only requirement: Returns a Promise resolving to an array of pilet metadata
+    return fetch(feedUrl)
+      .then((res) => res.json())
+      .then((res) => res.items);
+  },
+});
+
+const root = createRoot(document.querySelector("#app"));
+root.render(<Piral instance={instance} />);
+```
 
 ## Next Steps
 
