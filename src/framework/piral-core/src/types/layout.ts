@@ -1,7 +1,9 @@
 /**
  * The mapping of breakpoints to layout type index.
+ * Choose up to three breakpoints.
+ * In case of no breakpoint a default layout will be chosen.
  */
-export type LayoutBreakpoints = [string, string, string];
+export type LayoutBreakpoints = [string?, string?, string?];
 
 /**
  * The different known layout types.

@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.8.3 (tbd)
+
+- Updated `breakpoints` to have flexible breakpoints
+- Added `breakpoints` parameter to `getAppInstance` options
+- Added `breakpoints` parameter to `createInstanceElement` function
+
 ## 1.8.2 (January 31, 2025)
 
 - Fixed issue with command line parsing in the `piral-cli` on Windows
