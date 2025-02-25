@@ -11707,10 +11707,15 @@ serialize-javascript@^6.0.2:
   dependencies:
     randombytes "^2.1.0"
 
-seroval@^0.11.6:
-  version "0.11.6"
-  resolved "https://registry.yarnpkg.com/seroval/-/seroval-0.11.6.tgz#ec5ef38a7ac34cac116f6028d505c163c3767973"
-  integrity sha512-Lhy+94CNcNza6d0vM4sQKLsaLaX39q0ELqIBc7DkdiFljI8Q387Yb+xKgLxRWXs7uuHRu/ZcJ64xfVJ0Bj4LPg==
+seroval-plugins@^1.1.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/seroval-plugins/-/seroval-plugins-1.2.1.tgz#fa535e70ade8af553634b2b5c80d8a6fd8c2ff72"
+  integrity sha512-H5vs53+39+x4Udwp4J5rNZfgFuA+Lt+uU+09w1gYBVWomtAl98B+E9w7yC05Xc81/HgLvJdlyqJbU0fJCKCmdw==
+
+seroval@^1.1.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/seroval/-/seroval-1.2.1.tgz#fc671d63445923ab64f7abaf3967c83901382f40"
+  integrity sha512-yBxFFs3zmkvKNmR0pFSU//rIsYjuX418TnlDmc2weaq5XFDqDIV/NOMPBoLrbxjLH42p4UzRuXHryXh9dYcKcw==
 
 serve-static@1.16.2:
   version "1.16.2"
@@ -11880,12 +11885,13 @@ socks@^2.8.3:
     smart-buffer "^4.2.0"
 
 solid-js@^1.7.3:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.8.2.tgz#386facf92d5bcca2d7203016fb845a058fbeac83"
-  integrity sha512-Qifh2/EJ0hUgko9buZcE5oPpEykrpDp34mJoW+qxyy3UTQnfCTmwc8JbeI71UiDahZt5FqvgOzxolprTuwMAqg==
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.9.4.tgz#da9b5645f10875a631d93335cd50525ff36b6c27"
+  integrity sha512-ipQl8FJ31bFUoBNScDQTG3BjN6+9Rg+Q+f10bUbnO6EOTTf5NGerJeHc7wyu5I4RMHEl/WwZwUmy/PTRgxxZ8g==
   dependencies:
     csstype "^3.1.0"
-    seroval "^0.11.6"
+    seroval "^1.1.0"
+    seroval-plugins "^1.1.0"
 
 sort-keys@^2.0.0:
   version "2.0.0"
