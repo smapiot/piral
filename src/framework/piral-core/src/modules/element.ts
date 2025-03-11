@@ -258,8 +258,16 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
       return this.getAttribute('name');
     }
 
+    set name(value: string) {
+      this.setAttribute('name', value);
+    }
+
     get origin() {
       return this.getAttribute('origin');
+    }
+
+    set origin(value: string) {
+      this.setAttribute('origin', value);
     }
 
     connectedCallback() {
