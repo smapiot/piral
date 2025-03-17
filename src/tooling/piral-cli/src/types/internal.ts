@@ -57,4 +57,8 @@ export interface NpmClient {
    * The wrapper npm client, if any.
    */
   wrapper?: NpmWapperClientType;
+  /**
+   * Determines the root directory if the client is curently operating in a monorepo.
+   */
+  monorepo?: string;
 }

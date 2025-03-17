@@ -150,7 +150,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       fail('invalidPiralReference_0043');
     }
 
-    const monorepoRef = await isMonorepoPackageRef(sourceName, fullBase);
+    const monorepoRef = await isMonorepoPackageRef(sourceName, npmClient);
     const [packageRef] = await getCurrentPackageDetails(fullBase, sourceName, currentVersion, version, root);
     const originalFiles = await getFileStats(root, sourceName);
 

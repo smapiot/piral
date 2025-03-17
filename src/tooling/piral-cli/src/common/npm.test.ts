@@ -23,6 +23,7 @@ import {
   isGitPackage,
   makeExternals,
   findPackageRoot,
+  determineNpmClient,
 } from './npm';
 
 vitest.mock('child_process');
@@ -271,9 +272,9 @@ describe('npm Module', () => {
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
     wrongCase = false;
-    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeTruthy());
+    await isMonorepoPackageRef('npm', await determineNpmClient('./')).then((result) => expect(result).toBeTruthy());
     wrongCase = true;
-    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeFalsy());
+    await isMonorepoPackageRef('npm', await determineNpmClient('./')).then((result) => expect(result).toBeFalsy());
   });
 
   it('verifies whether lerna bootstrap ran', async () => {

@@ -120,6 +120,16 @@ async function determineDirectClient(root: string): Promise<NpmDirectClientType>
   return 'npm';
 }
 
+async function getMonorepo(root: string, client: NpmClientType): Promise<string> {
+  const [path, retrieved] = await detectMonorepoRoot(root);
+
+  if (path && retrieved === client) {
+    return path;
+  }
+
+  return undefined;
+}
+
 /**
  * For details about how this works consult issue
  * https://github.com/smapiot/piral/issues/203
@@ -132,27 +142,29 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
     return {
       direct,
       wrapper,
+      monorepo: await getMonorepo(root, wrapper || direct),
     };
   } else if (isDirectClient(selected)) {
     return {
       proposed: selected,
       direct: selected,
+      monorepo: await getMonorepo(root, selected),
     };
   } else {
     return {
       proposed: selected,
       direct: await determineDirectClient(root),
       wrapper: selected,
+      monorepo: await getMonorepo(root, selected),
     };
   }
 }
 
-export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
-  const [monorepoRoot, client] = await detectMonorepoRoot(root);
-
-  if (monorepoRoot) {
-    const c = clients[client];
-    return await c.isProject(monorepoRoot, refName);
+export async function isMonorepoPackageRef(refName: string, client: NpmClient): Promise<boolean> {
+  if (client.monorepo) {
+    const clientName = client.wrapper || client.direct;
+    const clientApi = clients[clientName];
+    return await clientApi.isProject(client.monorepo, refName);
   }
 
   return false;
