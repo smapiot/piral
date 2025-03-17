@@ -142,4 +142,11 @@ export interface DefaultLoaderConfig {
    * have an integrity defined will be set to "anonymous".
    */
   crossOrigin?: string;
+  /**
+   * Sets the override function for attaching a stylesheet.
+   * For pilets v3 this may be useful.
+   * @param pilet The pilet containing the style sheet reference.
+   * @param url The style sheet reference URL.
+   */
+  attachStyles?(pilet: Pilet, url: string): void;
 }

@@ -6,6 +6,7 @@
 - Updated `breakpoints` to have flexible breakpoints
 - Added `breakpoints` parameter to `getAppInstance` options
 - Added `breakpoints` parameter to `createInstanceElement` function
+- Added `attachStyles` override option to `loaderConfig`
 
 ## 1.8.2 (January 31, 2025)
 
