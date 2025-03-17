@@ -134,6 +134,7 @@ async function getMonorepo(root: string, client: NpmClientType): Promise<string>
  * For details about how this works consult issue
  * https://github.com/smapiot/piral/issues/203
  * @param root The project's root directory.
+ * @param selected The proposed ("selected") npm client.
  */
 export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClient> {
   if (!selected || !clientTypeKeys.includes(selected)) {
