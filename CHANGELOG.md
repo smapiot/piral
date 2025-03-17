@@ -3,6 +3,7 @@
 ## 1.8.3 (tbd)
 
 - Fixed `piral-component` to work with React 19
+- Fixed `importmap` entry in emulator for async centrally shared dependencies
 - Updated `breakpoints` to have flexible breakpoints
 - Added `breakpoints` parameter to `getAppInstance` options
 - Added `breakpoints` parameter to `createInstanceElement` function

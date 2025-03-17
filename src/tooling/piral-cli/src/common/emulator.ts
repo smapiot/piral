@@ -42,10 +42,7 @@ async function makeExternals(sourceDir: string, piralPkg: any, externals: Array<
   }, {} as Record<string, string>);
 
   const importmapEntries = externalPackages.reduce((deps, dep) => {
-    if (!dep.optional) {
-      deps[dep.name] = dep.name;
-    }
-
+    deps[dep.name] = dep.name;
     return deps;
   }, {} as Record<string, string>);
 
