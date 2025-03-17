@@ -59,7 +59,7 @@ export async function installPiralInstance(
   agent: Agent,
   selected?: boolean,
 ): Promise<string> {
-  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource);
+  const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource, npmClient);
 
   if (type === 'remote') {
     const emulator = await scaffoldFromEmulatorWebsite(rootDir, sourceName, agent);

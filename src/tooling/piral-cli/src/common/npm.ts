@@ -363,10 +363,12 @@ export function makeFilePath(basePath: string, fullName: string) {
  * ]
  * @param baseDir The base directory of the current operation.
  * @param fullName The provided package name.
+ * @param client The used npm client.
  */
 export async function dissectPackageName(
   baseDir: string,
   fullName: string,
+  client: NpmClient,
 ): Promise<[string, string, boolean, PackageType]> {
   if (isGitPackage(fullName)) {
     const gitUrl = makeGitUrl(fullName);
@@ -388,6 +390,8 @@ export async function dissectPackageName(
     }
 
     return [fullPath, 'latest', false, 'file'];
+  } else if (await isMonorepoPackageRef(fullName, client)) {
+    return [fullName, '*', false, 'monorepo'];
   } else {
     const index = fullName.indexOf('@', 1);
     const type = 'registry';
@@ -479,7 +483,9 @@ export function findPackageRoot(pck: string, baseDir: string) {
 }
 
 export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean, target: string) {
-  if (type === 'registry' && !hadVersion) {
+  if (type === 'monorepo') {
+    return true;
+  } else if (type === 'registry' && !hadVersion) {
     const root = findPackageRoot(name, target);
     return typeof root === 'string';
   }
@@ -519,8 +525,11 @@ export async function getPackageName(root: string, name: string, type: PackageTy
       const pj = await readJson(root, packageJson);
       const dd = pj.devDependencies || {};
       return Object.keys(dd).filter((dep) => dd[dep] === name)[0];
+    case 'monorepo':
     case 'registry':
       return name;
+    case 'remote':
+      throw new Error('Cannot get the package name for a remote package!');
   }
 }
 
@@ -541,6 +550,8 @@ export function getPackageVersion(
   root: string,
 ) {
   switch (type) {
+    case 'monorepo':
+      return sourceVersion;
     case 'registry':
       return hadVersion && sourceVersion;
     case 'file':
