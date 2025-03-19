@@ -186,7 +186,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
       await copyScaffoldingFiles(packageRoot, root, notOnceFiles, piralInfo, data);
     }
 
-    await patchPiletPackage(root, piralInfo, isEmulator);
+    await patchPiletPackage(root, piralInfo, isEmulator, npmClient);
 
     if (install) {
       progress(`Updating dependencies ...`);

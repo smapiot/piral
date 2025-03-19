@@ -19,7 +19,7 @@ import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson }
 import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson } from './constants';
 import { satisfies } from './version';
 import { getModulePath } from '../external';
-import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition } from '../types';
+import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
 import { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
 import { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
@@ -649,10 +649,11 @@ export async function patchPiletPackage(
   root: string,
   piralInfo: PiralPackageData,
   fromEmulator: boolean,
+  client: NpmClient,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   log('generalDebug_0003', `Patching the ${packageJson} in "${root}" ...`);
-  const pkg = await getPiletPackage(root, piralInfo, fromEmulator, newInfo);
+  const pkg = await getPiletPackage(root, piralInfo, fromEmulator, client, newInfo);
   await updateExistingJson(root, packageJson, pkg);
   log('generalDebug_0003', `Succesfully patched the ${packageJson}.`);
 }
@@ -661,15 +662,29 @@ function isWebsiteCompatible(version: string) {
   return satisfies(version, '>=1.4.0');
 }
 
+async function getExistingDependencies(client: NpmClient): Promise<Array<string>> {
+  if (client.monorepo) {
+    const existingData = await readJson(client.monorepo, packageJson);
+    return [
+      ...Object.keys(existingData.devDependencies || {}),
+      ...Object.keys(existingData.dependencies || {}),
+    ];
+  }
+
+  return [];
+}
+
 async function getPiletPackage(
   root: string,
   piralInfo: PiralPackageData,
   fromEmulator: boolean,
+  client: NpmClient,
   newInfo?: { language: SourceLanguage; bundler: string },
 ) {
   const { piralCLI = { version: cliVersion } } = piralInfo;
   const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const existingData = newInfo ? {} : await readJson(root, packageJson);
+  const existingDependencies = await getExistingDependencies(client)
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
@@ -713,6 +728,11 @@ async function getPiletPackage(
 
   if (newInfo) {
     await appendBundler(devDependencies, newInfo.bundler, toolVersion);
+  }
+
+  for (const name of existingDependencies) {
+    delete devDependencies[name];
+    delete dependencies[name];
   }
 
   return deepMerge(packageOverrides, {
