@@ -144,7 +144,7 @@ export interface DefaultLoaderConfig {
   crossOrigin?: string;
   /**
    * Sets the override function for attaching a stylesheet.
-   * For pilets v3 this may be useful.
+   * This option will only affect `v3` pilets.
    * @param pilet The pilet containing the style sheet reference.
    * @param url The style sheet reference URL.
    */
