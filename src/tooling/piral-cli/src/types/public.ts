@@ -274,7 +274,7 @@ export type PiralPublishType = 'release' | 'emulator';
 
 export type PiletBuildType = 'default' | 'standalone' | 'manifest';
 
-export type PackageType = 'registry' | 'file' | 'git' | 'remote';
+export type PackageType = 'registry' | 'monorepo' | 'file' | 'git' | 'remote';
 
 export type NpmDirectClientType = 'npm' | 'yarn' | 'pnp' | 'pnpm' | 'bun';
 

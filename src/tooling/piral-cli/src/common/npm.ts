@@ -120,10 +120,21 @@ async function determineDirectClient(root: string): Promise<NpmDirectClientType>
   return 'npm';
 }
 
+async function getMonorepo(root: string, client: NpmClientType): Promise<string> {
+  const [path, retrieved] = await detectMonorepoRoot(root);
+
+  if (path && retrieved === client) {
+    return path;
+  }
+
+  return undefined;
+}
+
 /**
  * For details about how this works consult issue
  * https://github.com/smapiot/piral/issues/203
  * @param root The project's root directory.
+ * @param selected The proposed ("selected") npm client.
  */
 export async function determineNpmClient(root: string, selected?: NpmClientType): Promise<NpmClient> {
   if (!selected || !clientTypeKeys.includes(selected)) {
@@ -132,27 +143,29 @@ export async function determineNpmClient(root: string, selected?: NpmClientType)
     return {
       direct,
       wrapper,
+      monorepo: await getMonorepo(root, wrapper || direct),
     };
   } else if (isDirectClient(selected)) {
     return {
       proposed: selected,
       direct: selected,
+      monorepo: await getMonorepo(root, selected),
     };
   } else {
     return {
       proposed: selected,
       direct: await determineDirectClient(root),
       wrapper: selected,
+      monorepo: await getMonorepo(root, selected),
     };
   }
 }
 
-export async function isMonorepoPackageRef(refName: string, root: string): Promise<boolean> {
-  const [monorepoRoot, client] = await detectMonorepoRoot(root);
-
-  if (monorepoRoot) {
-    const c = clients[client];
-    return await c.isProject(monorepoRoot, refName);
+export async function isMonorepoPackageRef(refName: string, client: NpmClient): Promise<boolean> {
+  if (client.monorepo) {
+    const clientName = client.wrapper || client.direct;
+    const clientApi = clients[clientName];
+    return await clientApi.isProject(client.monorepo, refName);
   }
 
   return false;
@@ -350,10 +363,12 @@ export function makeFilePath(basePath: string, fullName: string) {
  * ]
  * @param baseDir The base directory of the current operation.
  * @param fullName The provided package name.
+ * @param client The used npm client.
  */
 export async function dissectPackageName(
   baseDir: string,
   fullName: string,
+  client: NpmClient,
 ): Promise<[string, string, boolean, PackageType]> {
   if (isGitPackage(fullName)) {
     const gitUrl = makeGitUrl(fullName);
@@ -375,6 +390,8 @@ export async function dissectPackageName(
     }
 
     return [fullPath, 'latest', false, 'file'];
+  } else if (await isMonorepoPackageRef(fullName, client)) {
+    return [fullName, '*', false, 'monorepo'];
   } else {
     const index = fullName.indexOf('@', 1);
     const type = 'registry';
@@ -466,7 +483,9 @@ export function findPackageRoot(pck: string, baseDir: string) {
 }
 
 export function isLinkedPackage(name: string, type: PackageType, hadVersion: boolean, target: string) {
-  if (type === 'registry' && !hadVersion) {
+  if (type === 'monorepo') {
+    return true;
+  } else if (type === 'registry' && !hadVersion) {
     const root = findPackageRoot(name, target);
     return typeof root === 'string';
   }
@@ -506,8 +525,11 @@ export async function getPackageName(root: string, name: string, type: PackageTy
       const pj = await readJson(root, packageJson);
       const dd = pj.devDependencies || {};
       return Object.keys(dd).filter((dep) => dd[dep] === name)[0];
+    case 'monorepo':
     case 'registry':
       return name;
+    case 'remote':
+      throw new Error('Cannot get the package name for a remote package!');
   }
 }
 
@@ -528,6 +550,8 @@ export function getPackageVersion(
   root: string,
 ) {
   switch (type) {
+    case 'monorepo':
+      return sourceVersion;
     case 'registry':
       return hadVersion && sourceVersion;
     case 'file':

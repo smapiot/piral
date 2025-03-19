@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode } from 'react';
-import { PiralConfiguration, ComponentsState, ErrorComponentsState } from 'piral-core';
+import { PiralConfiguration, ComponentsState, ErrorComponentsState, LayoutBreakpoints } from 'piral-core';
 import { PiralExtSettings } from 'piral-ext';
 
 /**
@@ -15,6 +15,10 @@ export interface PiralRenderBaseOptions {
    * Defines how the layout looks like.
    */
   layout?: Partial<ComponentsState>;
+  /**
+   * Defines the breakpoints to use for responsive layouts.
+   */
+  breakpoints?: LayoutBreakpoints;
   /**
    * Defines how the errors look like.
    */

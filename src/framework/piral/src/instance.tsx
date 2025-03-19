@@ -8,6 +8,7 @@ import {
   ErrorComponentsState,
   SetErrors,
   SetLayout,
+  LayoutBreakpoints,
 } from 'piral-core';
 
 export function createInstanceElement(
@@ -16,9 +17,10 @@ export function createInstanceElement(
   errors?: Partial<ErrorComponentsState>,
   dashboardPath = '/',
   piralChildren?: React.ReactNode,
+  breakpoints?: LayoutBreakpoints,
 ): React.ReactElement {
   return (
-    <Piral instance={instance}>
+    <Piral instance={instance} breakpoints={breakpoints}>
       <SetLayout layout={layout} />
       <SetErrors errors={errors} />
       <SetRoute path={dashboardPath} component={Dashboard} />

@@ -1,5 +1,15 @@
 # Piral Changelog
 
+## 1.8.3 (tbd)
+
+- Fixed `piral-component` to work with React 19
+- Fixed `importmap` entry in emulator for async centrally shared dependencies
+- Improved pilet scaffolding within a monorepo (#742)
+- Updated `breakpoints` to have flexible breakpoints
+- Added `breakpoints` parameter to `getAppInstance` options
+- Added `breakpoints` parameter to `createInstanceElement` function
+- Added `attachStyles` override option to `loaderConfig`
+
 ## 1.8.2 (January 31, 2025)
 
 - Fixed issue with command line parsing in the `piral-cli` on Windows

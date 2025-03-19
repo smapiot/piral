@@ -23,6 +23,7 @@ import {
   isGitPackage,
   makeExternals,
   findPackageRoot,
+  determineNpmClient,
 } from './npm';
 
 vitest.mock('child_process');
@@ -112,7 +113,8 @@ describe('npm Module', () => {
 
   it('dissects a fully qualified name with latest correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@latest', client);
     expect(hadVersion).toBe(true);
     expect(version).toBe('latest');
     expect(name).toBe('foo');
@@ -121,7 +123,8 @@ describe('npm Module', () => {
 
   it('dissects a fully qualified name  with a specific version correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@1.2.3');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo@1.2.3', client);
     expect(hadVersion).toBe(true);
     expect(version).toBe('1.2.3');
     expect(name).toBe('foo');
@@ -130,7 +133,8 @@ describe('npm Module', () => {
 
   it('dissects a simple name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'foo', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('foo');
@@ -139,7 +143,8 @@ describe('npm Module', () => {
 
   it('dissects a relative file name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '../foo/bar');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '../foo/bar', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe(resolve('/home/yolo', '../foo/bar'));
@@ -148,7 +153,8 @@ describe('npm Module', () => {
 
   it('dissects an absolute file name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '/foo/bar');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName('/home/yolo', '/foo/bar', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe(resolve('/home/yolo', '/foo/bar'));
@@ -157,7 +163,8 @@ describe('npm Module', () => {
 
   it('dissects a git SSH repo name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'ssh://foo-bar.com/foo.git');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'ssh://foo-bar.com/foo.git', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('git+ssh://foo-bar.com/foo.git');
@@ -166,7 +173,8 @@ describe('npm Module', () => {
 
   it('dissects a git HTTPS repo name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'https://foo-bar.com/foo.git');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'https://foo-bar.com/foo.git', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('git+https://foo-bar.com/foo.git');
@@ -175,7 +183,8 @@ describe('npm Module', () => {
 
   it('dissects a scoped name correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar', client);
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('@foo/bar');
@@ -184,7 +193,8 @@ describe('npm Module', () => {
 
   it('dissects a scoped fully qualified name with latest correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@latest');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@latest', client);
     expect(hadVersion).toBe(true);
     expect(version).toBe('latest');
     expect(name).toBe('@foo/bar');
@@ -193,7 +203,8 @@ describe('npm Module', () => {
 
   it('dissects a scoped fully qualified name  with a specific version correctly', async () => {
     wrongCase = false;
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@^1.x');
+    const client = await determineNpmClient(process.cwd());
+    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), '@foo/bar@^1.x', client);
     expect(hadVersion).toBe(true);
     expect(version).toBe('^1.x');
     expect(name).toBe('@foo/bar');
@@ -271,9 +282,9 @@ describe('npm Module', () => {
 
   it('uses npm to verify whether a particular package is included in monorepo package', async () => {
     wrongCase = false;
-    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeTruthy());
+    await isMonorepoPackageRef('npm', await determineNpmClient('./')).then((result) => expect(result).toBeTruthy());
     wrongCase = true;
-    await isMonorepoPackageRef('npm', './').then((result) => expect(result).toBeFalsy());
+    await isMonorepoPackageRef('npm', await determineNpmClient('./')).then((result) => expect(result).toBeFalsy());
   });
 
   it('verifies whether lerna bootstrap ran', async () => {

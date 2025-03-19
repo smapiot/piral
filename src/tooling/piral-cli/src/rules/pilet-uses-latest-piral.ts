@@ -1,4 +1,4 @@
-import { isMonorepoPackageRef, findLatestVersion } from '../common';
+import { isMonorepoPackageRef, findLatestVersion, determineNpmClient } from '../common';
 import { PiletRuleContext } from '../types';
 
 export type Options = 'suggest' | 'required' | 'ignore';
@@ -13,7 +13,8 @@ export default async function (context: PiletRuleContext, options: Options = 'su
     const isfixed = demanded.startsWith('git+') || demanded.startsWith('file:');
 
     if (!isfixed) {
-      const isMonorepoRef = await isMonorepoPackageRef(name, context.root);
+      const npmClient = await determineNpmClient(context.root);
+      const isMonorepoRef = await isMonorepoPackageRef(name, npmClient);
 
       // either we are not in a monorepo or the app shell is not part of the monorepo
       if (!isMonorepoRef) {

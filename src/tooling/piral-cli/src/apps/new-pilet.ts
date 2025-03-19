@@ -229,7 +229,7 @@ always-auth=true`,
 
     const data = getPiletScaffoldData(language, root, packageName, variables);
 
-    await patchPiletPackage(root, piralInfo, isEmulator, {
+    await patchPiletPackage(root, piralInfo, isEmulator, npmClient, {
       language,
       bundler: bundlerName,
     });

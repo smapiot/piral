@@ -50,20 +50,21 @@
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
-    "@jsenv/file-size-impact": "14.3.12",
-    "@testing-library/react": "^14.1.0",
+    "@jsenv/file-size-impact": "14.3.18",
+    "@testing-library/dom": "^10",
+    "@testing-library/react": "^16",
     "caniuse-lite": "^1.0.30001341",
-    "esbuild": "^0.24.0",
-    "jsdom": "^20.0.0",
+    "esbuild": "^0.25.0",
+    "jsdom": "^26",
     "lerna": "^8",
-    "prettier": "^2.1.1",
-    "sass": "^1.34.0",
-    "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
+    "prettier": "^3",
+    "sass": "^1",
+    "tslint": "^5",
+    "tslint-config-prettier": "^1",
+    "tslint-plugin-prettier": "^2",
     "typedoc": "0.25.2",
     "typescript": "^5",
-    "vitest": "^2"
+    "vitest": "^3"
   },
   "resolutions": {
     "cookie": "0.7.0",

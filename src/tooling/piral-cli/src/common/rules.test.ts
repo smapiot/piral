@@ -12,7 +12,7 @@ describe('Rules Module', () => {
     const runException = () => {
       ruleSummary(['Error!'], []);
     };
-    expect(runException).toThrow(Error('[0080] Validation failed. Found 1 error(s).'));
+    expect(runException).toThrow('[0080] Validation failed. Found 1 error(s).');
 
     let consoleSpy = vitest.spyOn(process.stderr, 'write');
     ruleSummary([], []);
