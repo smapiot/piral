@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.3 (tbd)
+## 1.8.3 (March 19, 2025)
 
 - Fixed `piral-component` to work with React 19
 - Fixed `importmap` entry in emulator for async centrally shared dependencies
