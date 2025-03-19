@@ -147,7 +147,19 @@ interface PiletMetadataV2 {
   dependencies?: Record<string, string>;
 }
 
-type PiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataV2;
+interface PiletMetadataV3 {
+  name: string;
+  version: string;
+  link: string;
+  requireRef: string;
+  integrity?: string;
+  spec: 'v3';
+  custom?: any;
+  config?: Record<string, any>;
+  dependencies?: Record<string, string>;
+}
+
+type PiletMetadata = PiletMetadataV0 | PiletMetadataV1 | PiletMetadataV2 | PiletMetadataV3;
 ```
 
 The schema is written and defined using a TypeScript interface (see references).
@@ -158,7 +170,7 @@ If the `requireRef` field is used then `PiletMetadataV1` will be used implicitly
 
 In `PiletMetadataV1` the role of `hash` is replaced by an optional `integrity` field. While hash could be anything (we recommend SHA1) the `integrity` actually follows the browser specification (see references) and must be prefixed with a valid hash method (e.g., `sha384-`) followed by the base64 encoded hash.
 
-For `PiletMetadataV2` pilets to be identified accurately the `spec` field needs to be available and set to `v2`. Otherwise, from the metadata perspective, these pilets are almost identical to `PiletMetadataV1`. The major difference is that the actual JavaScript code is conforming to SystemJS instead of UMD.
+For `PiletMetadataV2` pilets to be identified accurately the `spec` field needs to be available and set to `v2`. Otherwise, from the metadata perspective, these pilets are almost identical to `PiletMetadataV1`. The major difference is that the actual JavaScript code is conforming to SystemJS instead of UMD. The same is true for `PiletMetadataV3`.
 
 The `custom` field can be used to transport any custom data into your Piral instance. This can be helpful for some fixed constants, translations, or some other relevant information.
 

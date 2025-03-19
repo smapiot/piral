@@ -103,6 +103,10 @@ The script for the partial resource has to be loaded from the same base URL as t
 
 The code in this section works exclusively for `v2` pilets. `v2` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
 
+### `v3` Format
+
+The code in this section works exclusively for `v3` pilets. `v3` pilets are using the [SystemJS format](https://github.com/systemjs/systemjs/blob/main/docs/system-register.md). For conformance to this format the SystemJS specification should be considered.
+
 ### `mf` Format
 
 The code in this section works exclusively for `mf` pilets. `mf` pilets are using [Module Federation](https://module-federation.io/) for exposing their API and taking part in (distributed) sharing of dependencies. For conformance to this format the Module Federation specification should be considered.
@@ -465,6 +469,17 @@ System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _d
 //...
 })())}};});
 ```
+
+For `v3` the output changes to:
+
+```js
+//@pilet v:3(pr_1fab123ad4fd76bd20e5e5e97366fd47, {})
+System.register([],function(e,c){var dep;return{setters:[function(_dep){dep = _dep;}],execute:function(){_export((function(){
+//...
+})())}};});
+```
+
+In general, `v3` looks like `v2`, but is supposed to also work in Node.js. Therefore, it should not (directly, e.g., when not rendering a component) reference `document`, `window` etc. (any of the browser APIs). One consequence of this is, that stylesheets are not directly embedded by the pilet, but rather exported via the `styles` export (as an additional export besides `setup` and `teardown`). `styles` is an array consisting of relative (to the pilet's base URL) paths.
 
 ## Limitations
 
