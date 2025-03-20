@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.9.0 (tbd)
+
+- ...
+
 ## 1.8.3 (March 19, 2025)
 
 - Fixed `piral-component` to work with React 19
