@@ -1,8 +1,8 @@
 # Piral Changelog
 
-## 1.9.0 (tbd)
+## 1.8.4 (tbd)
 
-- ...
+- Fixed newline when updating JSON files using the `piral-cli` (#749)
 
 ## 1.8.3 (March 19, 2025)
 

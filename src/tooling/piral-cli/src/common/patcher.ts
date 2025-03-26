@@ -54,7 +54,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
                 delete packageFileData.browserslist;
 
                 await writeJson(rootName, 'package.json', packageFileData, true);
-                await writeText(rootName, '.browserslistrc', 'node 10.11');
+                await writeText(rootName, '.browserslistrc', 'node 10.11\n');
                 await patchModule(folderName, rootName);
               }
 
