@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.4 (tbd)
+## 1.8.4 (April 1, 2025)
 
 - Fixed newline when updating JSON files using the `piral-cli` (#749)
 - Added `createCoreApi` and `renderElement` as direct exports to `piral-core`
