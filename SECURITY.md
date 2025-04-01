@@ -11,7 +11,7 @@
 
 | Version | End of Life |
 | ------- | ----------- |
-| 1.x     | 2025/07/01  |
+| 1.x     | 2025/12/01  |
 
 ## Reporting a Vulnerability
 

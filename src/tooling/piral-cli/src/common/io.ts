@@ -399,8 +399,8 @@ export function readText(targetDir: string, fileName: string) {
 }
 
 export function writeJson<T = any>(targetDir: string, fileName: string, data: T, beautify = false) {
-  const content = beautify ? JSON.stringify(data, undefined, 2) : JSON.stringify(data);
-  return writeText(targetDir, fileName, content);
+  const text = beautify ? JSON.stringify(data, undefined, 2) : JSON.stringify(data);
+  return writeText(targetDir, fileName, text + '\n');
 }
 
 export function writeText(targetDir: string, fileName: string, content: string) {
@@ -417,7 +417,8 @@ export function writeBinary(targetDir: string, fileName: string, data: Buffer) {
 
 export async function updateExistingJson<T>(targetDir: string, fileName: string, newContent: T) {
   const content = await mergeWithJson(targetDir, fileName, newContent);
-  await updateExistingFile(targetDir, fileName, JSON.stringify(content, undefined, 2));
+  const text = JSON.stringify(content, undefined, 2);
+  await updateExistingFile(targetDir, fileName, text + '\n');
 }
 
 export async function copy(source: string, target: string, forceOverwrite = ForceOverwrite.no): Promise<boolean> {

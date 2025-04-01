@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.8.4 (tbd)
+
+- Fixed newline when updating JSON files using the `piral-cli` (#749)
+- Added `createCoreApi` and `renderElement` as direct exports to `piral-core`
+
 ## 1.8.3 (March 19, 2025)
 
 - Fixed `piral-component` to work with React 19

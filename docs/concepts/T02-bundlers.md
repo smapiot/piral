@@ -12,17 +12,21 @@ One of the covered areas is bundling, i.e., producing optimized assets from your
 
 ## Available Bundler Plugins
 
-The `piral-cli` tool can be extended using existing bundler plugins. By default, we use the `piral-cli-webpack` plugin, which integrates Webpack as a bundler into the Piral CLI.
+The `piral-cli` tool can be extended using existing bundler plugins. By default, we use the `piral-cli-webpack5` plugin, which integrates Webpack (v5) as a bundler into the Piral CLI.
 
 Officially, there are the following plugins available:
 
 - [piral-cli-webpack](https://www.npmjs.com/package/piral-cli-webpack) for bringing support for Webpack (v4)
 - [piral-cli-webpack5](https://www.npmjs.com/package/piral-cli-webpack5) for bringing support for Webpack (v5)
+- [piral-cli-rspack](https://www.npmjs.com/package/piral-cli-rspack) for bringing support for rspack
 - [piral-cli-parcel](https://www.npmjs.com/package/piral-cli-parcel) for bringing support for Parcel (v1)
 - [piral-cli-parcel2](https://www.npmjs.com/package/piral-cli-parcel2) for bringing support for Parcel (v2)
 - [piral-cli-esbuild](https://www.npmjs.com/package/piral-cli-esbuild) for bringing support for esbuild
+- [piral-cli-bun](https://www.npmjs.com/package/piral-cli-bun) for bringing support for Bun
 - [piral-cli-rollup](https://www.npmjs.com/package/piral-cli-rollup) for bringing support for Rollup.js
-- [piral-cli-vite](https://www.npmjs.com/package/piral-cli-vite) for bringing support for Vite
+- [piral-cli-vite](https://www.npmjs.com/package/piral-cli-vite) for bringing support for Vite (v4)
+- [piral-cli-vite5](https://www.npmjs.com/package/piral-cli-vite5) for bringing support for Vite (v5)
+- [piral-cli-vite6](https://www.npmjs.com/package/piral-cli-vite6) for bringing support for Vite (v6)
 
 ::: question: Can the Piral CLI work without a bundler?
 Indeed it can, even though the default bundler plugin would be installed when a bundler is required.
