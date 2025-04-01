@@ -1,7 +1,7 @@
 {
   "name": "sample-piral-core",
   "private": true,
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "Example project illustrating the use of the piral-core and piral-cli packages.",
   "keywords": [
     "portal",
@@ -30,14 +30,14 @@
   },
   "app": "src/index.html",
   "dependencies": {
-    "piral-containers": "^1.8.3",
-    "piral-core": "^1.8.3",
-    "piral-dashboard": "^1.8.3",
-    "piral-feeds": "^1.8.3",
-    "piral-forms": "^1.8.3",
-    "piral-menu": "^1.8.3",
-    "piral-notifications": "^1.8.3",
-    "piral-search": "^1.8.3",
+    "piral-containers": "^1.8.4",
+    "piral-core": "^1.8.4",
+    "piral-dashboard": "^1.8.4",
+    "piral-feeds": "^1.8.4",
+    "piral-forms": "^1.8.4",
+    "piral-menu": "^1.8.4",
+    "piral-notifications": "^1.8.4",
+    "piral-search": "^1.8.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^5.2.0",
@@ -48,8 +48,8 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
-    "piral-cli": "^1.8.3",
-    "piral-cli-webpack5": "^1.8.3",
+    "piral-cli": "^1.8.4",
+    "piral-cli-webpack5": "^1.8.4",
     "sass": "^1.17.0"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "piral-configs",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "Plugin for dynamic configurations of pilets in Piral.",
   "keywords": [
     "piral",
@@ -53,6 +53,6 @@
     "url": "0.11.3"
   },
   "devDependencies": {
-    "piral-core": "^1.8.3"
+    "piral-core": "^1.8.4"
   }
 }
