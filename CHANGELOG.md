@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.8.5 (tbd)
+
+- Updated versions of Angular used in `piral-ng`
+
 ## 1.8.4 (April 1, 2025)
 
 - Fixed newline when updating JSON files using the `piral-cli` (#749)
