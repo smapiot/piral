@@ -1,5 +1,6 @@
 import type { ComponentContext } from 'piral-core';
 import type { NgModuleFlags, NgOptions } from './types';
+import * as browserDynamic from '@angular/platform-browser-dynamic';
 import {
   createPlatformFactory,
   enableProdMode,
@@ -10,13 +11,13 @@ import {
   VERSION,
 } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import {
-  ɵplatformCoreDynamic as platformCoreDynamic,
-  ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS as INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
-} from '@angular/platform-browser-dynamic';
 import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
+
+const legacyCall = 'ɵplatformCoreDynamic';
+const platformCoreDynamic = browserDynamic.platformBrowserDynamic || browserDynamic[legacyCall];
+const INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS = browserDynamic.ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS;
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();

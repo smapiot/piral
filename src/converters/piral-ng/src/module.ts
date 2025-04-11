@@ -12,6 +12,7 @@ import {
   NgModule,
   NgZone,
 } from '@angular/core';
+
 import { PIRAL, PROPS } from './injection';
 import { teardown } from './startup';
 import { RoutingService } from './RoutingService';
@@ -76,10 +77,16 @@ function instantiateModule(moduleDef: ModuleDefinition, piral: PiletApi) {
         const ref = this.zone.run(() => this.appRef.bootstrap<any>(factory, node));
         const name = (ref.componentType as any)?.ɵcmp?.inputs?.Props;
 
-        if (typeof name === 'string') {
+        if (typeof name === 'string' || Array.isArray(name)) {
           const sub = $props.subscribe((props) => {
-            ref.instance[name] = props;
-            ref.changeDetectorRef?.detectChanges();
+            if (typeof ref.setInput === 'function') {
+              // Here we don't care about the aliased name etc.
+              ref.setInput('Props', props);
+            } else if (typeof name === 'string') {
+              // Legacy mode - just set it directly and trigger CD
+              ref.instance[name] = props;
+              ref.changeDetectorRef?.detectChanges();
+            }
           });
           ref.onDestroy(() => sub.unsubscribe());
         }

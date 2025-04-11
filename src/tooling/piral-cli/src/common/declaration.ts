@@ -144,7 +144,6 @@ async function createDeclarationFile(options: DeclOptions, target: string, force
 }
 
 export async function createPiletDeclaration(
-  name: string,
   piralInstances: Array<string>,
   root: string,
   entry: string,
@@ -168,7 +167,7 @@ export async function createPiletDeclaration(
       plugins: [createDiffPlugin(file)],
       apis,
       noModuleDeclaration: true,
-      imports: allowedImports,
+      imports: allowedImports.filter((m) => m !== piralInstance),
       logLevel,
       logger: createLogger(),
     };

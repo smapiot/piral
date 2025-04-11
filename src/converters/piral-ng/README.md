@@ -475,6 +475,25 @@ export class SampleTileComponent {
 }
 ```
 
+Starting with Angular 19 you can also use signal inputs instead of `@Input` properties. Same example as above:
+
+```ts
+@Component({
+  template: `
+    <div class="tile">
+      <p>{{ props().rows }} rows and {{ props().columns }} columns</p>
+    </div>
+  `,
+})
+export class SampleTileComponent {
+  public readonly props = input<TileComponentProps<any>>(undefined, {
+    alias: "Props",
+  });
+
+  constructor() {}
+}
+```
+
 ## Converting an Angular Application to a Pilet
 
 Depending on the kind of Angular application this may be rather straight forward or very difficult. Since we cannot discuss all possible edge cases we will assume the standard scenario. If you need more help then don't hesitate to contact us.

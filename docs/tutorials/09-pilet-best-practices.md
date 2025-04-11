@@ -329,6 +329,34 @@ export default ({ piral }) => (
 
 The crucial part is that we do not only place the registration of our testing components (in the example above the page) inside the environment-switch, but also the dependent modules. Above we only bundle the `PlaygroundPage` if we are indeed in the development environment. Production builds will never include this code.
 
+## TypeScript Declarations
+
+You might want to provide some TypeScript declarations for the extensions used by your pilet.
+
+When you use an extension you want to be sure that everything works, e.g.:
+
+```jsx
+app.registerPage('/example', () => (
+  <div>
+    <app.Extension name="foo" params={{ name: 'Bar' }} />
+  </div>
+));
+```
+
+Here, the `params` passed into the extension should autocomplete. The way to do that is by having the `PiralCustomExtensionSlotMap` interface extended. If your app shell is called `sample-piral` you can do that using:
+
+```ts
+declare module 'sample-piral' {
+  interface PiralCustomExtensionSlotMap {
+    foo: {
+      name: string;
+    };
+  }
+}
+```
+
+This way, a new extension called `foo` is defined with its `params` being an object with only one property: a `string` called `name`.
+
 ## Next Steps
 
 In this tutorial, we reviewed a couple of strategies to develop pilets that provide a robust and flexible basis.
