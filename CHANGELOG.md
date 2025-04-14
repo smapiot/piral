@@ -2,6 +2,7 @@
 
 ## 1.8.5 (tbd)
 
+- Fixed generation of declarations during `pilet build` in the `piral-cli`
 - Updated versions of Angular used in `piral-ng`
 
 ## 1.8.4 (April 1, 2025)
