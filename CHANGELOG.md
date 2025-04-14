@@ -4,6 +4,7 @@
 
 - Fixed generation of declarations during `pilet build` in the `piral-cli`
 - Updated versions of Angular used in `piral-ng`
+- Added support for Angular 19 in `piral-ng` incl. support for input signals
 
 ## 1.8.4 (April 1, 2025)
 

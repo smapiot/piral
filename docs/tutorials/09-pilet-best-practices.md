@@ -343,7 +343,9 @@ app.registerPage('/example', () => (
 ));
 ```
 
-Here, the `params` passed into the extension should autocomplete. The way to do that is by having the `PiralCustomExtensionSlotMap` interface extended. If your app shell is called `sample-piral` you can do that using:
+Here, the `params` passed into the extension should autocomplete. The way to do that is by having the `PiralCustomExtensionSlotMap` interface extended.
+
+To achieve this at the example of an app shell called `sample-piral`, create a type declaration within your pilet (e.g., the `index.tsx` file or a referenced module) as follows:
 
 ```ts
 declare module 'sample-piral' {
@@ -356,6 +358,8 @@ declare module 'sample-piral' {
 ```
 
 This way, a new extension called `foo` is defined with its `params` being an object with only one property: a `string` called `name`.
+
+The generation of a declaration file plays nicely together with [declaration aggregation of a micro frontend discovery service such as Piral Cloud Feed Service](https://docs.piral.cloud/tutorials/18-type-definitions).
 
 ## Next Steps
 
