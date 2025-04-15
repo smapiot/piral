@@ -144,7 +144,6 @@ async function createDeclarationFile(options: DeclOptions, target: string, force
 }
 
 export async function createPiletDeclaration(
-  name: string,
   piralInstances: Array<string>,
   root: string,
   entry: string,
@@ -153,9 +152,9 @@ export async function createPiletDeclaration(
   forceOverwrite: ForceOverwrite,
   logLevel: LogLevels,
 ) {
-  const piralInstance = piralInstances[0];
+  const [piralInstance] = piralInstances;
   const apis = await findPiralInstanceApi(root, piralInstance);
-  const file = apis.map((m) => m.file)[0];
+  const [file] = apis.map((m) => m.file);
 
   if (file) {
     const files = await getAllFiles([entry]);
@@ -168,7 +167,7 @@ export async function createPiletDeclaration(
       plugins: [createDiffPlugin(file)],
       apis,
       noModuleDeclaration: true,
-      imports: allowedImports,
+      imports: allowedImports.filter(m => !piralInstances.includes(m)),
       logLevel,
       logger: createLogger(),
     };

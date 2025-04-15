@@ -3,10 +3,10 @@ import { config } from './config';
 import { removeDirectory } from './io';
 import { ForceOverwrite } from './enums';
 import { logInfo, progress } from './log';
-import { callPiletBuild } from '../bundler';
 import { defaultSchemaVersion } from './constants';
 import { createPiletDeclaration } from './declaration';
 import { combinePiletExternals, retrievePiletData, validateSharedDependencies } from './package';
+import { callPiletBuild } from '../bundler';
 import { LogLevels, PiletSchemaVersion } from '../types';
 
 const defaultOutput = 'dist/index.js';
@@ -73,7 +73,7 @@ export async function triggerBuildPilet({
   const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
   const piralInstances = apps.map((m) => m.appPackage.name);
   const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
-  const { main = defaultOutput, name = 'pilet' } = piletPackage;
+  const { main = defaultOutput } = piletPackage;
   const dest = getTarget(root, main, targetDir, target);
   const outDir = dirname(dest);
   const outFile = basename(dest);
@@ -117,7 +117,6 @@ export async function triggerBuildPilet({
   if (declaration) {
     await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
     await createPiletDeclaration(
-      name,
       piralInstances,
       root,
       entryModule,

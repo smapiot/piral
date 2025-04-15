@@ -475,6 +475,25 @@ export class SampleTileComponent {
 }
 ```
 
+Starting with Angular 19 you can also use signal inputs instead of `@Input` properties. Same example as above:
+
+```ts
+@Component({
+  template: `
+    <div class="tile">
+      <p>{{ props().rows }} rows and {{ props().columns }} columns</p>
+    </div>
+  `,
+})
+export class SampleTileComponent {
+  public readonly props = input<TileComponentProps<any>>(undefined, {
+    alias: "Props",
+  });
+
+  constructor() {}
+}
+```
+
 ## Converting an Angular Application to a Pilet
 
 Depending on the kind of Angular application this may be rather straight forward or very difficult. Since we cannot discuss all possible edge cases we will assume the standard scenario. If you need more help then don't hesitate to contact us.
@@ -594,7 +613,7 @@ The basic dependencies look as follows:
   "@angular/router": "^9",
   "@angular/platform-browser": "^9",
   "@angular/platform-browser-dynamic": "^9",
-  "core-js": "^3.15.2",
+  "core-js": "^3",
   "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
@@ -614,7 +633,7 @@ The basic dependencies look as follows:
   "@angular/router": "^10",
   "@angular/platform-browser": "^10",
   "@angular/platform-browser-dynamic": "^10",
-  "core-js": "^3.15.2",
+  "core-js": "^3",
   "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
@@ -634,7 +653,7 @@ The basic dependencies look as follows:
   "@angular/router": "^11",
   "@angular/platform-browser": "^11",
   "@angular/platform-browser-dynamic": "^11",
-  "core-js": "^3.15.2",
+  "core-js": "^3",
   "rxjs": "~6.5",
   "zone.js": "~0.9"
 }
@@ -654,7 +673,7 @@ The basic dependencies look as follows:
   "@angular/router": "^12",
   "@angular/platform-browser": "^12",
   "@angular/platform-browser-dynamic": "^12",
-  "core-js": "^3.15.2",
+  "core-js": "^3",
   "rxjs": "~6.4",
   "zone.js": "0.11.4"
 }
@@ -674,7 +693,7 @@ The basic dependencies look as follows:
   "@angular/router": "^13",
   "@angular/platform-browser": "^13",
   "@angular/platform-browser-dynamic": "^13",
-  "core-js": "^3.19.0",
+  "core-js": "^3",
   "rxjs": "^7.4",
   "zone.js": "0.11.4"
 }
@@ -703,9 +722,9 @@ The basic dependencies look as follows:
   "@angular/router": "^14",
   "@angular/platform-browser": "^14",
   "@angular/platform-browser-dynamic": "^14",
-  "core-js": "^3.19.0",
+  "core-js": "^3",
   "rxjs": "^7.4",
-  "zone.js": "~0.12.0"
+  "zone.js": "~0.12"
 }
 ```
 
@@ -732,9 +751,9 @@ The basic dependencies look as follows:
   "@angular/router": "^15",
   "@angular/platform-browser": "^15",
   "@angular/platform-browser-dynamic": "^15",
-  "core-js": "^3.19.0",
+  "core-js": "^3",
   "rxjs": "^7.4",
-  "zone.js": "~0.13.0"
+  "zone.js": "~0.13"
 }
 ```
 
@@ -761,9 +780,9 @@ The basic dependencies look as follows:
   "@angular/router": "^16",
   "@angular/platform-browser": "^16",
   "@angular/platform-browser-dynamic": "^16",
-  "core-js": "^3.19.0",
+  "core-js": "^3",
   "rxjs": "^7.4",
-  "zone.js": "~0.13.0"
+  "zone.js": "~0.13"
 }
 ```
 
@@ -790,13 +809,71 @@ The basic dependencies look as follows:
   "@angular/router": "^17",
   "@angular/platform-browser": "^17",
   "@angular/platform-browser-dynamic": "^17",
-  "core-js": "^3.19.0",
+  "core-js": "^3",
   "rxjs": "^7.4",
-  "zone.js": "~0.14.0"
+  "zone.js": "~0.14"
 }
 ```
 
 Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.2 (and less than 5.3).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 18
+
+In general, Angular 18 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^18",
+  "@angular/compiler": "^18",
+  "@angular/core": "^18",
+  "@angular/router": "^18",
+  "@angular/platform-browser": "^18",
+  "@angular/platform-browser-dynamic": "^18",
+  "core-js": "^3",
+  "rxjs": "^7.4",
+  "zone.js": "~0.14"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.3 (and less than 5.6).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 19
+
+In general, Angular 19 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^19",
+  "@angular/compiler": "^19",
+  "@angular/core": "^19",
+  "@angular/router": "^19",
+  "@angular/platform-browser": "^19",
+  "@angular/platform-browser-dynamic": "^19",
+  "core-js": "^3",
+  "rxjs": "^7.4",
+  "zone.js": "~0.15"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.5 (and less than 5.9).
 
 So include in your app shell as preamble:
 

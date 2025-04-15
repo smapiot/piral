@@ -1,5 +1,6 @@
 import type { ComponentContext } from 'piral-core';
 import type { NgModuleFlags, NgOptions } from './types';
+import * as browserDynamic from '@angular/platform-browser-dynamic';
 import {
   createPlatformFactory,
   enableProdMode,
@@ -10,13 +11,13 @@ import {
   VERSION,
 } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import {
-  ɵplatformCoreDynamic as platformCoreDynamic,
-  ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS as INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
-} from '@angular/platform-browser-dynamic';
 import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
+
+const legacyCall = 'ɵplatformCoreDynamic';
+const platformCoreDynamic = browserDynamic.platformBrowserDynamic || browserDynamic[legacyCall];
+const INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS = browserDynamic.ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS;
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();
@@ -126,10 +127,10 @@ if (process.env.NODE_ENV === 'development') {
       console.log('Running in outdated mode (Angular 9-13)');
     },
     current() {
-      console.log('Running in current mode (Angular 14-17)');
+      console.log('Running in current mode (Angular 14-19)');
     },
     next() {
-      console.log('Running in next mode (Angular 18)');
+      console.log('Running in next mode (Angular 20)');
     },
     unknown() {
       console.log('Running with an unknown version of Angular');
@@ -151,7 +152,9 @@ if (process.env.NODE_ENV === 'development') {
     v15: versionHandlers.current,
     v16: versionHandlers.current,
     v17: versionHandlers.current,
-    v18: versionHandlers.next,
+    v18: versionHandlers.current,
+    v19: versionHandlers.current,
+    v20: versionHandlers.next,
   };
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;

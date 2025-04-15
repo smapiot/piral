@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path';
+import { LogLevels } from '../types';
 import {
   setLogLevel,
   logDone,
@@ -9,7 +10,6 @@ import {
   combinePiletExternals,
   ensure,
 } from '../common';
-import { LogLevels } from '../types';
 
 export interface DeclarationPiletOptions {
   /**
@@ -62,22 +62,11 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
 
   for (const item of allEntries) {
     const targetDir = dirname(item);
-    const { peerDependencies, peerModules, root, apps, piletPackage, importmap } = await retrievePiletData(targetDir);
+    const { peerDependencies, peerModules, root, apps, importmap } = await retrievePiletData(targetDir);
     const piralInstances = apps.map((m) => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
-    results.push(
-      await createPiletDeclaration(
-        piletPackage.name,
-        piralInstances,
-        root,
-        item,
-        externals,
-        dest,
-        forceOverwrite,
-        logLevel,
-      ),
-    );
+    results.push(await createPiletDeclaration(piralInstances, root, item, externals, dest, forceOverwrite, logLevel));
   }
 
   if (results.every(Boolean)) {
