@@ -6,10 +6,16 @@ import { MemoryStream } from '../common/MemoryStream';
 
 // Helpers:
 
-function runYarnProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
+async function runYarnProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the Yarn Classic process ...');
   const cwd = resolve(process.cwd(), target);
-  return runCommand('yarn', args, cwd, output);
+
+  try {
+    return await runCommand('yarn', args, cwd, output);
+  } catch (err) {
+    log('generalInfo_0000', output.value);    
+    throw err;
+  }
 }
 
 function convert(flags: Array<string>) {

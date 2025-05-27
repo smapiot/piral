@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.9.0 (tbd)
+
+- Improved output when installation of packages fails (#759)
+
 ## 1.8.5 (April 15, 2025)
 
 - Fixed generation of declarations during `pilet build` in the `piral-cli`

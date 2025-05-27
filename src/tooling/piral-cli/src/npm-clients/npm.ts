@@ -6,10 +6,16 @@ import { MemoryStream } from '../common/MemoryStream';
 
 // Helpers:
 
-function runNpmProcess(args: Array<string>, target: string, output?: NodeJS.WritableStream) {
+async function runNpmProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the npm process ...');
   const cwd = resolve(process.cwd(), target);
-  return runCommand('npm', args, cwd, output);
+
+  try {
+    return await runCommand('npm', args, cwd, output);
+  } catch (err) {
+    log('generalInfo_0000', output.value);
+    throw err;
+  }
 }
 
 // Client interface functions:
