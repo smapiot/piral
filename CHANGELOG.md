@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.8.5 (tbd)
+## 1.8.5 (April 15, 2025)
 
 - Fixed generation of declarations during `pilet build` in the `piral-cli`
 - Updated versions of Angular used in `piral-ng`

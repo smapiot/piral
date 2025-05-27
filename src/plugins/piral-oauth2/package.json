@@ -1,6 +1,6 @@
 {
   "name": "piral-oauth2",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "description": "Plugin to integrate OAuth 2.0 authentication in Piral.",
   "keywords": [
     "piral",
@@ -52,6 +52,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.8.4"
+    "piral-core": "^1.8.5"
   }
 }
