@@ -194,13 +194,21 @@ export async function installNpmPackageFromOptionalRegistry(
   }
 }
 
+function selectNpmClient(client: NpmClient) {
+  if (client.wrapper === 'rush') {
+    return client.wrapper;
+  }
+
+  return client.direct;
+}
+
 export async function uninstallNpmPackage(
   client: NpmClient,
   packageRef: string,
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
-  const name = client.direct;
+  const name = selectNpmClient(client);
 
   try {
     const { uninstallPackage } = clients[name];
@@ -220,7 +228,7 @@ export async function installNpmPackage(
   target = '.',
   ...flags: Array<string>
 ): Promise<string> {
-  const name = client.direct;
+  const name = selectNpmClient(client);
 
   try {
     const { installPackage } = clients[name];
