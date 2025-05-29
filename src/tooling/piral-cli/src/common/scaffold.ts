@@ -18,10 +18,11 @@ function getTemplatePackage(templatePackageName: string) {
 
   try {
     return require(normalizedName);
-  } catch {
+  } catch (err) {
+    log('generalVerbose_0004', err);
     fail(
       'generalError_0002',
-      `Could not find the given template "${templatePackageName}". Package "${normalizedName}" could not be resolved.`,
+      `Could not load the template "${templatePackageName}". Package "${normalizedName}" could not be resolved due to ${err?.message || 'an unspecified error'}.`,
     );
   }
 }
