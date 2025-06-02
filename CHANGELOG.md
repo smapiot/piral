@@ -4,6 +4,7 @@
 
 - Improved output when installation of packages fails (#759)
 - Improved error message when template resolution fails (#763)
+- Added support for Angular 20 in `piral-ng`
 
 ## 1.8.5 (April 15, 2025)
 
