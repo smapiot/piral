@@ -92,6 +92,10 @@
       ],
       "description": "Defines how the styles for the web components are transported. 'inline' puts them on the web components when rendering, 'sheet' includes a stylesheet when bundling, 'none' requires you to include them somewhere. By default, 'inline' is used."
     },
+    "remoteTypes": {
+      "type": "string",
+      "description": "The address of the generated d.ts combining extra type information from all pilets."
+    },
     "shared": {
       "type": "array",
       "items": {

@@ -4,6 +4,7 @@
 
 - Improved output when installation of packages fails (#759)
 - Improved error message when template resolution fails (#763)
+- Updated `dets` to latest release
 - Updated `piral-cli-webpack5` to never output empty `main.css` files in pilets
 - Added support for Angular 20 in `piral-ng`
 

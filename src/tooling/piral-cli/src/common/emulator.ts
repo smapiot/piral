@@ -137,6 +137,7 @@ export async function createEmulatorSources(
       files: makeFilesMap(pilets.files),
     },
     piralCLI: {
+      remoteTypes: piralJsonPkg.remoteTypes,
       version: cliVersion,
       generated: true,
     },
@@ -208,6 +209,7 @@ export async function createEmulatorWebsite(
     version: piralPkg.version,
     timestamp: new Date().toISOString(),
     scaffolding: {
+      remoteTypes: piralJsonPkg.remoteTypes,
       pilets: {
         ...pilets,
         files: makeFilesMap(pilets.files),

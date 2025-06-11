@@ -81,6 +81,7 @@ async function createEmulatorFiles(
       pilets: emulatorJson.scaffolding.pilets,
       piralCLI: {
         version: emulatorJson.scaffolding.cli,
+        remoteTypes: emulatorJson.scaffolding.remoteTypes,
         timestamp: emulatorJson.timestamp,
         source: manifestUrl,
         generated: true,
