@@ -8,11 +8,11 @@ import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
-import { getHash, checkIsDirectory, matchFiles } from './io';
+import { getHash, checkIsDirectory, matchFiles, readText, writeText } from './io';
 import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
-import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite } from './website';
+import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite, retrieveExtraTypings } from './website';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
 import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson } from './constants';
@@ -149,6 +149,47 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
+function getTypesWithout(types: string, startMarker: string, endMarker: string) {
+  const start = types.indexOf(startMarker);
+
+  if (start >= 0) {
+    const end = types.indexOf(endMarker, start) + endMarker.length;
+
+    if (end > start) {
+      return types.substring(0, start) + types.substring(end);
+    }
+
+    return types.substring(0, start);
+  }
+
+  return types;
+}
+
+async function patchPiralTypes(appPackage: any, agent: Agent) {
+  const root = appPackage.root;
+  const remoteTypes = appPackage.piralCLI?.remoteTypes;
+  const normalTypes = appPackage.typings;
+
+  if (normalTypes) {
+    const types = await readText(root, normalTypes);
+    const startMarker = `//===\n//piral-cli:remoteTypes/start\n//===`;
+    const endMarker = `//===\n//piral-cli:remoteTypes/end\n//===`;
+    const typesWithout = getTypesWithout(types, startMarker, endMarker);
+
+    if (typesWithout !== types) {
+      await writeText(root, normalTypes, typesWithout);
+    }
+
+    if (remoteTypes) {
+      const content = await retrieveExtraTypings(remoteTypes, agent);
+
+      if (content) {
+        await writeText(root, normalTypes, [typesWithout, startMarker, content, endMarker].join('\n'));
+      }
+    }
+  }
+}
+
 async function loadPiralInstance(root: string, details?: PiralInstanceDetails): Promise<PiralInstancePackageData> {
   log('generalDebug_0003', `Following the app package in "${root}" ...`);
   const appPackage = await readJson(root, packageJson);
@@ -177,11 +218,15 @@ export async function findPiralInstance(
       await updateFromEmulatorWebsite(root, url, agent, interactive);
     }
 
-    return await loadPiralInstance(root, details);
+    const appPackage = await loadPiralInstance(root, details);
+    await patchPiralTypes(appPackage, agent);
+    return appPackage;
   } else if (url) {
     log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
     const emulator = await scaffoldFromEmulatorWebsite(rootDir, url, agent);
-    return await loadPiralInstance(emulator.path, details);
+    const appPackage = await loadPiralInstance(emulator.path, details);
+    await patchPiralTypes(appPackage, agent);
+    return appPackage;
   }
 
   fail('appInstanceNotFound_0010', proposedApp);
@@ -665,10 +710,7 @@ function isWebsiteCompatible(version: string) {
 async function getExistingDependencies(client: NpmClient): Promise<Array<string>> {
   if (client.monorepo) {
     const existingData = await readJson(client.monorepo, packageJson);
-    return [
-      ...Object.keys(existingData.devDependencies || {}),
-      ...Object.keys(existingData.dependencies || {}),
-    ];
+    return [...Object.keys(existingData.devDependencies || {}), ...Object.keys(existingData.dependencies || {})];
   }
 
   return [];
@@ -684,7 +726,7 @@ async function getPiletPackage(
   const { piralCLI = { version: cliVersion } } = piralInfo;
   const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const existingData = newInfo ? {} : await readJson(root, packageJson);
-  const existingDependencies = await getExistingDependencies(client)
+  const existingDependencies = await getExistingDependencies(client);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,
