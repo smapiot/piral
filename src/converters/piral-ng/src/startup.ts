@@ -25,14 +25,21 @@ function getVersionHandler(versions: Record<string, () => void>) {
   return versions[version];
 }
 
-// Equivalent to platformBrowserDynamic, but with support for multiple platforms
-const customPlatformDynamicFactory = createPlatformFactory(platformCoreDynamic, 'piralDynamic', [
-  ...INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+const newProviders = [
   {
     provide: ALLOW_MULTIPLE_PLATFORMS,
     useValue: true,
   },
-]);
+];
+
+// Equivalent to platformBrowserDynamic, but with support for multiple platforms
+const customPlatformDynamicFactory = createPlatformFactory(
+  platformCoreDynamic,
+  'piralDynamic',
+  Array.isArray(INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS)
+    ? INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS.concat(newProviders)
+    : newProviders,
+);
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
