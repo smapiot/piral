@@ -33,7 +33,7 @@ export default class SheetPlugin {
               if (source instanceof CachedSource) {
                 const cs = source.original();
 
-                if (cs instanceof ConcatSource) {
+                if (cs instanceof ConcatSource && cs.children) {
                   cs.children = cs.children.filter((m) => {
                     if (m instanceof CachedSource) {
                       const original = m.original();
