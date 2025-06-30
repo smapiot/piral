@@ -178,6 +178,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
           peerDependencies: {},
           scripts: {},
           main: 'dist/index.js',
+          types: 'dist/index.d.ts',
           files: ['dist'],
         },
         undefined,
