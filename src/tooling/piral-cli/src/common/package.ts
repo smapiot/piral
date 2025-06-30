@@ -150,7 +150,7 @@ export function getPiralPath(root: string, name: string) {
 }
 
 function getTypesWithout(types: string, startMarker: string, endMarker: string) {
-  const start = types.indexOf(startMarker);
+  const start = types.indexOf('\n' + startMarker);
 
   if (start >= 0) {
     const end = types.indexOf(endMarker, start) + endMarker.length;
@@ -173,7 +173,7 @@ async function patchPiralTypes(appPackage: any, agent: Agent) {
   if (normalTypes) {
     const types = await readText(root, normalTypes);
     const startMarker = `//===\n//piral-cli:remoteTypes/start\n//===`;
-    const endMarker = `//===\n//piral-cli:remoteTypes/end\n//===`;
+    const endMarker = `//===\n//piral-cli:remoteTypes/end\n//===\n`;
     const typesWithout = getTypesWithout(types, startMarker, endMarker);
 
     if (typesWithout !== types) {
