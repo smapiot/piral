@@ -8,6 +8,7 @@
 - Updated `dets` to latest release
 - Updated `piral-cli-webpack5` to never output empty `main.css` files in pilets
 - Added support for Angular 20 in `piral-ng`
+- Added `remoteTypes` to *piral.json* for specifying extra declarations
 
 ## 1.8.5 (April 15, 2025)
 
