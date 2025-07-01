@@ -2,7 +2,6 @@ import type { ComponentContext } from 'piral-core';
 import type { NgModuleFlags, NgOptions } from './types';
 import * as browserDynamic from '@angular/platform-browser-dynamic';
 import {
-  createPlatformFactory,
   enableProdMode,
   NgModuleRef,
   NgZone,
@@ -15,9 +14,9 @@ import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
 
+const normalCall = 'platformBrowserDynamic';
 const legacyCall = 'ɵplatformCoreDynamic';
-const platformCoreDynamic = browserDynamic.platformBrowserDynamic || browserDynamic[legacyCall];
-const INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS = browserDynamic.ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS;
+const platformCoreDynamic = normalCall in browserDynamic ? browserDynamic[normalCall] : browserDynamic[legacyCall];
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();
@@ -25,26 +24,12 @@ function getVersionHandler(versions: Record<string, () => void>) {
   return versions[version];
 }
 
-const newProviders = [
-  {
-    provide: ALLOW_MULTIPLE_PLATFORMS,
-    useValue: true,
-  },
-];
-
-// Equivalent to platformBrowserDynamic, but with support for multiple platforms
-const customPlatformDynamicFactory = createPlatformFactory(
-  platformCoreDynamic,
-  'piralDynamic',
-  Array.isArray(INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS)
-    ? INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS.concat(newProviders)
-    : newProviders,
-);
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
   const path = context.publicPath || '/';
-  const platform = customPlatformDynamicFactory([
+  const platform = platformCoreDynamic([
+    { provide: ALLOW_MULTIPLE_PLATFORMS, useValue: true },
     { provide: contextName, useValue: context },
     { provide: CONTEXT, useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
