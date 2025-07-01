@@ -53,7 +53,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "msal": "^1.1.1"
+    "msal": "^1"
   },
   "devDependencies": {
     "piral-core": "^1.8.5"

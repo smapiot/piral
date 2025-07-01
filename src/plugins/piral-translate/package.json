@@ -52,7 +52,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "deepmerge": "^4.2.2"
+    "deepmerge": "^4"
   },
   "devDependencies": {
     "@types/deepmerge": "^2.2.0",
