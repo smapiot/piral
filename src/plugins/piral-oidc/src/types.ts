@@ -1,5 +1,5 @@
 import type {} from 'piral-core';
-import type { Profile, StateStore } from 'oidc-client';
+import type { UserProfile, StateStore } from 'oidc-client-ts';
 
 /**
  * Available configuration options for the OpenID Connect plugin.
@@ -52,7 +52,7 @@ export interface OidcConfig {
    * via the responseType. By default, the responseType `code` will
    * get `query` and responseType `token` will get `fragment`.
    */
-  responseMode?: string;
+  responseMode?: 'query' | 'fragment';
   /**
    * The scopes to be used. By default, `openid` is used.
    */
@@ -150,7 +150,7 @@ export interface PiralCustomOidcProfile {}
 /**
  * The defined OIDC profile.
  */
-export type OidcProfile = PiralCustomOidcProfile & Profile;
+export type OidcProfile = PiralCustomOidcProfile & UserProfile;
 
 export interface OidcRequest {
   /**

@@ -8,6 +8,7 @@
 - Updated some dependencies such as `axios` (#765)
 - Updated `dets` to latest release
 - Updated `piral-cli-webpack5` to never output empty `main.css` files in pilets
+- Updated `piral-oidc` to use up-to-date `oidc-client-ts` instead of discontinued `oidc-client` library (#769)
 - Added support for Angular 20 in `piral-ng`
 
 ## 1.8.5 (April 15, 2025)
