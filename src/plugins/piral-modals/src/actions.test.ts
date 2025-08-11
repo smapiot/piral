@@ -65,10 +65,10 @@ describe('Modals Actions Module', () => {
   it('openModal adds a new modal', () => {
     const state: any = create(() => ({
       foo: 5,
-      modals: [{ id: 'b' }],
+      modals: [{ id: 'a' }],
     }));
     const ctx = createActions(state, createListener({}));
-    openModal(ctx, { id: 'a' });
+    openModal(ctx, { id: 'b' });
     expect(state.getState()).toEqual({
       foo: 5,
       modals: [{ id: 'a' }, { id: 'b' }],

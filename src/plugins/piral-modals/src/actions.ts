@@ -1,10 +1,10 @@
-import { withKey, withoutKey, prependItem, excludeOn, GlobalStateContext } from 'piral-core';
+import { withKey, withoutKey, excludeOn, GlobalStateContext, appendItem } from 'piral-core';
 import { ModalRegistration, OpenModalDialog } from './types';
 
 export function openModal(ctx: GlobalStateContext, dialog: OpenModalDialog) {
   ctx.dispatch((state) => ({
     ...state,
-    modals: prependItem(state.modals, dialog),
+    modals: appendItem(state.modals, dialog),
   }));
 }
 
