@@ -50,7 +50,7 @@
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {
-    "@jsenv/file-size-impact": "14.3.18",
+    "@jsenv/file-size-impact": "14.3.33",
     "@testing-library/dom": "^10",
     "@testing-library/react": "^16",
     "caniuse-lite": "^1.0.30001341",

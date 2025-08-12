@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: "20.12.2"
       - run: yarn install
+      - run: yarn install --ignore-scripts
       - name: Report changes
         run: node ./tools/size-reporter.mjs
         env:

@@ -40,7 +40,8 @@ export const Modals: React.FC = () => {
         )
       );
     })
-    .filter(Boolean).reverse();
+    .filter(Boolean)
+    .reverse();
   const open = children.length > 0;
 
   return (

@@ -3,6 +3,7 @@
 ## 1.9.0 (tbd)
 
 - Fixed platform providers for `piral-ng` with Angular 20 in non-standalone form (#764)
+- Improved dialog order in `piral-modals` (#773) by @pranav-hsg
 - Improved output when installation of packages fails (#759)
 - Improved error message when template resolution fails (#763)
 - Updated some dependencies such as `axios` (#765)
