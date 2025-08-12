@@ -21,9 +21,9 @@ function findModal(modals: Record<string, ModalRegistration>, name: string): Mod
 
 export const Modals: React.FC = () => {
   const modals = useGlobalState((s) => s.registry.modals);
-  const dialogs = [...useGlobalState((s) => s.modals)];
+  const dialogs = useGlobalState((s) => s.modals);
   const close = () => closeAll(dialogs);
-  const children = dialogs?.reverse()
+  const children = dialogs
     .map((n) => {
       const reg = modals[n.name] || findModal(modals, n.alternative);
       const Component = reg && reg.component;
@@ -40,7 +40,7 @@ export const Modals: React.FC = () => {
         )
       );
     })
-    .filter(Boolean);
+    .filter(Boolean).reverse();
   const open = children.length > 0;
 
   return (
