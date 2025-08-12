@@ -26,18 +26,22 @@ The extension slot module to be used in Angular components. This is not really n
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromNg` function from the Pilet API to convert your Angular components to components usable by your Piral instance.
+The recommended way is to use `piral-ng` from your pilets. In this case, no registration in the Piral instance is required.
 
 ### Example Usage
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { fromNg, defineNgModule } from 'piral-ng/convert';
 import { AngularPage } from './AngularPage';
+import { AngularModule } from './AngularModule';
 
 export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromNg(AngularPage));
+  defineNgModule(AngularModule);
+
+  piral.registerPage('/sample', fromNg(AngularPage));
 }
 ```
 
@@ -58,34 +62,18 @@ import { AngularPage } from './AngularPage';
 export class AppModule {}
 ```
 
-Now the example above changes:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { AppModule } from './AppModule';
-import { AngularPage } from './AngularPage';
-
-export function setup(piral: PiletApi) {
-  // this "teaches" Piral about the given module
-  piral.defineNgModule(AppModule);
-
-  // since we export the AngularPage from the defined module
-  // Piral will use the AppModule for bootstrapping the Ng app
-  piral.registerPage('/sample', piral.fromNg(AngularPage));
-}
-```
-
 ### Lazy Loading
 
 Even better, you can also lazy load the respective Angular module and components using the callback-based overload of `defineNgModule`:
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { defineNgModule } from 'piral-ng/convert';
 
 export function setup(piral: PiletApi) {
   // this "teaches" Piral about the given module, which is lazy loaded
   // important; in this case `./AppModule.ts` has a `default` export
-  const loadComponent = piral.defineNgModule(() => import('./AppModule'));
+  const loadComponent = defineNgModule(() => import('./AppModule'));
 
   // to fully lazy load we cannot reference the class anymore;
   // instead we reference the selector of the component
@@ -118,10 +106,11 @@ Standalone components can also be used with lazy loading.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { fromNg } from 'piral-ng/convert';
 
 export function setup(piral: PiletApi) {
   // Just make sure that `AngularPage` exports the component as `default` export
-  piral.registerPage('/sample', piral.fromNg(() => import('./AngularPage')));
+  piral.registerPage('/sample', fromNg(() => import('./AngularPage')));
 }
 ```
 
@@ -185,11 +174,12 @@ This is mainly used to allow an Angular Pilet to run without `zone.js` as descri
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
+import { defineNgModule } from 'piral-ng/convert';
 import { AppModule } from './AppModule';
 import { AngularPage } from './AngularPage';
 
 export function setup(piral: PiletApi) {
-  piral.defineNgModule(AppModule, { ngZone: 'noop' });
+  defineNgModule(AppModule, { ngZone: 'noop' });
 
   piral.registerPage('/sample', piral.fromNg(AngularPage));
 }
@@ -214,33 +204,6 @@ The `ResourceUrlPipe` is there to get the correct paths for images that are just
 ```
 
 In the example the relative path `images/coffee.jpg` will be expanded to a full URL rooted at the pilet's origin.
-
-Alternatively, if `piral-ng` has not been added to the Piral instance you can install and use the package also from a pilet directly.
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { fromNg } from 'piral-ng/convert';
-import { AngularPage } from './AngularPage';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', fromNg(AngularPage));
-}
-```
-
-Also, here you can make use of the `defineNgModule` function:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { fromNg, defineNgModule } from 'piral-ng/convert';
-import { AngularPage } from './AngularPage';
-import { AngularModule } from './AngularModule';
-
-export function setup(piral: PiletApi) {
-  defineNgModule(AngularModule);
-
-  piral.registerPage('/sample', fromNg(AngularPage));
-}
-```
 
 For components, such as the `AngularPage` a `template` should be specified.
 
@@ -351,10 +314,11 @@ module.exports = (config) => {
 ```
 
 **Note**: You must install these dependencies (also things like `copy-webpack-plugin`) yourself. `piral-ng` does not come with any dependencies for development.
-
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-ng` in your Piral instance.
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular 2+.
 
@@ -412,7 +376,6 @@ The related packages should be shared with the pilets via the *package.json*:
 ```
 
 Depending on your Angular needs you'd want to share more packages.
-
 :::
 
 ## Injected Services

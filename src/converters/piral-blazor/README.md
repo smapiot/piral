@@ -94,33 +94,13 @@ There is only a single argument, which refers to the name of the exposed Blazor 
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
 **Note**: If you use the .NET template (and specifically the `Piral.Blazor.Tools` package) then the whole JavaScript code will be generated for you. There is nothing you will need to do - even though you can also manually extend the generated JavaScript module.
 
-You can use the `fromBlazor` function from the Pilet API to convert your Blazor components to components usable by your Piral instance.
+The recommended way is to use `piral-blazor` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-
-export function setup(piral: PiletApi) {
-  piral.defineBlazorReferences([
-    require.resolve('./My.Dependency.dll'),
-    require.resolve('./My.Components.dll'),
-  ])
-  piral.registerPage('/sample', piral.fromBlazor('sample-page'));
-}
-```
-
-Within Blazor components the `Extension` component referenced from `Piral.Blazor.Utils`, e.g.,
-
-```jsx
-<Extension name="name-of-extension" />
-```
-
-Alternatively, if `piral-blazor` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -139,9 +119,16 @@ In this case, you'll also have to install the `blazor` package. `piral-blazor` w
 
 To maximize compatibility, the major and minor version of the `blazor` package should correspond to the major and minor version of .NET Blazor you want to use (e.g., `blazor@3.2.x` will resolve to the outdated .NET Blazor `3.2` release train - more recent ones look like `blazor@7.0.0`). It should be noted that the patch level is not aligned. If a specific patch level is desired, consult the `blazor` package documentation.
 
+Within Blazor components the `Extension` component referenced from `Piral.Blazor.Utils`, e.g.,
+
+```jsx
+<Extension name="name-of-extension" />
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-blazor` in your Piral instance.
 
 Using Blazor with Piral is as simple as installing the `piral-blazor` and `blazor` packages.
 

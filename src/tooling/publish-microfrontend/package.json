@@ -51,7 +51,7 @@
     "@types/node": "^18",
     "@types/rc": "^1",
     "@types/yargs": "^15",
-    "axios": "^1.7.7",
+    "axios": "^1",
     "chalk": "^5",
     "enhanced-resolve": "^5",
     "form-data": "^4",

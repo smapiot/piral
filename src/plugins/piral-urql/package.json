@@ -54,8 +54,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "subscriptions-transport-ws": "^0.9.16",
-    "urql": "^1.0.4"
+    "subscriptions-transport-ws": "^0.9",
+    "urql": "^1"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

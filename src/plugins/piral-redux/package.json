@@ -51,8 +51,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "react-redux": "^7.2.0",
-    "redux": "^4.0.5"
+    "react-redux": "^7",
+    "redux": "^4"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

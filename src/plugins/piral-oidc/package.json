@@ -52,7 +52,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "oidc-client": "^1.10.1"
+    "oidc-client-ts": "^3"
   },
   "devDependencies": {
     "piral-core": "^1.8.5"

@@ -22,29 +22,11 @@ The extension slot module to be referenced in Angular.js module definitions. All
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromNgjs` function from the Pilet API to convert your Angular.js modules to components usable by your Piral instance.
+The recommended way is to use `piral-ngjs` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { createAngularJsPage } from './AngularJsPage';
-
-export function setup(piral: PiletApi) {
-  const AngularJsPage = createAngularJsPage(piral.NgjsExtension.name);
-  piral.registerPage('/sample', piral.fromNgjs(AngularJsPage));
-}
-```
-
-Within Angular.js components the Piral Angular.js extension component can be used by referring to `NgjsExtension`, e.g.,
-
-```html
-<extension-component name="name-of-extension"></extension-component>
-```
-
-Alternatively, if `piral-ngjs` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -58,9 +40,16 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Within Angular.js components the Piral Angular.js extension component can be used by referring to `NgjsExtension`, e.g.,
+
+```html
+<extension-component name="name-of-extension"></extension-component>
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-ngjs` in your Piral instance.
 
 The provided library only brings API extensions for pilets to a Piral instance. The Piral instance still needs to be configured properly to support Angular.js 1.x. For this you'll need to install the `angular@^1.7` package.
 
@@ -91,7 +80,6 @@ The `angular` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
-
 :::
 
 ## License
