@@ -2,19 +2,31 @@ import { existsSync } from 'fs';
 import { Configuration } from 'webpack';
 import { DefaultConfiguration } from './webpack/common';
 
-export function extendConfig(
+export async function extendConfig(
   [webPackConfig, enhancer]: DefaultConfiguration,
   otherConfigPath: string,
   overrides: Configuration = {},
-): Configuration {
+): Promise<Configuration> {
   const original = webPackConfig;
 
   if (existsSync(otherConfigPath)) {
     try {
-      const otherConfig = require(otherConfigPath);
+      let otherConfig = require(otherConfigPath);
+      if (otherConfig.default) {
+        // The webpack config file appears to be an ESM module;
+        // this interop should give us the actual exported config
+        otherConfig = otherConfig.default;
+      }
 
       if (typeof otherConfig === 'function') {
-        webPackConfig = otherConfig(webPackConfig);
+        const configResult = otherConfig(webPackConfig);
+        // support Promise for returned config:
+        // https://webpack.js.org/configuration/configuration-types/#exporting-a-promise
+        if (configResult instanceof Promise) {
+          webPackConfig = await configResult;
+        } else {
+          webPackConfig = configResult;
+        }
       } else if (typeof otherConfig === 'object') {
         webPackConfig = {
           ...webPackConfig,
