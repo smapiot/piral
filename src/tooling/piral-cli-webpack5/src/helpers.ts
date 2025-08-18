@@ -19,14 +19,9 @@ export async function extendConfig(
       }
 
       if (typeof otherConfig === 'function') {
-        const configResult = otherConfig(webPackConfig);
         // support Promise for returned config:
         // https://webpack.js.org/configuration/configuration-types/#exporting-a-promise
-        if (configResult instanceof Promise) {
-          webPackConfig = await configResult;
-        } else {
-          webPackConfig = configResult;
-        }
+        webPackConfig = await otherConfig(webPackConfig);
       } else if (typeof otherConfig === 'object') {
         webPackConfig = {
           ...webPackConfig,
