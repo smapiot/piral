@@ -110,7 +110,7 @@ const handler: PiletBuildHandler = {
       options.contentHash,
       options.minify,
     );
-    const wpConfig = extendConfig(baseConfig, otherConfigPath, {
+    const wpConfig = await extendConfig(baseConfig, otherConfigPath, {
       watch: options.watch,
     });
 
