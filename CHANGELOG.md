@@ -11,6 +11,7 @@
 - Updated `piral-cli-webpack5` to never output empty `main.css` files in pilets
 - Updated `piral-oidc` to use up-to-date `oidc-client-ts` instead of discontinued `oidc-client` library (#769)
 - Added support for Angular 20 in `piral-ng`
+- Added support for Promise-based Webpack configuration files in `piral-cli-webpack5` (#774) by @grant-progress
 - Added `remoteTypes` to *piral.json* for specifying extra declarations
 
 ## 1.8.5 (April 15, 2025)
