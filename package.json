@@ -69,6 +69,7 @@
   "resolutions": {
     "cookie": "0.7.0",
     "node-fetch": "2.6.7",
-    "postcss": "8.4.40"
+    "postcss": "8.4.40",
+    "tmp": "0.2.5"
   }
 }

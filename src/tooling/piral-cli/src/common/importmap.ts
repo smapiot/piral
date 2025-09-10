@@ -1,10 +1,11 @@
 import { resolve, dirname, isAbsolute, basename } from 'path';
+
 import { log, fail } from './log';
 import { satisfies, validate } from './version';
 import { computeHash } from './hash';
 import { getHash, readJson, findFile, checkExists, checkIsDirectory } from './io';
 import { tryResolvePackage } from './npm';
-import { SharedDependency, Importmap, ImportmapVersions, ImportmapMode } from '../types';
+import type { SharedDependency, Importmap, ImportmapVersions, ImportmapMode, PiralPackageData } from '../types';
 
 const shorthandsUrls = ['', '.', '...'];
 
@@ -312,7 +313,7 @@ async function resolveImportmap(
 }
 async function consumeImportmap(
   dir: string,
-  packageDetails: any,
+  packageDetails: PiralPackageData,
   inherited: boolean,
   versionBehavior: ImportmapVersions,
   mode: ImportmapMode,
@@ -320,7 +321,7 @@ async function consumeImportmap(
 ): Promise<Array<SharedDependency>> {
   const importmap = packageDetails.importmap;
   const appShell = inherited && mode === 'remote';
-  const availableSpecs = appShell ? packageDetails.devDependencies ?? {} : {};
+  const availableSpecs = appShell ? (packageDetails.devDependencies ?? {}) : {};
   const inheritanceBehavior = appShell ? 'host' : mode;
 
   if (typeof importmap === 'string') {
@@ -366,7 +367,7 @@ async function consumeImportmap(
 
 export function readImportmap(
   dir: string,
-  packageDetails: any,
+  packageDetails: PiralPackageData,
   versionBehavior: ImportmapVersions = 'exact',
   inheritanceBehavior: ImportmapMode = 'remote',
 ): Promise<Array<SharedDependency>> {
