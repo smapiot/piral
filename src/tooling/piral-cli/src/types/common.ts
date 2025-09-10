@@ -59,8 +59,11 @@ export interface PiletPackageData extends PackageData {
 
 // Shape of the package.json of a Piral instance or emulator
 export interface PiralPackageData extends PackageData {
-  pilets?: PiletsInfo;
+  pilets?: PiletsInfo & {
+    externals: Array<string>;
+  };
   piralCLI?: { generated: boolean; version: string; remoteTypes?: string };
+  sharedDependencies?: Array<string>;
 }
 
 export interface PiralInstancePackageData extends PiralPackageData {

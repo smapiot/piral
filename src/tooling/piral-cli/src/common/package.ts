@@ -1,5 +1,6 @@
 import { Agent } from 'https';
 import { resolve, join, extname, basename, dirname, relative } from 'path';
+
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
@@ -20,8 +21,8 @@ import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson } from 
 import { satisfies } from './version';
 import { getModulePath } from '../external';
 import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
-import { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
-import { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
+import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
+import type { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
 export interface PiralInstanceData {
   packageName: Framework;
@@ -598,7 +599,7 @@ export function flattenExternals(dependencies: Array<SharedDependency>, disableA
   return dependencies.map(getName).filter(onlyUnique);
 }
 
-export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
+export async function retrieveExternals(root: string, packageInfo: PiralPackageData): Promise<Array<SharedDependency>> {
   const importmap = await readImportmap(root, packageInfo, 'exact', 'host');
 
   if (importmap.length === 0) {
