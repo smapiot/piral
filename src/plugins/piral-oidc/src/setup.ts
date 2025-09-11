@@ -1,4 +1,5 @@
 import { Log, User, UserManager, Logger } from 'oidc-client-ts';
+
 import { OidcError } from './OidcError';
 import { AuthenticationResult, LogLevel, OidcClient, OidcConfig, OidcErrorType, OidcProfile } from './types';
 
@@ -164,7 +165,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         if (appUri) {
           Logger.debug(`Redirecting to ${appUri} due to appUri being configured.`);
           window.location.href = appUri;
-          
+
           return resolve({
             shouldRender: false,
             state: user?.state,
