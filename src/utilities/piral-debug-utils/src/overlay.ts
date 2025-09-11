@@ -211,7 +211,6 @@ interface ExtendedError {
 
 interface ErrorOverlayProps {
   error: ExtendedError;
-  container: HTMLElement;
   errorId: string;
   errorType: string;
   pilet: string;

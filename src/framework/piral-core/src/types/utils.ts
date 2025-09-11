@@ -65,10 +65,6 @@ export interface PiralStoreDataEvent<TValue = any> {
  */
 export interface PiralUnhandledErrorEvent {
   /**
-   * The container showing the error / containing the component.
-   */
-  container: any;
-  /**
    * The type of the error, i.e., the type of component that crashed.
    */
   errorType: string;
