@@ -166,7 +166,7 @@ function getTypesWithout(types: string, startMarker: string, endMarker: string) 
   return types;
 }
 
-async function patchPiralTypes(appPackage: any, agent: Agent) {
+export async function patchPiralTypes(appPackage: any, agent: Agent) {
   const root = appPackage.root;
   const remoteTypes = appPackage.piralCLI?.remoteTypes;
   const normalTypes = appPackage.typings;
@@ -220,13 +220,13 @@ export async function findPiralInstance(
     }
 
     const appPackage = await loadPiralInstance(root, details);
-    await patchPiralTypes(appPackage, agent);
+    // await patchPiralTypes(appPackage, agent);
     return appPackage;
   } else if (url) {
     log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
     const emulator = await scaffoldFromEmulatorWebsite(rootDir, url, agent);
     const appPackage = await loadPiralInstance(emulator.path, details);
-    await patchPiralTypes(appPackage, agent);
+    // await patchPiralTypes(appPackage, agent);
     return appPackage;
   }
 
