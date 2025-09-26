@@ -157,9 +157,11 @@ interface RemoteTypeContent {
 
 function combineRemoteTypes(snippets: Array<RemoteTypeContent>) {
   if (snippets.length > 0) {
-    const head = snippets.map((m) => `import type {} from ${JSON.stringify(m.name)};`).join('\n');
+    const head = snippets.map((snippet) => `import type {} from ${JSON.stringify(snippet.name)};`).join('\n');
     const body = snippets
-      .map((m) => `declare module ${JSON.stringify(m.name)} {\n  ${m.text.split('\n').join('\n  ')}\n}`)
+      .map(
+        (snippet) => `declare module ${JSON.stringify(snippet.name)} {\n  ${snippet.text.split('\n').join('\n  ')}\n}`,
+      )
       .join('\n\n');
     return `${head}\n\n${body}\n`;
   }

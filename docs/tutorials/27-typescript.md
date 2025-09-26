@@ -1,6 +1,6 @@
 ---
 title: TypeScript Declarations
-description: Guidance how enhancd TypeScript support can be used in app shells and micro frontends.
+description: Guidance how enhanced TypeScript support can be used in app shells and micro frontends.
 audience: Architects, Developers
 level: Proficient
 section: Details
