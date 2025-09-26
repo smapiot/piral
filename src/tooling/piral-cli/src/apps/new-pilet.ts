@@ -31,6 +31,8 @@ import {
   ensure,
   getCertificate,
   getAgent,
+  defaultImportmapVersions,
+  defaultRemoteTypesTarget,
 } from '../common';
 
 export interface NewPiletOptions {
@@ -207,6 +209,8 @@ always-auth=true`,
         {
           $schema: piletJsonSchemaUrl,
           schemaVersion: defaultSchemaVersion,
+          importmapVersions: defaultImportmapVersions,
+          remoteTypesTarget: defaultRemoteTypesTarget,
           piralInstances: {},
         },
         undefined,
