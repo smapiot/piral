@@ -10,7 +10,7 @@ import { deepMerge } from './merge';
 import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
 import { getHash, checkIsDirectory, matchFiles, readText, writeText } from './io';
-import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
+import { readJson, copy, updateExistingJson, findFile, checkExists, removeFile } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
 import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite, retrieveExtraTypings } from './website';
@@ -156,11 +156,15 @@ interface RemoteTypeContent {
 }
 
 function combineRemoteTypes(snippets: Array<RemoteTypeContent>) {
-  const head = snippets.map((m) => `import type {} from ${JSON.stringify(m.name)};`).join('\n');
-  const body = snippets
-    .map((m) => `declare module ${JSON.stringify(m.name)} {\n  ${m.text.split('\n').join('\n  ')}\n}`)
-    .join('\n\n');
-  return `${head}\n${body}\n`;
+  if (snippets.length > 0) {
+    const head = snippets.map((m) => `import type {} from ${JSON.stringify(m.name)};`).join('\n');
+    const body = snippets
+      .map((m) => `declare module ${JSON.stringify(m.name)} {\n  ${m.text.split('\n').join('\n  ')}\n}`)
+      .join('\n\n');
+    return `${head}\n\n${body}\n`;
+  }
+
+  return '';
 }
 
 function extractRemoteTypesContent(content: string, piletName: string) {
@@ -181,10 +185,10 @@ function extractRemoteTypesContent(content: string, piletName: string) {
       }
     }
 
-    return output.join('\n');
+    return output.join('\n').trim();
   }
 
-  return undefined;
+  return '';
 }
 
 async function retrieveRemoteTypes(
@@ -241,10 +245,12 @@ async function writeRemoteTypes(
   if (proposedTarget) {
     const snippets = await retrieveRemoteTypes(appPackages, piletPackage, agent);
     const generatedText = combineRemoteTypes(snippets);
+    const target = resolve(rootDir, proposedTarget);
 
     if (generatedText) {
-      const target = resolve(rootDir, proposedTarget);
       await saveRemoteTypes(generatedText, target);
+    } else if (await checkExists(target)) {
+      await removeFile(target);
     }
   }
 }
