@@ -13,7 +13,7 @@ async function runBunProcess(args: Array<string>, target: string, output?: Memor
   try {
     return await runCommand('bun', args, cwd, output);
   } catch (err) {
-    log('generalInfo_0000', output.value);
+    log('generalInfo_0000', output.value || `bun failed due to ${err}`);
     throw err;
   }
 }

@@ -13,7 +13,7 @@ async function runNpmProcess(args: Array<string>, target: string, output?: Memor
   try {
     return await runCommand('npm', args, cwd, output);
   } catch (err) {
-    log('generalInfo_0000', output.value);
+    log('generalInfo_0000', output.value || `npm failed due to ${err}`);
     throw err;
   }
 }

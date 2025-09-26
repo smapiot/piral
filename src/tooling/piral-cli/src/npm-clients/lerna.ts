@@ -13,7 +13,7 @@ async function runLernaProcess(args: Array<string>, target: string, output?: Mem
   try {
     return await runCommand('lerna', args, cwd, output);
   } catch (err) {
-    log('generalInfo_0000', output.value);
+    log('generalInfo_0000', output.value || `lerna failed due to ${err}`);
     throw err;
   }
 }

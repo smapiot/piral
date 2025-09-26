@@ -15,7 +15,7 @@ async function runRushProcess(args: Array<string>, target: string, output?: Memo
   try {
     return await runCommand('rush', args, cwd, output);
   } catch (err) {
-    log('generalInfo_0000', output.value);
+    log('generalInfo_0000', output.value || `rush failed due to ${err}`);
     throw err;
   }
 }
