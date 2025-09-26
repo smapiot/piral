@@ -321,7 +321,13 @@ export async function findPiralInstances(
         return findPiralInstance(proposedApp, rootDir, details, agent, interactive);
       }),
     );
-    await writeRemoteTypes(rootDir, apps, piletPackage, piletDefinition, agent);
+
+    try {
+      await writeRemoteTypes(rootDir, apps, piletPackage, piletDefinition, agent);
+    } catch (err) {
+      log('generalWarning_0001', `Could not write the remote types: ${err.message}`);
+    }
+
     return apps;
   }
 
