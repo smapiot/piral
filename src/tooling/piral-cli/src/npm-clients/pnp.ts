@@ -13,7 +13,7 @@ async function runYarnProcess(args: Array<string>, target: string, output?: Memo
   try {
     return await runCommand('yarn', args, cwd, output);
   } catch (err) {
-    log('generalInfo_0000', output.value);    
+    log('generalInfo_0000', output.value);
     throw err;
   }
 }
