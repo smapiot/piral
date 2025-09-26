@@ -1,6 +1,6 @@
 {
   "name": "piral-containers",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "description": "Plugin for creating a pilet state container in Piral.",
   "keywords": [
     "piral",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "piral-core": "^1.8.5",
+    "piral-core": "^1.9.0",
     "react": "^18.0.0"
   }
 }
