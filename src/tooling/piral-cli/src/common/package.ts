@@ -150,43 +150,101 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
-function getTypesWithout(types: string, startMarker: string, endMarker: string) {
-  const start = types.indexOf('\n' + startMarker);
-
-  if (start >= 0) {
-    const end = types.indexOf(endMarker, start) + endMarker.length;
-
-    if (end > start) {
-      return types.substring(0, start) + types.substring(end);
-    }
-
-    return types.substring(0, start);
-  }
-
-  return types;
+interface RemoteTypeContent {
+  name: string;
+  text: string;
 }
 
-export async function patchPiralTypes(appPackage: any, agent: Agent) {
-  const root = appPackage.root;
-  const remoteTypes = appPackage.piralCLI?.remoteTypes;
-  const normalTypes = appPackage.typings;
+function combineRemoteTypes(snippets: Array<RemoteTypeContent>) {
+  const head = snippets.map((m) => `import type {} from ${JSON.stringify(m.name)};`).join('\n');
+  const body = snippets
+    .map((m) => `declare module ${JSON.stringify(m.name)} {\n  ${m.text.split('\n').join('\n  ')}\n}`)
+    .join('\n\n');
+  return `${head}\n${body}\n`;
+}
 
-  if (normalTypes) {
-    const types = await readText(root, normalTypes);
-    const startMarker = `//===\n//piral-cli:remoteTypes/start\n//===`;
-    const endMarker = `//===\n//piral-cli:remoteTypes/end\n//===\n`;
-    const typesWithout = getTypesWithout(types, startMarker, endMarker);
+function extractRemoteTypesContent(content: string, piletName: string) {
+  if (content) {
+    const lines = content.split('\n');
+    const output: Array<string> = [];
+    const startMarker = `/** BEGIN-MF: ${piletName} */`;
+    const endMarker = `/** END-MF: ${piletName} */`;
+    let insideSection = false;
 
-    if (typesWithout !== types) {
-      await writeText(root, normalTypes, typesWithout);
+    for (const line of lines) {
+      if (line === startMarker) {
+        insideSection = true;
+      } else if (line === endMarker) {
+        insideSection = false;
+      } else if (!insideSection) {
+        output.push(line);
+      }
     }
 
-    if (remoteTypes) {
-      const content = await retrieveExtraTypings(remoteTypes, agent);
+    return output.join('\n');
+  }
 
-      if (content) {
-        await writeText(root, normalTypes, [typesWithout, startMarker, content, endMarker].join('\n'));
+  return undefined;
+}
+
+async function retrieveRemoteTypes(
+  appPackages: Array<PiralInstancePackageData>,
+  piletPackage: PiletPackageData,
+  agent: Agent,
+) {
+  const snippets: Array<RemoteTypeContent> = [];
+
+  for (const appPackage of appPackages) {
+    const remoteTypes = appPackage.piralCLI?.remoteTypes;
+    log('generalDebug_0003', `Download the remote types from "${remoteTypes}" ...`);
+    const content = await retrieveExtraTypings(remoteTypes, agent);
+
+    if (content) {
+      const text = extractRemoteTypesContent(content, piletPackage.name);
+
+      if (text) {
+        snippets.push({
+          name: appPackage.name,
+          text,
+        });
       }
+    }
+  }
+
+  return snippets;
+}
+
+async function saveRemoteTypes(generatedText: string, target: string) {
+  const targetDir = dirname(target);
+  const fileName = basename(target);
+
+  log('generalDebug_0003', `Reading the current remote types from "${fileName}" in "${targetDir}" ...`);
+  const originalText = await readText(targetDir, fileName);
+
+  if (originalText !== generatedText) {
+    log('generalDebug_0003', `Writing the remote types to "${fileName}" in "${targetDir}" ...`);
+    await writeText(targetDir, fileName, generatedText);
+  }
+}
+
+async function writeRemoteTypes(
+  rootDir: string,
+  appPackages: Array<PiralInstancePackageData>,
+  piletPackage: PiletPackageData,
+  piletDefinition: PiletDefinition,
+  agent: Agent,
+) {
+  const { remoteTypesTarget } = piletDefinition || {};
+  const proposedTarget =
+    typeof remoteTypesTarget === 'string' ? remoteTypesTarget : remoteTypesTarget ? './src/remote.d.ts' : undefined;
+
+  if (proposedTarget) {
+    const snippets = await retrieveRemoteTypes(appPackages, piletPackage, agent);
+    const generatedText = combineRemoteTypes(snippets);
+
+    if (generatedText) {
+      const target = resolve(rootDir, proposedTarget);
+      await saveRemoteTypes(generatedText, target);
     }
   }
 }
@@ -219,15 +277,11 @@ export async function findPiralInstance(
       await updateFromEmulatorWebsite(root, url, agent, interactive);
     }
 
-    const appPackage = await loadPiralInstance(root, details);
-    // await patchPiralTypes(appPackage, agent);
-    return appPackage;
+    return await loadPiralInstance(root, details);
   } else if (url) {
     log('generalDebug_0003', `Piral instance not installed yet - trying from remote "${url}" ...`);
     const emulator = await scaffoldFromEmulatorWebsite(rootDir, url, agent);
-    const appPackage = await loadPiralInstance(emulator.path, details);
-    // await patchPiralTypes(appPackage, agent);
-    return appPackage;
+    return await loadPiralInstance(emulator.path, details);
   }
 
   fail('appInstanceNotFound_0010', proposedApp);
@@ -255,11 +309,14 @@ export async function findPiralInstances(
   }
 
   if (proposedApps.length > 0) {
-    return Promise.all(
-      proposedApps.map((proposedApp) =>
-        findPiralInstance(proposedApp, rootDir, piletDefinition?.piralInstances?.[proposedApp], agent, interactive),
-      ),
+    const apps = await Promise.all(
+      proposedApps.map((proposedApp) => {
+        const details = piletDefinition?.piralInstances?.[proposedApp];
+        return findPiralInstance(proposedApp, rootDir, details, agent, interactive);
+      }),
     );
+    await writeRemoteTypes(rootDir, apps, piletPackage, piletDefinition, agent);
+    return apps;
   }
 
   return [];

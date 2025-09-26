@@ -15,7 +15,8 @@
 - Added support for Angular 20 in `piral-ng`
 - Added warning in `piral-cli` when shared dependencies are wrongly declared (#768)
 - Added support for Promise-based Webpack configuration files in `piral-cli-webpack5` (#774) by @grant-progress
-- Added `remoteTypes` to *piral.json* for specifying extra declarations
+- Added `remoteTypesSource` to *piral.json* for specifying an URL for extra declarations
+- Added `remoteTypesTarget` to *pilet.json* for storing obtained extra declarations locally
 
 ## 1.8.5 (April 15, 2025)
 

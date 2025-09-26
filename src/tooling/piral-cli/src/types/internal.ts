@@ -21,6 +21,7 @@ export interface PiletDefinition {
   schemaVersion?: PiletSchemaVersion;
   importmapVersions?: ImportmapVersions;
   piralInstances?: Record<string, PiralInstanceDetails>;
+  remoteTypesTarget?: boolean | string;
 }
 
 export interface PackageFiles {

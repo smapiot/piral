@@ -28,6 +28,19 @@
       ],
       "description": "The default behavior for implicitly defined versions of shared dependencies."
     },
+    "remoteTypesTarget": {
+      "description": "The absolute or relative location of the file that is written with the remote types, if any. Default is './src/remote.d.ts'.",
+      "oneOf": [
+        {
+          "type": "boolean",
+          "description": "A truthy value indicates that the default value should be used. Otherwise, nothing is written."
+        },
+        {
+          "type": "string",
+          "description": "The absolute or relative location of the file with the remote types."
+        }
+      ]
+    },
     "piralInstances": {
       "type": "object",
       "description": "The app shells to be used for debugging the pilet. Each key defines the name of a Piral instance to be selectable.",
