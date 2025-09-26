@@ -1,4 +1,5 @@
-import { Log, User, UserManager } from 'oidc-client';
+import { Log, User, UserManager, Logger } from 'oidc-client-ts';
+
 import { OidcError } from './OidcError';
 import { AuthenticationResult, LogLevel, OidcClient, OidcConfig, OidcErrorType, OidcProfile } from './types';
 
@@ -67,11 +68,11 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
   });
 
   if (logLevel !== undefined) {
-    Log.logger = console;
-    Log.level = convertLogLevelToOidcClient(logLevel);
+    Log.setLogger(console);
+    Log.setLevel(convertLogLevelToOidcClient(logLevel));
   } else if (process.env.NODE_ENV === 'development') {
-    Log.logger = console;
-    Log.level = Log.DEBUG;
+    Log.setLogger(console);
+    Log.setLevel(Log.DEBUG);
   }
 
   if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri)) {
@@ -126,6 +127,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     new Promise(async (resolve, reject) => {
       /** The user that is resolved when finishing the callback  */
       let user: User;
+
       if (
         (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
           doesWindowLocationMatch(userManager.settings.popup_redirect_uri)) &&
@@ -137,10 +139,12 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
          * to update the parent. This is usually due to a timeout from a network error.
          */
         try {
-          user = await userManager.signinSilentCallback();
+          await userManager.signinSilentCallback();
+          user = await userManager.getUser();
         } catch (e) {
           return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
+
         return resolve({
           shouldRender: false,
           state: user?.state,
@@ -159,8 +163,9 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         }
 
         if (appUri) {
-          Log.debug(`Redirecting to ${appUri} due to appUri being configured.`);
+          Logger.debug(`Redirecting to ${appUri} due to appUri being configured.`);
           window.location.href = appUri;
+
           return resolve({
             shouldRender: false,
             state: user?.state,
@@ -220,7 +225,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
       return userManager.signoutRedirect();
     },
     revoke() {
-      return userManager.revokeAccessToken();
+      return userManager.revokeTokens();
     },
     handleAuthentication,
     extendHeaders(req) {

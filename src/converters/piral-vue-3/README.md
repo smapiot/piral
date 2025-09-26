@@ -65,28 +65,11 @@ Here we integrate the `i18next` plugin using the `i18next-vue` package. By defin
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromVue3` function from the Pilet API to convert your Vue@3 components to components usable by your Piral instance.
+The recommended way is to use `piral-vue-3` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import VuePage from './Page.vue';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromVue3(VuePage));
-}
-```
-
-Within Vue@3 components the Piral Vue@3 extension component can be used by referring to `extension-component`, e.g.,
-
-```html
-<extension-component name="name-of-extension"></extension-component>
-```
-
-Alternatively, if `piral-vue-3` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -98,9 +81,16 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Within Vue@3 components the Piral Vue@3 extension component can be used by referring to `extension-component`, e.g.,
+
+```html
+<extension-component name="name-of-extension"></extension-component>
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-vue-3` in your Piral instance.
 
 Using Vue with Piral is as simple as installing `piral-vue-3` and `vue@3`.
 
@@ -129,7 +119,6 @@ The `vue` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
-
 :::
 
 ## Development Setup

@@ -2,7 +2,7 @@
 
 # [Piral OIDC](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-oidc.svg?style=flat)](https://www.npmjs.com/package/piral-oidc) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Community Chat](https://dcbadge.vercel.app/api/server/kKJ2FZmK8t?style=flat)](https://discord.gg/kKJ2FZmK8t)
 
-This is a plugin that only has a peer dependency to `piral-core`. What `piral-oidc` brings to the table is a direct integration with OpenID Connect identity providers on basis of the oidc-client library that can be used with `piral` or `piral-core`.
+This is a plugin that only has a peer dependency to `piral-core`. What `piral-oidc` brings to the table is a direct integration with OpenID Connect identity providers on basis of the `oidc-client-ts` library that can be used with `piral` or `piral-core`.
 
 The set includes the `getAccessToken` API to retrieve the current user's access token, as well as `getProfile` to retrieve the current user's open id claims.
 
@@ -10,7 +10,7 @@ By default, these Pilet API extensions are not integrated in `piral`, so you'd n
 
 ## Why and When
 
-If you are using authorization with an OpenID Connect provider then `piral-oidc` might be a useful plugin. It uses the `oidc-client` library under the hood and exposes token functionality in common HTTP mechanisms (e.g., using `fetch` or a library such as `axios`). Pilets can get the currently available token via the pilet API.
+If you are using authorization with an OpenID Connect provider then `piral-oidc` might be a useful plugin. It uses the `oidc-client-ts` library under the hood and exposes token functionality in common HTTP mechanisms (e.g., using `fetch` or a library such as `axios`). Pilets can get the currently available token via the pilet API.
 
 Alternatives: Use a plugin that is specific to your method of authentication (e.g., `piral-auth` for generic user management, `piral-adal` for Microsoft, `piral-oauth2` for generic OAuth 2, etc.) or just a library.
 

@@ -20,6 +20,7 @@ export interface EmulatorWebsiteManifest {
   timestamp: string;
   scaffolding: {
     pilets: PiletsInfo;
+    remoteTypes?: string;
     cli: string;
   };
   files: EmulatorWebsiteManifestFiles;
@@ -58,8 +59,11 @@ export interface PiletPackageData extends PackageData {
 
 // Shape of the package.json of a Piral instance or emulator
 export interface PiralPackageData extends PackageData {
-  pilets?: PiletsInfo;
-  piralCLI?: { generated: boolean; version: string };
+  pilets?: PiletsInfo & {
+    externals: Array<string>;
+  };
+  piralCLI?: { generated: boolean; version: string; remoteTypes?: string };
+  sharedDependencies?: Array<string>;
 }
 
 export interface PiralInstancePackageData extends PiralPackageData {

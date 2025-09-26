@@ -1,9 +1,19 @@
+function getValue(value: any) {
+  try {
+    return value && value.toJSON instanceof Function ? value.toJSON() : value;
+  } catch {
+    // most likely its coming from a different context - emitting a security error
+    // see #775 for details
+    return `<protected>`;
+  }
+}
+
 export function decycle(obj: Record<string, any>) {
   const objects = [];
   const paths = [];
 
   const derez = (value: Record<string, any>, path: string) => {
-    const _value = value && value.toJSON instanceof Function ? value.toJSON() : value;
+    const _value = getValue(value);
 
     if (_value === null || _value === undefined) {
       return undefined;

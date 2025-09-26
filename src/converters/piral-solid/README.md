@@ -22,28 +22,11 @@ The extension slot component to be used in Solid components.
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromSolid` function from the Pilet API to convert your Solid components to components usable by your Piral instance.
+The recommended way is to use `piral-solid` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { SolidPage } from './SolidPage';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromSolid(SolidPage));
-}
-```
-
-Within Solid components the Piral Solid extension component can be used by referring to `SolidExtension`, e.g.,
-
-```jsx
-<SolidExtension name="name-of-extension" />
-```
-
-Alternatively, if `piral-solid` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -55,9 +38,16 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Within Solid components the Piral Solid extension component can be used by referring to `SolidExtension`, e.g.,
+
+```jsx
+<SolidExtension name="name-of-extension" />
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-solid` in your Piral instance.
 
 Using Solid with Piral is as simple as installing `piral-solid` and `solid-js@^1`.
 
@@ -87,7 +77,6 @@ The `solid-js` and `solid-js/web` packages should be shared with the pilets via 
   }
 }
 ```
-
 :::
 
 ## License

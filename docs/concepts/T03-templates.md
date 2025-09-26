@@ -33,7 +33,7 @@ Registry selection:
 
 A custom template is just an npm package that fulfills the following requirements:
 
-1. Expose a CommonJS module (`main` in the *package.json*)
+1. Expose a **CommonJS module** (`main` in the *package.json*)
 2. Have a `default` export being a function specified below
 3. Have `template` and either `pilet` (for pilets) or `piral` (for Piral instances) as keyword
 
@@ -84,3 +84,50 @@ interface ExecutionDetails {
 ```
 
 This way, the template packages are essentially factories to create virtual files which are then written out by the `piral-cli`.
+
+The easiest way to have a convenient codebase and adhere to the CommonJS output is to use a bundler such as `esbuild`. For instance, the following code (stored in *src/index.js*) would not work directly:
+
+```js
+import { createPiletTemplateFactory } from '@smapiot/template-utils';
+
+const root = resolve(__dirname, '..');
+
+export default createPiletTemplateFactory(root, () => [
+  {
+    languages: ['js', 'ts'],
+    name: 'foo.txt',
+    target: '<src>/foo.txt',
+  },
+]);
+```
+
+Here, we use an ES module. To bring that conveniently and efficiently into a CommonJS module you can use the following *package.json*:
+
+```json
+{
+  "name": "@custom/template",
+  "version": "1.0.0",
+  "keywords": ["template", "pilet"],
+  "engines": {
+    "node": ">=16.0",
+    "piral": "1.x"
+  },
+  "templateOptions": {},
+  "author": "Your name",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src",
+    "templates"
+  ],
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --outfile=./lib/index.js --platform=node"
+  },
+  "devDependencies": {
+    "@smapiot/template-utils": "^1.0.13"
+  }
+}
+```
+
+Importantly, you can run `npm run build` to convert the original ES module codebase to a single file stored in *lib/index.js*. This way, you do not need to declare runtime dependencies such as `@smapiot/template-utils` (they can remain a development-only dependency) and you obtain a legit CommonJS module.

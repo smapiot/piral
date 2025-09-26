@@ -1,5 +1,6 @@
 import { Agent } from 'https';
 import { resolve, join, extname, basename, dirname, relative } from 'path';
+
 import { log, fail } from './log';
 import { cliVersion } from './info';
 import { unpackTarball } from './archive';
@@ -8,11 +9,11 @@ import { checkAppShellCompatibility } from './compatibility';
 import { deepMerge } from './merge';
 import { onlyUnique } from './utils';
 import { readImportmap } from './importmap';
-import { getHash, checkIsDirectory, matchFiles } from './io';
-import { readJson, copy, updateExistingJson, findFile, checkExists } from './io';
+import { getHash, checkIsDirectory, matchFiles, readText, writeText } from './io';
+import { readJson, copy, updateExistingJson, findFile, checkExists, removeFile } from './io';
 import { isGitPackage, isLocalPackage, makeGitUrl, makeFilePath, tryResolvePackage, isNpmPackage } from './npm';
 import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion, makeNpmAlias } from './npm';
-import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite } from './website';
+import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite, retrieveExtraTypings } from './website';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
 import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson } from './constants';
@@ -20,8 +21,8 @@ import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson } from 
 import { satisfies } from './version';
 import { getModulePath } from '../external';
 import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
-import { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
-import { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
+import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
+import type { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
 export interface PiralInstanceData {
   packageName: Framework;
@@ -149,6 +150,113 @@ export function getPiralPath(root: string, name: string) {
   return dirname(path);
 }
 
+interface RemoteTypeContent {
+  name: string;
+  text: string;
+}
+
+function combineRemoteTypes(snippets: Array<RemoteTypeContent>) {
+  if (snippets.length > 0) {
+    const head = snippets.map((snippet) => `import type {} from ${JSON.stringify(snippet.name)};`).join('\n');
+    const body = snippets
+      .map(
+        (snippet) => `declare module ${JSON.stringify(snippet.name)} {\n  ${snippet.text.split('\n').join('\n  ')}\n}`,
+      )
+      .join('\n\n');
+    return `${head}\n\n${body}\n`;
+  }
+
+  return '';
+}
+
+function extractRemoteTypesContent(content: string, piletName: string) {
+  if (content) {
+    const lines = content.split('\n');
+    const output: Array<string> = [];
+    const startMarker = `/** BEGIN-MF: ${piletName} */`;
+    const endMarker = `/** END-MF: ${piletName} */`;
+    let insideSection = false;
+
+    for (const line of lines) {
+      if (line === startMarker) {
+        insideSection = true;
+      } else if (line === endMarker) {
+        insideSection = false;
+      } else if (!insideSection) {
+        output.push(line);
+      }
+    }
+
+    return output.join('\n').trim();
+  }
+
+  return '';
+}
+
+async function retrieveRemoteTypes(
+  appPackages: Array<PiralInstancePackageData>,
+  piletPackage: PiletPackageData,
+  agent: Agent,
+) {
+  const snippets: Array<RemoteTypeContent> = [];
+
+  for (const appPackage of appPackages) {
+    const remoteTypes = appPackage.piralCLI?.remoteTypes;
+    log('generalDebug_0003', `Download the remote types from "${remoteTypes}" ...`);
+    const content = await retrieveExtraTypings(remoteTypes, agent);
+
+    if (content) {
+      const text = extractRemoteTypesContent(content, piletPackage.name);
+
+      if (text) {
+        snippets.push({
+          name: appPackage.name,
+          text,
+        });
+      }
+    }
+  }
+
+  return snippets;
+}
+
+async function saveRemoteTypes(generatedText: string, target: string) {
+  const targetDir = dirname(target);
+  const fileName = basename(target);
+
+  log('generalDebug_0003', `Reading the current remote types from "${fileName}" in "${targetDir}" ...`);
+  const originalText = await readText(targetDir, fileName);
+
+  if (originalText !== generatedText) {
+    log('generalDebug_0003', `Writing the remote types to "${fileName}" in "${targetDir}" ...`);
+    await writeText(targetDir, fileName, generatedText);
+  }
+}
+
+async function writeRemoteTypes(
+  rootDir: string,
+  appPackages: Array<PiralInstancePackageData>,
+  piletPackage: PiletPackageData,
+  piletDefinition: PiletDefinition,
+  agent: Agent,
+) {
+  const { remoteTypesTarget } = piletDefinition || {};
+  const proposedTarget =
+    typeof remoteTypesTarget === 'string' ? remoteTypesTarget : remoteTypesTarget ? './src/remote.d.ts' : undefined;
+
+  if (proposedTarget) {
+    const snippets = await retrieveRemoteTypes(appPackages, piletPackage, agent);
+    const generatedText = combineRemoteTypes(snippets);
+    const target = resolve(rootDir, proposedTarget);
+
+    if (generatedText) {
+      await saveRemoteTypes(generatedText, target);
+    } else if (await checkExists(target)) {
+      await removeFile(target);
+    }
+  }
+}
+
 async function loadPiralInstance(root: string, details?: PiralInstanceDetails): Promise<PiralInstancePackageData> {
   log('generalDebug_0003', `Following the app package in "${root}" ...`);
   const appPackage = await readJson(root, packageJson);
@@ -209,11 +317,20 @@ export async function findPiralInstances(
   }
 
   if (proposedApps.length > 0) {
-    return Promise.all(
-      proposedApps.map((proposedApp) =>
-        findPiralInstance(proposedApp, rootDir, piletDefinition?.piralInstances?.[proposedApp], agent, interactive),
-      ),
+    const apps = await Promise.all(
+      proposedApps.map((proposedApp) => {
+        const details = piletDefinition?.piralInstances?.[proposedApp];
+        return findPiralInstance(proposedApp, rootDir, details, agent, interactive);
+      }),
     );
+
+    try {
+      await writeRemoteTypes(rootDir, apps, piletPackage, piletDefinition, agent);
+    } catch (err) {
+      log('generalWarning_0001', `Could not write the remote types: ${err.message}`);
+    }
+
+    return apps;
   }
 
   return [];
@@ -553,7 +670,7 @@ export function flattenExternals(dependencies: Array<SharedDependency>, disableA
   return dependencies.map(getName).filter(onlyUnique);
 }
 
-export async function retrieveExternals(root: string, packageInfo: any): Promise<Array<SharedDependency>> {
+export async function retrieveExternals(root: string, packageInfo: PiralPackageData): Promise<Array<SharedDependency>> {
   const importmap = await readImportmap(root, packageInfo, 'exact', 'host');
 
   if (importmap.length === 0) {
@@ -665,10 +782,7 @@ function isWebsiteCompatible(version: string) {
 async function getExistingDependencies(client: NpmClient): Promise<Array<string>> {
   if (client.monorepo) {
     const existingData = await readJson(client.monorepo, packageJson);
-    return [
-      ...Object.keys(existingData.devDependencies || {}),
-      ...Object.keys(existingData.dependencies || {}),
-    ];
+    return [...Object.keys(existingData.devDependencies || {}), ...Object.keys(existingData.dependencies || {})];
   }
 
   return [];
@@ -684,7 +798,7 @@ async function getPiletPackage(
   const { piralCLI = { version: cliVersion } } = piralInfo;
   const { packageOverrides, ...info } = getPiletsInfo(piralInfo);
   const existingData = newInfo ? {} : await readJson(root, packageJson);
-  const existingDependencies = await getExistingDependencies(client)
+  const existingDependencies = await getExistingDependencies(client);
   const piralDependencies = {
     ...piralInfo.devDependencies,
     ...piralInfo.dependencies,

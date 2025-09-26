@@ -106,7 +106,7 @@ const handler: PiralBuildHandler = {
       options.publicUrl,
       hmrPort,
     );
-    const wpConfig = extendConfig(baseConfig, otherConfigPath, {
+    const wpConfig = await extendConfig(baseConfig, otherConfigPath, {
       watch: options.watch,
     });
 

@@ -1,5 +1,23 @@
 # Piral Changelog
 
+## 1.9.0 (tbd)
+
+- Fixed platform providers for `piral-ng` with Angular 20 in non-standalone form (#764)
+- Fixed debug mode deserialization in case of modifications from other security contexts (#775)
+- Removed `container` property from the `unhandled-error` event arguments (#777)
+- Improved dialog order in `piral-modals` (#773) by @pranav-hsg
+- Improved output when installation of packages fails (#759)
+- Improved error message when template resolution fails (#763)
+- Updated some dependencies such as `axios` (#765)
+- Updated `dets` to latest release
+- Updated `piral-cli-webpack5` to never output empty `main.css` files in pilets
+- Updated `piral-oidc` to use up-to-date `oidc-client-ts` instead of discontinued `oidc-client` library (#769)
+- Added support for Angular 20 in `piral-ng`
+- Added warning in `piral-cli` when shared dependencies are wrongly declared (#768)
+- Added support for Promise-based Webpack configuration files in `piral-cli-webpack5` (#774) by @grant-progress
+- Added `remoteTypesSource` to *piral.json* for specifying an URL for extra declarations
+- Added `remoteTypesTarget` to *pilet.json* for storing obtained extra declarations locally
+
 ## 1.8.5 (April 15, 2025)
 
 - Fixed generation of declarations during `pilet build` in the `piral-cli`

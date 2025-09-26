@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
+
 import { RegisteredErrorInfo, RegisteredLoadingIndicator } from './components';
 import { defer } from '../utils';
-import { Errors, PiletApi } from '../types';
+import type { Errors, PiletApi } from '../types';
 
 export interface ErrorBoundaryProps {
   /**
@@ -52,9 +52,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       const pilet = piral.meta.name;
 
       defer(() => {
-        const container = findDOMNode(this);
         piral.emit('unhandled-error', {
-          container,
           errorType,
           error,
           pilet,

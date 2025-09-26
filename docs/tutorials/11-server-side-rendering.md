@@ -168,53 +168,6 @@ The diagram below shows this sequence.
 
 **Remark**: The replacement for the embedded data needs to be placed *before* the root module (in the example above `<script src="index.tsx"></script>`) is referenced.
 
-The embedded data is either the data from the pilet feed (this section) or the data from the feed including the pilets (see next section).
-
-## Embedding the Pilets
-
-Embedding the pilet feed may already be enough to provide improved startup performance. Nevertheless, especially for "cold starts", i.e., where no pilets have yet been seen or loaded, it can make sense to also deliver the pilets with the initial response.
-
-Following the approach described beforehand, we can extend the `sendIndex` function to also include the pilets.
-
-The only thing to add is the `getPilet` function in the provided options. This way, we can tell the SSR utility how to retrieve a pilet from its link.
-
-```ts
-import axios from 'axios';
-import { createApp } from '../common/app';
-
-const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/sample';
-
-function readRemoteText(link: string) {
-  return axios.get(link).then(res => res.data);
-}
-
-async function readRemoteJson(link: string) {
-  const content = await readRemoteText(link);
-  return JSON.parse(content);
-}
-
-async function sendIndex(_: express.Request, res: express.Response) {
-  const app = createApp();
-  const content = await renderFromServer(app, {
-    getPilet(url) {
-      return readRemoteText(url);
-    },
-    async getPiletsMetadata() {
-      const res = await readRemoteJson(feedUrl);
-      return res.items;
-    },
-    fillTemplate(body, script) {
-      return indexHtml
-        .replace('<div id="app"></div>', `<div id="app">${body}</div>`)
-        .replace('<noscript id="data"></noscript>', script);
-    },
-  });
-  res.send(content);
-}
-```
-
-Generally, this approach gives us quite some flexibility. It allows us to use caching in addition to HTTP requests. It also allows us to embed a pilet feed directly on the server-side, potentially not requiring any feed seen outside.
-
 ## Conclusion
 
 SSR can be helpful to improve startup performance and user experience. The cost of optimizing the backend is, however, not negligible and should be considered, too. Providing the fastest response possible to pilet feed and general page requests could be already sufficient to ensure a great user experience.

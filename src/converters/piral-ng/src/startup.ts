@@ -2,7 +2,6 @@ import type { ComponentContext } from 'piral-core';
 import type { NgModuleFlags, NgOptions } from './types';
 import * as browserDynamic from '@angular/platform-browser-dynamic';
 import {
-  createPlatformFactory,
   enableProdMode,
   NgModuleRef,
   NgZone,
@@ -15,9 +14,9 @@ import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
 
+const normalCall = 'platformBrowserDynamic';
 const legacyCall = 'ɵplatformCoreDynamic';
-const platformCoreDynamic = browserDynamic.platformBrowserDynamic || browserDynamic[legacyCall];
-const INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS = browserDynamic.ɵINTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS;
+const platformCoreDynamic = normalCall in browserDynamic ? browserDynamic[normalCall] : browserDynamic[legacyCall];
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();
@@ -25,19 +24,12 @@ function getVersionHandler(versions: Record<string, () => void>) {
   return versions[version];
 }
 
-// Equivalent to platformBrowserDynamic, but with support for multiple platforms
-const customPlatformDynamicFactory = createPlatformFactory(platformCoreDynamic, 'piralDynamic', [
-  ...INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
-  {
-    provide: ALLOW_MULTIPLE_PLATFORMS,
-    useValue: true,
-  },
-]);
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
   const path = context.publicPath || '/';
-  const platform = customPlatformDynamicFactory([
+  const platform = platformCoreDynamic([
+    { provide: ALLOW_MULTIPLE_PLATFORMS, useValue: true },
     { provide: contextName, useValue: context },
     { provide: CONTEXT, useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
@@ -124,13 +116,13 @@ if (process.env.NODE_ENV === 'development') {
       console.log('Running in legacy mode (Angular 2-8)');
     },
     outdated() {
-      console.log('Running in outdated mode (Angular 9-13)');
+      console.log('Running in outdated mode (Angular 9-15)');
     },
     current() {
-      console.log('Running in current mode (Angular 14-19)');
+      console.log('Running in current mode (Angular 16-20)');
     },
     next() {
-      console.log('Running in next mode (Angular 20)');
+      console.log('Running in next mode (Angular 21)');
     },
     unknown() {
       console.log('Running with an unknown version of Angular');
@@ -148,13 +140,14 @@ if (process.env.NODE_ENV === 'development') {
     v11: versionHandlers.outdated,
     v12: versionHandlers.outdated,
     v13: versionHandlers.outdated,
-    v14: versionHandlers.current,
-    v15: versionHandlers.current,
+    v14: versionHandlers.outdated,
+    v15: versionHandlers.outdated,
     v16: versionHandlers.current,
     v17: versionHandlers.current,
     v18: versionHandlers.current,
     v19: versionHandlers.current,
-    v20: versionHandlers.next,
+    v20: versionHandlers.current,
+    v21: versionHandlers.next,
   };
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;

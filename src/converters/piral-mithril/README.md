@@ -22,28 +22,11 @@ The extension slot component to be used in Mithril.js component.
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromMithril` function from the Pilet API to convert your Mithril.js components to components usable by your Piral instance.
+The recommended way is to use `piral-mithril` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { MithrilPage } from './MithrilPage';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromMithril(MithrilPage));
-}
-```
-
-Within Mithril.js components the Piral Mithril.js extension component can be used by referring to `MithrilExtension`, e.g.,
-
-```jsx
-<MithrilExtension name="name-of-extension" />
-```
-
-Alternatively, if `piral-mithril` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -55,9 +38,16 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Within Mithril.js components the Piral Mithril.js extension component can be used by referring to `MithrilExtension`, e.g.,
+
+```jsx
+<MithrilExtension name="name-of-extension" />
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-mithril` in your Piral instance.
 
 Using Mithril.js with Piral is as simple as installing `piral-mithril` and `mithril@^2`.
 
@@ -86,7 +76,6 @@ The `mithril` package should be shared with the pilets via the *package.json*:
   }
 }
 ```
-
 :::
 
 ## License

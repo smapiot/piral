@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vitest, beforeAll, beforeEach, afterAll } from 'vitest';
-import { UserManager } from 'oidc-client';
+import { UserManager } from 'oidc-client-ts';
 import { setupOidcClient } from './setup';
 import { OidcConfig, OidcErrorType } from './types';
 

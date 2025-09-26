@@ -140,7 +140,7 @@ The rule of thumb for sharing the type declarations is: Everything exported top-
 
 ### Exported Modules
 
-To simplify the process illustrated in the previous two sections you can use a special key called `shared` in your *pilet.json*, e.g.:
+To simplify the process illustrated in the previous two sections you can use a special key called `shared` in your *piral.json*, e.g.:
 
 ```json
 {

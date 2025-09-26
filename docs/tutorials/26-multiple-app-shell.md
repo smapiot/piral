@@ -132,3 +132,5 @@ This flag overrides the (primary) app shell selected via the `name` field of the
 ## Conclusion
 
 In this article, you've seen how pilets can be developed for multiple app shells. In theory, this is straightforward, however, depending on your (primary) app shell and the requirements it may be challenging. If you keep your pilets rather independent then a single artifact can be consumed by multiple shells. Otherwise, you can always opt-in to write code that can be published for different shells.
+
+In the next tutorial, we look at how enhanced TypeScript support works across Piral instances and pilets.

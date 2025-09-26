@@ -81,6 +81,7 @@ async function createEmulatorFiles(
       pilets: emulatorJson.scaffolding.pilets,
       piralCLI: {
         version: emulatorJson.scaffolding.cli,
+        remoteTypes: emulatorJson.scaffolding.remoteTypes,
         timestamp: emulatorJson.timestamp,
         source: manifestUrl,
         generated: true,
@@ -104,6 +105,12 @@ async function createEmulatorFiles(
   });
 
   await downloadEmulatorFiles(manifestUrl, targetDir, appDir, emulatorJson.files, httpsAgent);
+}
+
+export async function retrieveExtraTypings(url: string, httpsAgent: Agent): Promise<string> {
+  const opts = getAxiosOptions(url);
+  const result = await axios.get(url, { ...opts, httpsAgent });
+  return result.data;
 }
 
 export async function updateFromEmulatorWebsite(

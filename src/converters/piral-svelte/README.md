@@ -18,28 +18,11 @@ Transforms a standard Svelte component into a component that can be used in Pira
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromSvelte` function from the Pilet API to convert your Svelte components to components usable by your Piral instance.
+The recommended way is to use `piral-svelte` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import SveltePage from './Page.svelte';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromSvelte(SveltePage));
-}
-```
-
-Within Svelte components the Piral Svelte extension component can be used by referring to `svelte-extension`, e.g.,
-
-```html
-<svelte-extension name="name-of-extension"></svelte-extension>
-```
-
-Alternatively, if `piral-svelte` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -49,6 +32,12 @@ import SveltePage from './Page.svelte';
 export function setup(piral: PiletApi) {
   piral.registerPage('/sample', fromSvelte(SveltePage));
 }
+```
+
+Within Svelte components the Piral Svelte extension component can be used by referring to `svelte-extension`, e.g.,
+
+```html
+<svelte-extension name="name-of-extension"></svelte-extension>
 ```
 
 How you built your Svelte-pilet is up to you. If you use Webpack then the bundler options such as `piral-cli-webpack` or `piral-cli-webpack5` can be leveraged. In these cases you'd need to install the `svelte-loader` package and create a custom *webpack.config.js*:
@@ -111,10 +100,11 @@ module.exports = config => {
   return config;
 };
 ```
-
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-svelte` in your Piral instance.
 
 Using Svelte with Piral is as simple as installing `piral-svelte`. In the pilets using Svelte, `svelte` and `parcel-plugin-svelte` should be installed, too.
 
@@ -131,7 +121,6 @@ const instance = createInstance({
   // ...
 });
 ```
-
 :::
 
 ## Pilet Usage

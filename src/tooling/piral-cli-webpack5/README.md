@@ -64,6 +64,8 @@ module.exports = function(config) {
 };
 ```
 
+Your function may be async or return a Promise as needed.
+
 Otherwise, you can also use the `extend-config` helper module to get the job done without having to know the internals:
 
 ```js

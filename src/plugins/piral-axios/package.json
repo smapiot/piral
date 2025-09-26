@@ -52,7 +52,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "axios": "^1.7.7"
+    "axios": "^1"
   },
   "devDependencies": {
     "piral-core": "^1.8.5"

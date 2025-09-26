@@ -28,28 +28,11 @@ The extension slot component to be used in React 16+ components.
 
 ## Usage
 
-::: summary: For pilet authors
+::: summary: Modern Use (recommended)
 
-You can use the `fromReact` function from the Pilet API to convert your React 16+ components to components usable by your Piral instance.
+The recommended way is to use `piral-react` from your pilets. In this case, no registration in the Piral instance is required.
 
 Example use:
-
-```ts
-import { PiletApi } from '<name-of-piral-instance>';
-import { ReactPage } from './ReactPage';
-
-export function setup(piral: PiletApi) {
-  piral.registerPage('/sample', piral.fromReact(ReactPage));
-}
-```
-
-Within React 16+ components the Piral React 16+ extension component can be used by referring to `ReactExtension`, e.g.,
-
-```jsx
-<ReactExtension name="name-of-extension" />
-```
-
-Alternatively, if `piral-react` has not been added to the Piral instance you can install and use the package also from a pilet directly.
 
 ```ts
 import { PiletApi } from '<name-of-piral-instance>';
@@ -61,9 +44,16 @@ export function setup(piral: PiletApi) {
 }
 ```
 
+Within React 16+ components the Piral React 16+ extension component can be used by referring to `ReactExtension`, e.g.,
+
+```jsx
+<ReactExtension name="name-of-extension" />
+```
 :::
 
-::: summary: For Piral instance developers
+::: summary: Legacy Use
+
+For backwards compatibility, you can also install `piral-react` in your Piral instance.
 
 Using React 16+ with Piral is as simple as installing `piral-react` and `react`. For `react` add the following two packages to your project's dependencies:
 
@@ -103,7 +93,6 @@ The `react` package (or whatever alias you've chosen) should be shared with the 
   }
 }
 ```
-
 :::
 
 ## License
