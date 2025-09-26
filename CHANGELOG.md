@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.9.0 (tbd)
+## 1.9.0 (September 26, 2025)
 
 - Fixed platform providers for `piral-ng` with Angular 20 in non-standalone form (#764)
 - Fixed debug mode deserialization in case of modifications from other security contexts (#775)
