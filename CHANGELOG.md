@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.9.1 (tbd)
+
+- Improved `piral-cli` with smart bundler lookup during scaffolding
+
 ## 1.9.0 (September 26, 2025)
 
 - Fixed platform providers for `piral-ng` with Angular 20 in non-standalone form (#764)

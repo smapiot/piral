@@ -11,9 +11,12 @@ const rushJson = 'rush.json';
 async function runRushProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the Rush process ...');
   const cwd = resolve(process.cwd(), target);
+  return await runCommand('rush', args, cwd, output);
+}
 
+async function tryRunRushProcess(args: Array<string>, target: string, output: MemoryStream) {
   try {
-    return await runCommand('rush', args, cwd, output);
+    return await runRushProcess(args, target, output);
   } catch (err) {
     log('generalInfo_0000', output.value || `rush failed due to ${err}`);
     throw err;
@@ -41,21 +44,21 @@ function convert(flags: Array<string>) {
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runRushProcess(['update', ...convert(flags)], target, ms);
+  await tryRunRushProcess(['update', ...convert(flags)], target, ms);
   log('generalDebug_0003', `Rush install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runRushProcess(['remove', packageRef, ...convert(flags)], target, ms);
+  await tryRunRushProcess(['remove', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Rush remove package result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runRushProcess(['add', '--package', packageRef, ...convert(flags)], target, ms);
+  await tryRunRushProcess(['add', '--package', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Rush add package result: ${ms.value}`);
   return ms.value;
 }
@@ -114,11 +117,10 @@ export async function listProjects(target: string) {
 
   try {
     await runRushProcess(['list', '--json'], target, ms);
+    log('generalDebug_0003', `rush list project result: ${ms.value}`);
+    return JSON.parse(ms.value);
   } catch (e) {
     log('generalDebug_0003', `rush list error: ${e}`);
     return {};
   }
-
-  log('generalDebug_0003', `rush list project result: ${ms.value}`);
-  return JSON.parse(ms.value);
 }

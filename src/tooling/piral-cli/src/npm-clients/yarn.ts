@@ -9,9 +9,12 @@ import { MemoryStream } from '../common/MemoryStream';
 async function runYarnProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the Yarn Classic process ...');
   const cwd = resolve(process.cwd(), target);
+  return await runCommand('yarn', args, cwd, output);
+}
 
+async function tryRunYarnProcess(args: Array<string>, target: string, output: MemoryStream) {
   try {
-    return await runCommand('yarn', args, cwd, output);
+    return await runYarnProcess(args, target, output);
   } catch (err) {
     log('generalInfo_0000', output.value || `yarn failed due to ${err}`);
     throw err;
@@ -38,21 +41,21 @@ function convert(flags: Array<string>) {
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runYarnProcess(['install', ...convert(flags)], target, ms);
+  await tryRunYarnProcess(['install', ...convert(flags)], target, ms);
   log('generalDebug_0003', `Yarn Classic install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runYarnProcess(['remove', packageRef, ...convert(flags)], target, ms);
+  await tryRunYarnProcess(['remove', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Yarn Classic remove package result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
+  await tryRunYarnProcess(['add', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Yarn Classic add package result: ${ms.value}`);
   return ms.value;
 }
@@ -80,11 +83,10 @@ export async function listProjects(target: string) {
 
   try {
     await runYarnProcess(['workspaces', 'info'], target, ms);
+    log('generalDebug_0003', `yarn workspaces result: ${ms.value}`);
+    return JSON.parse(ms.value);
   } catch (e) {
     log('generalDebug_0003', `yarn workspaces error: ${e}`);
     return {};
   }
-
-  log('generalDebug_0003', `yarn workspaces result: ${ms.value}`);
-  return JSON.parse(ms.value);
 }
