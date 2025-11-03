@@ -246,74 +246,7 @@ export class AngularPage { /* ... */ }
 
 where you may need to tell your bundler how to treat these HTML files (i.e., transform these references to strings directly in the bundle).
 
-As an alternative, consider using Webpack with the `@ngtools/webpack` library. This allows you have a *webpack.config.js* like:
-
-```js
-const { AngularWebpackPlugin } = require('@ngtools/webpack');
-const CopyPlugin = require("copy-webpack-plugin");
-const { resolve } = require("path");
-
-module.exports = (config) => {
-  config.module.rules.filter(m => m.test.toString() === /\.css$/i.toString()).forEach(m => {
-    m.exclude = /\.component.css$/i;
-  });
-
-  config.module.rules.filter(m => m.test.toString() === /\.s[ac]ss$/i.toString()).forEach(m => {
-    m.exclude = /\.component.s[ac]ss$/i;
-  });
-
-  const cssLoaderNoModule = {
-    loader: require.resolve('css-loader'),
-    options: {
-      esModule: false,
-    },
-  };
-
-  const htmlLoaderNoModule = {
-    loader: require.resolve('html-loader'),
-    options: {
-      esModule: false,
-    },
-  };
-
-  const ruleIndex = config.module.rules.findIndex(m => m.test.toString() === /\.tsx?$/i.toString());
-
-  config.module.rules.splice(ruleIndex, 1,
-    {
-      test: /\.[jt]sx?$/,
-      loader: '@ngtools/webpack',
-    },
-    {
-      test: /\.component.html$/i,
-      use: ["to-string-loader", htmlLoaderNoModule],
-    },
-    {
-      test: /\.component.css$/i,
-      use: ["to-string-loader", cssLoaderNoModule],
-    },
-    {
-      test: /\.component.s[ac]ss$/i,
-      use: ["to-string-loader", cssLoaderNoModule, "sass-loader"],
-    });
-
-  config.plugins.push(
-    new AngularWebpackPlugin({
-      tsconfig: 'tsconfig.json',
-      jitMode: true,
-    }),
-    new CopyPlugin({
-      patterns: [
-        { from: resolve(__dirname, "src/assets") },
-      ],
-    }),
-  )
-
-
-  return config;
-};
-```
-
-**Note**: You must install these dependencies (also things like `copy-webpack-plugin`) yourself. `piral-ng` does not come with any dependencies for development.
+The standard bundler configuration can be done with `piral-ng/extend-webpack`. More information can be seen in the [Converting an Angular Application to a Pilet](#converting-an-angular-application-to-a-pilet) section.
 :::
 
 ::: summary: Legacy Use
