@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.9.1 (tbd)
+## 1.9.1 (November 6, 2025)
 
 - Fixed attempted download of remote types without a given URL
 - Fixed teardown of platform while code is running in `piral-ng` (#782)
