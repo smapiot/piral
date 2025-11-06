@@ -274,7 +274,9 @@ The idea is quite simple, components will always behave as follows for the lifet
 
 The unmount will *always* happen when the application is still running. In the case the application is closed, the components are not unmounted. Thus, this method should not be used to make some API cleanup calls or similar. Use the standard DOM method for these cases.
 
-## Context
+## Component Context
+
+### General Information
 
 When creating well-designed converters the concept of *context* is important. This becomes especially important to not only allow one-way (from the foreign component to a React component) conversions but also the other way around. Using Piral's extension mechanism, where components are offered in form of *extensions* two-way converters can be included, too.
 
@@ -377,7 +379,61 @@ In the provided example the context is directly transported into the `mount` fun
 
 While most frameworks come with a way to do this nicely, some lack this ability. In these cases, communication via events may be appropriate.
 
-By default, the `context` comes with two fields: `router` and `state`. While the former is the React Router context containing parts such as `history`, the latter is an `Atom<GlobalState>` to allow listening for global state changes.
+### Context Declaration
+
+By default, the `context` comes with two fields: `navigation` and `publicPath`. While the former is the navigation API containing parts such as `push`, the latter is the public path of the application itself, which might be useful for general purpose routing tasks.
+
+The navigation API has the following type declaration:
+
+```ts
+interface NavigationApi {
+  /**
+   * Pushes a new location onto the history stack.
+   */
+  push(target: string, state?: any): void;
+  /**
+   * Replaces the current location with another.
+   */
+  replace(target: string, state?: any): void;
+  /**
+   * Changes the current index in the history stack by a given delta.
+   */
+  go(n: number): void;
+  /**
+   * Prevents changes to the history stack from happening.
+   * This is useful when you want to prevent the user navigating
+   * away from the current page, for example when they have some
+   * unsaved data on the current page.
+   * @param blocker The function being called with a transition request.
+   * @returns The disposable for stopping the block.
+   */
+  block(blocker: NavigationBlocker): Disposable;
+  /**
+   * Starts listening for location changes and calls the given
+   * callback with an Update when it does.
+   * @param listener The function being called when the route changes.
+   * @returns The disposable for stopping the block.
+   */
+  listen(listener: NavigationListener): Disposable;
+  /**
+   * Gets the current navigation / application path.
+   */
+  path: string;
+  /**
+   * Gets the current navigation path incl. search and hash parts.
+   */
+  url: string;
+  /**
+   * The original router behind the navigation. Don't depend on this
+   * as the implementation is router specific and may change over time.
+   */
+  router: any;
+  /**
+   * Gets the public path of the application.
+   */
+  publicPath: string;
+}
+```
 
 ## Conclusion
 

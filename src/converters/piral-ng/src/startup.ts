@@ -1,6 +1,6 @@
 import type { ComponentContext } from 'piral-core';
-import type { NgModuleFlags, NgOptions } from './types';
 import * as browserDynamic from '@angular/platform-browser-dynamic';
+import { APP_BASE_HREF } from '@angular/common';
 import {
   enableProdMode,
   NgModuleRef,
@@ -9,10 +9,11 @@ import {
   ɵALLOW_MULTIPLE_PLATFORMS as ALLOW_MULTIPLE_PLATFORMS,
   VERSION,
 } from '@angular/core';
-import { APP_BASE_HREF } from '@angular/common';
+
 import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
+import type { NgModuleFlags, NgOptions } from './types';
 
 const normalCall = 'platformBrowserDynamic';
 const legacyCall = 'ɵplatformCoreDynamic';
@@ -79,11 +80,12 @@ export function teardown(BootstrapModule: any) {
   const runningModuleIndex = runningModules.findIndex(([ref]) => ref === BootstrapModule);
 
   if (runningModuleIndex !== -1) {
-    const [, , platform] = runningModules[runningModuleIndex];
-    runningModules.splice(runningModuleIndex, 1);
-
-    if (!platform.destroyed) {
-      platform.destroy();
+    const [, instance] = runningModules[runningModuleIndex];
+    try {
+      instance.destroy();
+      runningModules.splice(runningModuleIndex, 1);
+    } catch (ex) {
+      console.warn('Could not destroy the running Angular module', ex);
     }
   }
 }

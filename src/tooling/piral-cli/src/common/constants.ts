@@ -32,6 +32,7 @@ export const bundlerNames = [
   'vite' as const,
   'vite5' as const,
   'vite6' as const,
+  'vite7' as const,
   'xbuild' as const,
   'netpack' as const,
 ];

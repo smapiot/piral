@@ -57,13 +57,18 @@ vitest.mock('../external', async () => ({
 let specialCase = false;
 let shouldFind = true;
 let wrongCase = false;
+let resultOverride = '';
 const jsonValueString = JSON.stringify([{ name: 'npm' }]);
 const jsonValueStringWrong = JSON.stringify([]);
 
 vitest.mock('./scripts', () => ({
   runCommand: (exe: string, args: Array<string>, cwd: string, output?: NodeJS.WritableStream) => {
     return new Promise<void>((resolve) => {
-      output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
+      if (resultOverride) {
+        output?.write(resultOverride, () => {});
+      } else {
+        output?.write(wrongCase ? jsonValueStringWrong : jsonValueString, () => {});
+      }
       resolve();
     });
   },
@@ -164,7 +169,11 @@ describe('npm Module', () => {
   it('dissects a git SSH repo name correctly', async () => {
     wrongCase = false;
     const client = await determineNpmClient(process.cwd());
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'ssh://foo-bar.com/foo.git', client);
+    const [name, version, hadVersion, type] = await dissectPackageName(
+      process.cwd(),
+      'ssh://foo-bar.com/foo.git',
+      client,
+    );
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('git+ssh://foo-bar.com/foo.git');
@@ -174,7 +183,11 @@ describe('npm Module', () => {
   it('dissects a git HTTPS repo name correctly', async () => {
     wrongCase = false;
     const client = await determineNpmClient(process.cwd());
-    const [name, version, hadVersion, type] = await dissectPackageName(process.cwd(), 'https://foo-bar.com/foo.git', client);
+    const [name, version, hadVersion, type] = await dissectPackageName(
+      process.cwd(),
+      'https://foo-bar.com/foo.git',
+      client,
+    );
     expect(hadVersion).toBe(false);
     expect(version).toBe('latest');
     expect(name).toBe('git+https://foo-bar.com/foo.git');
@@ -336,11 +349,16 @@ describe('npm Module', () => {
     await findLatestVersion('foo').then((result) => expect(result).not.toEqual(jsonValueString));
   });
 
-  it('find specific version', async () => {
-    wrongCase = false;
-    await findSpecificVersion('foo', '1.0.0').then((result) => expect(result).toEqual(jsonValueString));
-    wrongCase = true;
-    await findSpecificVersion('foo', '1.0.0').then((result) => expect(result).not.toEqual(jsonValueString));
+  it('find specific version when it exists', async () => {
+    resultOverride = JSON.stringify(['1.0.0']);
+    const result = await findSpecificVersion('foo', '1.0.0');
+    expect(result).toEqual('1.0.0');
+  });
+
+  it('find specific version when it does not exist', async () => {
+    resultOverride = JSON.stringify(['2.0.0']);
+    const result = await findSpecificVersion('foo', '1.0.0');
+    expect(result).toEqual('');
   });
 
   it('check if package from full file is local', () => {

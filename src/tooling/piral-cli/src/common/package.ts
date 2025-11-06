@@ -202,17 +202,20 @@ async function retrieveRemoteTypes(
 
   for (const appPackage of appPackages) {
     const remoteTypes = appPackage.piralCLI?.remoteTypes;
-    log('generalDebug_0003', `Download the remote types from "${remoteTypes}" ...`);
-    const content = await retrieveExtraTypings(remoteTypes, agent);
 
-    if (content) {
-      const text = extractRemoteTypesContent(content, piletPackage.name);
+    if (remoteTypes && typeof remoteTypes === 'string') {
+      log('generalDebug_0003', `Download the remote types from "${remoteTypes}" ...`);
+      const content = await retrieveExtraTypings(remoteTypes, agent);
 
-      if (text) {
-        snippets.push({
-          name: appPackage.name,
-          text,
-        });
+      if (content) {
+        const text = extractRemoteTypesContent(content, piletPackage.name);
+
+        if (text) {
+          snippets.push({
+            name: appPackage.name,
+            text,
+          });
+        }
       }
     }
   }

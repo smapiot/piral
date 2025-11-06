@@ -9,9 +9,12 @@ import { MemoryStream } from '../common/MemoryStream';
 async function runPnpmProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the Pnpm process ...');
   const cwd = resolve(process.cwd(), target);
+  return await runCommand('pnpm', args, cwd, output);
+}
 
+async function tryRunPnpmProcess(args: Array<string>, target: string, output: MemoryStream) {
   try {
-    return await runCommand('pnpm', args, cwd, output);
+    return await runPnpmProcess(args, target, output);
   } catch (err) {
     log('generalInfo_0000', output.value || `pnpm failed due to ${err}`);
     throw err;
@@ -34,21 +37,21 @@ function convert(flags: Array<string>) {
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runPnpmProcess(['install', ...convert(flags)], target, ms);
+  await tryRunPnpmProcess(['install', ...convert(flags)], target, ms);
   log('generalDebug_0003', `Pnpm install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runPnpmProcess(['remove', packageRef, ...convert(flags)], target, ms);
+  await tryRunPnpmProcess(['remove', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Pnpm remove package result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runPnpmProcess(['add', packageRef, ...convert(flags)], target, ms);
+  await tryRunPnpmProcess(['add', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Pnpm add package result: ${ms.value}`);
   return ms.value;
 }
@@ -76,11 +79,10 @@ export async function listProjects(target: string) {
 
   try {
     await runPnpmProcess(['list', '--json', '--recursive', '--depth', '0'], target, ms);
+    log('generalDebug_0003', `pnpm list project result: ${ms.value}`);
+    return JSON.parse(ms.value);
   } catch (e) {
     log('generalDebug_0003', `pnpm list error: ${e}`);
     return [];
   }
-
-  log('generalDebug_0003', `pnpm list project result: ${ms.value}`);
-  return JSON.parse(ms.value);
 }

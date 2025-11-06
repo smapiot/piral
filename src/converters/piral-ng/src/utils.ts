@@ -9,7 +9,8 @@ export interface NgAnnotation {
   declarations: Array<any>;
   entryComponents: Array<any>;
   bootstrap: any;
-  selector: string;
+  selector?: string;
+  selectors?: Array<Array<string>>;
 }
 
 export function getId() {
@@ -33,7 +34,7 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
   }
 
   if (!annotations && typeof component.ɵcmp !== 'undefined') {
-    annotations = [{}];
+    annotations = [component.ɵcmp];
   }
 
   if (!annotations && typeof component.ɵmod !== 'undefined') {
@@ -45,7 +46,16 @@ export function getAnnotations(component: any): Array<NgAnnotation> {
 
 export function hasSelector(component: any, selector: string) {
   const [annotation] = getAnnotations(component);
-  return annotation && annotation.selector === selector;
+
+  if (annotation.selector === selector) {
+    return true;
+  }
+
+  if (!Array.isArray(annotation.selectors)) {
+    return false;
+  }
+
+  return annotation.selectors.some((sels) => sels.includes(selector));
 }
 
 export function findComponents(exports: Array<any>): Array<any> {

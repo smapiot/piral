@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 1.9.1 (tbd)
+
+- Fixed attempted download of remote types without a given URL
+- Fixed teardown of platform while code is running in `piral-ng` (#782)
+- Improved `piral-cli` with smart bundler lookup during scaffolding
+- Added `vite7` to available bundler options
+
 ## 1.9.0 (September 26, 2025)
 
 - Fixed platform providers for `piral-ng` with Angular 20 in non-standalone form (#764)

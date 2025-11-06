@@ -9,9 +9,12 @@ import { MemoryStream } from '../common/MemoryStream';
 async function runBunProcess(args: Array<string>, target: string, output?: MemoryStream) {
   log('generalDebug_0003', 'Starting the Bun process ...');
   const cwd = resolve(process.cwd(), target);
+  return await runCommand('bun', args, cwd, output);
+}
 
+async function tryRunBunProcess(args: Array<string>, target: string, output: MemoryStream) {
   try {
-    return await runCommand('bun', args, cwd, output);
+    return await runBunProcess(args, target, output);
   } catch (err) {
     log('generalInfo_0000', output.value || `bun failed due to ${err}`);
     throw err;
@@ -38,21 +41,21 @@ function convert(flags: Array<string>) {
 
 export async function installDependencies(target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runBunProcess(['install', ...convert(flags)], target, ms);
+  await tryRunBunProcess(['install', ...convert(flags)], target, ms);
   log('generalDebug_0003', `Bun install dependencies result: ${ms.value}`);
   return ms.value;
 }
 
 export async function uninstallPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runBunProcess(['remove', packageRef, ...convert(flags)], target, ms);
+  await tryRunBunProcess(['remove', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Bun remove package result: ${ms.value}`);
   return ms.value;
 }
 
 export async function installPackage(packageRef: string, target = '.', ...flags: Array<string>) {
   const ms = new MemoryStream();
-  await runBunProcess(['add', packageRef, ...convert(flags)], target, ms);
+  await tryRunBunProcess(['add', packageRef, ...convert(flags)], target, ms);
   log('generalDebug_0003', `Bun add package result: ${ms.value}`);
   return ms.value;
 }
@@ -81,14 +84,13 @@ export async function listProjects(target: string) {
 
   try {
     await runBunProcess(['pm', 'ls', '--all'], target, ms);
+    log('generalDebug_0003', `Bun workspaces result: ${ms.value}`);
+    return ms.value
+      .split('\n')
+      .filter((m) => m.startsWith('├──'))
+      .map((m) => m.replace('├── ', ''));
   } catch (e) {
     log('generalDebug_0003', `Bun workspaces error: ${e}`);
     return {};
   }
-
-  log('generalDebug_0003', `Bun workspaces result: ${ms.value}`);
-  return ms.value
-    .split('\n')
-    .filter((m) => m.startsWith('├──'))
-    .map((m) => m.replace('├── ', ''));
 }
