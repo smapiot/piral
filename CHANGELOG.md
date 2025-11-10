@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.9.2 (tbd)
+
+- Fixed removal of `ɵALLOW_MULTIPLE_PLATFORMS` in `@angualr/core` (#785)
+
 ## 1.9.1 (November 6, 2025)
 
 - Fixed attempted download of remote types without a given URL
