@@ -73,12 +73,12 @@ stages:
         Arguments: build:demo-minimal
     - task: Yarn@2
       displayName: Build Landing Page
-      condition: eq(variables['Build.SourceBranchName'], variables['documentBranch'])
+      condition: or(eq(variables['Build.SourceBranchName'], variables['documentBranch']), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
       inputs:
         Arguments: build:page
     - task: Yarn@2
       displayName: Build Documentation
-      condition: eq(variables['Build.SourceBranchName'], variables['documentBranch'])
+      condition: or(eq(variables['Build.SourceBranchName'], variables['documentBranch']), eq(variables['Build.SourceBranchName'], variables['releaseBranch']))
       inputs:
         Arguments: ci:docs
     - task: Yarn@2
@@ -484,8 +484,6 @@ stages:
             inputs:
               targetType: inline
               script: >-
-                git commit --allow-empty -m "Auto update documentation"
-
                 git push origin $(releaseBranch):$(documentBranch)
 
   - deployment: ReleaseDemoCross
@@ -756,7 +754,7 @@ stages:
 - stage: DeployHomepage
   displayName: Deploy Page
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['documentBranch']), eq(variables['Build.SourceBranchName'], variables['releaseBranch'])))
 
   jobs:
   - deployment: DeployLandingPage
@@ -787,7 +785,7 @@ stages:
 - stage: DeployDocumentation
   displayName: Deploy Documentation
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['documentBranch']), eq(variables['Build.SourceBranchName'], variables['releaseBranch'])))
 
   jobs:
   - deployment: DeployDocumentationPage
@@ -818,7 +816,7 @@ stages:
 - stage: DeployDemos
   displayName: Deploy Demos
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], variables['documentBranch']))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], variables['documentBranch']), eq(variables['Build.SourceBranchName'], variables['releaseBranch'])))
 
   jobs:
   - deployment: DeployCoreDemo
