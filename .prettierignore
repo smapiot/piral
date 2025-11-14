@@ -2,3 +2,6 @@ package.json
 package-lock.json
 src/**/node_modules
 src/**/lib
+
+/.nx/cache
+/.nx/workspace-data
