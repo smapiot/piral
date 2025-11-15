@@ -67,9 +67,11 @@
     "vitest": "^3"
   },
   "resolutions": {
-    "cookie": "0.7.0",
-    "node-fetch": "2.6.7",
-    "postcss": "8.4.40",
-    "tmp": "0.2.5"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "cookie": "^0.7.1",
+    "node-fetch": "^2.6.7",
+    "postcss": "^8.5.3",
+    "tmp": "^0.2.5"
   }
 }
