@@ -21,10 +21,7 @@ export default class SheetPlugin {
     compiler.hooks.compilation.tap('SheetPlugin', (compilation: Compilation) => {
       if (!compilation.compiler.parentCompilation) {
         compilation.hooks.processAssets.tap(
-          {
-            name: 'SheetPlugin',
-            stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
-          },
+          { name: 'SheetPlugin', stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS },
           (assets) => {
             if (!assets[this.cssName]) {
               const name = JSON.stringify(this.cssName);
@@ -33,7 +30,7 @@ export default class SheetPlugin {
               if (source instanceof CachedSource) {
                 const cs = source.original();
 
-                if (cs instanceof ConcatSource && cs.children) {
+                if (cs instanceof ConcatSource && 'children' in cs && Array.isArray(cs.children)) {
                   cs.children = cs.children.filter((m) => {
                     if (m instanceof CachedSource) {
                       const original = m.original();
