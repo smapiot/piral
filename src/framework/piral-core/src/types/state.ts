@@ -309,10 +309,7 @@ export interface PiralActions extends PiralCustomActions {
    * @param path The name of the component.
    * @param component The component to use for rendering.
    */
-  setRoute<T extends { [K in keyof T]?: string } = {}>(
-    path: string,
-    component: ComponentType<RouteComponentProps<T>>,
-  ): void;
+  setRoute<T extends { [K in keyof T]?: string } = {}>(path: string, component: ComponentType<any>): void;
   /**
    * Includes a new provider as a sub-provider to the current provider.
    * @param provider The provider to include.

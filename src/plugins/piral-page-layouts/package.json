@@ -50,7 +50,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.9.1",
-    "react-router-dom": "^5.2.0"
+    "piral-core": "^1.9.1"
   }
 }

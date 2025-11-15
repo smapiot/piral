@@ -1,20 +1,19 @@
 import { useEffect } from 'react';
-import { isfunc } from 'piral-core';
-import type { History, Location } from 'history';
+import { isfunc, NavigationApi, NavigationListener, NavigationBlocker } from 'piral-core';
 import { PromptMessage } from './types';
 
 /**
  * Hook to notify the user in case of potential data loss when
  * performing a page transition (internal or external).
  * @param active True if the prompt should be shown, otherwise false.
- * @param history The history of the currently used router.
+ * @param navigation The navigation API.
  * @param message The message to display when the prompt is shown.
  */
 export function usePrompt(
   active: boolean,
-  history: History,
+  navigation: NavigationApi,
   message: PromptMessage,
-  onTransition?: (location: Location) => void,
+  onTransition?: NavigationListener,
 ) {
   useEffect(() => {
     if (active) {
@@ -23,8 +22,9 @@ export function usePrompt(
         ev.returnValue = msg;
         return msg;
       };
-      const unlisten = onTransition && history.listen(onTransition);
-      const unblock = message && history.block(message);
+      const unlisten = onTransition && navigation.listen(onTransition);
+      const blocker = typeof message === 'function' ? message : () => message;
+      const unblock = message && navigation.block(blocker);
       window.addEventListener('beforeunload', beforeUnload);
       return () => {
         unlisten && unlisten();

@@ -1,6 +1,5 @@
-import type { History } from 'history';
 import { useState, useEffect, FormEvent } from 'react';
-import { isfunc, useAction, useGlobalState, isSame, generateId } from 'piral-core';
+import { isfunc, useAction, useGlobalState, isSame, generateId, NavigationApi } from 'piral-core';
 import { usePrompt } from './usePrompt';
 import { FormProps, InputFormOptions, FormDataState } from './types';
 
@@ -124,13 +123,13 @@ function createProps<TFormData>(
 /**
  * Hook for using a form locally that blocks if a transition is performed.
  * @param initialData The initial data of the form.
- * @param history The history to listen / block for changes / transitions.
+ * @param navigation The navigation API.
  * @param options The options used for creating the form.
  * @param existingId The existing id of the form, if any.
  */
 export function useForm<TFormData>(
   initialData: TFormData,
-  history: History,
+  navigation: NavigationApi,
   options: InputFormOptions<TFormData, any>,
   existingId?: string,
 ) {
@@ -138,7 +137,7 @@ export function useForm<TFormData>(
   const [id] = useState(existingId || generateId);
   const state = useGlobalState((m) => m.forms[id] || createDefaultState(initialData));
   const updateState = useAction('updateFormState');
-  usePrompt(!silent && state.changed, history, message);
+  usePrompt(!silent && state.changed, navigation, message);
   useEffect(() => {
     updateState(id, state, {
       active: true,

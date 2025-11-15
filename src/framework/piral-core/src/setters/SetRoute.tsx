@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { useGlobalStateContext, useSetter } from '../hooks';
 
 /**
@@ -13,7 +12,7 @@ export interface SetRouteProps<T extends { [K in keyof T]?: string } = {}> {
   /**
    * The component to render.
    */
-  component: React.ComponentType<RouteComponentProps<T>>;
+  component: React.ComponentType<any>;
 }
 
 /**

@@ -1,5 +1,4 @@
 import type { PropsWithChildren } from 'react';
-import type { RouteComponentProps } from 'react-router';
 import type {
   AnyComponent,
   BaseRegistration,
@@ -53,7 +52,7 @@ export interface PageLayoutRegistration extends BaseRegistration {
 /**
  * The error used when a page layout crashed.
  */
-export interface PageLayoutErrorInfoProps extends RouteComponentProps {
+export interface PageLayoutErrorInfoProps {
   /**
    * The type of the error.
    */
