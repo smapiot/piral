@@ -25,22 +25,22 @@
   "piletApiTypings": "lib/types/runtime.d.ts",
   "exports": {
     ".": {
+      "types": "./lib/index.full.d.ts",
       "node": "./dist/piral-base-node.js",
       "import": "./dist/piral-base-full.mjs",
-      "require": "./dist/piral-base-node.js",
-      "types": "./lib/index.full.d.ts"
+      "require": "./dist/piral-base-node.js"
     },
     "./minimal": {
-      "import": "./dist/piral-base-minimal.mjs",
-      "types": "./lib/index.minimal.d.ts"
+      "types": "./lib/index.minimal.d.ts",
+      "import": "./dist/piral-base-minimal.mjs"
     },
     "./node": {
-      "require": "./dist/piral-base-node.js",
-      "types": "./lib/index.node.d.ts"
+      "types": "./lib/index.node.d.ts",
+      "require": "./dist/piral-base-node.js"
     },
     "./full": {
-      "import": "./dist/piral-base-full.mjs",
-      "types": "./lib/index.full.d.ts"
+      "types": "./lib/index.full.d.ts",
+      "import": "./dist/piral-base-full.mjs"
     },
     "./lib/*": "./lib/*.d.ts",
     "./package.json": "./package.json"
