@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.9.2 (tbd)
+## 1.9.2 (November 19, 2025)
 
 - Fixed removal of `ɵALLOW_MULTIPLE_PLATFORMS` in `@angualr/core` (#785)
 - Removed `react-router` as a dependency in `piral-forms` and `piral-page-layouts` (#770)
