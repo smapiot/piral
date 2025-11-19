@@ -48,3 +48,5 @@ coverage
 
 # Generated Typings
 docs/types/*.json
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md

@@ -18,7 +18,7 @@ function createMockContainer() {
       emit: vitest.fn(),
       defineActions() {},
       state,
-      dispatch(update) {
+      dispatch(update: any) {
         state.setState(update(state.getState()));
       },
     } as any,
@@ -38,6 +38,6 @@ describe('Create Forms API Extensions', () => {
       },
     });
     const NewComponent = create(StubComponent);
-    expect(NewComponent.displayName).toBe('withRouter(FormLoader)');
+    expect(NewComponent.displayName).toBe('withForm(StubComponent)');
   });
 });

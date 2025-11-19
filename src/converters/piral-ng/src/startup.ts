@@ -1,23 +1,13 @@
 import type { ComponentContext } from 'piral-core';
-import * as browserDynamic from '@angular/platform-browser-dynamic';
+import type { NgModuleRef, PlatformRef } from '@angular/core';
+import * as angularBrowserDynamic from '@angular/platform-browser-dynamic';
+import * as angularCore from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import {
-  enableProdMode,
-  NgModuleRef,
-  NgZone,
-  PlatformRef,
-  ɵALLOW_MULTIPLE_PLATFORMS as ALLOW_MULTIPLE_PLATFORMS,
-  VERSION,
-} from '@angular/core';
 
 import { contextName } from './constants';
 import { CONTEXT } from './injection';
 import { getNgVersion } from './utils';
 import type { NgModuleFlags, NgOptions } from './types';
-
-const normalCall = 'platformBrowserDynamic';
-const legacyCall = 'ɵplatformCoreDynamic';
-const platformCoreDynamic = normalCall in browserDynamic ? browserDynamic[normalCall] : browserDynamic[legacyCall];
 
 function getVersionHandler(versions: Record<string, () => void>) {
   const major = getNgVersion();
@@ -28,43 +18,59 @@ function getVersionHandler(versions: Record<string, () => void>) {
 const runningModules: Array<[any, NgModuleInt, PlatformRef]> = [];
 
 function startNew(BootstrapModule: any, context: ComponentContext, ngOptions?: NgOptions, ngFlags?: NgModuleFlags) {
+  const normalCall = 'platformBrowserDynamic';
+  const legacyCall = 'ɵplatformCoreDynamic';
+  const multiplePlatforms = 'ɵALLOW_MULTIPLE_PLATFORMS';
+  const platformCoreDynamic =
+    normalCall in angularBrowserDynamic ? angularBrowserDynamic[normalCall] : angularBrowserDynamic[legacyCall];
   const path = context.publicPath || '/';
+  const extraDefinitions =
+    multiplePlatforms in angularCore ? [{ provide: angularCore[multiplePlatforms], useValue: true }] : [];
   const platform = platformCoreDynamic([
-    { provide: ALLOW_MULTIPLE_PLATFORMS, useValue: true },
+    ...extraDefinitions,
     { provide: contextName, useValue: context },
     { provide: CONTEXT, useValue: context },
     { provide: APP_BASE_HREF, useValue: path },
     { provide: 'NgFlags', useValue: ngFlags },
   ]);
 
-  // We need to bind the version-specific NgZone to its ID
-  // this will not be MF-dependent, but Angular dependent
-  // i.e., to allow using Zone.js with multiple versions of Angular
-  const zoneIdentifier = `piral-ng:${VERSION.full}`;
+  let zoneIdentifier = '';
 
-  // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
-  // See:
-  // - https://github.com/PlaceMe-SAS/single-spa-angular-cli/issues/33
-  // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L144
-  // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L257
-  // @ts-ignore
-  NgZone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
+  if ('NgZone' in angularCore) {
+    const zone = angularCore.NgZone;
+    const version = angularCore.VERSION.full;
 
-  // We disable those checks as they are misleading and might cause trouble
-  NgZone.assertInAngularZone = () => {};
-  NgZone.assertNotInAngularZone = () => {};
+    // We need to bind the version-specific NgZone to its ID
+    // this will not be MF-dependent, but Angular dependent
+    // i.e., to allow using Zone.js with multiple versions of Angular
+    zoneIdentifier = `piral-ng:${version}`;
+
+    // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
+    // See:
+    // - https://github.com/PlaceMe-SAS/single-spa-angular-cli/issues/33
+    // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L144
+    // - https://github.com/angular/angular/blob/a14dc2d7a4821a19f20a9547053a5734798f541e/packages/core/src/zone/ng_zone.ts#L257
+    // @ts-ignore
+    zone.isInAngularZone = () => window.Zone.current._properties[zoneIdentifier] === true;
+
+    // We disable those checks as they are misleading and might cause trouble
+    zone.assertInAngularZone = () => {};
+    zone.assertNotInAngularZone = () => {};
+  }
 
   return platform
     .bootstrapModule(BootstrapModule, ngOptions)
     .catch((err) => console.error(err))
     .then((instance: NgModuleInt) => {
       if (instance) {
-        const zone = instance.injector.get(NgZone);
-        // @ts-ignore
-        const z = zone?._inner ?? zone?.inner;
+        if (zoneIdentifier) {
+          const zone = instance.injector.get(angularCore.NgZone);
+          // @ts-ignore
+          const z = zone?._inner ?? zone?.inner;
 
-        if (z && '_properties' in z) {
-          z._properties[zoneIdentifier] = true;
+          if (z && '_properties' in z) {
+            z._properties[zoneIdentifier] = true;
+          }
         }
 
         runningModules.push([BootstrapModule, instance, platform]);
@@ -157,5 +163,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  enableProdMode();
+  if ('enableProdMode' in angularCore) {
+    angularCore.enableProdMode();
+  }
 }

@@ -32,7 +32,7 @@ export function createConverter(config: Vue3ConverterOptions = {}) {
   ): ForeignComponent<TProps> => ({
     mount(parent, data, ctx, locals: Vue3State) {
       const el = parent.appendChild(document.createElement(rootName));
-      const props = reactive({
+      const props: BaseComponentProps = reactive({
         ...captured,
         ...data,
       });

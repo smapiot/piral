@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.9.2 (tbd)
+
+- Fixed removal of `ɵALLOW_MULTIPLE_PLATFORMS` in `@angualr/core` (#785)
+- Removed `react-router` as a dependency in `piral-forms` and `piral-page-layouts` (#770)
+- Added help on NG04002 in the `piral-ng` documentation (#783)
+
 ## 1.9.1 (November 6, 2025)
 
 - Fixed attempted download of remote types without a given URL

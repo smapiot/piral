@@ -27,8 +27,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./package.json": "./package.json"
   },

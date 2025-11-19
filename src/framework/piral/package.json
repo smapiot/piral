@@ -22,8 +22,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./polyfills": "./polyfills.js",
     "./package.json": "./package.json"

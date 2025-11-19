@@ -390,6 +390,54 @@ export class SampleTileComponent {
 }
 ```
 
+## Setting Up Routing
+
+You can use the Angular router for (sub)pages that you register in your pilet's root module. In general the idea is that your page that includes a `<router-outlet>` will be registered in the global routing, but with a wildcard indicating that requests to paths below the main route are also handled by this page:
+
+```ts
+export function setup(app: PiletApi) {
+  const fromNg = createConverter(() => import('./app/app.module.ts'));
+
+  app.registerPage(`/app/*`, fromNg('app-page'));
+}
+```
+
+In your `app.module` include a routing module, e.g.:
+
+```ts
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+
+import { FirstPageComponent } from "./first.component";
+import { SecondPageComponent } from "./second.component";
+
+const routes: Routes = [
+  { path: "", redirectTo: "one", pathMatch: "full" },
+  { path: "one", component: FirstPageComponent },
+  { path: "two", component: SecondPageComponent },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { resolveNavigationPromiseOnError: true })],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+The `resolveNavigationPromiseOnError` option makes sure to hide navigation errors that will occur when you navigate globally, e.g., from a route defined in one micro frontend to some route from another micro frontend.
+
+As mentioned the linked `app-page` may be as simple as:
+
+```ts
+import { Component } from "@angular/core";
+
+@Component({
+  selector: 'app-page',
+  template: '<router-outlet></router-outlet>',
+})
+export class AppComponent {}
+```
+
 ## Converting an Angular Application to a Pilet
 
 Depending on the kind of Angular application this may be rather straight forward or very difficult. Since we cannot discuss all possible edge cases we will assume the standard scenario. If you need more help then don't hesitate to contact us.
@@ -493,7 +541,7 @@ If you still need to use `templateUrl` (or `styleUrls`) then take a look below a
 
 ## Angular Versions
 
-This plugin works with recent versions of Angular (right now 9 - 16). Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
+This plugin works with recent versions of Angular (right now 16 - 20) and (previously, i.e., not continuously tested) legacy versions starting with Angular 9. Support for Angular.js (also known as Angular 1) is given via `piral-ngjs`.
 
 ### Angular 9
 
@@ -740,7 +788,7 @@ The basic dependencies look as follows:
 }
 ```
 
-Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.3 (and less than 5.6).
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.5 (and less than 5.6).
 
 So include in your app shell as preamble:
 
@@ -769,7 +817,36 @@ The basic dependencies look as follows:
 }
 ```
 
-Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.5 (and less than 5.9).
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.7 (and less than 5.9).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 20
+
+In general, Angular 20 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^20",
+  "@angular/compiler": "^20",
+  "@angular/core": "^20",
+  "@angular/router": "^20",
+  "@angular/platform-browser": "^20",
+  "@angular/platform-browser-dynamic": "^20",
+  "core-js": "^3",
+  "rxjs": "^7.4",
+  "zone.js": "~0.15"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.8 (and less than 5.9).
 
 So include in your app shell as preamble:
 

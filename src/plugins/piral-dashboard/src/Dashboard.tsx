@@ -1,10 +1,9 @@
 import * as React from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
 import { useGlobalState } from 'piral-core';
 import { PiralDashboardContainer, PiralDashboardTile } from './components';
 import { TileRegistration } from './types';
 
-export interface DashboardProps extends RouteComponentProps {
+export interface DashboardProps {
   filter?(tile: TileRegistration): boolean;
 }
 

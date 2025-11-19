@@ -1,5 +1,4 @@
 import type { ComponentType, ReactNode } from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
 import type {
   Dict,
   WrappedComponent,
@@ -62,7 +61,7 @@ export interface InitialTile {
   preferences?: TilePreferences;
 }
 
-export interface DashboardContainerProps extends RouteComponentProps {
+export interface DashboardContainerProps {
   /**
    * The tiles to display.
    */

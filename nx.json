@@ -1,66 +1,65 @@
 {
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "build:convert",
-          "build:esnext",
-          "build:esnext:tsc",
-          "build:esnext:system",
-          "build:codegen",
-          "build:docs",
-          "build:bundle",
-          "build:emulator-sources",
-          "build:release",
-          "build:source",
-          "build:external"
-        ]
-      }
-    }
-  },
   "targetDefaults": {
     "build": {
       "dependsOn": [
         "^build"
-      ]
+      ],
+      "cache": true
     },
     "build:convert": {
       "outputs": [
         "{projectRoot}/convert.js",
         "{projectRoot}/convert.d.ts"
-      ]
+      ],
+      "cache": true
     },
     "build:esnext": {
       "outputs": [
         "{projectRoot}/lib"
-      ]
+      ],
+      "cache": true
     },
     "build:docs": {
       "outputs": [
         "{projectRoot}/dist"
-      ]
+      ],
+      "cache": true
     },
     "build:bundle": {
       "outputs": [
         "{projectRoot}/*.min.js"
-      ]
+      ],
+      "cache": true
     },
     "build:emulator-sources": {
       "outputs": [
         "{projectRoot}/dist/emulator"
-      ]
+      ],
+      "cache": true
     },
     "build:release": {
       "outputs": [
         "{projectRoot}/dist/release"
-      ]
+      ],
+      "cache": true
     },
     "build:external": {
       "outputs": [
         "{projectRoot}/lib/external/index.js"
-      ]
+      ],
+      "cache": true
+    },
+    "build:esnext:tsc": {
+      "cache": true
+    },
+    "build:esnext:system": {
+      "cache": true
+    },
+    "build:codegen": {
+      "cache": true
+    },
+    "build:source": {
+      "cache": true
     }
   }
 }

@@ -23,8 +23,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./convert": "./convert.js",
     "./extend-webpack": "./extend-webpack.js",

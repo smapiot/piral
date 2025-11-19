@@ -28,8 +28,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./app.codegen": "./app.codegen",
     "./package.json": "./package.json",

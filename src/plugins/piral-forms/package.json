@@ -22,8 +22,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./package.json": "./package.json"
   },
@@ -53,7 +53,6 @@
     "@types/react": "^18.0.0",
     "@types/react-router-dom": "^5.1.6",
     "piral-core": "^1.9.1",
-    "react": "^18.0.0",
-    "react-router-dom": "^5.2.0"
+    "react": "^18.0.0"
   }
 }

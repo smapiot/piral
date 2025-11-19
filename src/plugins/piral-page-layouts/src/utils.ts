@@ -1,6 +1,13 @@
-import { ComponentType, createElement, PropsWithChildren } from 'react';
-import { useLocation } from 'react-router-dom';
-import { PageComponentProps, Dict, defaultRender, useGlobalState, RouteSwitchProps, GlobalState } from 'piral-core';
+import { ComponentType, createElement, PropsWithChildren, useEffect, useState } from 'react';
+import {
+  PageComponentProps,
+  Dict,
+  defaultRender,
+  useGlobalState,
+  RouteSwitchProps,
+  GlobalState,
+  useGlobalStateContext,
+} from 'piral-core';
 import type { PageLayoutRegistration } from './types';
 
 const DefaultLayout: React.FC<PropsWithChildren> = (props) => defaultRender(props.children);
@@ -10,9 +17,16 @@ function createPageWrapper(
   fallback = 'default',
 ): ComponentType<RouteSwitchProps> {
   return (props) => {
-    const location = useLocation();
-    const data = props.paths.find((m) => m.matcher.test(location.pathname));
-    const layout = data?.meta?.layout || fallback;
+    const { navigation } = useGlobalStateContext();
+    const [layout, setLayout] = useState(fallback);
+
+    useEffect(() => {
+      return navigation.listen(({ location }) => {
+        const data = props.paths.find((m) => m.matcher.test(location.pathname));
+        setLayout(data?.meta?.layout || fallback);
+      });
+    }, []);
+
     const registration = useGlobalState((s) => s.registry.pageLayouts[layout] || s.registry.pageLayouts[fallback]);
     const Layout = registration?.component || DefaultLayout;
     return createElement(Layout, props, createElement(Routes, props));

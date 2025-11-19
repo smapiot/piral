@@ -28,8 +28,8 @@
     "./extend-webpack": "./extend-webpack.js",
     "./standalone": "./lib/standalone.js",
     "./lib/*": {
-      "import": "./lib/*",
-      "types": "./lib/*.d.ts"
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*"
     },
     "./package.json": "./package.json"
   },
