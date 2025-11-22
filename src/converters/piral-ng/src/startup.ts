@@ -124,10 +124,10 @@ if (process.env.NODE_ENV === 'development') {
       console.log('Running in legacy mode (Angular 2-8)');
     },
     outdated() {
-      console.log('Running in outdated mode (Angular 9-15)');
+      console.log('Running in outdated mode (Angular 9-18)');
     },
     current() {
-      console.log('Running in current mode (Angular 16-21)');
+      console.log('Running in current mode (Angular 19-21)');
     },
     next() {
       console.log('Running in next mode (Angular 22)');
@@ -150,9 +150,9 @@ if (process.env.NODE_ENV === 'development') {
     v13: versionHandlers.outdated,
     v14: versionHandlers.outdated,
     v15: versionHandlers.outdated,
-    v16: versionHandlers.current,
-    v17: versionHandlers.current,
-    v18: versionHandlers.current,
+    v16: versionHandlers.outdated,
+    v17: versionHandlers.outdated,
+    v18: versionHandlers.outdated,
     v19: versionHandlers.current,
     v20: versionHandlers.current,
     v21: versionHandlers.current,

@@ -855,6 +855,34 @@ import 'core-js/proposals/reflect-metadata';
 import '@angular/compiler';
 ```
 
+### Angular 21
+
+In general, Angular 21 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^21",
+  "@angular/compiler": "^21",
+  "@angular/core": "^21",
+  "@angular/router": "^21",
+  "@angular/platform-browser": "^21",
+  "@angular/platform-browser-dynamic": "^21",
+  "core-js": "^3",
+  "rxjs": "^7.4"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.9 (and less than 6.0).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
