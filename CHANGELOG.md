@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.10.0 (tbd)
+
+- Added support for Angular 21 in `piral-ng`
+
 ## 1.9.2 (November 19, 2025)
 
 - Fixed removal of `ɵALLOW_MULTIPLE_PLATFORMS` in `@angualr/core` (#785)
