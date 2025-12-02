@@ -2,6 +2,7 @@
 
 ## 1.10.0 (tbd)
 
+- Removed `always-auth` from all generated *.npmrc* files
 - Added support for Angular 21 in `piral-ng`
 
 ## 1.9.2 (November 19, 2025)
