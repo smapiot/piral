@@ -339,10 +339,16 @@ export async function findPiralInstances(
   return [];
 }
 
-export function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
+export async function readPiralPackage(root: string, name: string): Promise<PiralPackageData> {
   log('generalDebug_0003', `Reading the piral package in "${root}" ...`);
   const path = getPiralPath(root, name);
-  return readJson(path, packageJson);
+  const packageInfo = await readJson(path, packageJson);
+  const piralJsonPkg = await readJson(path, piralJson);
+
+  return {
+    ...piralJsonPkg,
+    ...packageInfo,
+  };
 }
 
 export async function patchPiralPackage(

@@ -2,6 +2,7 @@
 
 ## 1.10.0 (tbd)
 
+- Fixed usage of *piral.json* in monorepo scenarios for templating new pilets
 - Removed `always-auth` from all generated *.npmrc* files
 - Added support for Angular 21 in `piral-ng`
 
