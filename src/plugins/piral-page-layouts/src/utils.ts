@@ -7,10 +7,17 @@ import {
   RouteSwitchProps,
   GlobalState,
   useGlobalStateContext,
+  AppPath,
 } from 'piral-core';
+
 import type { PageLayoutRegistration } from './types';
 
 const DefaultLayout: React.FC<PropsWithChildren> = (props) => defaultRender(props.children);
+
+function findLayout(paths: Array<AppPath>, path: string, fallback: string) {
+  const data = paths.find((m) => m.matcher.test(path));
+  return data?.meta?.layout || fallback;
+}
 
 function createPageWrapper(
   Routes: ComponentType<RouteSwitchProps>,
@@ -18,12 +25,11 @@ function createPageWrapper(
 ): ComponentType<RouteSwitchProps> {
   return (props) => {
     const { navigation } = useGlobalStateContext();
-    const [layout, setLayout] = useState(fallback);
+    const [layout, setLayout] = useState(() => findLayout(props.paths, navigation.path, fallback));
 
     useEffect(() => {
       return navigation.listen(({ location }) => {
-        const data = props.paths.find((m) => m.matcher.test(location.pathname));
-        setLayout(data?.meta?.layout || fallback);
+        setLayout(findLayout(props.paths, location.pathname, fallback));
       });
     }, []);
 
