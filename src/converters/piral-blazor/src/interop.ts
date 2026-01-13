@@ -36,7 +36,11 @@ function createBase() {
   return document.head.appendChild(el);
 }
 
-async function prepareForStartup() {
+function defer() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+function prepareForStartup() {
   const originalApplyHotReload = window.Blazor._internal.applyHotReload;
   const queue = [];
 
@@ -56,16 +60,22 @@ async function prepareForStartup() {
     queue.push(() => originalApplyHotReload.apply(this, args));
   };
 
-  const capabilities = await getCapabilities();
+  return defer()
+    .then(getCapabilities)
+    .then((capabilities) => {
+      if (capabilities.includes('custom-element')) {
+        document.getElementById(blazorRootId).setAttribute('render', 'modern');
+      }
 
-  if (capabilities.includes('custom-element')) {
-    document.getElementById(blazorRootId).setAttribute('render', 'modern');
-  }
+      return {
+        capabilities,
+        applyChanges,
+      };
+    });
+}
 
-  return {
-    capabilities,
-    applyChanges,
-  };
+function startBlazor(opts: WebAssemblyStartOptions) {
+  return window.Blazor.start({ ...opts, webAssembly: opts }).then(prepareForStartup);
 }
 
 function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions) => Promise<BlazorRootConfig> {
@@ -106,19 +116,14 @@ function createBlazorStarter(publicPath: string): (opts: WebAssemblyStartOptions
 
       navManager.getBaseURI = () => originalBase;
 
-      return window.Blazor.start(opts)
-        .then(prepareForStartup)
-        .then(({ capabilities, applyChanges }) => {
-          baseElement.href = originalBase;
-          return [root, capabilities, applyChanges];
-        });
+      return startBlazor(opts).then(({ capabilities, applyChanges }) => {
+        baseElement.href = originalBase;
+        return [root, capabilities, applyChanges];
+      });
     };
   }
 
-  return (opts) =>
-    window.Blazor.start(opts)
-      .then(prepareForStartup)
-      .then(({ capabilities, applyChanges }) => [root, capabilities, applyChanges]);
+  return (opts) => startBlazor(opts).then(({ capabilities, applyChanges }) => [root, capabilities, applyChanges]);
 }
 
 function computePath() {

@@ -7,11 +7,13 @@ const loadedDependencies = (window.$blazorDependencies ??= []);
 const depsWithPrios = (window.$blazorDependencyPrios ??= []);
 
 function toExtLessUrl(url: string) {
-  const idx = url.lastIndexOf('.');
-  const sep = url.lastIndexOf('/');
+  if (url) {
+    const idx = url.lastIndexOf('.');
+    const sep = url.lastIndexOf('/');
 
-  if (idx > sep) {
-    return url.substring(0, idx);
+    if (idx > sep) {
+      return url.substring(0, idx);
+    }
   }
 
   return url;
@@ -23,10 +25,13 @@ function toPdb(url: string) {
 
 function toDepName(url: string) {
   const front = toExtLessUrl(url);
-  const idx = front.lastIndexOf('/');
 
-  if (idx >= 0) {
-    return front.substring(idx + 1);
+  if (front) {
+    const idx = front.lastIndexOf('/');
+
+    if (idx >= 0) {
+      return front.substring(idx + 1);
+    }
   }
 
   return front;

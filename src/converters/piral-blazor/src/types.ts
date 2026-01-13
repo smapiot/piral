@@ -38,11 +38,19 @@ export interface WebAssemblyStartOptions {
   applicationCulture?: string;
 }
 
+export interface ModernBlazorStartOptions {
+  webAssembly?: WebAssemblyStartOptions;
+}
+
+export type LegacyBlazorStartOptions = Partial<WebAssemblyStartOptions>;
+
+export type BlazorStartOptions = LegacyBlazorStartOptions | ModernBlazorStartOptions;
+
 declare global {
   interface Window {
     MutationEvent: any;
     Blazor: {
-      start(options?: Partial<WebAssemblyStartOptions>): Promise<void>;
+      start(options?: BlazorStartOptions): Promise<void>;
       emitPiralEvent(type: string, args: any): void;
       emitRenderEvent(
         source: HTMLElement,
