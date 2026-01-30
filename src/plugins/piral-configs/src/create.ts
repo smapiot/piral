@@ -1,6 +1,7 @@
 import { PiralPlugin } from 'piral-core';
 import { Validator, Schema } from 'jsonschema';
-import { PiletConfigsApi } from './types';
+
+import type { PiletConfigsApi } from './types';
 
 /**
  * Available configuration options for the configs plugin.

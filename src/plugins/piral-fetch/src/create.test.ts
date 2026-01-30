@@ -10,7 +10,7 @@ import { createFetchApi } from './create';
 
 describe('Create fetch API Module', () => {
   let terminate = () => {};
-  let port;
+  let port: number;
 
   beforeAll(async () => {
     const app = express();
@@ -102,7 +102,7 @@ describe('Create fetch API Module', () => {
   it('invokes middleware functions in top-down order', async () => {
     const context = { emit: vitest.fn() } as any;
     const invocationOrder: Array<number> = [];
-    const createMiddleware = (myPosition: number) => (path, options, next) => {
+    const createMiddleware = (myPosition: number) => (path: string, options: any, next: any) => {
       invocationOrder.push(myPosition);
       return next(path, options);
     };
