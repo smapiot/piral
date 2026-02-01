@@ -7,6 +7,7 @@
 - Fixed initial layout decision in `piral-page-layouts` (#790)
 - Removed `always-auth` from all generated *.npmrc* files
 - Added support for Angular 21 in `piral-ng`
+- Added `withFormHandler` function to `piral-forms` (#797)
 
 ## 1.9.2 (November 19, 2025)
 
