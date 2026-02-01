@@ -137,6 +137,10 @@ export type PromptMessage = string | (() => string);
 
 export interface InputFormOptions<TFormData, TProps> {
   /**
+   * If enabled does not prevent submission of unchanged forms.
+   */
+  allowSubmitUnchanged?: boolean;
+  /**
    * If enabled does not notify the user that form data could be lost on page transitions.
    */
   silent?: boolean;
@@ -175,8 +179,15 @@ export interface InputFormOptions<TFormData, TProps> {
 
 export interface PiletFormsApi {
   /**
-   * Creates an input form for tracking user input intelligently.
+   * Creates an input form for tracking user input intelligently, i.e., puts given components into a form element.
    * @param options The options for creating the form.
    */
   createForm<TFormData, TProps = {}>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
+  /**
+   * Creates a wrapper for tracking user input intelligently. Still requires a form element somewhere.
+   * @param options The options for creating the form handler.
+   */
+  createFormHandler<TFormData, TProps = {}>(
+    options: InputFormOptions<TFormData, TProps>,
+  ): FormCreator<TFormData, TProps>;
 }

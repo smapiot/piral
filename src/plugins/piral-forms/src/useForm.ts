@@ -96,7 +96,7 @@ function createProps<TFormData>(
     submit(e?: FormEvent) {
       e && e.preventDefault();
 
-      if (state.changed) {
+      if (options.allowSubmitUnchanged || state.changed) {
         submitData(id, state, updateState, options);
       }
 

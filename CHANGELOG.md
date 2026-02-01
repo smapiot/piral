@@ -8,6 +8,7 @@
 - Removed `always-auth` from all generated *.npmrc* files
 - Added support for Angular 21 in `piral-ng`
 - Added `withFormHandler` function to `piral-forms` (#797)
+- Added `allowSubmitUnchanged` option to form creation in `piral-forms` (#798)
 
 ## 1.9.2 (November 19, 2025)
 
