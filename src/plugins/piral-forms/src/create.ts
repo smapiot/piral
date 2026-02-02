@@ -24,10 +24,10 @@ export function createFormsApi(config: FormsConfig = {}): PiralPlugin<PiletForms
 
     return {
       createForm(options) {
-        return (component) => withForm(component, options);
-      },
-      createFormHandler(options) {
-        return (component) => withFormHandler(component, options);
+        return (component, config) => {
+          const hoc = config?.skipForm ? withFormHandler : withForm;
+          return hoc(component, options);
+        };
       },
     };
   };

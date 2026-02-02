@@ -127,7 +127,15 @@ export interface FormCreator<TFormData, TRequiredProps> {
   /**
    * Form function for wrapping a component.
    */
-  <TProps extends TRequiredProps>(component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
+  <TProps extends TRequiredProps>(
+    component: ComponentType<TProps & FormProps<TFormData>>,
+    config?: {
+      /**
+       * Indicates if the wrapping `<form>` element should be omitted.
+       */
+      skipForm?: boolean;
+    },
+  ): FC<TProps>;
 }
 
 /**
@@ -179,15 +187,8 @@ export interface InputFormOptions<TFormData, TProps> {
 
 export interface PiletFormsApi {
   /**
-   * Creates an input form for tracking user input intelligently, i.e., puts given components into a form element.
+   * Creates an input form for tracking user input intelligently.
    * @param options The options for creating the form.
    */
   createForm<TFormData, TProps = {}>(options: InputFormOptions<TFormData, TProps>): FormCreator<TFormData, TProps>;
-  /**
-   * Creates a wrapper for tracking user input intelligently. Still requires a form element somewhere.
-   * @param options The options for creating the form handler.
-   */
-  createFormHandler<TFormData, TProps = {}>(
-    options: InputFormOptions<TFormData, TProps>,
-  ): FormCreator<TFormData, TProps>;
 }

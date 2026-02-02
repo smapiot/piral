@@ -40,4 +40,18 @@ describe('Create Forms API Extensions', () => {
     const NewComponent = create(StubComponent);
     expect(NewComponent.displayName).toBe('withForm(StubComponent)');
   });
+
+  it('createCoreApi can also avoid wrapping in a form', () => {
+    const container = createMockContainer();
+    container.context.updateFormState = vitest.fn();
+    const api = createFormsApi()(container.context) as any;
+    const create = api.createForm({
+      emptyData: {},
+      onSubmit() {
+        return Promise.resolve();
+      },
+    });
+    const NewComponent = create(StubComponent, { skipForm: true });
+    expect(NewComponent.displayName).toBe('withFormHandler(StubComponent)');
+  });
 });
