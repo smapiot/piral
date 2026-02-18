@@ -3,6 +3,7 @@ import 'systemjs/dist/extras/named-register.js';
 
 import { describe, it, expect, vitest } from 'vitest';
 import loader from './index';
+import type { Pilet } from '../../types';
 
 describe('v3 loader module', () => {
   it('creates a new pilet with an empty setup function', async () => {
@@ -103,5 +104,33 @@ describe('v3 loader module', () => {
     expect(pilet.foo).toBe('a');
     expect(pilet.bar).toBe(undefined);
     expect(pilet.basePath).toBe('https://example.com/foo/bar/');
+  });
+
+  it('handles style links gracefully', async () => {
+    const app = {
+      setup: vitest.fn(),
+      styles: [
+        'style1.css',
+        '//style2.css',
+        '../style3.css',
+        'assets/style4.css',
+        'https://somewhereelse.com/style.css',
+      ],
+    };
+    System.import = vitest.fn(() => Promise.resolve(app)) as any;
+    const meta: any = {
+      foo: 'a',
+      link: 'https://example.com/foo/bar/index.js',
+    };
+    const outputStyles: string[] = [];
+    const attachStyles = (_pilet: Pilet, url: string) => outputStyles.push(url);
+    await loader(meta, { attachStyles });
+    expect(outputStyles).toEqual([
+      'https://example.com/foo/bar/style1.css',
+      'https://style2.css/',
+      'https://example.com/foo/style3.css',
+      'https://example.com/foo/bar/assets/style4.css',
+      'https://somewhereelse.com/style.css',
+    ]);
   });
 });

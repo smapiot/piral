@@ -35,7 +35,8 @@ export default function loader(entry: PiletV3Entry, options: DefaultLoaderConfig
 
     if (Array.isArray(app.styles)) {
       for (const style of app.styles) {
-        attachStyles(pilet, `${pilet.basePath}/${style}`);
+        const url = new URL(style, pilet.basePath).toString();
+        attachStyles(pilet, url);
       }
     }
 

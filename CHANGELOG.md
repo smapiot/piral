@@ -9,6 +9,7 @@
 - Added support for Angular 21 in `piral-ng`
 - Added `skipForm` config `createForm` pilet API function originating from `piral-forms` (#797)
 - Added `allowSubmitUnchanged` option to form creation in `piral-forms` (#798)
+- fixed resolution of style links in v3 loaders in `piral-base`
 
 ## 1.9.2 (November 19, 2025)
 
