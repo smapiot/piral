@@ -110,10 +110,11 @@ jobs:
           git config --global user.name "Piral Release Bot"
 
       - name: Canary-Release Packages
-        run: yarn ci:i:canar
+        run: yarn ci:i:canary
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
+          BUILD_BUILDID: ${{ github.run_id }}
 
   prerelease:
     name: Preview Packages
@@ -152,6 +153,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
+          BUILD_BUILDID: ${{ github.run_id }}
 
   release:
     name: Release Packages
