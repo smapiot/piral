@@ -5,6 +5,7 @@
 - Fixed usage of *piral.json* in monorepo scenarios for templating new pilets
 - Fixed deferred initialization for standalone Blazor applications using `piral-blazor`
 - Fixed initial layout decision in `piral-page-layouts` (#790)
+- Fixed resolution of style links in v3 loaders in `piral-base` (#802)
 - Removed `always-auth` from all generated *.npmrc* files
 - Added support for Angular 21 in `piral-ng`
 - Added `skipForm` config `createForm` pilet API function originating from `piral-forms` (#797)
