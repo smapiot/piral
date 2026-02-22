@@ -1,0 +1,201 @@
+name: build
+
+on:
+  push:
+    branches: [ experimental, documentation, develop, main ]
+  pull_request:
+    branches: [ develop ]
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  NODE_VERSION: 22.12.0
+  RELEASE_BRANCH: main
+  PREVIEW_BRANCH: develop
+  CANARY_BRANCH: experimental
+  DOCUMENT_BRANCH: documentation
+  NPM_CONFIG_PROVENANCE: true
+
+jobs:
+  build:
+    name: Process Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Build Core Demo
+        run: yarn build:demo-core
+
+      - name: Build CrossFx Demo
+        run: yarn build:demo-cross
+
+      - name: Build Full Demo
+        run: yarn build:demo-full
+
+      - name: Build Empty Shell
+        if: github.ref_name != env.DOCUMENT_BRANCH
+        run: yarn build:demo-empty
+
+      - name: Build Minimal Demo
+        if: github.ref_name != env.DOCUMENT_BRANCH
+        run: yarn build:demo-minimal
+
+      - name: Build Landing Page
+        if: github.ref_name == env.DOCUMENT_BRANCH || github.ref_name == env.RELEASE_BRANCH
+        run: yarn build:page
+
+      - name: Build Documentation
+        if: github.ref_name == env.DOCUMENT_BRANCH || github.ref_name == env.RELEASE_BRANCH
+        run: yarn ci:docs
+
+      - name: Test Code
+        if: github.ref_name != env.DOCUMENT_BRANCH
+        run: yarn test
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  canary:
+    name: Canary Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == env.CANARY_BRANCH
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Canary-Release Packages
+        run: yarn ci:i:canar
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+  prerelease:
+    name: Preview Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == env.PREVIEW_BRANCH
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Pre-Release Packages
+        run: yarn ci:prerelease
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+  release:
+    name: Release Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == env.RELEASE_BRANCH
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Update Release Date
+        run: yarn ci:version-update
+
+      - name: Release Packages
+        run: yarn ci:release
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Push release branch updates
+        run: git push origin ${RELEASE_BRANCH}
+
+      - name: Update Documentation Branch
+        run: git push origin ${RELEASE_BRANCH}:${DOCUMENT_BRANCH}
