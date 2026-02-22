@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ experimental, documentation, develop, main ]
+    branches: [ experimental, develop, main ]
   pull_request:
     branches: [ develop ]
 
@@ -52,23 +52,12 @@ jobs:
         run: yarn build:demo-full
 
       - name: Build Empty Shell
-        if: github.ref_name != env.DOCUMENT_BRANCH
         run: yarn build:demo-empty
 
       - name: Build Minimal Demo
-        if: github.ref_name != env.DOCUMENT_BRANCH
         run: yarn build:demo-minimal
 
-      - name: Build Landing Page
-        if: github.ref_name == env.DOCUMENT_BRANCH || github.ref_name == env.RELEASE_BRANCH
-        run: yarn build:page
-
-      - name: Build Documentation
-        if: github.ref_name == env.DOCUMENT_BRANCH || github.ref_name == env.RELEASE_BRANCH
-        run: yarn ci:docs
-
       - name: Test Code
-        if: github.ref_name != env.DOCUMENT_BRANCH
         run: yarn test
 
       - name: Upload dist artifact
@@ -155,6 +144,31 @@ jobs:
           NPM_CONFIG_PROVENANCE: true
           BUILD_BUILDID: ${{ github.run_id }}
 
+      - name: Build Emulator Packages
+        run: |
+          rm -rf dist/demo-cross/emulator
+          rm -rf dist/demo-full/emulator
+          rm -rf dist/demo-minimal/emulator
+          rm -rf dist/demo-empty/emulator
+          yarn build:demo-cross --type emulator
+          yarn build:demo-full --type emulator
+          yarn build:demo-minimal --type emulator
+          yarn build:demo-empty --type emulator
+          mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+          mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
+          mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+
+      - name: Pre-Release Emulator Packages
+        run: |
+          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next --provenance
+          npm publish dist/demo-full/emulator/sample-full.tgz --tag next --provenance
+          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag next --provenance
+          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag next --provenance
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
   release:
     name: Release Packages
     needs: build
@@ -192,6 +206,35 @@ jobs:
 
       - name: Release Packages
         run: yarn ci:release
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Build Emulator Packages
+        run: |
+          rm -rf dist/demo-cross/emulator
+          rm -rf dist/demo-full/emulator
+          rm -rf dist/demo-minimal/emulator
+          rm -rf dist/demo-empty/emulator
+          rm -rf dist/siteless/emulator
+          yarn build:demo-cross --type emulator
+          yarn build:demo-full --type emulator
+          yarn build:demo-minimal --type emulator
+          yarn build:demo-empty --type emulator
+          yarn build:siteless
+          mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+          mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
+          mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+          mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
+
+      - name: Release Emulator Packages
+        run: |
+          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
+          npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
+          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
+          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
+          npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
