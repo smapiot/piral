@@ -81,7 +81,7 @@ jobs:
     name: Canary Packages
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref_name == env.CANARY_BRANCH
+    if: github.ref_name == 'experimental'
 
     steps:
       - name: Checkout
@@ -119,7 +119,7 @@ jobs:
     name: Preview Packages
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref_name == env.PREVIEW_BRANCH
+    if: github.ref_name == 'develop'
 
     steps:
       - name: Checkout
@@ -157,7 +157,7 @@ jobs:
     name: Release Packages
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref_name == env.RELEASE_BRANCH
+    if: github.ref_name == 'main'
 
     steps:
       - name: Checkout
