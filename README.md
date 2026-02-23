@@ -24,7 +24,6 @@ This makes Piral an ideal foundation for a mid-sized to large-scale applications
 
 ## Important Links
 
-* 📢 **[We are hiring!](https://smapiot.com/jobs)** - work with us on Piral, its ecosystem and our users
 * 🌍 [Website](https://piral.io/) - learn more about Piral
 * 📖 [Documentation](https://docs.piral.io/) - everything to get started and master micro frontends
 * 🉐 **Help translating Piral!** - making PRs in the [documentation branch](https://github.com/smapiot/piral/tree/documentation)

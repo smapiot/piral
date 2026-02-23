@@ -13,18 +13,18 @@ function attach(element: React.ReactElement): InitialMenuItem {
 export function setupFooter() {
   return [
     attach(
-      <a href="https://smapiot.com/legal/imprint/" target="_blank">
+      <a href="https://www.smapiot.com/en/legal-notice/" target="_blank">
         Imprint
       </a>,
     ),
     attach(
-      <a href="https://smapiot.com/legal/privacy/" target="_blank">
-        Data Privacy
+      <a href="https://docs.piral.io" target="_blank">
+        Piral Documentation
       </a>,
     ),
     attach(
-      <a href="https://smapiot.com/legal/disclaimer/" target="_blank">
-        Legal Disclaimer
+      <a href="https://www.piral.cloud" target="_blank">
+        Piral Cloud Feed Service
       </a>,
     ),
   ];
