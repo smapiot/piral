@@ -44,8 +44,8 @@
     "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m UpdateReleaseDate",
     "ci:copy-docs": "cp -r ./dist/docs/release ./dist/docs/tmp && mv ./dist/docs/tmp ./dist/docs/release/$(yarn --silent ci:version)",
     "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
-    "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
-    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-beta.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
+    "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.${GITHUB_SHA::7} --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
+    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-beta.${GITHUB_SHA::7} --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
     "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --message '[skip ci] publish %s'"
   },
   "devDependencies": {

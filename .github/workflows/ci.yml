@@ -103,7 +103,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
-          BUILD_BUILDID: ${{ github.sha[0:7] }}
+          GITHUB_SHA: ${{ github.sha] }}
 
   prerelease:
     name: Preview Packages
@@ -142,7 +142,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
-          BUILD_BUILDID: ${{ github.sha[0:7] }}
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Build Emulator Packages
         run: |
@@ -159,6 +159,8 @@ jobs:
           mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
           mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
           mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+        env:
+          GITHUB_SHA: ${{ github.sha] }}
 
       - name: Pre-Release Emulator Packages
         run: |
@@ -227,6 +229,8 @@ jobs:
           mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
           mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
           mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
+        env:
+          GITHUB_SHA: ${{ github.sha] }}
 
       - name: Release Emulator Packages
         run: |
