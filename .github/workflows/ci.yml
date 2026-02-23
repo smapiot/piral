@@ -98,12 +98,16 @@ jobs:
           git config --global user.email "releases@piral.io"
           git config --global user.name "Piral Release Bot"
 
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
       - name: Canary-Release Packages
         run: yarn ci:i:canary
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
-          GITHUB_SHA: ${{ github.sha }}
 
   prerelease:
     name: Preview Packages
@@ -137,12 +141,16 @@ jobs:
           git config --global user.email "releases@piral.io"
           git config --global user.name "Piral Release Bot"
 
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
       - name: Pre-Release Packages
         run: yarn ci:prerelease
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
-          GITHUB_SHA: ${{ github.sha }}
 
       - name: Build Emulator Packages
         run: |
@@ -159,8 +167,6 @@ jobs:
           mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
           mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
           mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
-        env:
-          GITHUB_SHA: ${{ github.sha }}
 
       - name: Pre-Release Emulator Packages
         run: |
@@ -202,6 +208,11 @@ jobs:
           git config --global user.email "releases@piral.io"
           git config --global user.name "Piral Release Bot"
 
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
       - name: Update Release Date
         run: yarn ci:version-update
 
@@ -229,8 +240,6 @@ jobs:
           mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
           mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
           mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
-        env:
-          GITHUB_SHA: ${{ github.sha }}
 
       - name: Release Emulator Packages
         run: |

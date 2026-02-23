@@ -31,7 +31,7 @@ function updateChangelogDate(changelogPath = defaultPath) {
 }
 
 function getVersion(full, flags) {
-  const id = (process.env.GITHUB_SHA || '0').slice(0, 7);
+  const id = process.env.BUILD_BUILDID || '0';
 
   if (flags.includes('--beta')) {
     return `${full}-beta.${id}`;
