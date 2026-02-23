@@ -1,0 +1,257 @@
+name: build
+
+on:
+  push:
+    branches: [ experimental, develop, main ]
+  pull_request:
+    branches: [ develop ]
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  NODE_VERSION: 22.12.0
+  RELEASE_BRANCH: main
+  PREVIEW_BRANCH: develop
+  CANARY_BRANCH: experimental
+  DOCUMENT_BRANCH: documentation
+  NPM_CONFIG_PROVENANCE: true
+
+jobs:
+  build:
+    name: Process Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Build Core Demo
+        run: yarn build:demo-core
+
+      - name: Build CrossFx Demo
+        run: yarn build:demo-cross
+
+      - name: Build Full Demo
+        run: yarn build:demo-full
+
+      - name: Build Empty Shell
+        run: yarn build:demo-empty
+
+      - name: Build Minimal Demo
+        run: yarn build:demo-minimal
+
+      - name: Test Code
+        run: yarn test
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  canary:
+    name: Canary Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'experimental'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Canary-Release Packages
+        run: yarn ci:i:canary
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+  prerelease:
+    name: Preview Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'develop'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Pre-Release Packages
+        run: yarn ci:prerelease
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Build Emulator Packages
+        run: |
+          yarn ci:version --apply --beta
+          rm -rf dist/demo-cross/emulator
+          rm -rf dist/demo-full/emulator
+          rm -rf dist/demo-minimal/emulator
+          rm -rf dist/demo-empty/emulator
+          yarn build:demo-cross --type emulator
+          yarn build:demo-full --type emulator
+          yarn build:demo-minimal --type emulator
+          yarn build:demo-empty --type emulator
+          mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+          mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
+          mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+
+      - name: Pre-Release Emulator Packages
+        run: |
+          npm install -g npm@latest
+          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next --provenance
+          npm publish dist/demo-full/emulator/sample-full.tgz --tag next --provenance
+          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag next --provenance
+          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag next --provenance
+
+  release:
+    name: Release Packages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "releases@piral.io"
+          git config --global user.name "Piral Release Bot"
+
+      - name: Set Build id
+        run: echo "BUILD_BUILDID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Update Release Date
+        run: yarn ci:version-update
+
+      - name: Release Packages
+        run: yarn ci:release
+        env:
+          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Build Emulator Packages
+        run: |
+          yarn ci:version --apply
+          rm -rf dist/demo-cross/emulator
+          rm -rf dist/demo-full/emulator
+          rm -rf dist/demo-minimal/emulator
+          rm -rf dist/demo-empty/emulator
+          rm -rf dist/siteless/emulator
+          yarn build:demo-cross --type emulator
+          yarn build:demo-full --type emulator
+          yarn build:demo-minimal --type emulator
+          yarn build:demo-empty --type emulator
+          yarn build:siteless
+          mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+          mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+          mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
+          mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+          mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
+
+      - name: Release Emulator Packages
+        run: |
+          npm install -g npm@latest
+          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
+          npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
+          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
+          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
+          npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
+
+      - name: Push release branch updates
+        run: git push origin ${RELEASE_BRANCH}
+
+      - name: Update Documentation Branch
+        run: git push origin ${RELEASE_BRANCH}:${DOCUMENT_BRANCH}

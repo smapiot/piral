@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { isfunc, NavigationApi, NavigationListener, NavigationBlocker } from 'piral-core';
-import { PromptMessage } from './types';
+
+import type { PromptMessage } from './types';
 
 /**
  * Hook to notify the user in case of potential data loss when

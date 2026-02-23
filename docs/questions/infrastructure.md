@@ -18,7 +18,7 @@ We have a public feed service online that you can use to get started. If you wan
 
 ## How can I make my own Feed Service?
 
-We have a [specification](../specs/feed-api-specification.md) online. Also, a [sample using Node.js](https://github.com/smapiot/sample-pilet-service) is available. In case you need more we also offer our consulting services. Just [contact us](https://smapiot.com/contact) for more details.
+We have a [specification](../specs/feed-api-specification.md) online. Also, a [sample using Node.js](https://github.com/smapiot/sample-pilet-service) is available. In case you need more we also offer our consulting services. Just [contact us](https://www.smapiot.com/en/contact/) for more details.
 
 ---------------------------------------
 

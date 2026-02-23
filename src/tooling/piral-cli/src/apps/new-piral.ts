@@ -182,8 +182,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
       await createFileIfNotExists(
         root,
         '.npmrc',
-        `registry=${registry}
-always-auth=true`,
+        `registry=${registry}\n`,
         forceOverwrite,
       );
     }

@@ -196,8 +196,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
       await createFileIfNotExists(
         root,
         '.npmrc',
-        `registry=${registry}
-always-auth=true`,
+        `registry=${registry}\n`,
         forceOverwrite,
       );
     }

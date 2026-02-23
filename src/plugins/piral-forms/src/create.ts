@@ -1,7 +1,9 @@
 import * as actions from './actions';
 import { PiralPlugin } from 'piral-core';
+
 import { withForm } from './withForm';
-import { PiletFormsApi } from './types';
+import { withFormHandler } from './withFormHandler';
+import type { PiletFormsApi } from './types';
 
 /**
  * Available configuration options for the forms plugin.
@@ -22,7 +24,10 @@ export function createFormsApi(config: FormsConfig = {}): PiralPlugin<PiletForms
 
     return {
       createForm(options) {
-        return (component) => withForm(component, options);
+        return (component, config) => {
+          const hoc = config?.skipForm ? withFormHandler : withForm;
+          return hoc(component, options);
+        };
       },
     };
   };

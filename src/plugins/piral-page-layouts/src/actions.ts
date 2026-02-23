@@ -1,4 +1,5 @@
 import { withKey, withoutKey, GlobalStateContext } from 'piral-core';
+
 import type { PageLayoutRegistration } from './types';
 
 export function registerPageLayout(ctx: GlobalStateContext, name: string, value: PageLayoutRegistration) {

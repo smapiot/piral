@@ -1,7 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { isfunc, useAction, useGlobalState, isSame, generateId, NavigationApi } from 'piral-core';
+
 import { usePrompt } from './usePrompt';
-import { FormProps, InputFormOptions, FormDataState } from './types';
+import type { FormProps, InputFormOptions, FormDataState } from './types';
 
 const defaultMessage = 'Are you sure you want to discard the form data?';
 
@@ -96,7 +97,7 @@ function createProps<TFormData>(
     submit(e?: FormEvent) {
       e && e.preventDefault();
 
-      if (state.changed) {
+      if (options.allowSubmitUnchanged || state.changed) {
         submitData(id, state, updateState, options);
       }
 

@@ -9,6 +9,7 @@ export interface PiralInjectorConfig extends KrasInjectorConfig {
   bundler: Bundler;
   publicUrl: string;
   feed?: string;
+  useOriginal?: boolean;
   headers?: Record<string, string>;
 }
 
@@ -107,11 +108,14 @@ export default class PiralInjector implements KrasInjector {
 
   async sendIndexFile(target: string, url: string): Promise<KrasResult> {
     const indexHtml = await readFile(target, 'utf8');
-    const { feed } = this.config;
+    const { feed, useOriginal } = this.config;
 
-    if (feed) {
+    if (feed || useOriginal) {
       // mechanism to inject server side debug piletApi config into piral emulator
-      const windowInjectionScript = `window['dbg:pilet-api'] = '${feed}';`;
+      const windowInjectionScript = `
+        window['dbg:pilet-api'] = '${feed || ''}';
+        window['dbg:load-pilets'] = '${useOriginal ? 'on' : 'off'}';
+      `;
       const findStr = `<script`;
       const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
       const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);

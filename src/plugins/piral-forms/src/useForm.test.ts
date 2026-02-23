@@ -128,6 +128,37 @@ describe('Form Hook Module', () => {
   );
 
   it(
+    'Submit with no changed data does something with allowSubmitUnchanged is on',
+    async () => {
+      const { useForm } = await import('./useForm');
+      const onSubmit = vitest.fn(() => Promise.resolve());
+
+      useGlobalState.mockImplementation((select: any) =>
+        select({
+          forms: {},
+        }),
+      );
+      const options = {
+        allowSubmitUnchanged: true,
+        wait: false,
+        silent: false,
+        message: '',
+        onSubmit,
+        onChange: undefined,
+        emptyData: {},
+      };
+      const { changed, submitting, formData, submit } = useForm({}, undefined as any, options);
+      submit();
+      expect(changed).toBeFalsy();
+      expect(submitting).toBeFalsy();
+      expect(onSubmit).toHaveBeenCalled();
+      expect(formData).toEqual({});
+      expect(setStateFake.mock.calls[0][0].length).toBe(36);
+    },
+    testOptions,
+  );
+
+  it(
     'Submit with changed data submits successfully',
     async () => {
       const { useForm } = await import('./useForm');

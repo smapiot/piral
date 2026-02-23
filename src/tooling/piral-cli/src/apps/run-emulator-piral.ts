@@ -139,8 +139,7 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
     await createFileIfNotExists(
       appRoot,
       '.npmrc',
-      `registry=${registry}
-always-auth=true`,
+      `registry=${registry}\n`,
       ForceOverwrite.yes,
     );
   }

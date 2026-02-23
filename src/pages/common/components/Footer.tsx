@@ -51,7 +51,7 @@ export const Footer: React.FC = () => (
               </a>
             </li>
             <li>
-              <a href="https://smapiot.com/legal/imprint/" target="_blank">
+              <a href="https://www.smapiot.com/en/legal-notice/" target="_blank">
                 Imprint
               </a>
             </li>

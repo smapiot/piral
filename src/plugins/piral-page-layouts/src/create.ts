@@ -1,6 +1,7 @@
-import * as actions from './actions';
 import { ComponentType } from 'react';
 import { PiralPlugin, PageComponentProps, withApi } from 'piral-core';
+
+import * as actions from './actions';
 import { getPageLayouts, withPageLayouts } from './utils';
 import type { PiletPageLayoutsApi } from './types';
 

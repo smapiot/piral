@@ -1,5 +1,6 @@
 import { updateKey, removeIndicator, GlobalStateContext } from 'piral-core';
-import { FormDataState } from './types';
+
+import type { FormDataState } from './types';
 
 function getNewFormState(newState: FormDataState, patch: Partial<FormDataState>) {
   if (patch.active === false && !newState.submitting) {

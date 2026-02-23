@@ -1,6 +1,6 @@
 [![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
-# [Piral Ng](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-ng.svg?style=flat)](https://www.npmjs.com/package/piral-ng) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Community Chat](https://dcbadge.vercel.app/api/server/kKJ2FZmK8t?style=flat)](https://discord.gg/kKJ2FZmK8t)
+# [Piral Ng](https://piral.io) &middot; [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smapiot/piral/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/piral-ng.svg?style=flat)](https://www.npmjs.com/package/piral-ng) [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io) [![Community Chat](https://img.shields.io/discord/1222632475449229352)](https://discord.gg/kKJ2FZmK8t)
 
 This is a plugin that only has a peer dependency to `rxjs`, `@angular/core` and related packages. What `piral-ng` brings to the table is a set of Pilet API extensions that can be used with `piral` or `piral-core`.
 
@@ -847,6 +847,34 @@ The basic dependencies look as follows:
 ```
 
 Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.8 (and less than 5.9).
+
+So include in your app shell as preamble:
+
+```js
+import 'core-js/proposals/reflect-metadata';
+import '@angular/compiler';
+```
+
+### Angular 21
+
+In general, Angular 21 seems to work and is **supported**.
+
+The basic dependencies look as follows:
+
+```json
+{
+  "@angular/common": "^21",
+  "@angular/compiler": "^21",
+  "@angular/core": "^21",
+  "@angular/router": "^21",
+  "@angular/platform-browser": "^21",
+  "@angular/platform-browser-dynamic": "^21",
+  "core-js": "^3",
+  "rxjs": "^7.4"
+}
+```
+
+Besides the usual imports, the explicit import of the `@angular/compiler` package may be necessary. TypeScript has to be higher or equal to 5.9 (and less than 6.0).
 
 So include in your app shell as preamble:
 

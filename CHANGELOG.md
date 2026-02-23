@@ -1,5 +1,17 @@
 # Piral Changelog
 
+## 1.10.0 (tbd)
+
+- Fixed usage of *piral.json* in monorepo scenarios for templating new pilets
+- Fixed deferred initialization for standalone Blazor applications using `piral-blazor`
+- Fixed initial layout decision in `piral-page-layouts` (#790)
+- Fixed resolution of style links in v3 loaders in `piral-base` (#802)
+- Removed `always-auth` from all generated *.npmrc* files
+- Added trusted publishing to CI/CD process
+- Added support for Angular 21 in `piral-ng`
+- Added `skipForm` config `createForm` pilet API function originating from `piral-forms` (#797)
+- Added `allowSubmitUnchanged` option to form creation in `piral-forms` (#798)
+
 ## 1.9.2 (November 19, 2025)
 
 - Fixed removal of `ɵALLOW_MULTIPLE_PLATFORMS` in `@angualr/core` (#785)

@@ -127,7 +127,15 @@ export interface FormCreator<TFormData, TRequiredProps> {
   /**
    * Form function for wrapping a component.
    */
-  <TProps extends TRequiredProps>(component: ComponentType<TProps & FormProps<TFormData>>): FC<TProps>;
+  <TProps extends TRequiredProps>(
+    component: ComponentType<TProps & FormProps<TFormData>>,
+    config?: {
+      /**
+       * Indicates if the wrapping `<form>` element should be omitted.
+       */
+      skipForm?: boolean;
+    },
+  ): FC<TProps>;
 }
 
 /**
@@ -136,6 +144,10 @@ export interface FormCreator<TFormData, TRequiredProps> {
 export type PromptMessage = string | (() => string);
 
 export interface InputFormOptions<TFormData, TProps> {
+  /**
+   * If enabled does not prevent submission of unchanged forms.
+   */
+  allowSubmitUnchanged?: boolean;
   /**
    * If enabled does not notify the user that form data could be lost on page transitions.
    */

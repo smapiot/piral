@@ -10,6 +10,9 @@
       "pattern": "^https://docs.github.com/"
     },
     {
+      "pattern": "^https://docs.piral.cloud/"
+    },
+    {
       "pattern": "^https://app.fossa.com/"
     },
     {
@@ -20,6 +23,9 @@
     },
     {
       "pattern": "^https://azure.microsoft.com/"
+    },
+    {
+      "pattern": "^https://medium.embedengineering.com/"
     }
   ],
   "aliveStatusCodes": [999, 401, 403, 429, 200]
