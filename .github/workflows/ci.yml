@@ -161,13 +161,11 @@ jobs:
 
       - name: Pre-Release Emulator Packages
         run: |
+          npm install -g npm@latest
           npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag next --provenance
           npm publish dist/demo-full/emulator/sample-full.tgz --tag next --provenance
           npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag next --provenance
           npm publish dist/demo-empty/emulator/sample-empty.tgz --tag next --provenance
-        env:
-          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
-          NPM_CONFIG_PROVENANCE: true
 
   release:
     name: Release Packages
@@ -230,14 +228,12 @@ jobs:
 
       - name: Release Emulator Packages
         run: |
+          npm install -g npm@latest
           npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
           npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
           npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
           npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
           npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
-        env:
-          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
-          NPM_CONFIG_PROVENANCE: true
 
       - name: Push release branch updates
         run: git push origin ${RELEASE_BRANCH}
