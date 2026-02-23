@@ -6,8 +6,8 @@ title: Articles About Piral
 
 ## Magazine Articles
 
-- [web und mobile, 05/2020](https://www.webundmobile.de/hefte_data_2527642.html)
-- [dotnetpro, 08/2019](https://www.dotnetpro.de/frontend/weg-monolithen-1723779.html)
+- web und mobile, 05/2020
+- dotnetpro, 08/2019
 
 ## Available Videos
 
@@ -36,7 +36,6 @@ title: Articles About Piral
 - [基于 React 的微前端：Piral 简析, InfoQ (Chinese), 01/2020](https://www.infoq.cn/article/YH5mO2bVjmwLNYmXJeEP)
 - [Building React Microfrontends using Piral, Bits and Pieces, 11/2019](https://blog.bitsrc.io/building-react-microfrontends-using-piral-c26eb206310e)
 - [Microfrontends based on React, dev.to, 11/2019](https://dev.to/florianrappl/microfrontends-based-on-react-4oo9)
-- [What are Micro Frontends, Morioh, 10/2019](https://morioh.com/p/33aa986d8d3e)
 - [Taming the Frontend Monolith, Logrocket, 02/2019](https://blog.logrocket.com/taming-the-front-end-monolith-dbaede402c39/)
 
 ## Talks at Conferences
