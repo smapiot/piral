@@ -146,6 +146,7 @@ jobs:
 
       - name: Build Emulator Packages
         run: |
+          yarn ci:version --apply --beta
           rm -rf dist/demo-cross/emulator
           rm -rf dist/demo-full/emulator
           rm -rf dist/demo-minimal/emulator
@@ -210,6 +211,7 @@ jobs:
 
       - name: Build Emulator Packages
         run: |
+          yarn ci:version --apply
           rm -rf dist/demo-cross/emulator
           rm -rf dist/demo-full/emulator
           rm -rf dist/demo-minimal/emulator
