@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.10.1 (tbd)
+
+- Improved trusted publishing
+
 ## 1.10.0 (February 24, 2026)
 
 - Fixed usage of *piral.json* in monorepo scenarios for templating new pilets
