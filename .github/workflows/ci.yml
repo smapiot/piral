@@ -216,11 +216,11 @@ jobs:
       - name: Update Release Date
         run: yarn ci:version-update
 
-      - name: Release Packages
-        run: yarn ci:release
-        env:
-          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
-          NPM_CONFIG_PROVENANCE: true
+      # - name: Release Packages
+      #   run: yarn ci:release
+      #   env:
+      #     NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+      #     NPM_CONFIG_PROVENANCE: true
 
       - name: Build Emulator Packages
         run: |
@@ -249,9 +249,6 @@ jobs:
           npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
           npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
           npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
-
-      - name: Push release branch updates
-        run: git push origin ${RELEASE_BRANCH}
 
       - name: Update Documentation Branch
         run: git push origin ${RELEASE_BRANCH}:${DOCUMENT_BRANCH}
