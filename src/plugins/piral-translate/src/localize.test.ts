@@ -32,7 +32,7 @@ describe('Localize Module', () => {
     expect(result).toBe('hiho');
   });
 
-  it('localizeLocal translates from the global translations if local not available', () => {
+  it('localizeLocal translates from the global translations if local and fallback language are not available', () => {
     const localizer = new Localizer(messages, 'en');
     const result = localizer.localizeLocal(
       {
@@ -43,6 +43,19 @@ describe('Localize Module', () => {
       'hi',
     );
     expect(result).toBe('hello');
+  });
+
+  it('localizeLocal prioritzes fallback language over global translations', () => {
+    const localizer = new Localizer(messages, 'de', undefined, 'en');
+    const result = localizer.localizeLocal(
+      {
+        en: {
+          fallback: 'fallback',
+        },
+      },
+      'fallback'
+    );
+    expect(result).toBe('fallback');
   });
 
   it('localizeGlobal translates from the global translations', () => {
@@ -67,6 +80,12 @@ describe('Localize Module', () => {
     const localizer = new Localizer(messages, 'en');
     const result = localizer.localizeGlobal('greeting', { nom: 'User' });
     expect(result).toBe('Hi {{name}}, welcome back');
+  });
+
+  it('localizeGlobal uses fallback language', () => {
+    const localizer = new Localizer(messages, 'de', undefined, 'en');
+    const result = localizer.localizeGlobal('greeting', { name: 'fallback' });
+    expect(result).toBe('Hi fallback, welcome back');
   });
 
   it('localizeGlobal places missing string placeholder if not found', () => {

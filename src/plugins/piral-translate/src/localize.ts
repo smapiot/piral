@@ -16,7 +16,7 @@ function defaultFallback(key: string, language: string): string {
 
 function formatMessage<T extends object>(message: string, variables: T): string {
   return message.replace(/{{\s*([A-Za-z0-9_.]+)\s*}}/g, (_match: string, p1: string) => {
-    return p1 in variables ? variables[p1] ?? '' : `{{${p1}}}`;
+    return p1 in variables ? (variables[p1] ?? '') : `{{${p1}}}`;
   });
 }
 
@@ -29,7 +29,8 @@ export class Localizer implements Localizable {
   constructor(
     messages: LocalizationMessages | NestedLocalizationMessages,
     public language: string,
-    public languages: Array<string>,
+    public languages: Array<string> = [language],
+    private fallbackLanguage?: string,
     private fallback: TranslationFallback = defaultFallback,
   ) {
     this.messages = flattenTranslations(messages);
@@ -73,8 +74,10 @@ export class Localizer implements Localizable {
 
   private translateMessage<T extends object>(messages: LocalizationMessages, key: string, variables?: T) {
     const language = this.language;
+    const fallbackLanguage = this.fallbackLanguage;
     const translations = language && messages[language];
-    const translation = translations && translations[key];
+    const fallbackTranslations = fallbackLanguage && messages[fallbackLanguage];
+    const translation = (translations && translations[key]) || (fallbackTranslations && fallbackTranslations[key]);
     return translation && (variables ? formatMessage(translation, variables) : translation);
   }
 }
