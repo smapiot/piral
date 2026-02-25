@@ -1,6 +1,11 @@
 # Piral Changelog
 
-## 1.10.0 (tbd)
+## 1.10.1 (tbd)
+
+- Improved trusted publishing
+- Added `fallbackLanguage` in `piral-translate`
+
+## 1.10.0 (February 24, 2026)
 
 - Fixed usage of *piral.json* in monorepo scenarios for templating new pilets
 - Fixed deferred initialization for standalone Blazor applications using `piral-blazor`
