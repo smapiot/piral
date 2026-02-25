@@ -32,7 +32,13 @@ export interface LocaleConfig {
    */
   language?: string | RetrieveCurrentLanguage;
   /**
-   * Sets the optional fallback to use.
+   * Sets the fallback language to be used when a translation
+   * is not available in the current language.
+   */
+  fallbackLanguage?: string;
+  /**
+   * Sets the optional fallback to use when a translation is neither
+   * available in the current language or {@link fallbackLanguage}.
    */
   fallback?: TranslationFallback;
 }
@@ -48,7 +54,7 @@ export function setupLocalizer(config: LocaleConfig = {}): Localizable {
   const computeLang = config.language;
   const usedLang = typeof computeLang === 'function' ? computeLang(languages, defaultLang, 'en') : computeLang;
   const language = usedLang || defaultLang;
-  return new Localizer(msgs, language, languages.length ? languages : [language], config.fallback);
+  return new Localizer(msgs, language, languages.length ? languages : [language], config.fallbackLanguage, config.fallback);
 }
 
 /**
