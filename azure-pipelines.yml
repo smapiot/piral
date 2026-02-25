@@ -3,6 +3,8 @@ trigger:
     include:
     - documentation
 
+pr: none
+
 variables:
 - group: piral-deployment-variables
 - name: agentName
