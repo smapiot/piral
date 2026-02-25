@@ -1,6 +1,6 @@
 {
   "name": "piral-page-layouts",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "Plugin for providing different page layouts in Piral.",
   "keywords": [
     "piral",
@@ -50,6 +50,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {
-    "piral-core": "^1.9.2"
+    "piral-core": "^1.10.0"
   }
 }
