@@ -9266,12 +9266,229 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
+piral-aurelia@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-aurelia/-/piral-aurelia-1.10.0.tgz#9da5583ac9d1e3208f9b7039e85ee3d3c2442838"
+  integrity sha512-97a5A+cvmdRklY3oFUNkn7ALTnoKzIHUO8JHQ4y4jObHuKlXzjR13hgNb1h4aHUwqykL0DPFE4EfljH3nrPIdQ==
+
+piral-auth@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-auth/-/piral-auth-1.10.0.tgz#bb44ad06564898e54d1feaf0b2f6e67043a05dbc"
+  integrity sha512-0+DeFBkuGYT5xMDxBWxDsSI1+hvGLp3qBGmrfQTVpStGppuituLbdCbB1/SHc6635jN33yrhomC9fehaXjLA1g==
+
+piral-base@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-base/-/piral-base-1.10.0.tgz#880800b4474a60bea470fb9e7442462b2d1d1e8e"
+  integrity sha512-YoJ8dwiTlHhV5jo382a5W83rE0HG64KjUd+l6J+fVq4K0FXGOfQHJNDw6Q0m4L8/Nhz7lrW7LSUHOuSn0wjOOg==
+  dependencies:
+    tslib "^2.3.1"
+
+piral-blazor@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-blazor/-/piral-blazor-1.10.0.tgz#78756a4001e3925a712b2d3927efd79f6bb1d908"
+  integrity sha512-h/JpJm/PFtofGzSL72HUStF+l2W+R2z7aaxHGv5VKSEFqxt+RZAvFUJQ7XZr99CbivlgCVVVbJALI6ARclkkVg==
+
+piral-cli-webpack5@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-cli-webpack5/-/piral-cli-webpack5-1.10.0.tgz#a75be75b24dd2cffabe45e99a0a5ccf1d0041610"
+  integrity sha512-CKxxoH9e1VplgGX4aHpNvHQZitVMKos96tWyHVtK8WS7Yv6suK/Wjclda+8n6MNggY079uoOFVhiUnhWUIhYKg==
+  dependencies:
+    "@babel/core" "^7"
+    "@babel/preset-env" "^7"
+    "@babel/preset-react" "^7"
+    ansi-html-community "0.0.8"
+    babel-loader "^9"
+    cheerio "^1"
+    css-loader "^7"
+    css-minimizer-webpack-plugin "^7"
+    express "^4"
+    html-entities "^1"
+    html-webpack-plugin "^5"
+    loader-utils "^2"
+    mini-css-extract-plugin "^2"
+    parcel-codegen-loader "^2"
+    sass "^1.83.0"
+    sass-loader "^16"
+    source-map-loader "^4"
+    style-loader "^4"
+    systemjs-webpack-interop "^2"
+    terser-webpack-plugin "^5"
+    ts-loader "^9"
+    webpack "^5"
+
+piral-cli@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-cli/-/piral-cli-1.10.0.tgz#5365d45b373c9ab6fd946da1270bc1a2586d805c"
+  integrity sha512-NvIxH81JSiY1Eog2z1mKPozhDn5HTcPfe8CkLJvi45JOf8IZ/55yQCoWK6S9fgDx55/BspO7kQr97s477XMnPA==
+  dependencies:
+    css-conflict-inspector "^0.2"
+    dets "^0.17.0"
+    kras "^1.0.1"
+    open "^10"
+    typescript "^5"
+
+piral-containers@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-containers/-/piral-containers-1.10.0.tgz#4e6d56bdbb41f6bbbd2d66591e5d3baa37b75c07"
+  integrity sha512-NANaGkAwxfhnjObIhcJqn7i33FoP0NWkkAlAwQ7AxLRfppPRCmWgW93pSuaHMDLGFXqCEw6Ka1ZXow9jNeUoKA==
+
+piral-core@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-core/-/piral-core-1.10.0.tgz#492a5a1a55f3c4c3413cc6f514210a0c81e1377f"
+  integrity sha512-PV3rVsKbNBIa7JWcrC4GyyojaliEYYaMxgDCAPaM7Iz2YqPLnogkFZQIcj/YY4Loo2iM2+tNTFWSubs7dP3EfA==
+  dependencies:
+    piral-base "1.10.0"
+    piral-debug-utils "1.10.0"
+    zustand "^3.0.0"
+
+piral-dashboard@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-dashboard/-/piral-dashboard-1.10.0.tgz#8912aa3b349b947816aa1d27165e56954a6a209f"
+  integrity sha512-iBahQZfDwyu1sgRvK+Mtm/W2acof9vDflBd+nJDmD9U83P9x7x0QIe3yTwiDqK5/Yyzwm2vpXAb2ODt7doYfKg==
+
+piral-debug-utils@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-debug-utils/-/piral-debug-utils-1.10.0.tgz#1edd61f49e97c21a415c3507e44e4a00ca024ca6"
+  integrity sha512-Qs9RNUYQNdputEL7RXmYnjMvnJN05Qw3Ikx7aPRU9uWkYoNmSFz1xptCbgoMlsqrSFi+agRal+9b9eEmzPtizg==
+
+piral-elm@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-elm/-/piral-elm-1.10.0.tgz#fbee09395298927efae94e71afe84fd0bc75c149"
+  integrity sha512-sURjbsThZcE2FRcqytn1VDKAu2CVfTGYWnGZMjxMZn8Q6Sd/AZK7fMOos3L6qVRStcN7svykVDi1QnVvfxb1kA==
+
+piral-ext@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-ext/-/piral-ext-1.10.0.tgz#a2b299453078cec58620aa17a17efdcc8d626fb5"
+  integrity sha512-8q7Qzm3hJ24QQwLCd0GpGO84beRnMULIJJf0byhG/tfw/hpdVbFAIM5hDH+587e4g+aKqBLdNlT6RPLJeZPaOA==
+  dependencies:
+    piral-dashboard "1.10.0"
+    piral-feeds "1.10.0"
+    piral-menu "1.10.0"
+    piral-modals "1.10.0"
+    piral-notifications "1.10.0"
+    piral-translate "1.10.0"
+
+piral-feeds@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-feeds/-/piral-feeds-1.10.0.tgz#357ecec8193c20865e30c3334b5a2fd4ce21730d"
+  integrity sha512-17wzaxd7mmP6A2Lf7AksJ6ZEfxbAsBoAFayxdbR+ZG/cNjnLx/aNsvVkQsWh7V3jyvuG2I3diBjNARK1uLu7qg==
+
+piral-forms@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-forms/-/piral-forms-1.10.0.tgz#cbc711e5ad651941d2cffb1e72ace871e66d1f39"
+  integrity sha512-8gi9v+4Zec/Grc8oCSyQni97Dww1VsMJNGgYDIiYQSyxraulF0KfNk1PUHE7lK16eJW5roVNojbQxfAZz6jYdw==
+
+piral-hooks-utils@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-hooks-utils/-/piral-hooks-utils-1.10.0.tgz#183c42f5ba8af2453636ce6876087350194d703a"
+  integrity sha512-UtqYp1Ai0g3+c6QOcEicfcGj8aSU6otHiLSSZQB0AQ9ogno0Cw5ns34tOV+WDEsvGLs8SaqFxCUI9zr1fL1WtA==
+
+piral-hyperapp@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-hyperapp/-/piral-hyperapp-1.10.0.tgz#4922e3d78fa86e67d70486f9bf050504bdf4f903"
+  integrity sha512-UwNgvDnYF6dmMyCayhQvyoYWdD6CM3phWflCkJRkLB5mA/e8TOzMpZWqPqRDjFrEdj4yWRgWU1r6M1MX3jaLlg==
+
+piral-inferno@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-inferno/-/piral-inferno-1.10.0.tgz#190a4ae93bf0997f6f06bd917baaa8bbb085694d"
+  integrity sha512-5GotEvNgKpO3QoyfMS1hvSS7/8P5zZaSa1GkCvJ2LOTa+qE5TpvJr6qrywq+NtXxnZhFUnCqjZGwv65oCXwgqw==
+
+piral-lazy@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-lazy/-/piral-lazy-1.10.0.tgz#c97cb816f594d48b611e576b6e3ece830da1d890"
+  integrity sha512-w/f/URwECXfHCPsKdUHYC8kjb+QROwq8q3DjrxGVmLJ3q0I778V3FFLhVjomduOR6y6OQ83luR+RB4cjfY2iLg==
+
+piral-litel@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-litel/-/piral-litel-1.10.0.tgz#2b20e75b8baca8219d07c0c234aad0451d5a69b3"
+  integrity sha512-FNvLHgDQQeXhIupplKoCvhw7ZkpN3uJJOQ+XJfBNoCgp8hB4w5kdTbDqi2wUYyrx7Aheg/qXghL7cUqR9mWYYQ==
+
+piral-menu@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-menu/-/piral-menu-1.10.0.tgz#ea1c9e0bd6337d0084a97ccae817945e1ab7c26e"
+  integrity sha512-g2KYkyVLy5BMPg1ihTFAgW75jPK1qIpaAit+weaiiWg6E8fe9MS6r4Sas1ZNydWJqEYKcgSJZt0UdW8wok++zw==
+
+piral-mithril@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-mithril/-/piral-mithril-1.10.0.tgz#0406ff2c00c89f1cba8e4ba302b1f9ce0cf77141"
+  integrity sha512-XElZ654E2Is2Se9cNug6m6epz/Z99GI1Nm6b8QlC7/fadpgGu/GsaagflKbS+7z/VdPYqxL9ev3kBLDViCv/5g==
+
+piral-modals@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-modals/-/piral-modals-1.10.0.tgz#bf55145c1cf605d37b7ddcfab7f9adf811ee060a"
+  integrity sha512-rff30R9p1JWZW7Ts9qhRbax0m5pGnxT0g2bWFDaCO4Nvl0JFWi//QOQE6t7kWyIeRYP+x22D4aHN1CFCM6eo7A==
+
 piral-ng-common@^16.0.0:
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/piral-ng-common/-/piral-ng-common-16.0.0.tgz#3301cd28818dde49dadaab1480bf12aaf276ca5c"
   integrity sha512-oPDhitPmd/e5QyVIE/g6C4WzvRSwt2RsNAARTAMLmnuX0/lSvhW3NinUnfsOQZ+JIxheAxEk7zkeQkmZygudGw==
   dependencies:
     tslib "^2.3.0"
+
+piral-ng@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-ng/-/piral-ng-1.10.0.tgz#5272a65dbe2ac34a52e09c42d613ca5e2336f08b"
+  integrity sha512-4rkj/ouAI5FnIQkxJUsIQKrIrOML0p/hTjXsR947nmTdbPPwz8cV5kUsqZ5tq80xoIKVy+0ZA3OrMPKb8iXbzg==
+
+piral-ngjs@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-ngjs/-/piral-ngjs-1.10.0.tgz#2b3aec9e9202a7a64fcd7de48ab107458c710a61"
+  integrity sha512-pYZ/hSW2i0jFw2mLWcpNEgOBul4tarMMEnlVK2k7+bwuVw/+UskG7+/hkzMMLx6Ln5+Lif6JYIzTIhdbi9V7UA==
+
+piral-notifications@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-notifications/-/piral-notifications-1.10.0.tgz#e015a4202957f36e7684277037b85bbf42cb5080"
+  integrity sha512-/rqNc5pit0QGjWxFv3f0mJO0upelpVYMPEIdXlKIZ34NCKn5dN5zg6pOT4abLjilsJxbJmjO0yk6Ew42PKQlMw==
+
+piral-preact@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-preact/-/piral-preact-1.10.0.tgz#56d7220433303fb2375c466642ee9400c6712f03"
+  integrity sha512-0AlfveysUcw+aFPxk/ImxrNHY+EyjmbdCzgBZA2DfR1kdzxYK6hsXHTHGtnIbw0ZFWqKoaBQEs54yw/4fQ0MIA==
+
+piral-riot@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-riot/-/piral-riot-1.10.0.tgz#5a76a224d2c2804e3a3417df11cf5e8db4ebbde5"
+  integrity sha512-0caR4w4qnDbFM8h47Vqa/9Rv8Wn3zxfVbixWFoj4zBfb1YcXfoEK1YNR79Pah+lGIVrfHJ66RcL7etsbCQeJGw==
+
+piral-search@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-search/-/piral-search-1.10.0.tgz#38474e66dd4038444cc363815e472091a200589a"
+  integrity sha512-GcbKQnl759yoNkFPMpa/ddv2JAtQh1b1DTuugnH1qtVZj0AWR17Msoo80hjs/sUXTj9ZWLsT/QH1Xq8ni//IKA==
+
+piral-solid@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-solid/-/piral-solid-1.10.0.tgz#f5ff0c2e2a61303e6900ebba19d1d7e309d4338d"
+  integrity sha512-YfuA37/95fCRuc4O0aKk2Z6W2/AW63wLNIztbXu29rQgzp3JfYjxSUscvuBxWQ9v4/mua00tnFLDEAal/4SFMA==
+
+piral-svelte@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-svelte/-/piral-svelte-1.10.0.tgz#a4fe082915c8e29a1020a9491c5d42f8cf0414de"
+  integrity sha512-/gR+qbTiz4XAlgGwqr5ST/8Viv3wAoV3pVh8NljtYxpcJz+NanVRrrIns31u0zdPwYrJ0Ddejw9XydWOR5jS1Q==
+
+piral-translate@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-translate/-/piral-translate-1.10.0.tgz#246bd6ed387d5328778c6c5fbd31ea7f1e29656b"
+  integrity sha512-fid3cfhwi8h3eQuCO9OePFuSBcGNcrg64yOY4uZD2gx977EPi8rcIFchI50I9StIKVwrK72KWwRkY1/dHOHifA==
+  dependencies:
+    deepmerge "^4"
+
+piral-vue@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral-vue/-/piral-vue-1.10.0.tgz#5c50f50b5dedfaa13eb6112a60f5f616624db399"
+  integrity sha512-cQVe3C92lW8LO3FEHWrePSyllwHWjJBW6KA+wp1chB7sFe6SyVlUI8+uC7kDcJkkJuuoAxh3ar78Qsng5i8lXg==
+
+piral@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/piral/-/piral-1.10.0.tgz#61f1bc3367680f0e0c2dea85eb358b29d30b4c01"
+  integrity sha512-SNC9dH7tNUKoCexzt4f3NzuZbUxIy8nQHCCPIzqlrWRd5y4GR1kbKMhQx/OeIFvOAyXZ+6Y9eD/VMmhe0P3cmA==
+  dependencies:
+    piral-base "1.10.0"
+    piral-core "1.10.0"
+    piral-ext "1.10.0"
+    react "^18.0.0"
+    react-dom "^18.0.0"
+    react-router "^5.2.0"
+    react-router-dom "^5.2.0"
 
 pkg-dir@^4.2.0:
   version "4.2.0"
