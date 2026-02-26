@@ -250,7 +250,9 @@ jobs:
           npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
           npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
 
-      - name: Update Documentation Branch
+      - name: Update Branches
         run: |
+          git push origin ${RELEASE_BRANCH} --force
+          git push --tags
           git commit --allow-empty -m "docs: trigger documentation build"
           git push origin ${RELEASE_BRANCH}:${DOCUMENT_BRANCH}
