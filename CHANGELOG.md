@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.10.2 (tbd)
+
+- Improved release pipeline
+
 ## 1.10.1 (February 26, 2026)
 
 - Improved trusted publishing
