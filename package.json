@@ -46,7 +46,7 @@
     "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
     "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
     "ci:prerelease": "lerna publish $(yarn --silent ci:version)-beta.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
-    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --no-push --message '[skip ci] publish %s'"
+    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --skip-npm --no-push --message '[skip ci] publish %s'"
   },
   "devDependencies": {
     "@jsenv/file-size-impact": "14.3.33",
