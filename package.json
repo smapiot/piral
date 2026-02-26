@@ -41,7 +41,7 @@
     "docgen:types": "lerna run typedoc",
     "docgen": "yarn docgen:cli && yarn docgen:codes && yarn docgen:types",
     "ci:version": "node tools/changelog-version.js",
-    "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m UpdateReleaseDate",
+    "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m 'Update Release Date'",
     "ci:copy-docs": "cp -r ./dist/docs/release ./dist/docs/tmp && mv ./dist/docs/tmp ./dist/docs/release/$(yarn --silent ci:version)",
     "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
     "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",

@@ -216,39 +216,39 @@ jobs:
       - name: Update Release Date
         run: yarn ci:version-update
 
-      - name: Release Packages
-        run: yarn ci:release
-        env:
-          NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
-          NPM_CONFIG_PROVENANCE: true
+      # - name: Release Packages
+      #   run: yarn ci:release
+      #   env:
+      #     NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
+      #     NPM_CONFIG_PROVENANCE: true
 
-      - name: Build Emulator Packages
-        run: |
-          yarn ci:version --apply
-          rm -rf dist/demo-cross/emulator
-          rm -rf dist/demo-full/emulator
-          rm -rf dist/demo-minimal/emulator
-          rm -rf dist/demo-empty/emulator
-          rm -rf dist/siteless/emulator
-          yarn build:demo-cross --type emulator
-          yarn build:demo-full --type emulator
-          yarn build:demo-minimal --type emulator
-          yarn build:demo-empty --type emulator
-          yarn build:siteless
-          mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
-          mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
-          mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
-          mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
-          mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
+      # - name: Build Emulator Packages
+      #   run: |
+      #     yarn ci:version --apply
+      #     rm -rf dist/demo-cross/emulator
+      #     rm -rf dist/demo-full/emulator
+      #     rm -rf dist/demo-minimal/emulator
+      #     rm -rf dist/demo-empty/emulator
+      #     rm -rf dist/siteless/emulator
+      #     yarn build:demo-cross --type emulator
+      #     yarn build:demo-full --type emulator
+      #     yarn build:demo-minimal --type emulator
+      #     yarn build:demo-empty --type emulator
+      #     yarn build:siteless
+      #     mv dist/demo-cross/emulator/*.tgz dist/demo-cross/emulator/sample-cross-fx.tgz
+      #     mv dist/demo-full/emulator/*.tgz dist/demo-full/emulator/sample-full.tgz
+      #     mv dist/demo-minimal/emulator/*.tgz dist/demo-minimal/emulator/sample-minimal.tgz
+      #     mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
+      #     mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
 
-      - name: Release Emulator Packages
-        run: |
-          npm install -g npm@latest
-          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
-          npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
-          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
-          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
-          npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
+      # - name: Release Emulator Packages
+      #   run: |
+      #     npm install -g npm@latest
+      #     npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
+      #     npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
+      #     npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
+      #     npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
+      #     npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
 
       - name: Update Branches
         run: |
