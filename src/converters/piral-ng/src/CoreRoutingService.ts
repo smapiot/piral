@@ -70,7 +70,7 @@ export class CoreRoutingService implements OnDestroy {
             const locationUrl = nav.url;
 
             if (routerUrl !== locationUrl) {
-              queueNavigation(routerUrl);
+              queueNavigation(e.urlAfterRedirects);
             }
           }
         },
