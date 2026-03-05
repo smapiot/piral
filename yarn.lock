@@ -10487,10 +10487,10 @@ sass@^1, sass@^1.17.0, sass@^1.83.0:
   optionalDependencies:
     "@parcel/watcher" "^2.4.1"
 
-sax@^1.4.1:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/sax/-/sax-1.4.3.tgz#fcebae3b756cdc8428321805f4b70f16ec0ab5db"
-  integrity sha512-yqYn1JhPczigF94DMS+shiDMjDowYO6y9+wB/4WgO0Y19jWYk0lQ4tuG5KI7kj4FTp1wxPj5IFfcrz/s1c3jjQ==
+sax@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.5.0.tgz#b5549b671069b7aa392df55ec7574cf411179eb8"
+  integrity sha512-21IYA3Q5cQf089Z6tgaUTr7lDAyzoTPx5HRtbhsME8Udispad8dC/+sziTNugOEx54ilvatQ9YCzl4KQLPcRHA==
 
 saxes@^6.0.0:
   version "6.0.0"
@@ -11074,9 +11074,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 svgo@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/svgo/-/svgo-4.0.0.tgz#17e0fa2eaccf429e0ec0d2179169abde9ba8ad3d"
-  integrity sha512-VvrHQ+9uniE+Mvx3+C9IEe/lWasXCU0nXMY2kZeLrHNICuRiC8uMPyM14UEaMOFA5mhyQqEkB02VoQ16n3DLaw==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/svgo/-/svgo-4.0.1.tgz#c82dacd04ee9f1d55cd4e0b7f9a214c86670e3ee"
+  integrity sha512-XDpWUOPC6FEibaLzjfe0ucaV0YrOjYotGJO1WpF0Zd+n6ZGEQUsSugaoLq9QkEZtAfQIxT42UChcssDVPP3+/w==
   dependencies:
     commander "^11.1.0"
     css-select "^5.1.0"
@@ -11084,7 +11084,7 @@ svgo@^4.0.0:
     css-what "^6.1.0"
     csso "^5.0.5"
     picocolors "^1.1.1"
-    sax "^1.4.1"
+    sax "^1.5.0"
 
 symbol-observable@^1.0.3, symbol-observable@^1.0.4:
   version "1.2.0"
