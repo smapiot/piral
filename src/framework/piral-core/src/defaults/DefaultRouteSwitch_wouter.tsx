@@ -21,6 +21,7 @@ interface RouteContentWrapperProps {
 const RouteContentWrapper: React.FC<RouteContentWrapperProps> = ({ Component }) => {
   const params = useParams();
   const [pathname, navigate] = useLocation();
+
   return (
     <Component
       history={getHistory(navigate)}
