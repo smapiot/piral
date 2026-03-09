@@ -97,7 +97,10 @@ export interface RouteBaseProps<UrlParams extends { [K in keyof UrlParams]?: str
 /**
  * The props used by a page component.
  */
-export interface PageComponentProps<T extends { [K in keyof T]?: string } = {}, S = any> extends RouteBaseProps<T, S> {
+export interface PageComponentProps<
+  UrlParams extends { [K in keyof UrlParams]?: string } = Record<string, string>,
+  UrlState = any,
+> extends RouteBaseProps<UrlParams, UrlState> {
   /**
    * The meta data registered with the page.
    */
