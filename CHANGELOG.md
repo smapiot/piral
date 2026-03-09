@@ -4,6 +4,7 @@
 
 - Improved release pipeline
 - Fixed query parameters and URL hashes getting trimmed when using piral-ng standalone
+- Added `match` prop to routes registered within pilets (#813)
 
 ## 1.10.1 (February 26, 2026)
 
