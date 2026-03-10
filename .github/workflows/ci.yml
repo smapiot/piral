@@ -242,14 +242,14 @@ jobs:
           mv dist/demo-empty/emulator/*.tgz dist/demo-empty/emulator/sample-empty.tgz
           mv dist/siteless/emulator/*.tgz dist/siteless/emulator/siteless.tgz
 
-      # - name: Release Emulator Packages
-      #   run: |
-      #     npm install -g npm@latest
-      #     npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
-      #     npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
-      #     npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
-      #     npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
-      #     npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
+      - name: Release Emulator Packages
+        run: |
+          npm install -g npm@latest
+          npm publish dist/demo-cross/emulator/sample-cross-fx.tgz --tag latest --provenance
+          npm publish dist/demo-full/emulator/sample-full.tgz --tag latest --provenance
+          npm publish dist/demo-minimal/emulator/sample-minimal.tgz --tag latest --provenance
+          npm publish dist/demo-empty/emulator/sample-empty.tgz --tag latest --provenance
+          npm publish dist/siteless/emulator/siteless.tgz --tag latest --provenance
 
       - name: Update Branches
         run: |

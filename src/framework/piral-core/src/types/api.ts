@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import type { RouteComponentProps } from 'react-router';
+import type { History, Location } from 'history';
 import type {
   PiletApi,
   Pilet,
@@ -54,16 +54,53 @@ export interface ExtensionComponentProps<T> extends BaseComponentProps {
 }
 
 /**
+ * The match object determining what exactly has been matched for the current navigation.
+ */
+export interface RouteMatch<Params extends { [K in keyof Params]?: string } = {}> {
+  /**
+   * The parameters extracted from the current navigation.
+   */
+  params: Params;
+  /**
+   * Indicates if the parameters have been matched exactly.
+   */
+  isExact: boolean;
+  /**
+   * The relative path.
+   */
+  path: string;
+  /**
+   * The fully qualified URL.
+   */
+  url: string;
+}
+
+/**
  * The props that every registered page component obtains.
  */
 export interface RouteBaseProps<UrlParams extends { [K in keyof UrlParams]?: string } = {}, UrlState = any>
-  extends RouteComponentProps<UrlParams, {}, UrlState>,
-    BaseComponentProps {}
+  extends BaseComponentProps {
+  /**
+   * The history API to navigate.
+   */
+  history: History<UrlState>;
+  /**
+   * Information about the current location.
+   */
+  location: Location<UrlState>;
+  /**
+   * Information about the matching of the current route.
+   */
+  match: RouteMatch<UrlParams>;
+}
 
 /**
  * The props used by a page component.
  */
-export interface PageComponentProps<T extends { [K in keyof T]?: string } = {}, S = any> extends RouteBaseProps<T, S> {
+export interface PageComponentProps<
+  UrlParams extends { [K in keyof UrlParams]?: string } = Record<string, string>,
+  UrlState = any,
+> extends RouteBaseProps<UrlParams, UrlState> {
   /**
    * The meta data registered with the page.
    */
@@ -80,8 +117,8 @@ export interface PageComponentProps<T extends { [K in keyof T]?: string } = {}, 
 export type AnyExtensionComponent<TName> = TName extends keyof PiralExtensionSlotMap
   ? AnyComponent<ExtensionComponentProps<TName>>
   : TName extends string
-  ? AnyComponent<ExtensionComponentProps<any>>
-  : AnyComponent<ExtensionComponentProps<TName>>;
+    ? AnyComponent<ExtensionComponentProps<any>>
+    : AnyComponent<ExtensionComponentProps<TName>>;
 
 /**
  * Defines the Pilet API from piral-core.
