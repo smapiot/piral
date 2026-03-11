@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.10.3 (tbd)
+
+- Updated dependencies
+
 ## 1.10.2 (March 10, 2026)
 
 - Improved release pipeline
