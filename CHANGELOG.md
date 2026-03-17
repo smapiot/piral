@@ -3,6 +3,7 @@
 ## 1.10.3 (tbd)
 
 - Updated dependencies
+- Added `vite8` to available bundler options
 
 ## 1.10.2 (March 10, 2026)
 
