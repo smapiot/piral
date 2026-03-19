@@ -13,7 +13,12 @@ import { contextName, piralName } from './constants';
 import { CONTEXT, PIRAL } from './injection';
 
 function isLazyLoader(thing: NgStandaloneComponent): thing is NgStandaloneComponentLoader {
-  return typeof thing === 'function' && thing.hasOwnProperty('prototype') && thing.hasOwnProperty('arguments');
+  // Since both possible inputs, i.e., both loader functions and Angular components, are technically functions, we:
+  // a) check the number of args - a loader fn is expected to have no parameters.
+  // b) check for Angular's component metadata. Loader functions don't have those.
+  return (
+    typeof thing === 'function' && thing.length === 0 && !(thing.hasOwnProperty('ɵcmp') || thing.hasOwnProperty('ɵfac'))
+  );
 }
 
 export * from './injection';
