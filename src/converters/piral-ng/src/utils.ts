@@ -68,7 +68,9 @@ export function findComponents(exports: Array<any>): Array<any> {
       if (annotation) {
         if (annotation.exports) {
           components.push(...findComponents(annotation.exports));
-        } else if (!annotation.imports || annotation.standalone) {
+        // Angular 19+ defaults to standalone: true, omitting it from compiled metadata.
+        // Check selectors to reliably detect components (modules never have selectors).
+        } else if (!annotation.imports || annotation.standalone || annotation.selectors?.length) {
           components.push(ex);
         }
       }

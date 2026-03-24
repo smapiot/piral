@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.10.3 (tbd)
+
+- Updated dependencies
+- Added `vite8` to available bundler options
+- Improved detection of lazy component loader functions when using `piral-ng/standalone`
+
 ## 1.10.2 (March 10, 2026)
 
 - Improved release pipeline
