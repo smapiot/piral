@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.10.3 (tbd)
+## 1.10.3 (March 24, 2026)
 
 - Updated dependencies
 - Added `vite8` to available bundler options
