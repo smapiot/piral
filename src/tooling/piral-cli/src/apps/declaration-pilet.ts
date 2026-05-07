@@ -62,11 +62,13 @@ export async function declarationPilet(baseDir = process.cwd(), options: Declara
 
   for (const item of allEntries) {
     const targetDir = dirname(item);
-    const { peerDependencies, peerModules, root, apps, importmap } = await retrievePiletData(targetDir);
+    const { peerDependencies, peerModules, root, apps, importmap, definition } = await retrievePiletData(targetDir);
     const piralInstances = apps.map((m) => m.appPackage.name);
     const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
     const dest = resolve(root, target);
-    results.push(await createPiletDeclaration(piralInstances, root, item, externals, dest, forceOverwrite, logLevel));
+    results.push(
+      await createPiletDeclaration(piralInstances, root, definition, item, externals, dest, forceOverwrite, logLevel),
+    );
   }
 
   if (results.every(Boolean)) {

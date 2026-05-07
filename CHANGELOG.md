@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.11.0 (tbd)
+
+- Updated dependencies
+- Fixed issue in `pilet declaration` re-emitting remote types
+
 ## 1.10.3 (March 24, 2026)
 
 - Updated dependencies

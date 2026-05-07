@@ -16,11 +16,12 @@ import { makePiletExternals, makeExternals, findPackageRoot, findSpecificVersion
 import { scaffoldFromEmulatorWebsite, updateFromEmulatorWebsite, retrieveExtraTypings } from './website';
 import { getDependencies, getDependencyPackages, getDevDependencies } from './language';
 import { getDevDependencyPackages, getFrameworkDependencies } from './language';
-import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames, packageJson } from './constants';
-import { frameworkLibs, declarationEntryExtensions, piralJson, piletJson } from './constants';
+import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames } from './constants';
+import { frameworkLibs, defaultRemoteTypesTarget, packageJson } from './constants';
+import { declarationEntryExtensions, piralJson, piletJson } from './constants';
 import { satisfies } from './version';
 import { getModulePath } from '../external';
-import { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
+import type { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
 import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
 import type { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
@@ -236,6 +237,17 @@ async function saveRemoteTypes(generatedText: string, target: string) {
   }
 }
 
+export function getRemoteTypesTarget(rootDir: string, piletDefinition: PiletDefinition) {
+  const { remoteTypesTarget } = piletDefinition || {};
+  const proposedTarget =
+    typeof remoteTypesTarget === 'string'
+      ? remoteTypesTarget
+      : remoteTypesTarget
+        ? defaultRemoteTypesTarget
+        : undefined;
+  return proposedTarget ? resolve(rootDir, proposedTarget) : undefined;
+}
+
 async function writeRemoteTypes(
   rootDir: string,
   appPackages: Array<PiralInstancePackageData>,
@@ -243,14 +255,11 @@ async function writeRemoteTypes(
   piletDefinition: PiletDefinition,
   agent: Agent,
 ) {
-  const { remoteTypesTarget } = piletDefinition || {};
-  const proposedTarget =
-    typeof remoteTypesTarget === 'string' ? remoteTypesTarget : remoteTypesTarget ? './src/remote.d.ts' : undefined;
+  const target = getRemoteTypesTarget(rootDir, piletDefinition);
 
-  if (proposedTarget) {
+  if (target) {
     const snippets = await retrieveRemoteTypes(appPackages, piletPackage, agent);
     const generatedText = combineRemoteTypes(snippets);
-    const target = resolve(rootDir, proposedTarget);
 
     if (generatedText) {
       await saveRemoteTypes(generatedText, target);
@@ -959,6 +968,7 @@ export async function retrievePiletData(target: string, app?: string, agent?: Ag
     peerModules: piletPackage.peerModules || [],
     ignored: checkArrayOrUndefined(piletPackage, 'preservedDependencies'),
     schema: piletDefinition?.schemaVersion,
+    definition: piletDefinition,
     importmap,
     apps,
     piletPackage,

@@ -72,8 +72,8 @@
     "yargs": "^15"
   },
   "dependencies": {
-    "css-conflict-inspector": "^0.2",
-    "dets": "^0.17.0",
+    "css-conflict-inspector": "^0.3",
+    "dets": "^0.18",
     "kras": "^1.0.1",
     "open": "^10",
     "typescript": "^5"
