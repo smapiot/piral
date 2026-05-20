@@ -54,7 +54,13 @@ export function setupLocalizer(config: LocaleConfig = {}): Localizable {
   const computeLang = config.language;
   const usedLang = typeof computeLang === 'function' ? computeLang(languages, defaultLang, 'en') : computeLang;
   const language = usedLang || defaultLang;
-  return new Localizer(msgs, language, languages.length ? languages : [language], config.fallbackLanguage, config.fallback);
+  return new Localizer(
+    msgs,
+    language,
+    languages.length ? languages : [language],
+    config.fallbackLanguage,
+    config.fallback,
+  );
 }
 
 /**
@@ -89,7 +95,9 @@ export function createLocaleApi(localizer: Localizable = setupLocalizer()): Pira
         addTranslations(messages, isOverriding = true) {
           const current = localizer.messages;
           setTranslations(
-            deepmerge.all<AnyLocalizationMessages>(isOverriding ? [current, ...messages] : [...messages, current]),
+            deepmerge.all<AnyLocalizationMessages>(
+              isOverriding ? [current, localTranslations, ...messages] : [...messages, current, localTranslations],
+            ),
           );
         },
         getCurrentLanguage(cb?: (l: string) => void): any {
