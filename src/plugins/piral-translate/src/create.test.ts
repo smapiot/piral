@@ -225,4 +225,33 @@ describe('Create Localize API', () => {
 
     expect(result).toEqual(config.messages.fr.bar);
   });
+
+  it.each([true, false])('addTranslations merges local translations when called multiple times', (overwrite): void => {
+    const config = {
+      language: 'fr',
+    };
+
+    const firstMessages = {
+      fr: {
+        foo: 'fóo',
+      },
+    };
+
+    const secondMessages = {
+      fr: {
+        bar: 'bár (neu)',
+      },
+    };
+
+    const api = (createLocaleApi(setupLocalizer(config))(context) as any)();
+
+    api.addTranslations([firstMessages]);
+    api.addTranslations([secondMessages], overwrite);
+
+    const resultFoo = api.translate('foo');
+    const resultBar = api.translate('bar');
+
+    expect(resultFoo).toEqual(firstMessages.fr.foo);
+    expect(resultBar).toEqual(secondMessages.fr.bar);
+  });
 });
