@@ -25,93 +25,81 @@ describe('Feed Hook Module', () => {
     loadAction.mockReset();
   });
 
-  it(
-    'Does not load if its already loaded',
-    async () => {
-      const { useFeed } = await import('./useFeed');
-      const pseudoState = {
-        feeds: {
-          foo: {
-            loaded: true,
-            loading: false,
-            error: undefined,
-            data: [1, 2, 3],
-          },
+  it('Does not load if its already loaded', testOptions, async () => {
+    const { useFeed } = await import('./useFeed');
+    const pseudoState = {
+      feeds: {
+        foo: {
+          loaded: true,
+          loading: false,
+          error: undefined,
+          data: [1, 2, 3],
         },
-      };
-      const usedEffect = vitest.fn();
-      useGlobalState.mockImplementation((select: any) => select(pseudoState));
+      },
+    };
+    const usedEffect = vitest.fn();
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
-      (React as any).useEffect = usedEffect;
-      const [loaded, data, error] = useFeed({
-        id: 'foo',
-      } as any);
-      usedEffect.mock.calls[0][0]();
-      expect(loaded).toBeTruthy();
-      expect(data).toEqual([1, 2, 3]);
-      expect(error).toBeUndefined();
-      expect(loadAction).not.toBeCalled();
-    },
-    testOptions,
-  );
+    (React as any).useEffect = usedEffect;
+    const [loaded, data, error] = useFeed({
+      id: 'foo',
+    } as any);
+    usedEffect.mock.calls[0][0]();
+    expect(loaded).toBeTruthy();
+    expect(data).toEqual([1, 2, 3]);
+    expect(error).toBeUndefined();
+    expect(loadAction).not.toBeCalled();
+  });
 
-  it(
-    'Does not load if its already loading',
-    async () => {
-      const { useFeed } = await import('./useFeed');
-      const pseudoState = {
-        feeds: {
-          foo: {
-            loaded: false,
-            loading: true,
-            error: undefined,
-            data: undefined,
-          },
+  it('Does not load if its already loading', testOptions, async () => {
+    const { useFeed } = await import('./useFeed');
+    const pseudoState = {
+      feeds: {
+        foo: {
+          loaded: false,
+          loading: true,
+          error: undefined,
+          data: undefined,
         },
-      };
-      const usedEffect = vitest.fn();
-      useGlobalState.mockImplementation((select: any) => select(pseudoState));
+      },
+    };
+    const usedEffect = vitest.fn();
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
-      (React as any).useEffect = usedEffect;
-      const [loaded, data, error] = useFeed({
-        id: 'foo',
-      } as any);
-      usedEffect.mock.calls[0][0]();
-      expect(loaded).toBeFalsy();
-      expect(data).toBeUndefined();
-      expect(error).toBeUndefined();
-      expect(loadAction).not.toBeCalled();
-    },
-    testOptions,
-  );
+    (React as any).useEffect = usedEffect;
+    const [loaded, data, error] = useFeed({
+      id: 'foo',
+    } as any);
+    usedEffect.mock.calls[0][0]();
+    expect(loaded).toBeFalsy();
+    expect(data).toBeUndefined();
+    expect(error).toBeUndefined();
+    expect(loadAction).not.toBeCalled();
+  });
 
-  it(
-    'Triggers load if its not loading',
-    async () => {
-      const { useFeed } = await import('./useFeed');
-      const pseudoState = {
-        feeds: {
-          foo: {
-            loaded: false,
-            loading: false,
-            error: undefined,
-            data: undefined,
-          },
+  it('Triggers load if its not loading', testOptions, async () => {
+    const { useFeed } = await import('./useFeed');
+    const pseudoState = {
+      feeds: {
+        foo: {
+          loaded: false,
+          loading: false,
+          error: undefined,
+          data: undefined,
         },
-      };
-      const usedEffect = vitest.fn();
-      useGlobalState.mockImplementation((select: any) => select(pseudoState));
+      },
+    };
+    const usedEffect = vitest.fn();
+    useGlobalState.mockImplementation((select: any) => select(pseudoState));
 
-      (React as any).useEffect = usedEffect;
-      const [loaded, data, error] = useFeed({
-        id: 'foo',
-      } as any);
-      usedEffect.mock.calls[0][0]();
-      expect(loaded).toBeFalsy();
-      expect(data).toBeUndefined();
-      expect(error).toBeUndefined();
-      expect(loadAction).toBeCalled();
-    },
-    testOptions,
-  );
+    (React as any).useEffect = usedEffect;
+    const [loaded, data, error] = useFeed({
+      id: 'foo',
+    } as any);
+    usedEffect.mock.calls[0][0]();
+    expect(loaded).toBeFalsy();
+    expect(data).toBeUndefined();
+    expect(error).toBeUndefined();
+    expect(loadAction).toBeCalled();
+  });
 });

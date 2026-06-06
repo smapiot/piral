@@ -62,7 +62,7 @@
     "sass": "^1",
     "typedoc": "0.25.2",
     "typescript": "^5",
-    "vitest": "^3"
+    "vitest": "^4"
   },
   "resolutions": {
     "@types/react": "^18",

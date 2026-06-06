@@ -47,101 +47,81 @@ const testOptions = {
 };
 
 describe('New Pilet Command', () => {
-  it(
-    'scaffolding in an empty directory works',
-    async () => {
-      const dir = createTempDir();
-      await newPilet(dir, {
-        install: false,
-        source: 'piral@latest',
-        registry: 'https://someFakeRegistry.com',
-      });
-      expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
-      expect(existsSync(resolve(dir, '.npmrc'))).toBeTruthy();
-    },
-    testOptions,
-  );
+  it('scaffolding in an empty directory works', testOptions, async () => {
+    const dir = createTempDir();
+    await newPilet(dir, {
+      install: false,
+      source: 'piral@latest',
+      registry: 'https://someFakeRegistry.com',
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeTruthy();
+  });
 
-  it(
-    'command will fail when providing invalid registry',
-    async () => {
-      // Arrange
-      const dir = createTempDir();
-      const options = {
-        install: true,
-        source: 'piral@latest',
-        registry: 'https://someFakeRegistry.com',
-      };
+  it('command will fail when providing invalid registry', testOptions, async () => {
+    // Arrange
+    const dir = createTempDir();
+    const options = {
+      install: true,
+      source: 'piral@latest',
+      registry: 'https://someFakeRegistry.com',
+    };
 
-      let error = false;
+    let error = false;
 
-      try {
-        await newPilet(dir, options);
-      } catch {
-        error = true;
-      }
+    try {
+      await newPilet(dir, options);
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeTruthy();
-    },
-    testOptions,
-  );
+    expect(error).toBeTruthy();
+  });
 
-  it(
-    'should scaffold without creating npmrc file',
-    async () => {
-      const dir = createTempDir();
-      await newPilet(dir, {
-        install: false,
-        source: 'piral@latest',
-      });
-      expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
-      expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
-    },
-    testOptions,
-  );
+  it('should scaffold without creating npmrc file', testOptions, async () => {
+    const dir = createTempDir();
+    await newPilet(dir, {
+      install: false,
+      source: 'piral@latest',
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  });
 
-  it(
-    'scaffolding with language JS works',
-    async () => {
-      const dir = createTempDir();
-      await newPilet(dir, {
-        language: 'js',
-        install: false,
-        source: 'piral@latest',
-      });
-      expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeTruthy();
-      expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
-    },
-    testOptions,
-  );
+  it('scaffolding with language JS works', testOptions, async () => {
+    const dir = createTempDir();
+    await newPilet(dir, {
+      language: 'js',
+      install: false,
+      source: 'piral@latest',
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'src/index.jsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  });
 
-  it(
-    'should set pilet name if passed as argument',
-    async () => {
-      const dir = createTempDir();
-      await newPilet(dir, {
-        install: false,
-        source: 'piral@latest',
-        name: 'testpiralname',
-      });
-      expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
-      expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
+  it('should set pilet name if passed as argument', testOptions, async () => {
+    const dir = createTempDir();
+    await newPilet(dir, {
+      install: false,
+      source: 'piral@latest',
+      name: 'testpiralname',
+    });
+    expect(existsSync(resolve(dir, 'node_modules/piral/package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'package.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'tsconfig.json'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'src/index.tsx'))).toBeTruthy();
+    expect(existsSync(resolve(dir, '.npmrc'))).toBeFalsy();
 
-      const packageContent = await JSON.parse(readFileSync(`${dir}/package.json`, 'utf8'));
-      expect(packageContent.name).toBe('testpiralname');
-    },
-    testOptions,
-  );
+    const packageContent = await JSON.parse(readFileSync(`${dir}/package.json`, 'utf8'));
+    expect(packageContent.name).toBe('testpiralname');
+  });
 });
