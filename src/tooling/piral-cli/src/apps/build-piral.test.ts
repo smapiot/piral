@@ -154,173 +154,145 @@ describe('Build Piral Command', () => {
     expect(error).toBeTruthy();
   });
 
-  it(
-    'can create an emulator build without files in default subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create an emulator build without files in default subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'emulator',
-        });
-      } catch (err) {
-        console.log(err);
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'emulator',
+      });
+    } catch (err) {
+      console.log(err);
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+  });
 
-  it(
-    'can create an emulator build without files in explicit subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create an emulator build without files in explicit subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'emulator',
-          subdir: true,
-        });
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'emulator',
+        subdir: true,
+      });
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+  });
 
-  it(
-    'can create an emulator build without files in no subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create an emulator build without files in no subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'emulator',
-          subdir: false,
-        });
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'emulator',
+        subdir: false,
+      });
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/release'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+  });
 
-  it(
-    'can create a release build in implicit subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create a release build in implicit subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'release',
-        });
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'release',
+      });
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+  });
 
-  it(
-    'can create a release build in explicit subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create a release build in explicit subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'release',
-          subdir: true,
-        });
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'release',
+        subdir: true,
+      });
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeFalsy();
+  });
 
-  it(
-    'can create a release build in no subdir',
-    async () => {
-      const dir = scaffoldNewPiralInstance();
-      let error = false;
+  it('can create a release build in no subdir', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance();
+    let error = false;
 
-      try {
-        await buildPiral(dir, {
-          type: 'release',
-          subdir: false,
-        });
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir, {
+        type: 'release',
+        subdir: false,
+      });
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/index.html'))).toBeTruthy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/piral-local-test-1.0.0.tgz'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/release/index.html'))).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/index.html'))).toBeTruthy();
+  });
 
-  it(
-    'can create all builds with files',
-    async () => {
-      const dir = scaffoldNewPiralInstance([
-        'foo.txt',
-        {
-          from: 'src/bar.txt',
-          to: 'bar.txt',
-        },
-      ]);
-      writeFileSync(resolve(dir, 'foo.txt'), 'foo!', 'utf8');
-      writeFileSync(resolve(dir, 'src/bar.txt'), 'bar!', 'utf8');
-      let error = false;
+  it('can create all builds with files', testOptions, async () => {
+    const dir = scaffoldNewPiralInstance([
+      'foo.txt',
+      {
+        from: 'src/bar.txt',
+        to: 'bar.txt',
+      },
+    ]);
+    writeFileSync(resolve(dir, 'foo.txt'), 'foo!', 'utf8');
+    writeFileSync(resolve(dir, 'src/bar.txt'), 'bar!', 'utf8');
+    let error = false;
 
-      try {
-        await buildPiral(dir);
-      } catch {
-        error = true;
-      }
+    try {
+      await buildPiral(dir);
+    } catch {
+      error = true;
+    }
 
-      expect(error).toBeFalsy();
-      expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
-      expect(existsSync(resolve(dir, 'dist/release'))).toBeTruthy();
-    },
-    testOptions,
-  );
+    expect(error).toBeFalsy();
+    expect(existsSync(resolve(dir, 'dist/emulator/piral-local-test-1.0.0.tgz'))).toBeTruthy();
+    expect(existsSync(resolve(dir, 'dist/release'))).toBeTruthy();
+  });
 });
