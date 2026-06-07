@@ -39,60 +39,44 @@ const testOptions = {
 };
 
 describe('Search Hook Module', () => {
-  it(
-    'just returns current input value',
-    async () => {
-      const { useSearch } = await import('./useSearch');
-      const usedEffect = vitest.fn();
-      (React as any).useEffect = usedEffect;
-      (React as any).useRef = (current) => ({ current });
-      const [value] = useSearch();
-      expect(value).toBe('abc');
-    },
-    testOptions,
-  );
+  it('just returns current input value', testOptions, async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn();
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = (current) => ({ current });
+    const [value] = useSearch();
+    expect(value).toBe('abc');
+  });
 
-  it(
-    'sets the value using the action',
-    async () => {
-      const { useSearch } = await import('./useSearch');
-      const usedEffect = vitest.fn();
-      (React as any).useEffect = usedEffect;
-      (React as any).useRef = (current) => ({ current });
-      (React as any).useState = (initial) => [initial, vitest.fn()];
-      const [_, setValue] = useSearch();
-      setValue('foo');
-      expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
-    },
-    testOptions,
-  );
+  it('sets the value using the action', testOptions, async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn();
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = (current) => ({ current });
+    (React as any).useState = (initial) => [initial, vitest.fn()];
+    const [_, setValue] = useSearch();
+    setValue('foo');
+    expect(availableActions.setSearchInput).toHaveBeenCalledWith('foo');
+  });
 
-  it(
-    'triggers the search without immediate mode',
-    async () => {
-      const { useSearch } = await import('./useSearch');
-      const usedEffect = vitest.fn((fn) => fn());
-      (React as any).useEffect = usedEffect;
-      (React as any).useRef = (current) => ({ current });
-      (React as any).useState = (initial) => [initial, vitest.fn()];
-      useSearch();
-      expect(availableActions.triggerSearch).toHaveBeenCalledWith('abc', false);
-    },
-    testOptions,
-  );
+  it('triggers the search without immediate mode', testOptions, async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn((fn) => fn());
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = (current) => ({ current });
+    (React as any).useState = (initial) => [initial, vitest.fn()];
+    useSearch();
+    expect(availableActions.triggerSearch).toHaveBeenCalledWith('abc', false);
+  });
 
-  it(
-    'cancels the current search',
-    async () => {
-      const { useSearch } = await import('./useSearch');
-      const usedEffect = vitest.fn((fn) => fn());
-      const cancel = vitest.fn();
-      (React as any).useEffect = usedEffect;
-      (React as any).useRef = (_) => ({ current: cancel });
-      (React as any).useState = (initial) => [initial, vitest.fn()];
-      useSearch();
-      expect(cancel).toHaveBeenCalledTimes(1);
-    },
-    testOptions,
-  );
+  it('cancels the current search', testOptions, async () => {
+    const { useSearch } = await import('./useSearch');
+    const usedEffect = vitest.fn((fn) => fn());
+    const cancel = vitest.fn();
+    (React as any).useEffect = usedEffect;
+    (React as any).useRef = (_) => ({ current: cancel });
+    (React as any).useState = (initial) => [initial, vitest.fn()];
+    useSearch();
+    expect(cancel).toHaveBeenCalledTimes(1);
+  });
 });

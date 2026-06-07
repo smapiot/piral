@@ -28,31 +28,41 @@ async function makeExternals(sourceDir: string, piralPkg: any, externals: Array<
     externals
       .filter((ext) => ext.type === 'local' && isValidDependency(ext.name))
       .map(async (external) => ({
+        id: external.requireId,
         name: external.name,
         version: await findDependencyVersion(piralPkg, sourceDir, external),
         optional: external.isAsync,
       })),
   );
-  const externalDependencies = externalPackages.reduce((deps, dep) => {
-    if (!dep.optional) {
-      deps[dep.name] = dep.version;
-    }
+  const externalDependencies = externalPackages.reduce(
+    (deps, dep) => {
+      if (!dep.optional) {
+        deps[dep.name] = dep.version;
+      }
 
-    return deps;
-  }, {} as Record<string, string>);
+      return deps;
+    },
+    {} as Record<string, string>,
+  );
 
-  const importmapEntries = externalPackages.reduce((deps, dep) => {
-    deps[dep.name] = dep.name;
-    return deps;
-  }, {} as Record<string, string>);
+  const importmapEntries = externalPackages.reduce(
+    (deps, dep) => {
+      deps[dep.id] = dep.name;
+      return deps;
+    },
+    {} as Record<string, string>,
+  );
 
-  const optionalDependencies = externalPackages.reduce((deps, dep) => {
-    if (dep.optional) {
-      deps[dep.name] = dep.name;
-    }
+  const optionalDependencies = externalPackages.reduce(
+    (deps, dep) => {
+      if (dep.optional) {
+        deps[dep.name] = dep.name;
+      }
 
-    return deps;
-  }, {} as Record<string, string>);
+      return deps;
+    },
+    {} as Record<string, string>,
+  );
 
   return [externalDependencies, importmapEntries, optionalDependencies] as const;
 }

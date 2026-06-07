@@ -1,12 +1,14 @@
 import { DeclOptions, generateDeclaration, createDiffPlugin, Logger } from 'dets';
 import { basename, dirname, extname, join, resolve } from 'path';
+
 import { progress, log, logWarn, logVerbose, logInfo } from './log';
 import { ForceOverwrite } from './enums';
-import { retrievePiralRoot, retrievePiletsInfo, flattenExternals, validateSharedDependencies } from './package';
+import { retrievePiralRoot, retrievePiletsInfo, flattenExternals } from './package';
+import { getRemoteTypesTarget, validateSharedDependencies } from './package';
 import { entryModuleExtensions, piralBaseRoot, packageJson } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists, readJson } from './io';
 import { getModulePath } from '../external';
-import { LogLevels } from '../types';
+import { LogLevels, PiletDefinition } from '../types';
 
 const piletApiName = 'PiletApi';
 
@@ -146,6 +148,7 @@ async function createDeclarationFile(options: DeclOptions, target: string, force
 export async function createPiletDeclaration(
   piralInstances: Array<string>,
   root: string,
+  definition: PiletDefinition,
   entry: string,
   allowedImports: Array<string>,
   target: string,
@@ -159,15 +162,17 @@ export async function createPiletDeclaration(
   if (file) {
     const files = await getAllFiles([entry]);
     const types = findDeclaredTypings(root);
+    const excluded = getRemoteTypesTarget(root, definition);
     const options: DeclOptions = {
       name: piralInstance,
       root,
       files,
       types,
+      excluded: excluded ? [excluded] : [],
       plugins: [createDiffPlugin(file)],
       apis,
       noModuleDeclaration: true,
-      imports: allowedImports.filter(m => !piralInstances.includes(m)),
+      imports: allowedImports.filter((m) => !piralInstances.includes(m)),
       logLevel,
       logger: createLogger(),
     };

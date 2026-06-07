@@ -68,7 +68,7 @@ export async function triggerBuildPilet({
   _,
 }: BuildPiletOptions) {
   const targetDir = dirname(entryModule);
-  const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema } =
+  const { peerDependencies, peerModules, root, apps, piletPackage, ignored, importmap, schema, definition } =
     await retrievePiletData(targetDir, app);
   const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
   const piralInstances = apps.map((m) => m.appPackage.name);
@@ -119,6 +119,7 @@ export async function triggerBuildPilet({
     await createPiletDeclaration(
       piralInstances,
       root,
+      definition,
       entryModule,
       externals,
       outDir,
