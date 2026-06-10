@@ -1,6 +1,10 @@
 # Piral Changelog
 
-## 1.11.0 (tbd)
+## 1.11.1 (tbd)
+
+- Fixed DOM portal updates appending duplicate portals when matching by object identity fails (#838)
+
+## 1.11.0 (June 07, 2026)
 
 - Updated dependencies
 - Fixed issue in `pilet declaration` re-emitting remote types
