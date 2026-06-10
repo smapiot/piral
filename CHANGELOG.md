@@ -5,6 +5,7 @@
 - Updated dependencies
 - Fixed issue in `pilet declaration` re-emitting remote types
 - Fixed issue in `piral-translate` where calling `addTranslation` multiple times caused previously added local translations to be removed
+- Fixed DOM portal updates appending duplicate portals when matching by object identity fails
 - Added version specifier in emulator for centrally shared dependencies (#835)
 
 ## 1.10.3 (March 24, 2026)
