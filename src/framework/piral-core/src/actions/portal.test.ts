@@ -70,6 +70,48 @@ describe('Piral-Core portal actions', () => {
     expect(portals.test).not.toBeNull();
   });
 
+  it('updatePortal replaces a portal with the same container', () => {
+    const children = React.createElement('div');
+    const container = {};
+    const stored = {
+      key: 'stored',
+      children: { children },
+      type: 'div',
+      props: null,
+      containerInfo: container,
+    } as unknown as React.ReactPortal & { containerInfo: unknown };
+    const current = {
+      key: 'current',
+      children: { children },
+      type: 'div',
+      props: null,
+      containerInfo: container,
+    } as unknown as React.ReactPortal & { containerInfo: unknown };
+    const next = {
+      key: 'next',
+      children: { children },
+      type: 'div',
+      props: null,
+      containerInfo: container,
+    } as unknown as React.ReactPortal & { containerInfo: unknown };
+
+    const state = create(() => ({
+      portals: { test: [stored] },
+    }));
+
+    const ctx: any = {
+      state,
+      dispatch(update) {
+        state.setState(update(state.getState()));
+      },
+    };
+
+    updatePortal(ctx, 'test', current, next);
+    const { portals } = ctx.state.getState();
+    expect(portals.test).toHaveLength(1);
+    expect(portals.test[0]).toBe(next);
+  });
+
   it('showPortal adds a portal', () => {
     const children = React.createElement('div');
     const newPortal: React.ReactPortal = { key: 'test', children: { children }, type: 'div', props: null };
