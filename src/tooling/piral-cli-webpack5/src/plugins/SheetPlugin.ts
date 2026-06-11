@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { Compilation, Compiler } from 'webpack';
-import { CachedSource, ConcatSource, ReplaceSource } from 'webpack-sources';
+import { RawSource } from 'webpack-sources';
 
 export default class SheetPlugin {
   private loaderPath: string;
@@ -21,32 +21,22 @@ export default class SheetPlugin {
     compiler.hooks.compilation.tap('SheetPlugin', (compilation: Compilation) => {
       if (!compilation.compiler.parentCompilation) {
         compilation.hooks.processAssets.tap(
-          { name: 'SheetPlugin', stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS },
-          (assets) => {
-            if (!assets[this.cssName]) {
-              const name = JSON.stringify(this.cssName);
-              const [[, source]] = Object.entries(assets);
+          {
+            name: 'SheetPlugin',
+            stage: Compilation.PROCESS_ASSETS_STAGE_REPORT,
+          },
+          () => {
+            const cssExists = !!compilation.getAsset(this.cssName);
 
-              if (source instanceof CachedSource) {
-                const cs = source.original();
+            if (!cssExists) {
+              // locate target asset
+              const targetName = `${this.entryName}.js`;
+              const asset = compilation.getAsset(targetName);
 
-                if (cs instanceof ConcatSource && 'children' in cs && Array.isArray(cs.children)) {
-                  cs.children = cs.children.filter((m) => {
-                    if (m instanceof CachedSource) {
-                      const original = m.original();
-
-                      if (original instanceof ReplaceSource) {
-                        const src = original.source();
-
-                        if (typeof src === 'string') {
-                          return !src.includes(name);
-                        }
-                      }
-                    }
-
-                    return true;
-                  });
-                }
+              if (asset) {
+                const source = asset.source.source().toString();
+                const updated = source.replace('window.__NO_CSS__', 'true');
+                compilation.updateAsset(targetName, new RawSource(updated));
               }
             }
           },
