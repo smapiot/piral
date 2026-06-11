@@ -156,7 +156,8 @@ if (process.env.NODE_ENV === 'development') {
     v19: versionHandlers.current,
     v20: versionHandlers.current,
     v21: versionHandlers.current,
-    v22: versionHandlers.next,
+    v22: versionHandlers.current,
+    v23: versionHandlers.next,
   };
 
   const handler = getVersionHandler(versions) || versionHandlers.unknown;
