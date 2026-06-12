@@ -37,4 +37,33 @@ describe('Piral-Core state actions', () => {
     }));
     expect(context.read().test).toBe(11);
   });
+
+  it('dispatch updates the portal state for new portal instances', () => {
+    const oldPortal = {
+      key: null,
+      children: 'content',
+      containerInfo: {},
+      implementation: null,
+    };
+    const newPortal = {
+      key: null,
+      children: 'content',
+      containerInfo: {},
+      implementation: null,
+    };
+    const { context } = createMockContainer({
+      portals: {
+        root: [oldPortal],
+      },
+    });
+
+    dispatch(context, (state: any) => ({
+      ...state,
+      portals: {
+        root: [newPortal],
+      },
+    }));
+
+    expect(context.read().portals.root[0]).toBe(newPortal);
+  });
 });
