@@ -5,7 +5,7 @@ export function dispatch(ctx: GlobalStateContext, update: (state: GlobalState) =
   const oldState = ctx.state.getState();
   const newState = update(oldState);
 
-  if (!isSame(oldState, newState)) {
+  if (oldState.portals !== newState.portals || !isSame(oldState, newState)) {
     ctx.state.setState(newState);
   }
 }
