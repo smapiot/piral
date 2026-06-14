@@ -53,7 +53,7 @@
     "@testing-library/dom": "^10",
     "@testing-library/react": "^16",
     "caniuse-lite": "^1.0.30001341",
-    "esbuild": "^0.27",
+    "esbuild": "^0.28",
     "glob": "^8",
     "jsdom": "^26",
     "lerna": "^9",
