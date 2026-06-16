@@ -25,7 +25,7 @@
       "pattern": "^https://azure.microsoft.com/"
     },
     {
-      "pattern": "^https://medium.embedengineering.com/"
+      "pattern": "^https://addons.opera.com/"
     }
   ],
   "aliveStatusCodes": [999, 401, 403, 429, 200]

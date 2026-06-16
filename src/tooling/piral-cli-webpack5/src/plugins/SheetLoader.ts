@@ -11,6 +11,6 @@ export default function sheetLoader() {
     `e.type="text/css"`,
     `e.rel="stylesheet"`,
     `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
-    `d.head.appendChild(e)`,
+    `!(window.__NO_CSS__ || false) && d.head.appendChild(e)`,
   ].join(';');
 }
