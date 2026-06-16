@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.11.1 (tbd)
+## 1.11.1 (June 16, 2026)
 
 - Fixed portal state updates being skipped for new React portal instances (#840)
 - Fixed reference to `main.css` in case there is no stylesheet in pilets (#839)
