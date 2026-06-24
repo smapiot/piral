@@ -42,8 +42,11 @@ export function createConverter(options: ApplicationConfig): NgStandaloneConvert
 
       if (ct?.ɵcmp?.inputs?.Props) {
         ref.setInput('Props', props);
+        return true;
       }
     }
+
+    return false;
   };
 
   let app: undefined | Promise<ApplicationRef> = undefined;
@@ -94,13 +97,22 @@ export function createConverter(options: ApplicationConfig): NgStandaloneConvert
               // Start the routing service.
               appRef.injector.get(CoreRoutingService);
 
-              update(ref, props);
+              const initialProps = 'initialProps' in locals ? locals.initialProps : props; // See `update` below.
+              update(ref, initialProps);
+
               locals.component = ref;
             }
           });
       },
       update(_1, props, _2, locals) {
-        update(locals.component, props);
+        // In some situations, update can be called before mount finishes (due to the async mounting behavior).
+        // In such cases, these early update calls, which should overwrite the initial props passed to mount,
+        // would get lost because setting the component input isn't possible yet.
+        // To circumvent this, early/failed update props are stored in locals. mount can then access these
+        // in place of the initial (old) props.
+        if (!update(locals.component, props)) {
+          locals.initialProps = props;
+        }
       },
       unmount(element, locals) {
         locals.active = false;
