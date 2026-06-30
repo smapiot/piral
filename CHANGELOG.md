@@ -1,5 +1,12 @@
 # Piral Changelog
 
+## 1.11.2 (tbd)
+
+- Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)
+- Fixed a bug due to a missing terminator in `piral-cli-webpack5` with specific versions of Webpack (#849)
+- Updated dependencies
+- Added support for Angular 22 in `piral-ng`
+
 ## 1.11.1 (June 16, 2026)
 
 - Fixed portal state updates being skipped for new React portal instances (#840)
