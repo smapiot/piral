@@ -12,5 +12,6 @@ export default function sheetLoader() {
     `e.rel="stylesheet"`,
     `e.href=${debug ? 'u+"?_="+Math.random()' : 'u'}`,
     `!(window.__NO_CSS__ || false) && d.head.appendChild(e)`,
+    ``, // important to have ";" terminator always present, see #849
   ].join(';');
 }
