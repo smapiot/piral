@@ -12,10 +12,10 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "main": "lib/index.js",
+  "module": "lib/index.mjs",
   "typings": "lib/index.d.ts",
   "engines": {
-    "node": ">=18.17"
+    "node": ">=20.19"
   },
   "files": [
     "lib",
@@ -36,16 +36,15 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "bin": {
-    "pb": "./lib/pb-cli.js",
-    "piral": "./lib/piral-cli.js",
-    "pilet": "./lib/pilet-cli.js"
+    "pb": "./lib/pb-cli.mjs",
+    "piral": "./lib/piral-cli.mjs",
+    "pilet": "./lib/pilet-cli.mjs"
   },
   "scripts": {
     "cleanup": "rimraf lib",
     "build": "yarn build:source && rimraf lib/external && yarn build:external",
     "build:source": "tsc --declaration",
-    "build:external": "esbuild src/external/index.ts --bundle --outfile=lib/external/index.js --format=cjs --platform=node --external:pnpapi --external:open",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:external": "esbuild src/external/index.ts --bundle --outfile=lib/external/index.mjs --format=esm --platform=node --external:pnpapi --external:open"
   },
   "devDependencies": {
     "@types/express": "^4",
@@ -76,6 +75,6 @@
     "dets": "^0.18",
     "kras": "^1.0.1",
     "open": "^10",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }

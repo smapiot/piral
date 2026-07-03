@@ -47,9 +47,8 @@
     "cleanup": "rimraf esm lib piral-translate.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-translate.min.js --bundle --external:piral-core --external:react --minify --global-name=piralTranslate",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-translate.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-translate.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "deepmerge": "^4"

@@ -46,9 +46,8 @@
     "cleanup": "rimraf esm lib piral-redux.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-redux.min.js --bundle --external:piral-core --external:react --minify --global-name=piralRedux",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-redux.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-redux.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "react-redux": "^7",

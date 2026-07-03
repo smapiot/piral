@@ -42,9 +42,8 @@
   "scripts": {
     "cleanup": "rimraf esm lib",
     "build": "yarn build:esnext",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "piral-dashboard": "^1.11.2",

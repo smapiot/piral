@@ -44,9 +44,8 @@
     "cleanup": "rimraf esm lib piral-configs.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-configs.min.js --bundle --external:piral-core --minify --global-name=piralConfigs",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-configs.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-configs.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "jsonschema": "1.4.1",

@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "./lib",
     "skipLibCheck": true,
-    "module": "ESNext",
     "jsx": "react",
     "importHelpers": true
   },

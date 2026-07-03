@@ -3,7 +3,6 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "jsx": "react",
-    "importHelpers": true
   },
   "include": [
     "./src"

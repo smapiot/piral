@@ -2,7 +2,6 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
-    "module": "ESNext",
     "skipLibCheck": true,
     "jsx": "react",
     "importHelpers": true

@@ -46,9 +46,8 @@
     "cleanup": "rimraf esm lib piral-tracking.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-tracking.min.js --bundle --external:piral-core --minify --global-name=piralTracking",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-tracking.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-tracking.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
     "piral-core": "^1.11.2"

@@ -45,9 +45,8 @@
     "cleanup": "rimraf esm lib piral-dashboard.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-dashboard.min.js --bundle --external:piral-core --external:react --minify --global-name=piralDashboard",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-dashboard.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-dashboard.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

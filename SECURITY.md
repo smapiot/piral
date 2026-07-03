@@ -4,6 +4,7 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 2.x     | :white_check_mark: |
 | 1.x     | :white_check_mark: |
 | 0.x     | :x:                |
 
@@ -12,6 +13,7 @@
 | Version | End of Life |
 | ------- | ----------- |
 | 1.x     | 2026/07/01  |
+| 2.x     | 2030/12/31  |
 
 ## Reporting a Vulnerability
 

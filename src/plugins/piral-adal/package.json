@@ -48,9 +48,8 @@
     "cleanup": "rimraf esm lib piral-adal.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-adal.min.js --bundle --external:piral-core --minify",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-adal.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-adal.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "msal": "^1"

@@ -12,10 +12,8 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.19"
   },
   "files": [
     "lib",
@@ -33,12 +31,11 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "bin": {
-    "publish-microfrontend": "./lib/index.js"
+    "publish-microfrontend": "./lib/index.mjs"
   },
   "scripts": {
     "cleanup": "rimraf lib",
-    "build": "esbuild src/index.ts --bundle --outfile=lib/index.js --format=cjs --external:open --platform=node",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "esbuild src/index.ts --bundle --outfile=lib/index.mjs --format=mjs --external:open --platform=node"
   },
   "dependencies": {
     "open": "^10"
@@ -65,7 +62,7 @@
     "rc": "^1",
     "rimraf": "^6",
     "tar": "^7",
-    "typescript": "^5",
+    "typescript": "^6",
     "yargs": "^15"
   }
 }

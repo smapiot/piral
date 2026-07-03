@@ -57,10 +57,9 @@
   "scripts": {
     "cleanup": "rimraf dist esm lib",
     "build": "yarn build:esnext && yarn build:codegen",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
     "build:codegen": "esbuild src/tools/codegen.ts --bundle --outfile=lib/codegen.js --format=cjs --platform=node --external:pnpapi",
-    "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
     "piral-base": "^1.11.2",

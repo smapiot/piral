@@ -61,7 +61,7 @@
     "prettier": "^3",
     "sass": "^1",
     "typedoc": "0.25.2",
-    "typescript": "^5",
+    "typescript": "^6",
     "vitest": "^4"
   },
   "resolutions": {

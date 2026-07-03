@@ -33,8 +33,7 @@
   },
   "scripts": {
     "cleanup": "rimraf lib",
-    "build": "tsc",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "tsc"
   },
   "dependencies": {
     "inquirer": "^12",

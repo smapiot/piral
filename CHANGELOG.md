@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 2.0.0 (tbd)
+
+- Updated `engines` field to have a constraint for Node.js >=20.19
+- Removed all CommonJS outputs - frontend and CLI packages are all ESM only
+
 ## 1.11.2 (June 30, 2026)
 
 - Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)

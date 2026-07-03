@@ -16,11 +16,10 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "lib/index.js",
-  "main": "lib/index.js",
+  "module": "lib/index.mjs",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": "./lib/index.js",
+    ".": "./lib/index.mjs",
     "./lib/*": {
       "types": "./lib/*.d.ts",
       "import": "./lib/*"
@@ -42,8 +41,7 @@
   "scripts": {
     "cleanup": "rimraf esm lib",
     "build": "yarn build:esnext",
-    "build:esnext": "tsc --project tsconfig.json --outDir lib --module esnext",
-    "typedoc": "typedoc --json ../../../docs/types/piral-hooks-utils.json src --exclude \"src/**/*.test.*\"",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build:esnext": "tsc --project tsconfig.json --outDir lib",
+    "typedoc": "typedoc --json ../../../docs/types/piral-hooks-utils.json src --exclude \"src/**/*.test.*\""
   }
 }
