@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.11.2 (tbd)
+## 1.11.2 (June 30, 2026)
 
 - Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)
 - Fixed a bug due to a missing terminator in `piral-cli-webpack5` with specific versions of Webpack (#849)
