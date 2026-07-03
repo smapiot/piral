@@ -9,7 +9,7 @@ import { log } from '../common/log';
 import { getAxiosOptions } from '../common/http';
 import { getPiletSpecMeta } from '../common/spec';
 import { config as commonConfig } from '../common/config';
-import { axios, mime, jju } from '../external';
+import { axios, mime, jju } from '../external/index.mjs';
 import { Bundler } from '../types';
 
 export interface PiletInjectorConfig extends KrasInjectorConfig {

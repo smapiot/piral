@@ -3,12 +3,13 @@ import { Agent } from 'https';
 import { Stream } from 'stream';
 import { tmpdir } from 'os';
 import { createWriteStream } from 'fs';
+
 import { log } from './log';
 import { config } from './config';
 import { standardHeaders } from './info';
 import { checkExists, readBinary } from './io';
 import { getTokenInteractively } from './interactive';
-import { axios, FormData } from '../external';
+import { axios, FormData } from '../external/index.mjs';
 import { PublishScheme } from '../types';
 
 function getMessage(body: string | { message?: string }) {

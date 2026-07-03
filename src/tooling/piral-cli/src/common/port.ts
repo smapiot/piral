@@ -1,5 +1,5 @@
 import { log, fail } from './log';
-import { getPort } from '../external';
+import { getPort } from '../external/index.mjs';
 
 export async function getAvailablePort(defaultPort: number, strict: boolean) {
   const selectedPort = await getFreePort(defaultPort);

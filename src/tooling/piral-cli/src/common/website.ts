@@ -8,7 +8,7 @@ import { ForceOverwrite } from './enums';
 import { createDirectory, readJson, writeBinary } from './io';
 import { writeJson } from './io';
 import { progress, log } from './log';
-import { axios, isInteractive } from '../external';
+import { axios, isInteractive } from '../external/index.mjs';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
 async function requestManifest(url: string, httpsAgent: Agent, interactive: boolean) {

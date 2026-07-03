@@ -44,7 +44,7 @@
     "cleanup": "rimraf lib",
     "build": "yarn build:source && rimraf lib/external && yarn build:external",
     "build:source": "tsc --declaration",
-    "build:external": "esbuild src/external/index.ts --bundle --outfile=lib/external/index.mjs --format=esm --platform=node --external:pnpapi --external:open"
+    "build:external": "esbuild src/external/index.mts --bundle --outfile=lib/external/index.mjs --format=esm --platform=node --external:pnpapi --external:open"
   },
   "devDependencies": {
     "@types/express": "^4",

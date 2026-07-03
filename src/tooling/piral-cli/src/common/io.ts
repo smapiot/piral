@@ -9,7 +9,7 @@ import { deepMerge } from './merge';
 import { computeHash } from './hash';
 import { ForceOverwrite } from './enums';
 import { promptConfirm } from './interactive';
-import { glob, rimraf } from '../external';
+import { glob, rimraf } from '../external/index.mjs';
 
 function promptOverwrite(file: string) {
   const message = `The file ${file} exists already. Do you want to overwrite it?`;

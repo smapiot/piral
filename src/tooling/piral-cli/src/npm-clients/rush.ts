@@ -3,7 +3,7 @@ import { log } from '../common/log';
 import { findFile, readText, writeText } from '../common/io';
 import { runCommand } from '../common/scripts';
 import { MemoryStream } from '../common/MemoryStream';
-import { jju } from '../external';
+import { jju } from '../external/index.mjs';
 
 // Helpers:
 const rushJson = 'rush.json';

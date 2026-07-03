@@ -5,7 +5,7 @@ import { flattenExternals } from './package';
 import { log, logDone, logInfo, progress } from './log';
 import { createEmulatorSources, createEmulatorWebsite, packageEmulator } from './emulator';
 import { emulatorName, emulatorPackageName, emulatorSourcesName, emulatorWebsiteName, releaseName } from './constants';
-import { callPiralBuild } from '../bundler';
+import { callPiralBuild } from '../bundler.mjs';
 import { LogLevels, SharedDependency } from '../types';
 
 async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {

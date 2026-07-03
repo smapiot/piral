@@ -2,7 +2,7 @@ import { join } from 'path';
 import { EventEmitter } from 'events';
 import { readFile, stat } from 'fs/promises';
 import { KrasInjector, KrasRequest, KrasInjectorConfig, KrasConfiguration, KrasResult } from 'kras';
-import { mime } from '../external';
+import { mime } from '../external/index.mjs';
 import { Bundler } from '../types';
 
 export interface PiralInjectorConfig extends KrasInjectorConfig {

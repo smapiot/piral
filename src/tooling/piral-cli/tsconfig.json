@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "declaration": false
   },

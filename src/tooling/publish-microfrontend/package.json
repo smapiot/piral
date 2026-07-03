@@ -35,7 +35,7 @@
   },
   "scripts": {
     "cleanup": "rimraf lib",
-    "build": "esbuild src/index.ts --bundle --outfile=lib/index.mjs --format=mjs --external:open --platform=node"
+    "build": "esbuild src/index.ts --bundle --outfile=lib/index.mjs --format=esm --external:open --platform=node"
   },
   "dependencies": {
     "open": "^10"

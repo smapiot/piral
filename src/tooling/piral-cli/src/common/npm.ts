@@ -6,8 +6,8 @@ import { legacyCoreExternals, frameworkLibs, defaultRegistry, packageJson } from
 import { inspectPackage } from './inspect';
 import { readJson, checkExists } from './io';
 import { clients, detectDirectClients, detectWrapperClients, isDirectClient, isWrapperClient } from '../npm-clients';
-import { clientTypeKeys } from '../helpers';
-import { getModulePath } from '../external';
+import { clientTypeKeys } from '../helpers.mjs';
+import { getModulePath } from '../external/index.mjs';
 import { PackageType, NpmClientType, NpmClient, NpmDirectClientType, NpmWapperClientType } from '../types';
 
 const gitPrefix = 'git+';

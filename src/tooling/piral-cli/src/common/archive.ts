@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { createWriteStream } from 'fs';
 import { resolve, relative } from 'path';
 import { log } from './log';
-import { tar } from '../external';
+import { tar } from '../external/index.mjs';
 import { PackageFiles } from '../types';
 
 interface ReadEntry extends EventEmitter {

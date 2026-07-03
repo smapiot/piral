@@ -1,6 +1,7 @@
-import * as messages from '../messages';
 import { format } from 'util';
-import { ora } from '../external';
+
+import * as messages from '../messages.mjs';
+import { ora } from '../external/index.mjs';
 import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;

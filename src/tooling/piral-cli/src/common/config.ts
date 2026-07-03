@@ -1,8 +1,9 @@
 import { homedir } from 'os';
 import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
+
 import { appName, defaultRegistry } from './constants';
-import { rc } from '../external';
+import { rc } from '../external/index.mjs';
 import { AuthConfig, SourceLanguage, NpmClientType, PiletSchemaVersion } from '../types';
 
 export interface PiralCliConfig {

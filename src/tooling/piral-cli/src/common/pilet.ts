@@ -6,7 +6,7 @@ import { logInfo, progress } from './log';
 import { defaultSchemaVersion } from './constants';
 import { createPiletDeclaration } from './declaration';
 import { combinePiletExternals, retrievePiletData, validateSharedDependencies } from './package';
-import { callPiletBuild } from '../bundler';
+import { callPiletBuild } from '../bundler.mjs';
 import { LogLevels, PiletSchemaVersion } from '../types';
 
 const defaultOutput = 'dist/index.js';

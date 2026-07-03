@@ -1,9 +1,10 @@
 import { Agent } from 'https';
+
 import { openBrowserAt } from './browser';
 import { standardHeaders } from './info';
 import { logSuspend, logInfo } from './log';
-import { axios, inquirer } from '../external';
-import { PublishScheme } from '../types';
+import { axios, inquirer } from '../external/index.mjs';
+import type { PublishScheme } from '../types';
 
 export function promptSelect(message: string, values: Array<string>, defaultValue: string): Promise<string> {
   const questions = [

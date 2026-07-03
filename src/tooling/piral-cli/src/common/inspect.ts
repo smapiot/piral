@@ -1,6 +1,7 @@
 import { dirname, basename } from 'path';
+
 import { unpackGzTar } from './archive';
-import { jju } from '../external';
+import { jju } from '../external/index.mjs';
 import { PiletPackageData, PackageData, PackageFiles } from '../types';
 
 const packageRoot = 'package/';

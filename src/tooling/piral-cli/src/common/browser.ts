@@ -1,4 +1,4 @@
-import { open } from '../external';
+import { open } from '../external/index.mjs';
 import { log } from './log';
 import { config } from './config';
 

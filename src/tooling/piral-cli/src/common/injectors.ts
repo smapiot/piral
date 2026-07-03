@@ -1,7 +1,8 @@
 import { resolve } from 'path';
+
 import { liveIcon, settingsIcon } from './emoji';
 import { logInfo, log, logReset } from './log';
-import { chalk } from '../external';
+import { chalk } from '../external/index.mjs';
 
 export function notifyServerOnline(path: string, api: string | false) {
   return (svc: any) => {

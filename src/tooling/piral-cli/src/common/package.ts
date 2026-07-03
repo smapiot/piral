@@ -20,7 +20,7 @@ import { piralJsonSchemaUrl, filesTar, filesOnceTar, bundlerNames } from './cons
 import { frameworkLibs, defaultRemoteTypesTarget, packageJson } from './constants';
 import { declarationEntryExtensions, piralJson, piletJson } from './constants';
 import { satisfies } from './version';
-import { getModulePath } from '../external';
+import { getModulePath } from '../external/index.mjs';
 import type { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
 import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
 import type { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';

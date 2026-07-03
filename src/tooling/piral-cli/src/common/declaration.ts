@@ -7,7 +7,7 @@ import { retrievePiralRoot, retrievePiletsInfo, flattenExternals } from './packa
 import { getRemoteTypesTarget, validateSharedDependencies } from './package';
 import { entryModuleExtensions, piralBaseRoot, packageJson } from './constants';
 import { readText, getEntryFiles, matchFiles, createFileIfNotExists, readJson } from './io';
-import { getModulePath } from '../external';
+import { getModulePath } from '../external/index.mjs';
 import { LogLevels, PiletDefinition } from '../types';
 
 const piletApiName = 'PiletApi';
