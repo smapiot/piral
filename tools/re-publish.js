@@ -1,10 +1,21 @@
 const { exec } = require('child_process');
 
+const npmRegistry = 'https://registry.npmjs.org/';
+
 function run(cmd, options = {}) {
   const { ignoreError = false } = options;
 
   return new Promise((resolve, reject) => {
-    exec(cmd, (err, stdout, stderr) => {
+    exec(
+      cmd,
+      {
+        env: {
+          ...process.env,
+          npm_config_registry: npmRegistry,
+          NPM_CONFIG_REGISTRY: npmRegistry,
+        },
+      },
+      (err, stdout, stderr) => {
       if (err) {
         if (ignoreError) {
           resolve({ ok: false, stdout: stdout || '', stderr: stderr || '' });
@@ -14,7 +25,8 @@ function run(cmd, options = {}) {
       } else {
         resolve({ ok: true, stdout: stdout || '', stderr: stderr || '' });
       }
-    });
+      },
+    );
   });
 }
 
@@ -37,9 +49,12 @@ function isFlagSet(name) {
 }
 
 async function isVersionPublished(packageName, version) {
-  const result = await run(`npm view ${packageName}@${version} version --json`, {
-    ignoreError: true,
-  });
+  const result = await run(
+    `npm view ${packageName}@${version} version --json --registry ${npmRegistry}`,
+    {
+      ignoreError: true,
+    },
+  );
 
   if (!result.ok) {
     return false;
@@ -74,7 +89,9 @@ async function publishMissingPackages() {
 
     console.log(`Publishing package: ${pkg.name}@${pkg.version} (tag: ${distTag})`);
 
-    await run(`npx lerna exec --scope ${pkg.name} -- npm publish --tag ${distTag}${provenanceArg}`);
+    await run(
+      `npm publish ${pkg.location} --tag ${distTag}${provenanceArg} --registry ${npmRegistry}`,
+    );
 
     console.log(`Published package: ${pkg.name}@${pkg.version}`);
   }
