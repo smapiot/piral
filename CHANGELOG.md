@@ -1,6 +1,10 @@
 # Piral Changelog
 
-## 1.12.0 (tbd)
+## 1.12.1 (tbd)
+
+- Fixed CI/CD pipeline using broken Node.js version (https://github.com/nodejs/node/issues/62425)
+
+## 1.12.0 (July 28, 2026)
 
 - Updated dependencies
 - Added converter plugin `piral-gea` for [Gea](https://geajs.com/)

@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 env:
-  NODE_VERSION: 22.22.2
+  NODE_VERSION: 24.14.1
   RELEASE_BRANCH: main
   PREVIEW_BRANCH: develop
   CANARY_BRANCH: experimental
