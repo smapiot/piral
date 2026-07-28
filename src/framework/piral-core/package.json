@@ -1,6 +1,6 @@
 {
   "name": "piral-core",
-  "version": "1.11.2",
+  "version": "1.12.1",
   "description": "The core library for creating a Piral instance.",
   "keywords": [
     "portal",
@@ -62,8 +62,8 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-core.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
-    "piral-base": "^1.11.2",
-    "piral-debug-utils": "^1.11.2",
+    "piral-base": "^1.12.1",
+    "piral-debug-utils": "^1.12.1",
     "zustand": "^3.0.0"
   },
   "devDependencies": {

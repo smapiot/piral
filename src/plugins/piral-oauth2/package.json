@@ -1,6 +1,6 @@
 {
   "name": "piral-oauth2",
-  "version": "1.11.2",
+  "version": "1.12.1",
   "description": "Plugin to integrate OAuth 2.0 authentication in Piral.",
   "keywords": [
     "piral",
@@ -51,6 +51,6 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-oauth2.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.11.2"
+    "piral-core": "^1.12.1"
   }
 }

@@ -5,6 +5,15 @@
 - Updated `engines` field to have a constraint for Node.js >=20.19
 - Removed all CommonJS outputs - frontend and CLI packages are all ESM only
 
+## 1.12.1 (July 28, 2026)
+
+- Fixed CI/CD pipeline using broken Node.js version (https://github.com/nodejs/node/issues/62425)
+
+## 1.12.0 (July 28, 2026)
+
+- Updated dependencies
+- Added converter plugin `piral-gea` for [Gea](https://geajs.com/)
+
 ## 1.11.2 (June 30, 2026)
 
 - Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)

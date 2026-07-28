@@ -1,6 +1,6 @@
 {
   "name": "piral-page-layouts",
-  "version": "1.11.2",
+  "version": "1.12.1",
   "description": "Plugin for providing different page layouts in Piral.",
   "keywords": [
     "piral",
@@ -49,6 +49,6 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-page-layouts.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.11.2"
+    "piral-core": "^1.12.1"
   }
 }
