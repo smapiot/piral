@@ -1,5 +1,10 @@
 # Piral Changelog
 
+## 1.12.0 (tbd)
+
+- Updated dependencies
+- Added converter plugin `piral-gea` for [Gea](https://geajs.com/)
+
 ## 1.11.2 (June 30, 2026)
 
 - Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)
