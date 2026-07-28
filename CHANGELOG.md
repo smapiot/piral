@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.12.1 (tbd)
+## 1.12.1 (July 28, 2026)
 
 - Fixed CI/CD pipeline using broken Node.js version (https://github.com/nodejs/node/issues/62425)
 
