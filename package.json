@@ -44,9 +44,9 @@
     "ci:version-update": "yarn ci:version --update && git add CHANGELOG.md && git commit -m 'Update Release Date'",
     "ci:copy-docs": "cp -r ./dist/docs/release ./dist/docs/tmp && mv ./dist/docs/tmp ./dist/docs/release/$(yarn --silent ci:version)",
     "ci:docs": "yarn docgen && yarn build:docs && yarn ci:copy-docs && git checkout -- .",
-    "ci:canary": "lerna publish $(yarn --silent ci:version)-alpha.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag canary && git checkout -- .",
-    "ci:prerelease": "lerna publish $(yarn --silent ci:version)-beta.$BUILD_BUILDID --exact --yes --force-publish --no-git-tag-version --no-push --dist-tag next && git checkout -- .",
-    "ci:release": "lerna publish $(yarn --silent ci:version) --yes --force-publish --no-push --message '[skip ci] publish %s'"
+    "ci:canary": "yarn ci:version --apply --alpha && node tools/re-publish.js --tag canary --provenance && git checkout -- .",
+    "ci:prerelease": "yarn ci:version --apply --beta && node tools/re-publish.js --tag next --provenance && git checkout -- .",
+    "ci:release": "lerna version $(yarn --silent ci:version) --yes --force-publish --no-push --message '[skip ci] publish %s' && node tools/re-publish.js --tag latest --provenance"
   },
   "devDependencies": {
     "@jsenv/file-size-impact": "14.3.33",

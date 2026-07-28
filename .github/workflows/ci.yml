@@ -104,7 +104,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
 
       - name: Canary-Release Packages
-        run: yarn ci:i:canary
+        run: yarn ci:canary
         env:
           NODE_AUTH_TOKEN: "" # explicitly empty to avoid token fallback
           NPM_CONFIG_PROVENANCE: true
