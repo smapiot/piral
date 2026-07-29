@@ -21,7 +21,7 @@ export interface PiletOptionsConfig {
   availablePilets: Array<Pilet>;
   strategy: PiletLoadingStrategy;
   createApi: PiletApiCreator;
-  loadPilet: PiletLoader;
+  loadPilet?: PiletLoader;
   requestPilets: PiletRequester;
   shareDependencies: DependencySelector;
   debug?: DebuggerExtensionOptions;

@@ -11,7 +11,7 @@ import { progress, log } from './log';
 import { axios, isInteractive } from '../external/index.mjs';
 import { EmulatorWebsiteManifestFiles, EmulatorWebsiteManifest } from '../types';
 
-async function requestManifest(url: string, httpsAgent: Agent, interactive: boolean) {
+async function requestManifest(url: string, httpsAgent: Agent | undefined, interactive: boolean) {
   const opts = getAxiosOptions(url);
 
   try {
@@ -23,7 +23,7 @@ async function requestManifest(url: string, httpsAgent: Agent, interactive: bool
         [url]: {
           mode: 'header',
           key: 'authorization',
-          value: headers.authorization,
+          value: headers.authorization!,
         },
       });
       return await requestManifest(url, httpsAgent, false);
@@ -46,15 +46,15 @@ async function downloadEmulatorFiles(
     responseType: 'arraybuffer' as const,
   };
 
-  const downloadFiles = (files: Array<string>, target: string) => {
-    return files
-      .filter((file) => file && typeof file === 'string')
-      .map(async (file) => {
+  const downloadFiles = (files: Array<string | undefined>, target: string) => {
+    return files.map(async (file) => {
+      if (file && typeof file === 'string') {
         const url = new URL(file, manifestUrl);
         const res = await axios.get(url.href, opts);
         const data: Buffer = res.data;
         await writeBinary(target, file, data);
-      });
+      }
+    });
   };
 
   await Promise.all([...downloadFiles(requiredFiles, appDir), ...downloadFiles(optionalFiles, targetDir)]);
@@ -93,7 +93,7 @@ async function createEmulatorFiles(
       peerDependencies: {},
       optionalDependencies: emulatorJson.dependencies.optional,
       devDependencies: emulatorJson.dependencies.included,
-      sharedDependencies: [Object.keys(emulatorJson.importmap.imports)],
+      sharedDependencies: [Object.keys(emulatorJson.importmap.imports!)],
     },
     true,
   );
@@ -107,7 +107,7 @@ async function createEmulatorFiles(
   await downloadEmulatorFiles(manifestUrl, targetDir, appDir, emulatorJson.files, httpsAgent);
 }
 
-export async function retrieveExtraTypings(url: string, httpsAgent: Agent): Promise<string> {
+export async function retrieveExtraTypings(url: string, httpsAgent: Agent | undefined): Promise<string> {
   const opts = getAxiosOptions(url);
   const result = await axios.get(url, { ...opts, httpsAgent });
   return result.data;
@@ -116,7 +116,7 @@ export async function retrieveExtraTypings(url: string, httpsAgent: Agent): Prom
 export async function updateFromEmulatorWebsite(
   targetDir: string,
   manifestUrl: string,
-  httpsAgent: Agent,
+  httpsAgent: Agent | undefined,
   interactive: boolean,
 ) {
   progress(`Updating emulator from %s ...`, manifestUrl);
@@ -141,7 +141,7 @@ export async function updateFromEmulatorWebsite(
   }
 }
 
-export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string, httpsAgent: Agent) {
+export async function scaffoldFromEmulatorWebsite(rootDir: string, manifestUrl: string, httpsAgent: Agent | undefined) {
   progress(`Downloading emulator from %s ...`, manifestUrl);
   const interactive = isInteractive();
   const response = await requestManifest(manifestUrl, httpsAgent, interactive);

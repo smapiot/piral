@@ -8,7 +8,7 @@ import { emulatorName, emulatorPackageName, emulatorSourcesName, emulatorWebsite
 import { callPiralBuild } from '../bundler.mjs';
 import { LogLevels, SharedDependency } from '../types';
 
-async function runLifecycle(root: string, scripts: Record<string, string>, type: string) {
+async function runLifecycle(root: string, scripts: Record<string, string> | undefined, type: string) {
   const script = scripts?.[type];
 
   if (script) {
@@ -77,7 +77,7 @@ export async function triggerBuildEmulator({
   // since we create this anyway let's just pretend we want to have it clean!
   await removeDirectory(targetDir);
 
-  await hooks.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, piralInstances });
+  await hooks?.beforeBuild?.({ root, publicUrl: emulatorPublicUrl, externals, entryFiles, targetDir, piralInstances });
 
   logInfo(`Bundle ${emulatorName} ...`);
 
@@ -108,7 +108,7 @@ export async function triggerBuildEmulator({
     bundlerName,
   );
 
-  await hooks.afterBuild?.({
+  await hooks?.afterBuild?.({
     root,
     publicUrl: emulatorPublicUrl,
     externals,
@@ -123,16 +123,16 @@ export async function triggerBuildEmulator({
   await runLifecycle(root, scripts, 'piral:postbuild');
   await runLifecycle(root, scripts, `piral:postbuild-${emulatorName}`);
 
-  await hooks.beforeEmulator?.({ root, externals, targetDir, outDir });
+  await hooks?.beforeEmulator?.({ root, externals, targetDir, outDir });
 
   let rootDir = root;
 
   switch (emulatorType) {
     case emulatorPackageName:
       rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
-      await hooks.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
+      await hooks?.beforePackage?.({ root, externals, targetDir, outDir, rootDir });
       await packageEmulator(rootDir);
-      await hooks.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
+      await hooks?.afterPackage?.({ root, externals, targetDir, outDir, rootDir });
       break;
     case emulatorSourcesName:
       rootDir = await createEmulatorSources(root, externals, outDir, outFile, logLevel);
@@ -144,7 +144,7 @@ export async function triggerBuildEmulator({
       break;
   }
 
-  await hooks.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
+  await hooks?.afterEmulator?.({ root, externals, targetDir, outDir, rootDir });
 }
 
 export interface BuildShellOptions extends BaseBuildPiralOptions {
@@ -179,7 +179,7 @@ export async function triggerBuildShell({
 
   logInfo(`Bundle ${releaseName} ...`);
 
-  await hooks.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances });
+  await hooks?.beforeBuild?.({ root, publicUrl, externals, entryFiles, targetDir, piralInstances });
 
   const {
     dir: outDir,
@@ -208,7 +208,7 @@ export async function triggerBuildShell({
     bundlerName,
   );
 
-  await hooks.afterBuild?.({
+  await hooks?.afterBuild?.({
     root,
     publicUrl,
     externals,

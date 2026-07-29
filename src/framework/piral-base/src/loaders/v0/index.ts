@@ -12,12 +12,12 @@ import type { DefaultLoaderConfig, PiletV0Entry, Pilet } from '../../types';
 export default function loader(entry: PiletV0Entry, _config: DefaultLoaderConfig): Promise<Pilet> {
   const { name, config = {}, dependencies = {}, spec = 'v0' } = entry;
   const meta = {
+    link: '',
+    ...entry,
     name,
     config,
     dependencies,
     spec,
-    link: '',
-    ...entry,
   };
 
   if ('link' in entry && entry.link) {

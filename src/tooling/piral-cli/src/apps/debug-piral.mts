@@ -140,23 +140,23 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
   ensure('hooks', hooks, 'object');
   ensure('target', target, 'string');
 
-  const publicUrl = normalizePublicUrl(originalPublicUrl);
+  const publicUrl = normalizePublicUrl(originalPublicUrl!);
   const fullBase = resolve(process.cwd(), baseDir);
   const network: NetworkSpec = {
-    port: originalPort,
+    port: originalPort!,
     type: strictPort ? 'wanted' : 'proposed',
   };
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   await hooks.onBegin?.({ options, fullBase });
 
   progress('Reading configuration ...');
 
   const buildRef = await watcherTask(async (watcherContext) => {
-    const entryFiles = await retrievePiralRoot(fullBase, entry);
+    const entryFiles = await retrievePiralRoot(fullBase, entry!);
     const { externals, name, root, ignored } = await retrievePiletsInfo(entryFiles);
     const piralInstances = [name];
-    const dest = getDestination(entryFiles, resolve(fullBase, target));
+    const dest = getDestination(entryFiles, resolve(fullBase, target!));
 
     await checkCliCompatibility(root);
 
@@ -177,7 +177,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
         ignored,
         ...dest,
         _,
-      },
+      } as any,
       bundlerName,
     );
 
@@ -218,7 +218,7 @@ export async function debugPiral(baseDir = process.cwd(), options: DebugPiralOpt
       registerWatcher(file) {
         return watcherContext.watch(file);
       },
-    });
+    } as any);
 
     const handleUpdate = () => {
       const { bundler } = buildRef.data;

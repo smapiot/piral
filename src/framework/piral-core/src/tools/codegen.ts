@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from 'fs';
-import { resolve, relative, dirname, sep, posix } from 'path';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve, relative, dirname, sep, posix } from 'node:path';
 
 // this file is bundled, so the references here will not be at runtime (i.e., for a user)
 import { getModulePath } from 'piral-cli/src/external/resolve.mjs';

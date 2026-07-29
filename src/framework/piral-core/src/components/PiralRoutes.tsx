@@ -37,7 +37,7 @@ function usePiletRoutes() {
 function useRoutes() {
   const shellRoutes = useShellRoutes();
   const piletRoutes = usePiletRoutes();
-  return useRouteFilter([...shellRoutes, ...piletRoutes]);
+  return useRouteFilter([...shellRoutes, ...piletRoutes] as any);
 }
 
 /**

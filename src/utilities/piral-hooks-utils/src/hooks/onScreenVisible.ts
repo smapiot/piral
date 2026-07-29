@@ -21,7 +21,7 @@ export function useOnScreenVisible<T extends HTMLElement>(ref: RefObject<T>, roo
       observer.observe(ref.current);
     }
 
-    return () => observer.unobserve(ref.current);
+    return () => observer.disconnect();
   }, []);
 
   return isIntersecting;

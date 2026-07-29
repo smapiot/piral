@@ -17,5 +17,5 @@ export default function loader(entry: PiletV1Entry, config: DefaultLoaderConfig)
     ...rest,
   };
 
-  return loadFrom(meta, () => includeDependency(entry, config.crossOrigin));
+  return loadFrom(meta, () => includeDependency(entry, config.crossOrigin) as Promise<Pilet>);
 }

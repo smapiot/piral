@@ -126,7 +126,7 @@ export function blazingStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): P
  */
 export function asyncStrategy(options: LoadPiletsOptions, cb: PiletsLoaded): PromiseLike<void> {
   standardStrategy(options, cb);
-  return promisify();
+  return promisify(undefined);
 }
 
 /**
@@ -180,6 +180,6 @@ export function createDeferredStrategy(trigger: Promise<void>, strategy = standa
   return (options, cb) => {
     cb(undefined, []);
     trigger.then(() => strategy(options, cb));
-    return promisify();
+    return promisify(undefined);
   };
 }

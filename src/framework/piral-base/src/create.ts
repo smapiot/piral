@@ -5,13 +5,13 @@ import type { LoadPiletsOptions, Pilet, PiletsLoading } from './types';
 export function startLoadingPilets(options: LoadPiletsOptions) {
   const state = {
     loaded: false,
-    pilets: [],
-    error: undefined,
+    pilets: [] as Array<Pilet>,
+    error: undefined as Error | undefined,
   };
   const notifiers: Array<PiletsLoading> = [];
   const call = (notifier: PiletsLoading) => notifier(state.error, state.pilets, state.loaded);
   const notify = () => notifiers.forEach(call);
-  const setPilets = (error: Error, pilets: Array<Pilet>) => {
+  const setPilets = (error: Error | undefined, pilets: Array<Pilet>) => {
     state.error = error;
     state.pilets = pilets;
     notify();

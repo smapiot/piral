@@ -87,7 +87,7 @@ export async function triggerBuildPilet({
 
   logInfo('Bundle pilet ...');
 
-  await hooks.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
+  await hooks?.beforeBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
 
   await callPiletBuild(
     {
@@ -112,10 +112,10 @@ export async function triggerBuildPilet({
     bundlerName,
   );
 
-  await hooks.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
+  await hooks?.afterBuild?.({ root, outDir, importmap, entryModule, schemaVersion, piletPackage });
 
   if (declaration) {
-    await hooks.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
+    await hooks?.beforeDeclaration?.({ root, outDir, entryModule, piletPackage });
     await createPiletDeclaration(
       piralInstances,
       root,
@@ -126,7 +126,7 @@ export async function triggerBuildPilet({
       ForceOverwrite.yes,
       logLevel,
     );
-    await hooks.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
+    await hooks?.afterDeclaration?.({ root, outDir, entryModule, piletPackage });
   }
 
   return {

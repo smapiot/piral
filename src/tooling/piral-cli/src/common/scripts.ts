@@ -43,8 +43,8 @@ export function runScript(script: string, cwd = process.cwd(), output: NodeJS.Wr
       env,
     });
 
-    cp.stdout.pipe(output, opt);
-    cp.stderr.pipe(error, opt);
+    cp.stdout!.pipe(output, opt);
+    cp.stderr!.pipe(error, opt);
 
     cp.on('error', () => reject(new Error(error.value)));
     cp.on('close', (code) => (code === 0 ? resolve() : reject(new Error(error.value))));

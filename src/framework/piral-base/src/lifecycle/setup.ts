@@ -30,11 +30,11 @@ export function setupSinglePilet(app: SinglePilet, apiFactory: PiletApiCreator, 
     const result = app.setup(api);
     prepareCleanup(app, api, hooks);
     return withCatch(result, name);
-  } catch (e) {
+  } catch (e: any) {
     logError(name, e);
   }
 
-  return promisify();
+  return promisify(undefined);
 }
 
 /**
@@ -51,9 +51,9 @@ export function setupPiletBundle(app: MultiPilet, apiFactory: PiletApiCreator, h
     callfunc(hooks.setupPilet, app);
     const result = app.setup(apiFactory);
     return withCatch(result, name);
-  } catch (e) {
+  } catch (e: any) {
     logError(name, e);
   }
 
-  return promisify();
+  return promisify(undefined);
 }

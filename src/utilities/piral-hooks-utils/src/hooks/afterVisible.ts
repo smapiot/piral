@@ -14,7 +14,9 @@ export function useAfterVisible(time: number, cb: () => void) {
     const observer = new IntersectionObserver((ev) => {
       setIntersecting(ev.some((m) => m.isIntersecting));
     });
-    observer.observe(ref.current);
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
     return () => observer.disconnect();
   }, [ref.current]);
 

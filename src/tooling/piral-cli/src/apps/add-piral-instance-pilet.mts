@@ -85,11 +85,11 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
   ensure('source', source, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
 
   const npmClient = await determineNpmClient(fullBase, defaultNpmClient);
-  const allEntries = await matchAnyPilet(fullBase, [source]);
+  const allEntries = await matchAnyPilet(fullBase, [source!]);
   const ca = await getCertificate(cert);
   const agent = getAgent({ ca, allowSelfSigned });
 
@@ -100,7 +100,7 @@ export async function addPiralInstancePilet(baseDir = process.cwd(), options: Ad
     if (piletJsonPath) {
       const piletJsonDir = dirname(piletJsonPath);
       const root = await findPiletRoot(piletJsonDir);
-      const packageName = await installPiralInstance(app, fullBase, root, npmClient, agent, selected);
+      const packageName = await installPiralInstance(app!, fullBase, root, npmClient, agent, selected);
       const piralInfo = await readPiralPackage(root, packageName);
       const isEmulator = checkAppShellPackage(piralInfo);
 

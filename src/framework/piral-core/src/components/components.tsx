@@ -21,34 +21,34 @@ export function getPiralComponent<TKey extends keyof ComponentsState>(name: TKey
  * Gets the currently registered ErrorInfo component.
  * By default the DefaultErrorInfo component is used.
  */
-export const RegisteredErrorInfo = getPiralComponent('ErrorInfo');
+export const RegisteredErrorInfo = getPiralComponent('ErrorInfo')!;
 
 /**
  * Gets the currently registered LoadingIndicator component.
  * By default only Loading is rendered.
  */
-export const RegisteredLoadingIndicator = getPiralComponent('LoadingIndicator');
+export const RegisteredLoadingIndicator = getPiralComponent('LoadingIndicator')!;
 
 /**
  * Gets the currently registered Router component.
  * By default the BrowserRouter is used.
  */
-export const RegisteredRouter = getPiralComponent('Router');
+export const RegisteredRouter = getPiralComponent('Router')!;
 
 /**
  * Gets the currently registered Route Switch component.
  * By default the DefaultRouteSwitch component is used.
  */
-export const RegisteredRouteSwitch = getPiralComponent('RouteSwitch');
+export const RegisteredRouteSwitch = getPiralComponent('RouteSwitch')!;
 
 /**
  * Gets the currently registered Layout component.
  * By default the children are rendered.
  */
-export const RegisteredLayout = getPiralComponent('Layout');
+export const RegisteredLayout = getPiralComponent('Layout')!;
 
 /**
  * Gets the currently registered Debug component.
  * By default nothing is used.
  */
-export const RegisteredDebug = getPiralComponent('Debug');
+export const RegisteredDebug = getPiralComponent('Debug')!;

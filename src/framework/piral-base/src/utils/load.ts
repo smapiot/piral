@@ -16,7 +16,7 @@ function loadSharedDependencies(dependencies: Record<string, string>): Promise<a
     );
   }
 
-  return promisify();
+  return promisify(undefined);
 }
 
 function handleFailure(error: Error, name: string) {

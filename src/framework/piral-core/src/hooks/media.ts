@@ -8,7 +8,7 @@ import { getCurrentLayout } from '../utils/media';
  * @param values The values mapping to the breakpoints
  * @param defaultValue The default value.
  */
-export function useMedia<T>(queries: Array<string>, values: Array<T>, defaultValue: T) {
+export function useMedia<T>(queries: Array<string | undefined>, values: Array<T>, defaultValue: T) {
   const match = () => getCurrentLayout(queries, values, defaultValue);
   const [value, update] = useState(match);
 

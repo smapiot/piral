@@ -8,10 +8,10 @@ export const defaultBreakpoints: LayoutBreakpoints = ['(min-width: 991px)', '(mi
 const mm =
   typeof window === 'undefined' || !isfunc(window.matchMedia)
     ? () => ({ matches: undefined })
-    : (q: string) => window.matchMedia(q);
+    : (q: string | undefined) => (q ? window.matchMedia(q) : { matches: undefined });
 
 export function getCurrentLayout<T>(
-  breakpoints: Array<string> = defaultBreakpoints,
+  breakpoints: Array<string | undefined> = defaultBreakpoints,
   layouts: Array<T>,
   defaultLayout: T,
 ) {

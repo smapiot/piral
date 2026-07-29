@@ -1,5 +1,5 @@
 import { requireModule } from '../../utils';
-import type { PiletExports } from '../../types';
+import type { Pilet, PiletExports } from '../../types';
 
 /**
  * Compiles the given content from a generic dependency.
@@ -8,7 +8,7 @@ import type { PiletExports } from '../../types';
  * @param link The optional link to the dependency.
  * @returns The evaluated dependency.
  */
-export function evalDependency(name: string, content: string, link = '') {
+export function evalDependency(name: string, content: string, link = ''): Pilet {
   const mod = {
     exports: {},
   } as PiletExports;
@@ -23,5 +23,5 @@ export function evalDependency(name: string, content: string, link = '') {
     console.error(`Error while evaluating ${name}.`, e);
   }
 
-  return mod.exports;
+  return mod.exports as Pilet;
 }

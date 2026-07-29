@@ -2,7 +2,7 @@
 
 import yargs from 'yargs';
 import rc from 'rc';
-import { fromKeys, publishModeKeys } from 'piral-cli/src/helpers';
+import { fromKeys, publishModeKeys } from 'piral-cli/src/helpers.mjs';
 import { basename } from 'path';
 import { readFile } from 'fs/promises';
 import { progress, fail, logDone, logFail, logInfo } from './log';

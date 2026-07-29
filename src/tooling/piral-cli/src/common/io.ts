@@ -74,7 +74,7 @@ export async function getEntryFiles(content: string, basePath: string) {
   log('generalDebug_0003', `Extract entry files from "${basePath}".`);
   const matcher = /<script\s.*?src=(?:"(.*?)"|'(.*?)'|([^\s>]*)).*?>/gi;
   const results: Array<string> = [];
-  let result: RegExpExecArray = undefined;
+  let result: RegExpExecArray | null = null;
 
   while ((result = matcher.exec(content))) {
     const src = result[1] || result[2] || result[3];
@@ -145,7 +145,7 @@ export async function findFile(
   topDir: string,
   fileName: string | Array<string>,
   stopDir = resolve(topDir, '/'),
-): Promise<string> {
+): Promise<string | undefined> {
   const fileNames = Array.isArray(fileName) ? fileName : [fileName];
 
   for (const fn of fileNames) {
@@ -210,7 +210,7 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
   };
   const exts = preferences.map((s) => s.substring(1)).join(',');
   const allPatterns = patterns.reduce<Array<AnyPattern>>((agg, curr) => {
-    const patterns = [];
+    const patterns: Array<string> = [];
 
     if (/[a-zA-Z0-9\-\*]$/.test(curr) && !preferences.find((ext) => curr.endsWith(ext))) {
       patterns.push(curr, `${curr}.{${exts}}`, `${curr}/${packageJson}`, `${curr}/${piletJson}`);
@@ -353,7 +353,7 @@ export async function updateExistingFile(targetDir: string, fileName: string, co
 }
 
 export async function getHash(targetFile: string) {
-  return new Promise<string>((resolve) => {
+  return new Promise<string | undefined>((resolve) => {
     readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(computeHash(c))));
   });
 }
@@ -386,14 +386,14 @@ export async function readJson<T = any>(targetDir: string, fileName: string, def
 
 export function readBinary(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  return new Promise<Buffer>((resolve) => {
+  return new Promise<Buffer | undefined>((resolve) => {
     readFile(targetFile, (err, c) => (err ? resolve(undefined) : resolve(c)));
   });
 }
 
 export function readText(targetDir: string, fileName: string) {
   const targetFile = join(targetDir, fileName);
-  return new Promise<string>((resolve) => {
+  return new Promise<string | undefined>((resolve) => {
     readFile(targetFile, 'utf8', (err, c) => (err ? resolve(undefined) : resolve(c)));
   });
 }
@@ -493,7 +493,7 @@ export async function move(source: string, target: string, forceOverwrite = Forc
 }
 
 function isVersion5OrHigher() {
-  const currentMajor = parseInt(version.split('.').shift());
+  const currentMajor = parseInt(version.split('.').shift()!);
   return currentMajor >= 5;
 }
 
@@ -513,7 +513,7 @@ export async function getSourceFiles(entry: string) {
         const content = await readText(directory, name);
 
         if (name.endsWith('.ts') || name.endsWith('.tsx')) {
-          return transpileModule(content, {
+          return transpileModule(content!, {
             fileName: path,
             moduleName: name,
             compilerOptions: {

@@ -51,7 +51,7 @@ export async function publishWebsiteEmulator(
     const relPath = relative(directory, file);
     const fileName = basename(file);
     const content = await readBinary(dirname(file), fileName);
-    data[relPath] = [content, fileName];
+    data[relPath] = [content!, fileName];
   }
 
   return await postForm(url, mode, apiKey, data, headers, agent, interactive);

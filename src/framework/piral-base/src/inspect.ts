@@ -37,18 +37,18 @@ export function inspectPilet(meta: PiletEntry): InspectPiletResult {
   const inBrowser = typeof document !== 'undefined';
 
   if ('link' in meta && meta.spec === 'v3') {
-    return ['v3', meta, setupSinglePilet];
+    return ['v3', meta, setupSinglePilet as any];
   } else if (inBrowser && 'link' in meta && meta.spec === 'mf') {
-    return ['mf', meta, setupSinglePilet];
+    return ['mf', meta, setupSinglePilet as any];
   } else if (inBrowser && 'link' in meta && meta.spec === 'v2') {
-    return ['v2', meta, setupSinglePilet];
+    return ['v2', meta, setupSinglePilet as any];
   } else if (inBrowser && 'requireRef' in meta && meta.spec !== 'v2') {
-    return ['v1', meta, setupSinglePilet];
+    return ['v1', meta, setupSinglePilet as any];
   } else if (inBrowser && 'bundle' in meta && meta.bundle) {
-    return ['bundle', meta, setupPiletBundle];
+    return ['bundle', meta, setupPiletBundle as any];
   } else if ('hash' in meta) {
-    return ['v0', meta, setupSinglePilet];
+    return ['v0', meta, setupSinglePilet as any];
   } else {
-    return ['unknown', meta, setupSinglePilet];
+    return ['unknown', meta, setupSinglePilet as any];
   }
 }

@@ -32,7 +32,11 @@ export interface PiralInstanceData {
   reactRouterVersion: number;
 }
 
-async function appendBundler(devDependencies: Record<string, string>, bundler: string, proposedVersion: string) {
+async function appendBundler(
+  devDependencies: Record<string, string>,
+  bundler: string | undefined,
+  proposedVersion: string,
+) {
   if (bundler && bundler !== 'none') {
     if (isValidDependency(bundler)) {
       const sep = bundler.indexOf('@', 1);
@@ -197,7 +201,7 @@ function extractRemoteTypesContent(content: string, piletName: string) {
 async function retrieveRemoteTypes(
   appPackages: Array<PiralInstancePackageData>,
   piletPackage: PiletPackageData,
-  agent: Agent,
+  agent: Agent | undefined,
 ) {
   const snippets: Array<RemoteTypeContent> = [];
 
@@ -237,7 +241,7 @@ async function saveRemoteTypes(generatedText: string, target: string) {
   }
 }
 
-export function getRemoteTypesTarget(rootDir: string, piletDefinition: PiletDefinition) {
+export function getRemoteTypesTarget(rootDir: string, piletDefinition: PiletDefinition | undefined) {
   const { remoteTypesTarget } = piletDefinition || {};
   const proposedTarget =
     typeof remoteTypesTarget === 'string'
@@ -252,8 +256,8 @@ async function writeRemoteTypes(
   rootDir: string,
   appPackages: Array<PiralInstancePackageData>,
   piletPackage: PiletPackageData,
-  piletDefinition: PiletDefinition,
-  agent: Agent,
+  piletDefinition: PiletDefinition | undefined,
+  agent: Agent | undefined,
 ) {
   const target = getRemoteTypesTarget(rootDir, piletDefinition);
 
@@ -282,8 +286,8 @@ async function loadPiralInstance(root: string, details?: PiralInstanceDetails): 
 export async function findPiralInstance(
   proposedApp: string,
   rootDir: string,
-  details: PiralInstanceDetails,
-  agent: Agent,
+  details: PiralInstanceDetails | undefined,
+  agent: Agent | undefined,
   interactive = false,
 ) {
   const path = findPackageRoot(proposedApp, rootDir);
@@ -308,27 +312,27 @@ export async function findPiralInstance(
 }
 
 export async function findPiralInstances(
-  proposedApps: Array<string>,
+  proposedApps: Array<string> | undefined,
   piletPackage: PiletPackageData,
   piletDefinition: undefined | PiletDefinition,
   rootDir: string,
-  agent: Agent,
+  agent: Agent | undefined,
   interactive?: boolean,
 ) {
   if (proposedApps) {
     // do nothing
   } else if (piletDefinition) {
     const availableApps = Object.keys(piletDefinition.piralInstances || {});
-    proposedApps = availableApps.filter((m) => piletDefinition.piralInstances[m].selected);
+    proposedApps = availableApps.filter((m) => piletDefinition.piralInstances?.[m].selected);
 
     if (proposedApps.length === 0) {
       proposedApps = availableApps.slice(0, 1);
     }
   } else {
-    proposedApps = [piletPackage.piral?.name].filter(Boolean);
+    proposedApps = [piletPackage.piral?.name].filter((m) => m !== undefined);
   }
 
-  if (proposedApps.length > 0) {
+  if (proposedApps && proposedApps.length > 0) {
     const apps = await Promise.all(
       proposedApps.map((proposedApp) => {
         const details = piletDefinition?.piralInstances?.[proposedApp];
@@ -338,7 +342,7 @@ export async function findPiralInstances(
 
     try {
       await writeRemoteTypes(rootDir, apps, piletPackage, piletDefinition, agent);
-    } catch (err) {
+    } catch (err: any) {
       log('generalWarning_0001', `Could not write the remote types: ${err.message}`);
     }
 
@@ -449,8 +453,8 @@ export async function getFileStats(root: string, name: string) {
       const targetHash = await getHash(targetPath);
       log('generalDebug_0003', `Obtained hash from "${targetPath}": ${targetHash}`);
       return {
-        path: targetPath,
-        hash: targetHash,
+        path: targetPath!,
+        hash: targetHash!,
         changed: sourceHash !== targetHash,
       };
     }),
@@ -525,11 +529,7 @@ async function extendPackageOverridesFromTemplateFragment(root: string, piralInf
   }
 }
 
-function isTemplateFileLocation(item: string | TemplateFileLocation): item is TemplateFileLocation {
-  return typeof item === 'object';
-}
-
-function tryFindPackageVersion(packageName: string): string {
+function tryFindPackageVersion(packageName: string): string | undefined {
   try {
     const { version } = require(`${packageName}/${packageJson}`);
     return version;
@@ -615,7 +615,7 @@ export async function retrievePiralRoot(baseDir: string, entry: string) {
 }
 
 function checkArrayOrUndefined(obj: Record<string, any>, key: string) {
-  const items = obj[key];
+  const items: Array<string | undefined> = obj[key];
 
   if (Array.isArray(items)) {
     return items;
@@ -673,7 +673,7 @@ export async function findPackageVersion(rootPath: string, packageName: string |
       log('generalDebug_0003', `Finding the version of "${packageName}" in "${rootPath}".`);
       const moduleName = getModulePath(rootPath, pckg);
       const packageJsonPath = await findFile(moduleName, packageJson);
-      const root = dirname(packageJsonPath);
+      const root = dirname(packageJsonPath!);
       const { version } = await readJson(root, packageJson);
       return version;
     } catch {}
@@ -854,7 +854,7 @@ async function getPiletPackage(
     }, {}),
     ['piral-cli']: toolVersion,
   };
-  const dependencies: Record<string, string> = {
+  const dependencies: Record<string, string | undefined> = {
     ['piral-cli']: undefined,
   };
 
@@ -911,7 +911,7 @@ export function combinePiletExternals(
       // mentioned / referenced app shells
       // in other cases (e.g., if one app shell does not share this) use the distributed
       // mechanism to ensure that the dependency can also be resolved in this shell
-      if (appShells.every((app) => entry.parents.includes(app))) {
+      if (appShells.every((app) => entry.parents!.includes(app))) {
         externals.push(entry.name);
         importmap.splice(i, 1);
       }
@@ -936,8 +936,17 @@ export async function retrievePiletData(target: string, app?: string, agent?: Ag
   const proposedRoot = piletJsonPath ? dirname(piletJsonPath) : target;
   const root = await findPiletRoot(proposedRoot);
   const piletPackage = await readJson(root, packageJson);
-  const piletDefinition: PiletDefinition = piletJsonPath && (await readJson(proposedRoot, piletJson));
-  const appPackages = await findPiralInstances(app && [app], piletPackage, piletDefinition, root, agent, interactive);
+  const piletDefinition: PiletDefinition | undefined = piletJsonPath
+    ? await readJson(proposedRoot, piletJson)
+    : undefined;
+  const appPackages = await findPiralInstances(
+    app ? [app] : undefined,
+    piletPackage,
+    piletDefinition,
+    root,
+    agent,
+    interactive,
+  );
   const apps: Array<AppDefinition> = [];
 
   for (const appPackage of appPackages) {

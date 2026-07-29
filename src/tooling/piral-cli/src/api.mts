@@ -24,12 +24,12 @@ function findAll(commandName: string, cb: (command: ToolCommand<any, any>, index
   }
 }
 
-export function withCommand<T, U>(command: ToolCommand<T, U>) {
+export function withCommand<T, U>(this: any, command: ToolCommand<T, U>) {
   commands.all.push(command);
   return this;
 }
 
-export function withoutCommand(commandName: string) {
+export function withoutCommand(this: any, commandName: string) {
   findAll(commandName, (_, i) => commands.all.splice(i, 1));
   return this;
 }
@@ -40,7 +40,7 @@ function maybeWithFlags<T>(commandName: string, setter?: ToolCommandFlagsSetter<
   }
 }
 
-export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter<T>) {
+export function withFlags<T>(this: any, commandName: string, setter: ToolCommandFlagsSetter<T>) {
   if (typeof commandName !== 'string') {
     log('apiCommandNameInvalid_0200', 'flags');
   } else if (typeof setter !== 'function') {
@@ -55,7 +55,7 @@ export function withFlags<T>(commandName: string, setter: ToolCommandFlagsSetter
   return this;
 }
 
-export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<U>) {
+export function wrapCommand<U>(this: any, commandName: string, wrapper: ToolCommandWrapper<U>) {
   if (typeof commandName !== 'string') {
     log('apiCommandNameInvalid_0200', 'command');
   } else if (typeof wrapper !== 'function') {
@@ -70,7 +70,7 @@ export function wrapCommand<U>(commandName: string, wrapper: ToolCommandWrapper<
   return this;
 }
 
-export function beforeCommand<U>(commandName: string, before: ToolCommandRunner<U>) {
+export function beforeCommand<U>(this: any, commandName: string, before: ToolCommandRunner<U>) {
   if (typeof commandName !== 'string') {
     log('apiCommandNameInvalid_0200', 'before command');
   } else if (typeof before !== 'function') {
@@ -85,7 +85,7 @@ export function beforeCommand<U>(commandName: string, before: ToolCommandRunner<
   return this;
 }
 
-export function afterCommand<U>(commandName: string, after: ToolCommandRunner<U>) {
+export function afterCommand<U>(this: any, commandName: string, after: ToolCommandRunner<U>) {
   if (typeof commandName !== 'string') {
     log('apiCommandNameInvalid_0200', 'after command');
   } else if (typeof after !== 'function') {
@@ -100,7 +100,7 @@ export function afterCommand<U>(commandName: string, after: ToolCommandRunner<U>
   return this;
 }
 
-export function withPiralRule(name: string, run: RuleRunner<PiralRuleContext>) {
+export function withPiralRule(this: any, name: string, run: RuleRunner<PiralRuleContext>) {
   if (typeof name !== 'string') {
     log('apiValidateNameInvalid_0202', 'Piral');
   } else if (typeof run !== 'function') {
@@ -112,7 +112,7 @@ export function withPiralRule(name: string, run: RuleRunner<PiralRuleContext>) {
   return this;
 }
 
-export function withPiletRule(name: string, run: RuleRunner<PiletRuleContext>) {
+export function withPiletRule(this: any, name: string, run: RuleRunner<PiletRuleContext>) {
   if (typeof name !== 'string') {
     log('apiValidateNameInvalid_0202', 'pilet');
   } else if (typeof run !== 'function') {
@@ -124,7 +124,7 @@ export function withPiletRule(name: string, run: RuleRunner<PiletRuleContext>) {
   return this;
 }
 
-export function withPatcher(packageName: string, patch: PackagePatcher) {
+export function withPatcher(this: any, packageName: string, patch: PackagePatcher) {
   if (typeof packageName !== 'string') {
     log('apiPatchInvalid_0204', 'packageName');
   } else if (typeof patch !== 'function') {
@@ -136,7 +136,7 @@ export function withPatcher(packageName: string, patch: PackagePatcher) {
   return this;
 }
 
-export function withBundler(name: string, actions: BundlerDefinition) {
+export function withBundler(this: any, name: string, actions: BundlerDefinition) {
   if (typeof name !== 'string') {
     log('apiBundlerInvalid_0206', 'bundlerName');
   } else if (typeof actions !== 'object') {

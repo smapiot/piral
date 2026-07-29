@@ -25,7 +25,10 @@ export function runCleanup(app: SinglePilet, api: PiletApi, hooks: PiletLifecycl
   // check if this was actually set up using a require reference
   if ('requireRef' in app) {
     const depName = app.requireRef;
-    delete globalThis[depName];
+
+    if (typeof depName === 'string') {
+      delete globalThis[depName];
+    }
   }
 
   // remove the pilet's evaluated modules from SystemJS (except the shared dependencies)

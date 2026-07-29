@@ -23,7 +23,7 @@ export default async function (context: PiletRuleContext, options: Options = 'ig
       const fileContent = await file.read();
 
       for (const tester of testers) {
-        if (tester.test(fileContent)) {
+        if (tester.test(fileContent!)) {
           context.error(
             `
 The Piral instance is referenced in "${file.path}".

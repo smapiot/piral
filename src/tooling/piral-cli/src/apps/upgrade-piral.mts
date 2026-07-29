@@ -89,8 +89,8 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
   ensure('target', target, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  const root = resolve(fullBase, target);
-  setLogLevel(logLevel);
+  const root = resolve(fullBase, target!);
+  setLogLevel(logLevel!);
   const valid = await checkExistingDirectory(root);
   const exists = await checkExists(join(root, 'package.json'));
 
@@ -101,13 +101,13 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
   const npmClient = await determineNpmClient(root, defaultNpmClient);
 
   progress(`Checking provided version ...`);
-  const realVersion = await findSpecificVersion('piral-cli', version);
+  const realVersion = await findSpecificVersion('piral-cli', version!);
 
   if (!realVersion) {
-    fail('packageVersionInvalid_0024', version);
+    fail('packageVersionInvalid_0024', version!);
   }
 
-  log('generalDebug_0003', `Found real version: "${version}".`);
+  log('generalDebug_0003', `Found real version: "${realVersion}".`);
   const pckg = await readJson(root, 'package.json');
   log('generalDebug_0003', `Updating all dependencies ...`);
 
@@ -119,7 +119,7 @@ export async function upgradePiral(baseDir = process.cwd(), options: UpgradePira
   await updateExistingJson(root, 'package.json', pckg);
 
   if (install) {
-    progress(`Updating the npm packages to %s ...`, version);
+    progress(`Updating the npm packages to %s ...`, realVersion);
     await installNpmDependencies(npmClient, root);
   }
 

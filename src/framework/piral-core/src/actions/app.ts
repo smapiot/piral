@@ -24,9 +24,9 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
   }));
 }
 
-export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> {
+export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> | undefined {
   return ctx.options
-    .loadPilet(meta)
+    .loadPilet?.(meta)
     .then((pilet) => ctx.injectPilet(pilet))
     .then((pilet) => runPilet(ctx.options.createApi, pilet, ctx.options.hooks))
     .then(noop);

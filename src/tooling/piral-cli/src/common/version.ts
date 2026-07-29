@@ -30,7 +30,11 @@ function parseSegment(v: string) {
 
 function validateAndParse(v: string) {
   const match = v.match(semver);
-  match.shift();
+
+  if (match) {
+    match.shift();
+  }
+
   return match;
 }
 
@@ -131,8 +135,8 @@ export function satisfies(v: string, r: string) {
     }
 
     // else range of either "~" or "^" is assumed
-    const [v1, v2, v3] = validateAndParse(v);
-    const [m1, m2, m3] = validateAndParse(r);
+    const [v1, v2, v3] = validateAndParse(v)!;
+    const [m1, m2, m3] = validateAndParse(r)!;
 
     if (compareStrings(v1, m1) !== 0) {
       return false;

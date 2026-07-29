@@ -119,10 +119,10 @@ export default class PiralInjector implements KrasInjector {
       const findStr = `<script`;
       const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
       const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
-      return this.sendContent(content, mime.getType(target), url);
+      return this.sendContent(content, mime.getType(target)!, url);
     }
 
-    return this.sendContent(indexHtml, mime.getType(target), url);
+    return this.sendContent(indexHtml, mime.getType(target)!, url);
   }
 
   async sendResponse(path: string, target: string, dir: string, url: string, recursionDepth = 0): Promise<KrasResult> {
@@ -152,7 +152,7 @@ export default class PiralInjector implements KrasInjector {
         const pathLength = publicUrl.length || 1;
         const path = req.url.substring(pathLength);
         const dir = bundler.bundle.dir;
-        const target = join(dir, path.split('?').shift());
+        const target = join(dir, path.split('?').shift()!);
         await bundler.ready();
         return await this.sendResponse(path, target, dir, req.url);
       }

@@ -23,11 +23,11 @@ export const clients = {
 const directClients: Array<NpmDirectClientType> = ['npm', 'pnp', 'yarn', 'pnpm', 'bun'];
 const wrapperClients: Array<NpmWapperClientType> = ['lerna', 'rush'];
 
-export function isWrapperClient(client: NpmClientType): client is NpmWapperClientType {
+export function isWrapperClient(client: NpmClientType | undefined): client is NpmWapperClientType {
   return wrapperClients.includes(client as any);
 }
 
-export function isDirectClient(client: NpmClientType): client is NpmDirectClientType {
+export function isDirectClient(client: NpmClientType | undefined): client is NpmDirectClientType {
   return directClients.includes(client as any);
 }
 

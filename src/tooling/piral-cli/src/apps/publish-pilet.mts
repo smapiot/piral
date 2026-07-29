@@ -167,7 +167,7 @@ async function getFiles(
           contentHash: true,
           minify: true,
           hooks,
-        });
+        } as any);
 
         const name = piletPackage.name;
         log('generalDebug_0003', `Pilet "${name}" built successfully!`);
@@ -209,7 +209,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
     fresh = publishPiletDefaults.fresh,
     source = fresh ? './src/index' : '*.tgz',
     url = config.url ?? publishPiletDefaults.url,
-    apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiletDefaults.apiKey,
+    apiKey = config.apiKeys?.[url!] ?? config.apiKey ?? publishPiletDefaults.apiKey,
     logLevel = publishPiletDefaults.logLevel,
     from = publishPiletDefaults.from,
     schemaVersion = publishPiletDefaults.schemaVersion,
@@ -231,7 +231,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
   ensure('hooks', hooks, 'object');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
 
   if (!url) {
@@ -243,7 +243,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
   log('generalDebug_0003', 'Getting the tgz files ...');
   const sources = Array.isArray(source) ? source : [source];
-  const files = await getFiles(fullBase, sources, from, fresh, schemaVersion, logLevel, bundlerName, _, agent, hooks);
+  const files = await getFiles(fullBase, sources, from!, fresh!, schemaVersion!, logLevel!, bundlerName!, _, agent, hooks);
   const successfulUploads: Array<string> = [];
   log('generalDebug_0003', 'Received available tgz files.');
 
@@ -260,7 +260,7 @@ export async function publishPilet(baseDir = process.cwd(), options: PublishPile
 
     if (content) {
       progress(`Publishing "%s" to "%s" ...`, file, url);
-      const result = await postFile(url, mode, apiKey, content, fields, headers, agent, interactive);
+      const result = await postFile(url, mode!, apiKey!, content, fields, headers, agent, interactive!);
 
       if (result.success) {
         successfulUploads.push(file);

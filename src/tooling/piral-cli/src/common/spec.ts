@@ -33,7 +33,7 @@ export function getPiletSpecMeta(target: string, basePath: string) {
 
     if (checkV1.test(content)) {
       // uses single argument; requireRef (required)
-      const [, requireRef] = checkV1.exec(content);
+      const [, requireRef] = checkV1.exec(content)!;
       return {
         spec: 'v1',
         requireRef,
@@ -41,7 +41,7 @@ export function getPiletSpecMeta(target: string, basePath: string) {
       };
     } else if (checkV2.test(content)) {
       // uses two arguments; requireRef and dependencies as JSON (required)
-      const [, requireRef, plainDependencies] = checkV2.exec(content);
+      const [, requireRef, plainDependencies] = checkV2.exec(content)!;
       return {
         spec: 'v2',
         requireRef,
@@ -49,7 +49,7 @@ export function getPiletSpecMeta(target: string, basePath: string) {
       };
     } else if (checkV3.test(content)) {
       // uses two arguments; requireRef and dependencies as JSON (required)
-      const [, requireRef, plainDependencies] = checkV3.exec(content);
+      const [, requireRef, plainDependencies] = checkV3.exec(content)!;
       return {
         spec: 'v3',
         requireRef,

@@ -120,7 +120,7 @@ async function determineDirectClient(root: string): Promise<NpmDirectClientType>
   return 'npm';
 }
 
-async function getMonorepo(root: string, client: NpmClientType): Promise<string> {
+async function getMonorepo(root: string, client: NpmClientType): Promise<string | undefined> {
   const [path, retrieved] = await detectMonorepoRoot(root);
 
   if (path && retrieved === client) {
@@ -473,7 +473,7 @@ function tryResolve(packageName: string, baseDir = process.cwd()) {
   }
 }
 
-export function tryResolvePackage(name: string, baseDir: string = undefined) {
+export function tryResolvePackage(name: string, baseDir?: string) {
   const path = baseDir ? tryResolve(name, baseDir) : tryResolve(name);
   const root = baseDir || process.cwd();
 
@@ -510,7 +510,7 @@ export function combinePackageRef(name: string, version: string, type: PackageTy
   return name;
 }
 
-export async function getPackageName(root: string, name: string, type: PackageType): Promise<string> {
+export async function getPackageName(root: string, name: string, type: PackageType): Promise<string | undefined> {
   switch (type) {
     case 'file':
       const originalPackageJson = await readJson(name, packageJson);
@@ -561,11 +561,13 @@ export function getPackageVersion(
     case 'monorepo':
       return sourceVersion;
     case 'registry':
-      return hadVersion && sourceVersion;
+      return hadVersion ? sourceVersion : undefined;
     case 'file':
       return getFilePackageVersion(sourceName, root);
     case 'git':
       return getGitPackageVersion(sourceName);
+    default:
+      return undefined;
   }
 }
 
@@ -633,7 +635,11 @@ export function mergeExternals(customExternals?: Array<string>, coreExternals: A
   return coreExternals;
 }
 
-export async function makeExternals(root: string, dependencies: Record<string, string>, externals: Array<string>) {
+export async function makeExternals(
+  root: string,
+  dependencies: Record<string, string>,
+  externals: Array<string> | undefined,
+) {
   const coreExternals = await getCoreExternals(root, dependencies);
   return mergeExternals(externals, coreExternals);
 }

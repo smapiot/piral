@@ -151,7 +151,7 @@ export const debugPiletDefaults: DebugPiletOptions = {
 interface AppInfo {
   apps: Array<AppDefinition>;
   root: string;
-  mocks: string;
+  mocks: string | undefined;
   publicUrl: string;
   externals: Array<string>;
 }
@@ -245,20 +245,20 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   ensure('publicUrl', originalPublicUrl, 'string');
   ensure('port', originalPort, ['number', 'undefined']);
 
-  const publicUrl = normalizePublicUrl(originalPublicUrl);
+  const publicUrl = normalizePublicUrl(originalPublicUrl!);
   const fullBase = resolve(process.cwd(), baseDir);
   const networks: Array<NetworkSpec> = [];
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   await hooks.onBegin?.({ options, fullBase });
 
   progress('Reading configuration ...');
 
   const entryList = Array.isArray(entry) ? entry : [entry];
-  const multi = entryList.length > 1 || entryList[0].indexOf('*') !== -1;
+  const multi = entryList.length > 1 || entryList[0]!.indexOf('*') !== -1;
   log('generalDebug_0003', `Looking for (${multi ? 'multi' : 'single'}) "${entryList.join('", "')}" in "${fullBase}".`);
 
-  const allEntries = await matchAnyPilet(fullBase, entryList);
+  const allEntries = await matchAnyPilet(fullBase, entryList.filter(m => m !== undefined));
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (allEntries.length === 0) {
@@ -272,7 +272,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
   process.stdin?.setMaxListeners(maxListeners);
 
   const buildRef = await watcherTask(async (watcherContext) => {
-    const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
+    const pilets = await concurrentWorkers(allEntries, concurrency!, async (entryModule) => {
       const targetDir = dirname(entryModule);
       const { peerDependencies, peerModules, root, apps, ignored, importmap, schema } = await retrievePiletData(
         targetDir,
@@ -282,7 +282,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       const piralInstances = apps.map((m) => m.appPackage.name);
       const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
       const mocks = join(targetDir, 'mocks');
-      const dest = resolve(root, target);
+      const dest = resolve(root, target!);
       const outDir = dirname(dest);
       const outFile = basename(dest);
       const mocksExists = await checkExistingDirectory(mocks);
@@ -307,7 +307,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           version: schemaVersion,
           ignored,
           _,
-        },
+        } as any,
         bundlerName,
       );
 
@@ -354,12 +354,12 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
     const appInstances: Array<PiralInstanceInfo> = appInstanceDir
       ? [[appInstanceDir, 0]]
-      : await getOrMakeApps(pilets[0], logLevel);
+      : await getOrMakeApps(pilets[0]!, logLevel!);
 
     pilets.forEach((p) => p.bundler.start());
 
     if (appInstances.length === 0) {
-      appInstances.push([undefined, originalPort]);
+      appInstances.push([undefined!, originalPort!]);
     }
 
     await Promise.all(
@@ -368,7 +368,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
 
         if (networks.length === i) {
           networks.push({
-            port: appPort || originalPort + i,
+            port: appPort || originalPort! + i,
             type: strictPort ? 'wanted' : 'proposed',
           });
         }
@@ -390,7 +390,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
           registerWatcher(file) {
             return watcherContext.watch(file);
           },
-        });
+        } as any);
 
         const handleUpdate = () => {
           const { pilets } = buildRef.data;

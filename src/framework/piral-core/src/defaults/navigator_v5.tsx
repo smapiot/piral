@@ -3,7 +3,7 @@ import type { History, Location, Action } from 'history';
 import { __RouterContext as RouterContext, Redirect, useLocation } from 'react-router';
 import { NavigationApi } from '../types';
 
-let _nav: History;
+let _nav: History | undefined;
 const _noop = () => {};
 
 function useRouterContext() {
@@ -44,7 +44,7 @@ export function createNavigation(publicPath: string): NavigationApi {
     action,
     location: {
       get href() {
-        return _nav.createHref(location);
+        return _nav!.createHref(location);
       },
       ...location,
     },
@@ -52,11 +52,11 @@ export function createNavigation(publicPath: string): NavigationApi {
 
   return {
     get path() {
-      const loc = _nav ? _nav.location : location;
+      const loc = _nav ? _nav.location : window.location;
       return loc.pathname;
     },
     get url() {
-      const loc = _nav ? _nav.location : location;
+      const loc = _nav ? _nav.location : window.location;
       return `${loc.pathname}${loc.search}${loc.hash}`;
     },
     push(target, state) {
@@ -82,7 +82,7 @@ export function createNavigation(publicPath: string): NavigationApi {
       return _nav.block((location, action) => blocker(enhance(location, action)));
     },
     listen(listener) {
-      const handler = (e: CustomEvent) => listener(enhance(e.detail.location, _nav.action));
+      const handler: any = (e: CustomEvent) => listener(enhance(e.detail.location, _nav!.action));
 
       window.addEventListener('piral-navigate', handler);
 

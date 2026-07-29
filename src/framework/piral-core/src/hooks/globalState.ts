@@ -27,5 +27,5 @@ export function useGlobalState<R>(select: (state: GlobalState) => R): R;
 
 export function useGlobalState<R>(select?: (state: GlobalState) => R) {
   const { state: useState } = useGlobalStateContext();
-  return useState(select);
+  return useState(select!);
 }

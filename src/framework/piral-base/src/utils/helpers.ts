@@ -2,11 +2,11 @@ export function isfunc(f: any): f is Function {
   return typeof f === 'function';
 }
 
-export function callfunc<T extends (...args: Array<any>) => void>(f: T, ...args: Parameters<T>) {
+export function callfunc<T extends (...args: Array<any>) => void>(f: T | undefined, ...args: Parameters<T>) {
   isfunc(f) && f(...args);
 }
 
-export function promisify<T = void>(value?: T | PromiseLike<T>) {
+export function promisify<T = void>(value: T | PromiseLike<T>) {
   return Promise.resolve<T>(value);
 }
 

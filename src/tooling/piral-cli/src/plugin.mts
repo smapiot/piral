@@ -31,7 +31,7 @@ async function getLocalPackageDir() {
   for (const dir of proposedDirs.filter(Boolean)) {
     log('generalDebug_0003', `Checking for potential plugin directory "${dir}" ...`);
 
-    if (await isValidModulesDirectory(dir)) {
+    if (await isValidModulesDirectory(dir!)) {
       return dir;
     }
   }
@@ -122,7 +122,7 @@ async function getAllPlugins(rootDir: string): Promise<Array<string>> {
 
 export async function loadPlugins() {
   const localDir = await getLocalPackageDir();
-  const allPlugins = await getAllPlugins(localDir);
+  const allPlugins = await getAllPlugins(localDir!);
 
   for (const pluginPath of allPlugins) {
     inject(pluginPath);

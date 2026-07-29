@@ -35,7 +35,7 @@ type TokenResult = Promise<{ mode: PublishScheme; token: string }>;
 
 const tokenRetrievers: Record<string, TokenResult> = {};
 
-export function getTokenInteractively(url: string, httpsAgent: Agent): TokenResult {
+export function getTokenInteractively(url: string, httpsAgent: Agent | undefined): TokenResult {
   if (!(url in tokenRetrievers)) {
     const logResume = logSuspend();
 

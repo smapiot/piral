@@ -25,7 +25,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
     const { mount } = $component;
 
     if (current && isfunc(mount)) {
-      mount(current, innerProps, $context, this.locals);
+      mount(current, innerProps, $context, this.locals!);
     }
 
     this.previous = current;
@@ -40,7 +40,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
       previous && this.componentWillUnmount();
       current && this.componentDidMount();
     } else if (isfunc(update)) {
-      update(current, innerProps, $context, this.locals);
+      update(current!, innerProps, $context, this.locals!);
     }
   }
 
@@ -50,7 +50,7 @@ export class ForeignComponentContainer<T> extends React.Component<ForeignCompone
     const { unmount } = $component;
 
     if (previous && isfunc(unmount)) {
-      unmount(previous, this.locals);
+      unmount(previous, this.locals!);
     }
 
     this.previous = undefined;

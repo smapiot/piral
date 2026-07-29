@@ -6,7 +6,7 @@ import { LogLevels, QuickMessage } from '../types';
 
 type Messages = typeof messages;
 type MessageTypes = keyof Messages;
-let currentProgress: string = undefined;
+let currentProgress: string | undefined = undefined;
 let logLevel = LogLevels.info;
 let instance = ora();
 
@@ -86,7 +86,7 @@ export function fail<T extends MessageTypes>(type: T, ...args: Parameters<Messag
 }
 
 export function log<T extends MessageTypes>(type: T, ...args: Parameters<Messages[T]>) {
-  const [level, code, message] = messages[type].apply(this, args) as QuickMessage;
+  const [level, code, message] = (messages[type] as any).apply(undefined, args) as QuickMessage;
 
   switch (level) {
     case LogLevels.error:

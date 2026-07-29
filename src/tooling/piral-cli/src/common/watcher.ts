@@ -26,7 +26,7 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
     notify = resolve;
   });
   const ref: WatcherRef<T> = {
-    data: undefined,
+    data: undefined as T,
     on(cb) {
       triggers.push(cb);
     },
@@ -71,7 +71,7 @@ export function watcherTask<T = void>(cb: (watcherContext: WatcherContext) => Pr
       anotherRef.on(reRun);
     },
     close() {
-      cb = () => Promise.resolve(undefined);
+      cb = () => Promise.resolve(undefined as T);
       reRun().then(notify);
     },
     status: 'initial',

@@ -72,13 +72,13 @@ process.on('message', async (msg: any) => {
 
         if (bundler) {
           bundler.onStart(() => {
-            process.send({
+            process.send!({
               type: 'pending',
             });
           });
 
           bundler.onEnd((result) => {
-            process.send({
+            process.send!({
               type: 'update',
               outHash: result.hash,
               outName: 'index.html',
@@ -88,7 +88,7 @@ process.on('message', async (msg: any) => {
             });
           });
 
-          process.send({
+          process.send!({
             type: 'done',
             outDir: msg.outDir,
           });
@@ -96,8 +96,8 @@ process.on('message', async (msg: any) => {
 
         break;
     }
-  } catch (error) {
-    process.send({
+  } catch (error: any) {
+    process.send!({
       type: 'fail',
       error: error?.message,
     });

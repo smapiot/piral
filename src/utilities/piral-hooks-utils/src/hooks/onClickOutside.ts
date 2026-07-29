@@ -6,9 +6,9 @@ import { useEffect, RefObject } from 'react';
  * @param ref The reference to the element.
  * @param handler The callback to invoke when an outside click happened.
  */
-export function useOnClickOutside<T extends HTMLElement>(ref: RefObject<T>, handler: (event: MouseEvent) => void) {
+export function useOnClickOutside<T extends HTMLElement>(ref: RefObject<T>, handler: (event: MouseEvent | TouchEvent) => void) {
   useEffect(() => {
-    const listener = (event: MouseEvent) => {
+    const listener = (event: MouseEvent | TouchEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         handler(event);
       }

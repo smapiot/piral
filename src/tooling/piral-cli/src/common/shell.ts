@@ -42,11 +42,15 @@ async function setupPiralInstance(
     progress(`Using locally available npm package %s ...`, sourceName);
     const packageName = await getPackageName(rootDir, sourceName, type);
     const packageVersion = getPackageVersion(hadVersion, sourceName, sourceVersion, type, rootDir);
-    await updateExistingJson(rootDir, packageJson, {
-      devDependencies: {
-        [packageName]: packageVersion,
-      },
-    });
+
+    if (packageName && packageVersion) {
+      await updateExistingJson(rootDir, packageJson, {
+        devDependencies: {
+          [packageName]: packageVersion,
+        },
+      });
+    }
+
     return packageName;
   }
 }
@@ -56,7 +60,7 @@ export async function installPiralInstance(
   baseDir: string,
   rootDir: string,
   npmClient: NpmClient,
-  agent: Agent,
+  agent: Agent | undefined,
   selected?: boolean,
 ): Promise<string> {
   const [sourceName, sourceVersion, hadVersion, type] = await dissectPackageName(baseDir, usedSource, npmClient);
@@ -71,9 +75,13 @@ export async function installPiralInstance(
     return packageName;
   } else {
     const packageName = await setupPiralInstance(sourceName, type, hadVersion, rootDir, sourceVersion, npmClient);
-    await updatePiletJson(rootDir, packageName, {
-      selected,
-    });
-    return packageName;
+
+    if (packageName) {
+      await updatePiletJson(rootDir, packageName, {
+        selected,
+      });
+    }
+
+    return packageName!;
   }
 }

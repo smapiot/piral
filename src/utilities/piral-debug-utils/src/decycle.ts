@@ -9,8 +9,8 @@ function getValue(value: any) {
 }
 
 export function decycle(obj: Record<string, any>) {
-  const objects = [];
-  const paths = [];
+  const objects: Array<any> = [];
+  const paths: Array<any> = [];
 
   const derez = (value: Record<string, any>, path: string) => {
     const _value = getValue(value);
@@ -36,7 +36,7 @@ export function decycle(obj: Record<string, any>) {
       paths.push(path);
 
       if (Array.isArray(_value)) {
-        const nu = [];
+        const nu: Array<any> = [];
 
         for (let i = 0; i < _value.length; i += 1) {
           nu[i] = derez(_value[i], `${path}[${i}]`);

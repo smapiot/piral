@@ -49,7 +49,7 @@ export default async function (context: PiletRuleContext, options: Options = 'ig
         const fileContent = await file.read();
 
         for (const tester of testers) {
-          if (tester.run.test(fileContent)) {
+          if (tester.run.test(fileContent!)) {
             tester.count++;
           }
         }

@@ -122,7 +122,7 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
   const api = config.piletApi;
   const fullBase = resolve(process.cwd(), baseDir);
   const baseMocks = resolve(fullBase, 'mocks');
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   progress('Reading configuration ...');
 
@@ -135,19 +135,19 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
   const agent = getAgent({ ca, allowSelfSigned });
 
   if (registry !== runEmulatorPiralDefaults.registry) {
-    progress(`Setting up npm registry (%s) ...`, registry);
+    progress(`Setting up npm registry (%s) ...`, registry!);
 
     await createFileIfNotExists(appRoot, '.npmrc', `registry=${registry}\n`, ForceOverwrite.yes);
   }
 
   const npmClient = await determineNpmClient(appRoot, defaultNpmClient);
-  const packageName = await installPiralInstance(app, fullBase, appRoot, npmClient, agent);
+  const packageName = await installPiralInstance(app!, fullBase, appRoot, npmClient, agent);
   const piral = await findPiralInstance(packageName, appRoot, { port: originalPort }, agent);
-  const port = await getAvailablePort(piral.port, strictPort);
+  const port = await getAvailablePort(piral.port, strictPort!);
 
   const krasBaseConfig = resolve(fullBase, krasrc);
   const krasRootConfig = resolve(appRoot, krasrc);
-  const initial = createInitialKrasConfig(baseMocks, [], { [api]: '' }, feed);
+  const initial = createInitialKrasConfig(baseMocks, [], { [api!]: '' }, feed);
   const required = {
     injectors: {
       piral: {
@@ -162,7 +162,7 @@ export async function runEmulatorPiral(baseDir = process.cwd(), options: RunEmul
         api,
       },
     },
-  };
+  } as any;
   const configs = [krasBaseConfig, krasRootConfig];
   const krasConfig = readKrasConfig({ port, initial, required }, ...configs);
 

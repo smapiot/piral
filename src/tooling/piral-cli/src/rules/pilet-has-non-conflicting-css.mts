@@ -24,7 +24,7 @@ async function getPiletCssPaths(main: string, baseDir: string) {
 
 async function getCssScore(dir: string, file: string) {
   const content = await readText(dir, file);
-  const result = analyzeCss(content);
+  const result = analyzeCss(content!);
   return result.score;
 }
 

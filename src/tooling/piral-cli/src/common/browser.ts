@@ -5,12 +5,12 @@ import { config } from './config';
 export async function openBrowserAt(address: string) {
   try {
     await open(address);
-  } catch (err) {
+  } catch (err: any) {
     log('failedToOpenBrowser_0170', err);
   }
 }
 
-export async function openBrowser(shouldOpen: boolean, port: number, path: string, https?: boolean) {
+export async function openBrowser(shouldOpen: boolean | undefined, port: number, path: string, https?: boolean) {
   if (shouldOpen) {
     const scheme = https ? 'https' : 'http';
     const address = `${scheme}://${config.host}:${port}${path}`;

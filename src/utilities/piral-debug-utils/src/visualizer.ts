@@ -29,7 +29,7 @@ function getTarget(element: Element) {
     } else {
       return new DOMRectReadOnly(0, 0, 0, 0);
     }
-  });
+  }) as any;
 
   const relevant = rects.filter((m) => m.height !== 0 && m.width !== 0);
 
@@ -71,6 +71,12 @@ class PiralInspectorVisualizer extends HTMLElement {
 
     document.querySelectorAll('piral-component').forEach((element) => {
       const pilet = element.getAttribute('origin');
+
+      if (!pilet) {
+        // skip to next entry
+        return;
+      }
+
       const vis = this.appendChild(document.createElement('div'));
       const info = vis.appendChild(document.createElement('div'));
       vis.style.position = 'absolute';

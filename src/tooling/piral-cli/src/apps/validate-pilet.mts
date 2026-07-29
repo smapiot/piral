@@ -47,11 +47,11 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   ensure('entry', entry, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
 
   const rules = await getPiletRules();
-  const entryFile = join(fullBase, entry);
+  const entryFile = join(fullBase, entry!);
   const target = dirname(entryFile);
   const {
     dependencies,
@@ -72,10 +72,10 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
     const { validators } = getPiletsInfo(appPackage);
     const context: PiletRuleContext = {
       error(message) {
-        errors.push(log('generalError_0002', message));
+        errors.push(log('generalError_0002', message)!);
       },
       warning(message) {
-        warnings.push(log('generalWarning_0001', message));
+        warnings.push(log('generalWarning_0001', message)!);
       },
       logLevel,
       entry: entryFile,

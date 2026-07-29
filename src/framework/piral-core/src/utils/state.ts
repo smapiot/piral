@@ -110,7 +110,7 @@ export function withProvider(provider: JSX.Element) {
 
   return (state: GlobalState): GlobalState => ({
     ...state,
-    provider: !state.provider ? wrapper : (props) => createElement(state.provider, undefined, wrapper(props)),
+    provider: !state.provider ? wrapper : (props) => createElement(state.provider!, undefined, wrapper(props)),
   });
 }
 

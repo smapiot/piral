@@ -46,7 +46,7 @@ export function replaceOrAddItem<T>(items: Array<T>, item: T, predicate: (item: 
 }
 
 export function removeNested<T, U = any>(obj: T, predicate: (item: U) => boolean): T {
-  return Object.keys(obj).reduce((entries, key) => {
+  return Object.keys(obj!).reduce((entries, key) => {
     const item = obj[key];
     entries[key] = Object.keys(item).reduce((all, key) => {
       const value = item[key];

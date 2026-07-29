@@ -32,7 +32,7 @@ export async function select(from: SelectCommands) {
       args: process.argv.slice(2),
     });
 
-    ps.on('exit', (code) => process.exit(code));
+    ps.on('exit', (code) => process.exit(code!));
   } else {
     // If no runner exists or we are in the same directory go for the classic mode
     const { start } = require(join(localPath, 'start'));

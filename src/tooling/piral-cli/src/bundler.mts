@@ -123,7 +123,7 @@ export async function callPiralDebug(args: DebugPiralParameters, bundlerName?: s
     const action = bundler.actions.debugPiral;
     const params = await prepareArgs(action, args);
     return await callDynamic('debug-piral', action.path, params, action.exec);
-  } catch (err) {
+  } catch (err: any) {
     fail('bundlingFailed_0174', err);
   }
 }
@@ -135,7 +135,7 @@ export async function callPiletDebug(args: DebugPiletParameters, bundlerName?: s
     const action = bundler.actions.debugPilet;
     const params = await prepareArgs(action, args);
     return await callDynamic('debug-pilet', action.path, params, action.exec);
-  } catch (err) {
+  } catch (err: any) {
     fail('bundlingFailed_0174', err);
   }
 }
@@ -148,7 +148,7 @@ export async function callPiralBuild(args: BuildPiralParameters, bundlerName?: s
     const params = await prepareArgs(action, args);
     const instance = await callStatic('build-piral', action.path, params, action.exec);
     return instance.bundle;
-  } catch (err) {
+  } catch (err: any) {
     fail('bundlingFailed_0174', err);
   }
 }
@@ -161,7 +161,7 @@ export async function callPiletBuild(args: BuildPiletParameters, bundlerName?: s
     const params = await prepareArgs(action, args);
     const instance = await callStatic('build-pilet', action.path, params, action.exec);
     return instance.bundle;
-  } catch (err) {
+  } catch (err: any) {
     fail('bundlingFailed_0174', err);
   }
 }
@@ -177,7 +177,7 @@ export async function callDebugPiralFromMonoRepo(
     const params = await prepareArgs(action, args);
     const instance = await callStatic('debug-mono-piral', action.path, params, action.exec);
     return instance.bundle;
-  } catch (err) {
+  } catch (err: any) {
     fail('bundlingFailed_0174', err);
   }
 }

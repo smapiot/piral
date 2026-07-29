@@ -33,7 +33,7 @@ function parse(str: string) {
   let key = 0;
   let index = 0;
   let path = '';
-  let res: RegExpExecArray;
+  let res: RegExpExecArray | null;
 
   while ((res = pathExpr.exec(str)) !== null) {
     const m = res[0];

@@ -73,7 +73,7 @@ process.on('message', async (msg: any) => {
         const result = await bundler.bundle();
 
         if (result && !msg.watch) {
-          process.send({
+          process.send!({
             type: 'done',
             outDir: result.outDir,
             outFile: result.outFile,
@@ -82,8 +82,8 @@ process.on('message', async (msg: any) => {
 
         break;
     }
-  } catch (error) {
-    process.send({
+  } catch (error: any) {
+    process.send!({
       type: 'fail',
       error: error?.message,
     });

@@ -143,7 +143,7 @@ interface ImportmapResolutionOptions {
 
 async function resolveImportmap(
   dir: string,
-  importmap: Importmap,
+  importmap: Importmap | undefined,
   options: ImportmapResolutionOptions,
 ): Promise<Array<SharedDependency>> {
   const dependencies: Array<SharedDependency> = [];
@@ -187,7 +187,7 @@ async function resolveImportmap(
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
           const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
-            packageJson,
+            packageJson!,
             depName,
             versionSpec,
             options.versionBehavior,
@@ -212,7 +212,7 @@ async function resolveImportmap(
         if (entry) {
           const packageJson = await findFile(dirname(entry), 'package.json');
           const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
-            packageJson,
+            packageJson!,
             depName,
             versionSpec,
             options.versionBehavior,
@@ -240,11 +240,11 @@ async function resolveImportmap(
           const packageJson = isDirectory
             ? resolve(entry, 'package.json')
             : await findFile(dirname(entry), 'package.json');
-          const packageJsonExists = await checkExists(packageJson);
+          const packageJsonExists = await checkExists(packageJson!);
 
           if (packageJsonExists) {
             const [realIdentifier, version, requireVersion] = await getLocalDependencyVersion(
-              packageJson,
+              packageJson!,
               depName,
               versionSpec,
               options.versionBehavior,
@@ -256,7 +256,7 @@ async function resolveImportmap(
               identifier,
               version,
               requireVersion,
-              isDirectory ? tryResolvePackage(entry, dir) : entry,
+              isDirectory ? tryResolvePackage(entry, dir)! : entry,
               assetName,
               isAsync,
             );
@@ -342,7 +342,7 @@ async function consumeImportmap(
     });
   } else if (typeof importmap === 'undefined' && inherited) {
     // Fall back to sharedDependencies or pilets.external if available
-    const shared: Array<string> = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
+    const shared: Array<string> | undefined = packageDetails.sharedDependencies ?? packageDetails.pilets?.externals;
 
     if (Array.isArray(shared)) {
       return shared.map((dep) => ({

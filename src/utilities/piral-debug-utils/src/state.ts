@@ -20,16 +20,16 @@ const defaultSetter = (name: string, value: string) => {
 
 const persistentSetter = (name: string, value: string) => {
   defaultSetter(name, value);
-  const data = JSON.parse(localStorage.getItem(persistKey));
+  const data = JSON.parse(localStorage.getItem(persistKey)!);
   data[name] = value;
   localStorage.setItem(persistKey, JSON.stringify(data));
 };
 
-function getValue(key: string, defaultValue: boolean, fallbackValue: boolean) {
+function getValue(key: string, defaultValue: boolean | undefined, fallbackValue: boolean) {
   const value = sessionStorage.getItem(key);
   const actualValue = value === 'on';
 
-  if (['on', 'off'].includes(value)) {
+  if (['on', 'off'].includes(value!)) {
     return actualValue;
   }
 
@@ -44,7 +44,7 @@ function getValue(key: string, defaultValue: boolean, fallbackValue: boolean) {
 
 if (persistSettings) {
   try {
-    const settings = JSON.parse(localStorage.getItem(persistKey));
+    const settings = JSON.parse(localStorage.getItem(persistKey)!);
 
     Object.keys(settings).forEach((name) => {
       const value = settings[name];
@@ -63,8 +63,8 @@ export function enablePersistance() {
   for (let i = 0; i < sessionStorage.length; i++) {
     const name = sessionStorage.key(i);
 
-    if (validKeys.includes(name)) {
-      const value = sessionStorage.getItem(name);
+    if (name && validKeys.includes(name)) {
+      const value = sessionStorage.getItem(name)!;
       data[name] = value;
     }
   }

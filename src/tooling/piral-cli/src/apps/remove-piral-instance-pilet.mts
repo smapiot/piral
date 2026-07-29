@@ -60,11 +60,11 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
   ensure('app', app, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
 
   const npmClient = await determineNpmClient(fullBase, defaultNpmClient);
-  const allEntries = await matchAnyPilet(fullBase, [source]);
+  const allEntries = await matchAnyPilet(fullBase, [source!]);
 
   const tasks = allEntries.map(async (entryModule) => {
     const targetDir = dirname(entryModule);
@@ -75,19 +75,19 @@ export async function removePiralInstancePilet(baseDir = process.cwd(), options:
       const oldContent = await readJson(piletJsonDir, piletJson);
       const root = await findPiletRoot(piletJsonDir);
 
-      if ('piralInstances' in oldContent && app in oldContent.piralInstances) {
+      if ('piralInstances' in oldContent && app! in oldContent.piralInstances) {
         const newContent = {
           ...oldContent,
           piralInstances: {
             ...oldContent.piralInstances,
-            [app]: undefined,
+            [app!]: undefined,
           },
         };
 
         await writeJson(piletJsonDir, piletJson, newContent, true);
       }
 
-      await uninstallNpmPackage(npmClient, app, root);
+      await uninstallNpmPackage(npmClient, app!, root);
     } else {
       log('piletJsonNotAvailable_0180', targetDir);
     }

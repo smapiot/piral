@@ -150,14 +150,14 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   ensure('hooks', hooks, 'object');
   ensure('target', target, 'string');
 
-  const publicUrl = normalizePublicUrl(originalPublicUrl);
+  const publicUrl = normalizePublicUrl(originalPublicUrl!);
   const fullBase = resolve(process.cwd(), baseDir);
   const useSubdir = type === 'all' || subdir;
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const entryFiles = await retrievePiralRoot(fullBase, entry);
+  const entryFiles = await retrievePiralRoot(fullBase, entry!);
   const {
     name,
     root,
@@ -167,7 +167,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
     emulator = emulatorPackageName,
   } = await retrievePiletsInfo(entryFiles);
   const piralInstances = [name];
-  const dest = getDestination(entryFiles, resolve(fullBase, target));
+  const dest = getDestination(entryFiles, resolve(fullBase, target!));
 
   await checkCliCompatibility(root);
 
@@ -179,7 +179,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
   }
 
   // either take the explicit type or find out the implicit / default one
-  const emulatorType = type === allName || type === emulatorName ? emulator : type.replace(`${emulatorName}-`, '');
+  const emulatorType = type === allName || type === emulatorName ? emulator : type!.replace(`${emulatorName}-`, '');
 
   // only applies to an explicit emulator target (e.g., "emulator-website") or to "all" / "emulator" with the setting from the piral.json
   if ([emulatorSourcesName, emulatorPackageName, emulatorWebsiteName].includes(emulatorType)) {
@@ -203,7 +203,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       contentHash,
       outFile: dest.outFile,
       _,
-    });
+    } as any);
 
     logReset();
   }
@@ -231,7 +231,7 @@ export async function buildPiral(baseDir = process.cwd(), options: BuildPiralOpt
       piralInstances,
       scripts,
       _,
-    });
+    } as any);
 
     logReset();
   }

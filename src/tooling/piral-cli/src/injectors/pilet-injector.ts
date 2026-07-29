@@ -138,6 +138,7 @@ export default class PiletInjector implements KrasInjector {
   constructor(config: PiletInjectorConfig, serverConfig: KrasConfiguration, core: EventEmitter) {
     this.config = config;
     this.serverConfig = serverConfig;
+    this.indexPath = '';
 
     if (this.config.active) {
       const { api, app, publicUrl, assetUrl } = config;
@@ -265,7 +266,7 @@ export default class PiletInjector implements KrasInjector {
   async loadRemoteFeed(
     rawHeaders: IncomingHttpHeaders,
     feed?: string | Array<string>,
-  ): Promise<Array<Array<PiletMetadata>>> {
+  ): Promise<Array<Array<PiletMetadata> | undefined>> {
     if (feed) {
       const feeds = Array.isArray(feed) ? feed : [feed];
       const {
@@ -286,9 +287,11 @@ export default class PiletInjector implements KrasInjector {
       } = rawHeaders;
       return await Promise.all(feeds.map((url) => loadFeed(url, headers)));
     }
+
+    return [];
   }
 
-  mergePilets(localPilets: Array<PiletMetadata>, remoteFeeds: Array<Array<PiletMetadata>>) {
+  mergePilets(localPilets: Array<PiletMetadata>, remoteFeeds: Array<Array<PiletMetadata> | undefined>) {
     if (!remoteFeeds || !Array.isArray(remoteFeeds)) {
       return localPilets;
     }
@@ -313,7 +316,9 @@ export default class PiletInjector implements KrasInjector {
         if (!isNew && mergeConfig) {
           const existing = merged.find((m) => m.name === name);
 
-          if (existing.config === undefined) {
+          if (!existing) {
+            // do nothing
+          } else if (existing.config === undefined) {
             existing.config = pilet.config;
           } else if (pilet.config !== undefined) {
             Object.assign(existing.config, pilet.config);
@@ -387,11 +392,11 @@ export default class PiletInjector implements KrasInjector {
     const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
     const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
 
-    return this.sendContent(content, mime.getType(target), url);
+    return this.sendContent(content, mime.getType(target)!, url);
   }
 
   private download(path: string) {
-    const manifestUrl = this.proxyInfo.source;
+    const manifestUrl = this.proxyInfo!.source;
     const url = new URL(path, manifestUrl);
     const opts = getAxiosOptions(manifestUrl);
     return axios.get(url.href, { ...opts, responseType: 'arraybuffer' });
@@ -426,11 +431,11 @@ export default class PiletInjector implements KrasInjector {
   async handle(req: KrasRequest): Promise<KrasResult> {
     const { app, api, publicUrl, assetUrl } = this.config;
     const baseUrl =
-      assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined);
+      assetUrl || (req.headers.host ? `${req.encrypted ? 'https' : 'http'}://${req.headers.host}` : undefined)!;
 
     if (!req.target) {
       if (req.url.startsWith(publicUrl)) {
-        const path = req.url.substring(publicUrl.length).split('?').shift();
+        const path = req.url.substring(publicUrl.length).split('?').shift()!;
 
         if (app) {
           const target = join(app, path);
@@ -454,7 +459,7 @@ export default class PiletInjector implements KrasInjector {
 
       return undefined;
     } else if (req.target === api) {
-      const path = req.url.substring(1).split('?').shift();
+      const path = req.url.substring(1).split('?').shift()!;
       return await this.sendResponse(path, req, baseUrl);
     }
   }

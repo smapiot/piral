@@ -4,7 +4,8 @@
     "jsx": "react",
     "lib": ["dom", "es2015", "es2018"],
     "esModuleInterop": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "rootDir": "."
   },
   "include": [
     "./src"

@@ -32,7 +32,7 @@ const defaultIgnoredPackages = ['core-js'];
  * Treat all modules as non-optimized for the current output target.
  * This makes sense in general as only the application should determine the target.
  */
-async function patch(staticPath: string, ignoredPackages: Array<string>) {
+async function patch(staticPath: string, ignoredPackages: Array<string | undefined>) {
   log('generalDebug_0003', `Patching files in "${staticPath}" ...`);
   const folderNames = await getFileNames(staticPath);
   return Promise.all(
@@ -69,7 +69,7 @@ async function patch(staticPath: string, ignoredPackages: Array<string>) {
   );
 }
 
-async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
+async function patchFolder(rootDir: string, ignoredPackages: Array<string | undefined>) {
   const file = '.patched';
   const modulesDir = resolve(rootDir, 'node_modules');
   const exists = await checkExists(modulesDir);
@@ -87,7 +87,7 @@ async function patchFolder(rootDir: string, ignoredPackages: Array<string>) {
   }
 }
 
-export async function patchModules(rootDir: string, ignoredPackages = defaultIgnoredPackages) {
+export async function patchModules(rootDir: string, ignoredPackages: Array<string | undefined> = defaultIgnoredPackages) {
   log('generalDebug_0003', `Patching modules starting in "${rootDir}" ...`);
   const otherRoot = resolve(require.resolve('piral-cli/package.json'), '..', '..', '..');
   await patchFolder(rootDir, ignoredPackages);

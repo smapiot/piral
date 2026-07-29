@@ -1,6 +1,8 @@
+import type { RouteRegistration } from './types';
+
 export const debugRouteCache = {
   active: 0,
-  paths: [],
+  paths: [] as Array<RouteRegistration>,
 };
 
 export function freezeRouteRefresh() {

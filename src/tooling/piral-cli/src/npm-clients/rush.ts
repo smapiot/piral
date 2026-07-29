@@ -78,7 +78,7 @@ export async function initProject(packageName: string, target: string) {
 
   const rushDir = dirname(rushPath);
   const rushContent = await readText(rushDir, rushJson);
-  const rushData = jju.parse(rushContent);
+  const rushData = jju.parse(rushContent!);
   const projectFolder = relative(rushDir, target);
 
   if (!Array.isArray(rushData.projects)) {
@@ -93,7 +93,7 @@ export async function initProject(packageName: string, target: string) {
   await writeText(
     rushDir,
     rushJson,
-    jju.update(rushContent, rushData, {
+    jju.update(rushContent!, rushData, {
       mode: 'cjson',
       indent: 2,
     }),

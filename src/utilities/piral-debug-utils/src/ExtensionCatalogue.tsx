@@ -11,7 +11,7 @@ interface StoreState {
 }
 
 interface Store {
-  current: StoreState;
+  current: StoreState | undefined;
   observe(cb: (state: StoreState) => void): {
     (): void;
   };
@@ -23,7 +23,7 @@ const store: Store = {
   current: undefined,
   observe(setState) {
     const handler = () => {
-      setState(store.current);
+      setState(store.current!);
     };
     window.addEventListener(changeEvent, handler);
     return () => {

@@ -62,12 +62,12 @@ export function getAxiosOptions(url: string) {
   }
 }
 
-export async function getCertificate(cert = config.cert): Promise<Buffer> {
+export async function getCertificate(cert = config.cert): Promise<Buffer | undefined> {
   log('generalDebug_0003', 'Checking if certificate exists.');
 
-  if (await checkExists(cert)) {
-    const dir = dirname(cert);
-    const file = basename(cert);
+  if (await checkExists(cert!)) {
+    const dir = dirname(cert!);
+    const file = basename(cert!);
     log('generalDebug_0003', `Reading certificate file "${file}" from "${dir}".`);
     return await readBinary(dir, file);
   }
@@ -75,7 +75,7 @@ export async function getCertificate(cert = config.cert): Promise<Buffer> {
   return undefined;
 }
 
-export function getAuthorizationHeaders(scheme: PublishScheme, key: string) {
+export function getAuthorizationHeaders(scheme: PublishScheme, key: string): Record<string, string> {
   if (key) {
     switch (scheme) {
       case 'basic':
@@ -122,7 +122,7 @@ export function getAgent({ allowSelfSigned, ca }: AgentOptions) {
   }
 }
 
-export function downloadFile(target: string, httpsAgent: Agent): Promise<Array<string>> {
+export function downloadFile(target: string, httpsAgent: Agent | undefined): Promise<Array<string>> {
   return axios
     .get<Stream>(target, {
       responseType: 'stream',
@@ -164,9 +164,9 @@ export function createAxiosForm(formData: FormDataObj) {
 export function handleAxiosError(
   error: any,
   interactive: boolean,
-  httpsAgent: Agent,
+  httpsAgent: Agent | undefined,
   refetch: (mode: PublishScheme, key: string) => Promise<any>,
-  onfail?: (status: number, statusText: string, response: string) => any,
+  onfail?: (status: number, statusText: string | undefined, response: string) => any,
 ) {
   if (!onfail) {
     onfail = () => {
@@ -254,7 +254,7 @@ export async function postData(
   key: string,
   data: any,
   customHeaders: Record<string, string> = {},
-  httpsAgent: Agent = undefined,
+  httpsAgent: Agent | undefined = undefined,
   isForm = false,
   interactive = false,
 ): Promise<PostFormResult> {
@@ -287,7 +287,7 @@ export async function postData(
             response: undefined,
           };
         } else {
-          log('unsuccessfulHttpPost_0066', statusText, status, response);
+          log('unsuccessfulHttpPost_0066', statusText!, status, response);
           return {
             status,
             success: false,
@@ -305,7 +305,7 @@ export function postForm(
   key: string,
   formData: FormDataObj,
   customHeaders: Record<string, string> = {},
-  httpsAgent: Agent = undefined,
+  httpsAgent: Agent | undefined = undefined,
   interactive = false,
 ): Promise<PostFormResult> {
   return postData(target, scheme, key, formData, customHeaders, httpsAgent, true, interactive);
@@ -318,7 +318,7 @@ export function postFile(
   file: Buffer,
   customFields: Record<string, string> = {},
   customHeaders: Record<string, string> = {},
-  agent: Agent = undefined,
+  agent: Agent | undefined = undefined,
   interactive = false,
 ): Promise<PostFormResult> {
   const data: FormDataObj = { ...customFields, file: [file, 'pilet.tgz'] };

@@ -18,7 +18,7 @@ function getTemplatePackage(templatePackageName: string) {
 
   try {
     return require(normalizedName);
-  } catch (err) {
+  } catch (err: any) {
     log('generalVerbose_0004', err);
     fail(
       'generalError_0002',

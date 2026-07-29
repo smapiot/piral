@@ -209,22 +209,25 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   ensure('hooks', hooks, 'object');
   ensure('target', target, 'string');
 
-  const publicUrl = normalizePublicUrl(originalPublicUrl);
+  const publicUrl = normalizePublicUrl(originalPublicUrl!);
   const fullBase = resolve(process.cwd(), baseDir);
   const entryList = Array.isArray(entry) ? entry : [entry];
   const manifest = 'pilets.json';
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   await hooks.onBegin?.({ options, fullBase });
   progress('Reading configuration ...');
-  const allEntries = await matchAnyPilet(fullBase, entryList);
+  const allEntries = await matchAnyPilet(
+    fullBase,
+    entryList.filter((m) => m !== undefined),
+  );
   log('generalDebug_0003', `Found the following entries: ${allEntries.join(', ')}`);
 
   if (allEntries.length === 0) {
     fail('entryFileMissing_0077');
   }
 
-  const pilets = await concurrentWorkers(allEntries, concurrency, async (entryModule) => {
+  const pilets = await concurrentWorkers(allEntries, concurrency!, async (entryModule) => {
     const { piletPackage, root, outDir, apps, outFile, dest } = await triggerBuildPilet({
       _,
       app,
@@ -241,7 +244,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
       watch,
       hooks,
       declaration,
-    });
+    } as any);
 
     logDone(`Pilet "${piletPackage.name}" built successfully!`);
 
@@ -257,7 +260,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
   });
 
   if (type === 'standalone') {
-    const distDir = dirname(resolve(fullBase, target));
+    const distDir = dirname(resolve(fullBase, target!));
     const outDir = resolve(distDir, 'standalone');
     const outFile = 'index.html';
     const { apps, root } = pilets[0];
@@ -307,7 +310,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           logLevel,
           ignored: [],
           _,
-        },
+        } as any,
         bundlerName,
       );
     } else {
@@ -333,13 +336,13 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
           logLevel,
           ignored,
           _,
-        },
+        } as any,
         bundlerName,
       );
     }
 
     const html = await readText(outDir, outFile);
-    const newHtml = html.replace(
+    const newHtml = html!.replace(
       '<script', // place the assignment before the first seen script
       `<script>window['dbg:pilet-api']=${JSON.stringify(publicUrl + manifest)};</script><script`,
     );
@@ -347,7 +350,7 @@ export async function buildPilet(baseDir = process.cwd(), options: BuildPiletOpt
 
     logDone(`Standalone app available at "${outDir}"!`);
   } else if (type === 'manifest') {
-    const outDir = dirname(resolve(fullBase, target));
+    const outDir = dirname(resolve(fullBase, target!));
 
     logInfo('Building pilet manifest ...');
 

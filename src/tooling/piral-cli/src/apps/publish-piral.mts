@@ -128,7 +128,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     interactive = publishPiralDefaults.interactive,
     fresh = publishPiralDefaults.fresh,
     url = config.url ?? publishPiralDefaults.url,
-    apiKey = config.apiKeys?.[url] ?? config.apiKey ?? publishPiralDefaults.apiKey,
+    apiKey = config.apiKeys?.[url!] ?? config.apiKey ?? publishPiralDefaults.apiKey,
     headers = publishPiralDefaults.headers,
     mode = publishPiralDefaults.mode,
     type = publishPiralDefaults.type,
@@ -145,7 +145,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
   ensure('hooks', hooks, 'object');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
 
   if (!url) {
@@ -174,7 +174,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
   }
 
   const dir = type === 'release' ? releaseName : emulatorName;
-  const targetDir = resolve(fullBase, source, dir);
+  const targetDir = resolve(fullBase, source!, dir);
 
   if (fresh) {
     const piralInstances = [name];
@@ -201,7 +201,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
         piralInstances,
         scripts,
         _,
-      });
+      } as any);
     } else {
       await triggerBuildEmulator({
         root,
@@ -221,7 +221,7 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
         contentHash: true,
         outFile: 'index.html',
         _,
-      });
+      } as any);
     }
 
     logReset();
@@ -237,11 +237,11 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const result = await publishWebsiteEmulator(
       version,
       url,
-      apiKey,
-      mode,
+      apiKey!,
+      mode!,
       targetDir,
       files,
-      interactive,
+      interactive!,
       headers,
       agent,
     );
@@ -272,11 +272,11 @@ export async function publishPiral(baseDir = process.cwd(), options: PublishPira
     const result = await publishWebsiteEmulator(
       version,
       url,
-      apiKey,
-      mode,
+      apiKey!,
+      mode!,
       targetDir,
       files,
-      interactive,
+      interactive!,
       headers,
       agent,
     );

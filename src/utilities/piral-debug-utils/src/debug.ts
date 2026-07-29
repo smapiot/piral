@@ -5,6 +5,9 @@ import { createVisualizer, destroyVisualizer, toggleVisualizer } from './visuali
 import { getInitialSettings, initialSetter, enablePersistance, disablePersistance, settingsKeys } from './state';
 import { DebugCustomSetting, DebuggerOptions } from './types';
 
+declare const System: any;
+declare const process: any;
+
 export function installPiralDebug(options: DebuggerOptions) {
   const {
     getGlobalState,
@@ -22,7 +25,7 @@ export function installPiralDebug(options: DebuggerOptions) {
     customSettings = {},
     defaultSettings = {},
   } = options;
-  const events = [];
+  const events: Array<any> = [];
   const legacyBrowser = !new Error().stack;
   const selfSource = 'piral-debug-api';
   const debugApiVersion = 'v1';
@@ -379,7 +382,7 @@ export function installPiralDebug(options: DebuggerOptions) {
         typeof customElements !== 'undefined' &&
         sessionStorage.getItem(settingsKeys.errorOverlay) !== 'off'
       ) {
-        const ErrorOverlay = customElements.get(overlayId);
+        const ErrorOverlay = customElements.get(overlayId)!;
         document.body.appendChild(new ErrorOverlay(args));
       }
 
@@ -450,7 +453,7 @@ export function installPiralDebug(options: DebuggerOptions) {
           if (!legacyBrowser) {
             // Chrome, Firefox, ... (full capability)
             const err = new Error();
-            const lastLine = err.stack.split('\n')[6];
+            const lastLine = err.stack!.split('\n')[6];
 
             if (lastLine) {
               const action = lastLine.replace(/^\s+at\s+(Atom\.|Object\.)?/, '');

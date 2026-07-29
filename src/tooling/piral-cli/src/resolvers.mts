@@ -23,13 +23,16 @@ function fromNode() {
 
 function fromHome() {
   const homePath = isWin32 ? process.env['USERPROFILE'] : process.env['HOME'];
-  const paths = ['node_modules', 'node_libraries', 'node_packages'];
 
-  for (let i = 0, l = paths.length; i < l; i += 1) {
-    const modulePath = join(homePath, paths[i]);
+  if (homePath) {
+    const paths = ['node_modules', 'node_libraries', 'node_packages'];
 
-    if (modulePath && existsSync(modulePath)) {
-      return modulePath;
+    for (let i = 0, l = paths.length; i < l; i += 1) {
+      const modulePath = join(homePath, paths[i]);
+
+      if (modulePath && existsSync(modulePath)) {
+        return modulePath;
+      }
     }
   }
 
@@ -56,7 +59,13 @@ function fromEnvironment() {
 
 function fromLibraries() {
   if (isWin32) {
-    const prefix = join(process.env.APPDATA, 'npm');
+    const appData = process.env.APPDATA;
+
+    if (!appData) {
+      return undefined;
+    }
+
+    const prefix = join(appData, 'npm');
     const path = join(prefix, 'node_modules');
     return existsSync(path) && path;
   } else {

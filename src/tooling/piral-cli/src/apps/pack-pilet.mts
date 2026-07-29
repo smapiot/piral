@@ -38,8 +38,8 @@ export async function packPilet(baseDir = process.cwd(), options: PackPiletOptio
   ensure('target', target, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
   progress('Reading configuration ...');
-  await createPiletPackage(fullBase, source, target);
+  await createPiletPackage(fullBase, source!, target!);
   logDone(`Pilet packed successfully!`);
 }

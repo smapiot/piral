@@ -11,7 +11,7 @@ interface SlotCarrierProps {
 }
 
 const SlotCarrier: React.FC<SlotCarrierProps> = ({ nodes }) => {
-  const host = React.useRef<HTMLSlotElement>();
+  const host = React.useRef<any>();
 
   React.useEffect(() => {
     host.current?.append(...nodes);
@@ -31,6 +31,7 @@ const SlotCarrier: React.FC<SlotCarrierProps> = ({ nodes }) => {
  * @returns The extension component (receiving its props via params).
  */
 export function toExtension<T>(Component: React.ComponentType<T>): WrappedComponent<ExtensionComponentProps<T>> {
+  // @ts-ignore
   return (props) => <Component {...props.params} />;
 }
 

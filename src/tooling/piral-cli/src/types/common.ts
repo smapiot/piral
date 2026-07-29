@@ -199,7 +199,7 @@ export interface SharedDependency {
   id: string;
   requireId: string;
   name: string;
-  ref: string;
+  ref: string | undefined;
   type: 'local' | 'remote';
   entry: string;
   parents?: Array<string>;

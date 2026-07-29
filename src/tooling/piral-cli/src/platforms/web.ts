@@ -35,7 +35,7 @@ async function startModule(options: PlatformStartModuleOptions) {
   } = options;
 
   const sources = pilets.map((m) => m.mocks).filter(Boolean);
-  const api = `${publicUrl}${config.piletApi.replace(/^\/+/, '')}`;
+  const api = `${publicUrl}${config.piletApi!.replace(/^\/+/, '')}`;
   const baseMocks = resolve(fullBase, 'mocks');
   const initial = createInitialKrasConfig(baseMocks, sources, { [api]: '' }, feed);
   const configs = [...pilets.map((p) => resolve(p.root, krasrc))];
@@ -119,7 +119,7 @@ async function startShell(options: PlatformStartShellOptions) {
   const mocks = join(targetDir, 'mocks');
   const baseMocks = resolve(fullBase, 'mocks');
   const mocksExist = await checkExistingDirectory(mocks);
-  const sources = [mocksExist ? mocks : undefined].filter(Boolean);
+  const sources = [mocksExist ? mocks : undefined].filter((m) => m !== undefined);
   const initial = createInitialKrasConfig(baseMocks, sources);
   const configs = [krasBaseConfig, krasRootConfig];
   const required = {

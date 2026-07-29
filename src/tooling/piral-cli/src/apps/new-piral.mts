@@ -140,20 +140,20 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
   ensure('variables', variables, 'object');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  const root = resolve(fullBase, target);
+  const root = resolve(fullBase, target!);
 
-  if (!frameworkKeys.includes(framework)) {
+  if (!frameworkKeys.includes(framework!)) {
     fail('generalError_0002', `The "framework" value must be one of: ${frameworkKeys.join(', ')}`);
   }
 
-  setLogLevel(logLevel);
+  setLogLevel(logLevel!);
 
   progress('Preparing source and target ...');
   const success = await createDirectory(root);
 
   if (success) {
     const npmClient = await determineNpmClient(root, defaultNpmClient);
-    const packageRef = combinePackageRef(framework, version, 'registry');
+    const packageRef = combinePackageRef(framework!, version!, 'registry');
     const projectName = name || basename(root);
 
     progress(`Creating a new Piral instance in %s ...`, root);
@@ -178,7 +178,7 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
     await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiralDefaults.registry) {
-      progress(`Setting up npm registry (%s) ...`, registry);
+      progress(`Setting up npm registry (%s) ...`, registry!);
 
       await createFileIfNotExists(root, '.npmrc', `registry=${registry}\n`, forceOverwrite);
     }
@@ -191,11 +191,11 @@ export async function newPiral(baseDir = process.cwd(), options: NewPiralOptions
 
     progress(`Taking care of templating ...`);
 
-    const data = getPiralScaffoldData(language, root, app, framework, variables);
+    const data = getPiralScaffoldData(language!, root, app!, framework!, variables!);
 
-    await patchPiralPackage(root, app, data, version, bundlerName);
+    await patchPiralPackage(root, app!, data, version!, bundlerName);
 
-    await scaffoldPiralSourceFiles(template, registry, data, forceOverwrite);
+    await scaffoldPiralSourceFiles(template!, registry!, data, forceOverwrite!);
 
     if (install) {
       progress(`Installing dependencies ...`);

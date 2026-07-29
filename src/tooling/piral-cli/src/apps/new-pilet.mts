@@ -154,8 +154,8 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
   ensure('variables', variables, 'object');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  const root = resolve(fullBase, target);
-  setLogLevel(logLevel);
+  const root = resolve(fullBase, target!);
+  setLogLevel(logLevel!);
   progress('Preparing source and target ...');
   const success = await createDirectory(root);
 
@@ -192,7 +192,7 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
     await initNpmProject(npmClient, projectName, root);
 
     if (registry !== newPiletDefaults.registry) {
-      progress(`Setting up npm registry (%s) ...`, registry);
+      progress(`Setting up npm registry (%s) ...`, registry!);
 
       await createFileIfNotExists(root, '.npmrc', `registry=${registry}\n`, forceOverwrite);
     }
@@ -227,15 +227,15 @@ export async function newPilet(baseDir = process.cwd(), options: NewPiletOptions
 
     progress(`Taking care of templating ...`);
 
-    const data = getPiletScaffoldData(language, root, packageName, variables);
+    const data = getPiletScaffoldData(language!, root, packageName, variables!);
 
     await patchPiletPackage(root, piralInfo, isEmulator, npmClient, {
       language,
       bundler: bundlerName,
-    });
+    } as any);
 
     const chosenTemplate = template || preSelectedTemplate || 'default';
-    await scaffoldPiletSourceFiles(chosenTemplate, registry, data, forceOverwrite);
+    await scaffoldPiletSourceFiles(chosenTemplate, registry!, data, forceOverwrite!);
 
     if (isEmulator) {
       // in the emulator case we get the files (and files_once) from the contained tarballs

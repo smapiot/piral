@@ -4,7 +4,8 @@
     "outDir": "./lib",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "declaration": false
+    "declaration": false,
+    "rootDir": "."
   },
   "include": [
     "./src"

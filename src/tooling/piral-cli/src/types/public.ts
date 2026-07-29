@@ -78,7 +78,7 @@ export interface PackagePatcher {
 export interface BaseBundleParameters {
   root: string;
   optimizeModules: boolean;
-  ignored: Array<string>;
+  ignored?: Array<string | undefined>;
   _: Record<string, any>;
 }
 

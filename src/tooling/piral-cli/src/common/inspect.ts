@@ -34,7 +34,7 @@ export function inspectPackage(stream: NodeJS.ReadableStream): Promise<PackageDa
 export function inspectPilet(stream: NodeJS.ReadableStream): Promise<InspectedPiletPackageData> {
   return unpackGzTar(stream).then((files) => {
     const data = getPackageJson(files);
-    const path = getPiletMainPath(data, files);
+    const path = getPiletMainPath(data, files)!;
     const root = dirname(path);
     const main = basename(path);
     return {

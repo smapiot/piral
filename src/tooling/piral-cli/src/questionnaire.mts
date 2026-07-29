@@ -115,6 +115,8 @@ function getType(flag: Flag): 'list' | 'input' | 'confirm' {
       return 'input';
     case 'boolean':
       return 'confirm';
+    default:
+      throw new Error(`Unknown type "${flag.type}" for flag "${flag.name}".`);
   }
 }
 
@@ -145,7 +147,7 @@ export function runQuestionnaireFor(
       when: instruction.when,
     }));
 
-  return inquirer.prompt(questions).then((answers) => {
+  return inquirer.prompt(questions as any).then((answers) => {
     const parameters: Record<string, any> = {};
 
     for (const instruction of instructions) {
@@ -156,7 +158,7 @@ export function runQuestionnaireFor(
           ignoredInstructions[name] ??
           [...instruction.alias, instruction.name].map((m) => args[m]).find((v) => v !== undefined);
         const convert = instruction.convert || ((value) => value);
-        const result = convert(value !== undefined ? getValue(instruction.type, value as any) : instruction.default);
+        const result = convert(value !== undefined ? getValue(instruction.type!, value as any) : instruction.default);
 
         if (typeof result === 'object' && typeof parameters[name] === 'object') {
           Object.assign(parameters[name], result);

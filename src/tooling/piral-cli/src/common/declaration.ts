@@ -113,7 +113,7 @@ async function getAllFiles(entryModules: Array<string>) {
 async function getEntryModules(entryFiles: string) {
   if (!entryModuleExtensions.includes(extname(entryFiles).toLowerCase())) {
     const appFile = await readText(dirname(entryFiles), basename(entryFiles));
-    const entryModules = await getEntryFiles(appFile, dirname(entryFiles));
+    const entryModules = await getEntryFiles(appFile!, dirname(entryFiles));
     return entryModules;
   }
 
@@ -148,7 +148,7 @@ async function createDeclarationFile(options: DeclOptions, target: string, force
 export async function createPiletDeclaration(
   piralInstances: Array<string>,
   root: string,
-  definition: PiletDefinition,
+  definition: PiletDefinition | undefined,
   entry: string,
   allowedImports: Array<string>,
   target: string,
@@ -180,7 +180,7 @@ export async function createPiletDeclaration(
     try {
       await createDeclarationFile(options, target, forceOverwrite);
       return true;
-    } catch (ex) {
+    } catch (ex: any) {
       log('declarationCouldNotBeGenerated_0076', root, ex);
     }
 
@@ -205,7 +205,7 @@ export async function createPiralDeclaration(
     root,
     files,
     types: findDeclaredTypings(root, shared),
-    apis: findPiralBaseApi(root, framework),
+    apis: findPiralBaseApi(root, framework!),
     noModuleDeclaration: true,
     imports: flattenExternals(externals, true),
     logLevel,
@@ -214,11 +214,11 @@ export async function createPiralDeclaration(
 
   validateSharedDependencies(externals);
 
-  if (options.apis.length) {
+  if (options.apis?.length) {
     try {
       await createDeclarationFile(options, target, forceOverwrite);
       return true;
-    } catch (ex) {
+    } catch (ex: any) {
       log('declarationCouldNotBeGenerated_0076', baseDir, ex);
     }
   } else {

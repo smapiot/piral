@@ -22,5 +22,5 @@ export default function loader(entry: PiletEntry, _config: DefaultLoaderConfig):
   };
 
   console.warn('Empty pilet found!', name);
-  return promisify({ ...meta, ...emptyApp });
+  return promisify({ ...meta, ...emptyApp } as Pilet);
 }

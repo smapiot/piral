@@ -115,8 +115,8 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
   ensure('target', target, 'string');
 
   const fullBase = resolve(process.cwd(), baseDir);
-  const root = resolve(fullBase, target);
-  setLogLevel(logLevel);
+  const root = resolve(fullBase, target!);
+  setLogLevel(logLevel!);
   const valid = await checkExistingDirectory(root);
 
   if (!valid) {
@@ -152,7 +152,7 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     const monorepoRef = await isMonorepoPackageRef(sourceName, npmClient);
-    const [packageRef] = await getCurrentPackageDetails(fullBase, sourceName, currentVersion, version, root);
+    const [packageRef] = await getCurrentPackageDetails(fullBase, sourceName, currentVersion, version!, root);
     const originalFiles = await getFileStats(root, sourceName);
 
     if (!monorepoRef) {
@@ -174,11 +174,11 @@ export async function upgradePilet(baseDir = process.cwd(), options: UpgradePile
     }
 
     progress(`Taking care of templating ...`);
-    const data = getPiletScaffoldData(language, root, sourceName, variables);
+    const data = getPiletScaffoldData(language, root, sourceName, variables!);
 
     if (isEmulator) {
       // in the emulator case we get the files from the contained tarball
-      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite, data, originalFiles);
+      await copyPiralFiles(root, sourceName, piralInfo, forceOverwrite!, data, originalFiles);
     } else {
       // otherwise, we perform the same action as in the emulator creation
       // just with a different target; not a created directory, but the root
