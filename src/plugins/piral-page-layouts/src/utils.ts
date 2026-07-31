@@ -28,8 +28,8 @@ function createPageWrapper(
     const [layout, setLayout] = useState(() => findLayout(props.paths, navigation.path, fallback));
 
     useEffect(() => {
-      return navigation.listen(({ location }) => {
-        setLayout(findLayout(props.paths, location.pathname, fallback));
+      return navigation.listen(() => {
+        setLayout(findLayout(props.paths, navigation.path, fallback));
       });
     }, []);
 
