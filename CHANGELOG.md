@@ -5,6 +5,11 @@
 - Updated `engines` field to have a constraint for Node.js >=20.19
 - Removed all CommonJS outputs - frontend and CLI packages are all ESM only
 
+## 1.12.2 (tbd)
+
+- Updated dependencies
+- Improved coupling to React Router in `piral-page-layouts` (#861) by @mehrabix
+
 ## 1.12.1 (July 28, 2026)
 
 - Fixed CI/CD pipeline using broken Node.js version (https://github.com/nodejs/node/issues/62425)
