@@ -2,6 +2,7 @@ import * as fs from 'graceful-fs';
 import { ResolverFactory, CachedInputFileSystem } from 'enhanced-resolve';
 
 const nodeFileSystem = new CachedInputFileSystem(fs, 100);
+const isProduction = process.env.NODE_ENV === 'production';
 
 const nodeContext = {
   environments: ['node+es3+es5+process+native'],
@@ -9,7 +10,14 @@ const nodeContext = {
 
 const enhancedResolve = ResolverFactory.createResolver({
   aliasFields: ['browser'],
-  conditionNames: ['import', 'module', 'webpack', 'development', 'browser'],
+  conditionNames: [
+    'import',
+    'module',
+    'webpack',
+    ...(isProduction ? ['default'] : ['development']),
+    'browser',
+    'default',
+  ],
   extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.json'],
   exportsFields: ['exports'],
   importsFields: ['imports'],
