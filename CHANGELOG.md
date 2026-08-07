@@ -1,11 +1,32 @@
 # Piral Changelog
 
-## 1.11.1 (tbd)
+## 1.12.2 (tbd)
 
-- Fixed DOM portal updates appending duplicate portals when matching by object identity fails (#838)
+- Updated dependencies
+- Improved coupling to React Router in `piral-page-layouts` (#861) by @mehrabix
+
+## 1.12.1 (July 28, 2026)
+
+- Fixed CI/CD pipeline using broken Node.js version (https://github.com/nodejs/node/issues/62425)
+
+## 1.12.0 (July 28, 2026)
+
+- Updated dependencies
+- Added converter plugin `piral-gea` for [Gea](https://geajs.com/)
+
+## 1.11.2 (June 30, 2026)
+
+- Fixed a race condition in `piral-ng`, where Props updates could get lost before mounting a component (#848)
+- Fixed a bug due to a missing terminator in `piral-cli-webpack5` with specific versions of Webpack (#849)
+- Updated dependencies
+- Added support for Angular 22 in `piral-ng`
+
+## 1.11.1 (June 16, 2026)
+
+- Fixed portal state updates being skipped for new React portal instances (#840)
 - Fixed reference to `main.css` in case there is no stylesheet in pilets (#839)
 
-## 1.11.0 (June 07, 2026)
+## 1.11.0 (June 7, 2026)
 
 - Updated dependencies
 - Fixed issue in `pilet declaration` re-emitting remote types

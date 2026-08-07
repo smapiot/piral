@@ -9,6 +9,7 @@ Piral is developed as a monorepo.
 - [piral-cycle](./piral-cycle/README.md) provides integration for *Cycle.js*
 - [piral-elm](./piral-elm/README.md) provides integration for *Elm*
 - [piral-ember](./piral-ember/README.md) provides integration for *Ember.js*
+- [piral-gea](./piral-gea/README.md) provides integration for *Gea*
 - [piral-hyperapp](./piral-hyperapp/README.md) provides integration for *Hyperapp*
 - [piral-inferno](./piral-inferno/README.md) provides integration for *Inferno*
 - [piral-litel](./piral-litel/README.md) provides integration for *LitElement*
