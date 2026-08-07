@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.12.2 (tbd)
+## 1.12.2 (August 5, 2026)
 
 - Updated dependencies
 - Improved coupling to React Router in `piral-page-layouts` (#861) by @mehrabix
