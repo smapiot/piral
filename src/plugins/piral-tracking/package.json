@@ -1,6 +1,6 @@
 {
   "name": "piral-tracking",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Plugin for tracking and telemetry events in Piral.",
   "keywords": [
     "piral",
@@ -50,6 +50,6 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-tracking.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.12.1"
+    "piral-core": "^1.12.2"
   }
 }

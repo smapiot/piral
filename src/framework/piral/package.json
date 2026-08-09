@@ -1,6 +1,6 @@
 {
   "name": "piral",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "The all-in-one piral package.",
   "keywords": [
     "smapiot",
@@ -58,9 +58,9 @@
     "typedoc": "typedoc --json ../../../docs/types/piral.json src --exclude \"src/**/*.test.*\""
   },
   "dependencies": {
-    "piral-base": "^1.12.1",
-    "piral-core": "^1.12.1",
-    "piral-ext": "^1.12.1",
+    "piral-base": "^1.12.2",
+    "piral-core": "^1.12.2",
+    "piral-ext": "^1.12.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^5.2.0",

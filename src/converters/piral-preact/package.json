@@ -1,6 +1,6 @@
 {
   "name": "piral-preact",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Plugin for integrating Preact components in Piral.",
   "keywords": [
     "piral",
@@ -50,7 +50,7 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-preact.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.12.1",
+    "piral-core": "^1.12.2",
     "preact": "^10.5.13"
   }
 }

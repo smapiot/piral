@@ -1,6 +1,6 @@
 {
   "name": "piral-react-15",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Plugin for integrating React v15 components in Piral.",
   "keywords": [
     "piral",
@@ -50,7 +50,7 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-react-15.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.12.1",
+    "piral-core": "^1.12.2",
     "react-15": "npm:react@15",
     "react-dom-15": "npm:react-dom@15"
   }

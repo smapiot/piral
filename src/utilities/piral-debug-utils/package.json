@@ -1,6 +1,6 @@
 {
   "name": "piral-debug-utils",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Utilities for debugging Piral instances.",
   "keywords": [
     "piral",
@@ -47,6 +47,6 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-debug-utils.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-base": "^1.12.1"
+    "piral-base": "^1.12.2"
   }
 }

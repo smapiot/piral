@@ -1,6 +1,6 @@
 {
   "name": "piral-riot",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "Plugin for integrating Riot.js components in Piral.",
   "keywords": [
     "piral",
@@ -50,7 +50,7 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-riot.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.12.1",
+    "piral-core": "^1.12.2",
     "riot": "^4.7.2"
   }
 }
