@@ -40,7 +40,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib",
+    "cleanup": "rimraf lib",
     "build": "yarn build:esnext",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",
     "typedoc": "typedoc --json ../../../docs/types/piral-ext.json src --exclude \"src/**/*.test.*\""

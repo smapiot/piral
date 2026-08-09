@@ -4,7 +4,7 @@
     "jsx": "react",
     "lib": ["dom", "es2015", "es2018"],
     "outDir": "lib",
-    "rootDir": ".",
+    "rootDir": "./src",
     "emitDeclarationOnly": true,
     "importHelpers": true
   },

@@ -42,7 +42,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib piral-tracker.min.js",
+    "cleanup": "rimraf lib piral-tracker.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-tracker.min.js --bundle --external:piral-core --external:react --minify --global-name=piralTracker",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",

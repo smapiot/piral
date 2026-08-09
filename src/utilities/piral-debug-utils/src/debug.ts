@@ -364,10 +364,10 @@ export function installPiralDebug(options: DebuggerOptions) {
     });
   };
 
-  document.body.dispatchEvent = function (ev: CustomEvent) {
+  document.body.dispatchEvent = function (ev: Event) {
     if (ev.type.startsWith('piral-')) {
       const name = ev.type.replace('piral-', '');
-      const args = ev.detail.arg;
+      const args = (ev as CustomEvent).detail.arg;
 
       events.unshift({
         id: events.length.toString(),

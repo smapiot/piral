@@ -17,8 +17,11 @@ export function createListener(state: any = {}): EventEmitter {
 
   const events = {
     on(type, callback) {
-      const listener = ({ detail }: CustomEvent) => detail && detail.state === state && callback(detail.arg);
-      document.body.addEventListener(nameOf(type), listener as any);
+      const listener = (ev: Event) => {
+        const { detail } = ev as CustomEvent;
+        detail && detail.state === state && callback(detail.arg);
+      };
+      document.body.addEventListener(nameOf(type), listener);
       eventListeners.push([callback, listener]);
       return events;
     },

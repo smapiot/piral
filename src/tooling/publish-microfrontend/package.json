@@ -45,7 +45,7 @@
     "@types/glob": "^8",
     "@types/jju": "^1",
     "@types/mime": "^4",
-    "@types/node": "^18",
+    "@types/node": "^22",
     "@types/rc": "^1",
     "@types/yargs": "^15",
     "axios": "^1",

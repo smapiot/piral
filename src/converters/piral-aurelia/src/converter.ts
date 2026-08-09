@@ -14,7 +14,7 @@ export interface AureliaConverterOptions {
 }
 
 interface AureliaLocals {
-  aurelia: Aurelia;
+  aurelia?: Aurelia;
 }
 
 export function createConverter(config: AureliaConverterOptions = {}) {
@@ -38,6 +38,10 @@ export function createConverter(config: AureliaConverterOptions = {}) {
       locals.aurelia = aurelia;
     },
     update(el, props, ctx, locals: AureliaLocals) {
+      if (!locals.aurelia) {
+        return;
+      }
+
       locals.aurelia.container.registerInstance('props', props);
       locals.aurelia.container.registerInstance('ctx', ctx);
     },

@@ -8,7 +8,7 @@ export const User: React.FC = () => {
   const currentUser = useGlobalState((m) => m.user);
   const menuItems = useGlobalState((m) => m.registry.menuItems);
   const itemNames = Object.keys(menuItems).filter((m) => menuItems[m].settings.type === 'user');
-  const container = React.useRef<HTMLDivElement>(undefined);
+  const container = React.useRef<HTMLDivElement>(null);
   const image = currentUser ? require('../images/male.png') : require('../images/female.png');
   const items = itemNames.length > 0 && (
     <>

@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "declaration": false,
-    "rootDir": "."
+    "rootDir": "./src"
   },
   "include": [
     "./src"

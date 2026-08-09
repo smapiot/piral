@@ -2,10 +2,11 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react",
+    "types": ["node"],
     "lib": ["dom", "es2015", "es2018"],
     "esModuleInterop": true,
     "importHelpers": true,
-    "rootDir": "."
+    "rootDir": "./src"
   },
   "include": [
     "./src"

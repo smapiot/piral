@@ -3,7 +3,7 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "jsx": "react",
-    "rootDir": "."
+    "rootDir": "./src"
   },
   "include": [
     "./src"

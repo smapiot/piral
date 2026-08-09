@@ -41,7 +41,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib piral-configs.min.js",
+    "cleanup": "rimraf lib piral-configs.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-configs.min.js --bundle --external:piral-core --minify --global-name=piralConfigs",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",

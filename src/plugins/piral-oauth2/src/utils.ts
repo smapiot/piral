@@ -6,7 +6,7 @@ import { OAuth2Persistence } from './types';
 export function createOAuth2MemoryPersistence(): OAuth2Persistence {
   return {
     load() {
-      return undefined;
+      return undefined as any;
     },
     save() {},
   };

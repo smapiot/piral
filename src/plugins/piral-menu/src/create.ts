@@ -46,7 +46,7 @@ function getMenuItems(items: Array<InitialMenuItem>, defaultSettings: MenuSettin
 
   for (const { component, settings } of items) {
     menuItems[`global-${i++}`] = {
-      pilet: undefined,
+      pilet: undefined!,
       component,
       settings: getSettings(defaultSettings, settings),
     };
@@ -82,7 +82,7 @@ export function createMenuApi(config: MenuConfig = {}): PiralPlugin<PiletMenuApi
     context.dispatch(withAll(withMenu(getMenuItems(items, defaultSettings)), withRootExtension('piral-menu', Menu)));
 
     return (api, target) => {
-      const pilet = target.name;
+      const pilet = target.name!;
       let next = 0;
 
       return {

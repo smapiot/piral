@@ -7,17 +7,18 @@ const languages = {
 
 function getSampleTranslations(language: string) {
   switch (language) {
-    case 'en':
-      return {
-        ...languages,
-        sample: 'Welcome to the Piral Sample App!',
-        search: 'Search ...',
-      };
     case 'de':
       return {
         ...languages,
         sample: 'Willkommen in der Piral Beispielanwendung!',
         search: 'Suche ...',
+      };
+    case 'en':
+    default:
+      return {
+        ...languages,
+        sample: 'Welcome to the Piral Sample App!',
+        search: 'Search ...',
       };
   }
 }

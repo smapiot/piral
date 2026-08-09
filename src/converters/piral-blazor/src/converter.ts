@@ -88,24 +88,28 @@ export function createConverter(
       }
 
       if (first && capabilities.includes('events')) {
-        const eventDispatcher = document.body.dispatchEvent;
+        const body = document.body;
 
-        // listen to all events for forwarding them
-        document.body.dispatchEvent = function (ev: CustomEvent) {
-          if (ev.type.startsWith('piral-')) {
-            const type = ev.type.replace('piral-', '');
-            const args = ev.detail.arg;
+        if (body) {
+          const eventDispatcher = body.dispatchEvent;
 
-            try {
-              JSON.stringify(args);
-              processEvent(type, args);
-            } catch {
-              console.warn(`The event "${type}" could not be serialized and will not be handled by Blazor.`);
+          // listen to all events for forwarding them
+          body.dispatchEvent = function (ev: Event) {
+            if (ev.type.startsWith('piral-')) {
+              const type = ev.type.replace('piral-', '');
+              const args = (ev as CustomEvent).detail.arg;
+
+              try {
+                JSON.stringify(args);
+                processEvent(type, args);
+              } catch {
+                console.warn(`The event "${type}" could not be serialized and will not be handled by Blazor.`);
+              }
             }
-          }
 
-          return eventDispatcher.call(this, ev);
-        };
+            return eventDispatcher.call(this, ev);
+          };
+        }
       }
 
       if (language && capabilities.includes('language')) {

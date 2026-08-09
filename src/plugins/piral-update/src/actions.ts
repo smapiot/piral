@@ -38,11 +38,11 @@ async function apply(ctx: GlobalStateContext) {
   const { added, removed, updated } = ctx.readState((s) => s.updatability);
 
   for (const pilet of removed) {
-    await ctx.removePilet(pilet.name);
+    await ctx.removePilet(pilet.name!);
   }
 
   for (const pilet of updated) {
-    await ctx.removePilet(pilet.name);
+    await ctx.removePilet(pilet.name!);
     await ctx.addPilet(pilet);
   }
 

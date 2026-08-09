@@ -46,7 +46,7 @@ function getModalDialogs(dialogs: Array<InitialModalDialog>) {
 
   for (const { name, component, defaults, layout = {} } of dialogs) {
     modals[`global-${name}`] = {
-      pilet: undefined,
+      pilet: undefined!,
       name,
       component,
       defaults,
@@ -61,9 +61,9 @@ function withModals(modals: Dict<ModalRegistration>) {
   return (state: GlobalState): GlobalState => ({
     ...state,
     components: {
+      ...state.components,
       ModalsHost: DefaultHost,
       ModalsDialog: DefaultDialog,
-      ...state.components,
     },
     registry: {
       ...state.registry,
@@ -85,7 +85,7 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
     context.dispatch(withAll(withModals(getModalDialogs(dialogs)), withRootExtension('piral-modals', Modals)));
 
     return (api, target) => {
-      const pilet = target.name;
+      const pilet = target.name || '';
 
       return {
         showModal(simpleName, options) {
@@ -94,7 +94,7 @@ export function createModalsApi(config: ModalsConfig = {}): PiralPlugin<PiletMod
             id: selectId(name),
             name,
             alternative: simpleName,
-            options,
+            options: options || {},
             close() {
               context.closeModal(dialog);
             },

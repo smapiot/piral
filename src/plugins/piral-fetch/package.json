@@ -42,7 +42,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib piral-fetch.min.js",
+    "cleanup": "rimraf lib piral-fetch.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-fetch.min.js --bundle --external:piral-core --minify --global-name=piralFetch",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",

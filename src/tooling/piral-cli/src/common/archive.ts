@@ -35,7 +35,7 @@ export function createTgz(file: string, cwd: string, files: Array<string>) {
 
   tgz.pipe(stream, { end: true });
 
-  return new Promise((finish) => stream.on('close', finish));
+  return new Promise<void>((finish) => stream.on('close', () => finish()));
 }
 
 export function createTarball(sourceDir: string, targetDir: string, targetFile: string) {

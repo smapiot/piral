@@ -39,23 +39,30 @@ export function setupGqlClient(config: GqlConfig = {}): UrqlClient {
   const url = config.url || location.origin;
   const subscriptionUrl = (config.subscriptionUrl || url).replace(/^http/i, 'ws');
   const subscriptionClient =
-    config.subscriptionUrl !== false &&
-    new SubscriptionClient(subscriptionUrl, {
-      reconnect: true,
-      lazy: config.lazy || false,
-      inactivityTimeout: 0,
-      connectionCallback(err) {
-        const { onConnected, onDisconnected } = config;
-        const errors = err && (Array.isArray(err) ? err : [err]);
+    config.subscriptionUrl !== false
+      ? new SubscriptionClient(subscriptionUrl, {
+          reconnect: true,
+          lazy: config.lazy || false,
+          inactivityTimeout: 0,
+          connectionCallback(err) {
+            const { onConnected, onDisconnected } = config;
+            const errors = err && (Array.isArray(err) ? err : [err]);
 
-        if (errors && errors.length > 0) {
-          typeof onDisconnected === 'function' && onDisconnected(errors);
-        } else {
-          typeof onConnected === 'function' && onConnected();
-        }
-      },
-    });
-  const forwardSubscription = (operation: OperationOptions) => subscriptionClient.request(operation);
+            if (errors && errors.length > 0) {
+              typeof onDisconnected === 'function' && onDisconnected(errors);
+            } else {
+              typeof onConnected === 'function' && onConnected();
+            }
+          },
+        })
+      : undefined;
+  const forwardSubscription = (operation: OperationOptions) => {
+    if (!subscriptionClient) {
+      return undefined as any;
+    }
+
+    return subscriptionClient.request(operation);
+  };
   const exchanges = [...defaultExchanges];
 
   if (subscriptionClient) {

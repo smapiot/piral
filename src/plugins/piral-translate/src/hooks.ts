@@ -12,7 +12,7 @@ export function useDynamicLanguage(
   useEffect(() => {
     let active = true;
     const current = getTranslations(selected);
-    selectLanguage(undefined);
+    selectLanguage(undefined!);
     load(selected, current).then(
       (result) => {
         if (active) {

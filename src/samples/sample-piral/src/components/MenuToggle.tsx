@@ -8,10 +8,12 @@ export const MenuToggle: React.ComponentType = withRouter(({ history }) => {
   React.useEffect(() => {
     const node = document.querySelector('.app-menu');
 
-    if (active) {
-      node.classList.add('is-open');
-    } else {
-      node.classList.remove('is-open');
+    if (node) {
+      if (active) {
+        node.classList.add('is-open');
+      } else {
+        node.classList.remove('is-open');
+      }
     }
     return history.listen(() => active && setActive(false));
   }, [active]);

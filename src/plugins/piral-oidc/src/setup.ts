@@ -75,7 +75,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     Log.setLevel(Log.DEBUG);
   }
 
-  if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri)) {
+  if (doesWindowLocationMatch(userManager.settings.post_logout_redirect_uri!)) {
     if (isMainWindow()) {
       userManager.signoutRedirectCallback();
     } else {
@@ -90,7 +90,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
         .then((user) => {
           if (!user) {
             rej(new OidcError(OidcErrorType.notAuthorized));
-          } else if (user.access_token && user.expires_in > 60) {
+          } else if (user.access_token && (user.expires_in ?? 0) > 60) {
             res(user.access_token);
           } else {
             return userManager.signinSilent().then((user) => {
@@ -112,7 +112,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
     return new Promise<OidcProfile>((res, rej) => {
       userManager.getUser().then(
         (user) => {
-          if (!user || user.expires_in <= 0) {
+          if (!user || (user.expires_in ?? 0) <= 0) {
             return rej(new OidcError(OidcErrorType.notAuthorized));
           } else {
             return res(user.profile as OidcProfile);
@@ -126,7 +126,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
   const handleAuthentication = (): Promise<AuthenticationResult> =>
     new Promise(async (resolve, reject) => {
       /** The user that is resolved when finishing the callback  */
-      let user: User;
+      let user: User | null;
 
       if (
         (doesWindowLocationMatch(userManager.settings.silent_redirect_uri) ||
@@ -140,7 +140,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
          */
         try {
           await userManager.signinSilentCallback();
-          user = await userManager.getUser();
+          user = (await userManager.getUser()) || null;
         } catch (e) {
           return reject(new OidcError(OidcErrorType.oidcCallback, e));
         }
@@ -153,7 +153,7 @@ export function setupOidcClient(config: OidcConfig): OidcClient {
 
       if (doesWindowLocationMatch(userManager.settings.redirect_uri) && isMainWindow()) {
         try {
-          user = await userManager.signinCallback();
+          user = (await userManager.signinCallback()) || null;
         } catch (e) {
           /*
            * Failing to handle a sign-in callback is non-recoverable. The user is expected to call `logout()`, after

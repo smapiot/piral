@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "lib": ["dom", "es2015", "es2018"],
     "jsx": "react",
+    "rootDir": "./src",
     "downlevelIteration": true,
     "importHelpers": true
   },

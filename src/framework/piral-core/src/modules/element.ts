@@ -298,7 +298,7 @@ export function renderElement(
   if (typeof window !== 'undefined') {
     let [id, portal] = renderInDom(context, element, ExtensionSlot, props);
     const evName = 'extension-props-changed';
-    const handler = (ev: CustomEvent) => update(ev.detail);
+    const handler = (ev: Event) => update((ev as CustomEvent).detail);
     const dispose: Disposable = () => {
       context.hidePortal(id, portal);
       element.removeEventListener(evName, handler);

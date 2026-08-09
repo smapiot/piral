@@ -7,7 +7,7 @@ function closeAll(modals: Array<OpenModalDialog>) {
   modals.forEach((m) => m.close());
 }
 
-function findModal(modals: Record<string, ModalRegistration>, name: string): ModalRegistration {
+function findModal(modals: Record<string, ModalRegistration>, name?: string): ModalRegistration | undefined {
   if (name) {
     const [modal] = Object.keys(modals)
       .filter((m) => modals[m].name === name)
@@ -26,15 +26,15 @@ export const Modals: React.FC = () => {
   const children = dialogs
     .map((n) => {
       const reg = modals[n.name] || findModal(modals, n.alternative);
-      const Component = reg && reg.component;
-      const defaults = reg && reg.defaults;
+      const Component = reg?.component;
+      const defaults = reg?.defaults;
       const options = {
         ...defaults,
         ...n.options,
       };
       return (
         Component && (
-          <PiralModalsDialog {...n} options={options} defaults={reg.defaults} layout={reg.layout} key={n.name}>
+          <PiralModalsDialog {...n} options={options} defaults={defaults} layout={reg?.layout || {}} key={n.name}>
             <Component onClose={n.close} options={options} />
           </PiralModalsDialog>
         )

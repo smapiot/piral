@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { debugRouteCache } from './routeRefresh';
-import { RouteRegistration } from './types';
+import type { RouteRegistration } from './types';
 
 export function useDebugRouteFilter(paths: Array<RouteRegistration>) {
   const [_, triggerChange] = useState(0);

@@ -57,7 +57,7 @@ export function createNavigation(publicPath: string): NavigationApi {
       return _noop;
     },
     listen(listener) {
-      const handler = (e: CustomEvent) => listener(enhance(e.detail.location));
+      const handler = (e: Event) => listener(enhance((e as CustomEvent).detail.location));
 
       window.addEventListener('piral-navigate', handler);
 

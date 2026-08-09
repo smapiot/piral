@@ -14,16 +14,16 @@
   "author": "smapiot",
   "homepage": "https://piral.io",
   "license": "MIT",
-  "module": "lib/index.mjs",
+  "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    ".": "./lib/index.mjs",
+    ".": "./lib/index.js",
     "./lib/*": {
       "types": "./lib/*.d.ts",
       "import": "./lib/*"
     },
-    "./debug": "./lib/debug.mjs",
-    "./emulator": "./lib/emulator.mjs",
+    "./debug": "./lib/debug.js",
+    "./emulator": "./lib/emulator.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -41,7 +41,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib",
+    "cleanup": "rimraf lib",
     "build": "yarn build:esnext",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",
     "typedoc": "typedoc --json ../../../docs/types/piral-debug-utils.json src --exclude \"src/**/*.test.*\""

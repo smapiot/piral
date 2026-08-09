@@ -39,7 +39,7 @@ export interface UpdateModeRegistration {
 
 export interface UpdatabilityState {
   active: boolean;
-  lastHash: string;
+  lastHash?: string;
   added: PiletEntries;
   removed: PiletEntries;
   updated: PiletEntries;

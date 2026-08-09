@@ -39,5 +39,8 @@
   "dependencies": {
     "inquirer": "^12",
     "piral-cli": "^1.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22"
   }
 }

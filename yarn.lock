@@ -2819,12 +2819,12 @@
   dependencies:
     undici-types "~7.16.0"
 
-"@types/node@^18":
-  version "18.19.130"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.130.tgz#da4c6324793a79defb7a62cba3947ec5add00d59"
-  integrity sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==
+"@types/node@^22":
+  version "22.20.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.20.1.tgz#84e7cdf63cdaa20c134aa317ccc901aa21e16f0e"
+  integrity sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==
   dependencies:
-    undici-types "~5.26.4"
+    undici-types "~6.21.0"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.4"
@@ -5943,7 +5943,7 @@ flat@5.0.2:
   resolved "https://registry.yarnpkg.com/flat/-/flat-5.0.2.tgz#8ca6fe332069ffa9d324c327198c598259ceb241"
   integrity sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==
 
-follow-redirects@^1.16.0:
+follow-redirects@1.16.0, follow-redirects@^1.16.0:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
   integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
@@ -8973,10 +8973,10 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-piral-cli-webpack5@^1.12.1:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/piral-cli-webpack5/-/piral-cli-webpack5-1.12.1.tgz#0481f0be18a4f74969ee9eea3f4952254126f2ce"
-  integrity sha512-+qEuPkm0Bb1HLCy1EexCCgaoF8dO699VWPIFWZuM0CjgmjwkOtih6goJb+9nVUlwcAciAJiJ6fuP6sP2Rk2RGA==
+piral-cli-webpack5@^1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/piral-cli-webpack5/-/piral-cli-webpack5-1.12.2.tgz#5526a62f83b6fcbaa3261d45a34325ccb506de92"
+  integrity sha512-wQxKxnzPLfl9in4s/ewjhQaHQPXdrWnBYdssDkpMjaMkVtex+G+Mo5pF22FcA1EGpVNKpzmh/JGIe04sotHKkQ==
   dependencies:
     "@babel/core" "^7"
     "@babel/preset-env" "^7"
@@ -10545,11 +10545,6 @@ stdin-discarder@^0.2.2:
   resolved "https://registry.yarnpkg.com/stdin-discarder/-/stdin-discarder-0.2.2.tgz#390037f44c4ae1a1ae535c5fe38dc3aba8d997be"
   integrity sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==
 
-stickyfilljs@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/stickyfilljs/-/stickyfilljs-2.1.0.tgz#46dabb599d8275d185bdb97db597f86a2e3afa7b"
-  integrity sha512-LkG0BXArL5HbW2O09IAXfnBQfpScgGqJuUDUrI3Ire5YKjRz/EhakIZEJogHwgXeQ4qnTicM9sK9uYfWN11qKg==
-
 "string-width-cjs@npm:string-width@^4.2.0", string-width@4.2.3, "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
@@ -10596,7 +10591,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@6.0.1, strip-ansi@^6, strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@6.0.1, strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -11053,7 +11048,7 @@ typescript@5.3.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
 
-"typescript@>=3 < 6", typescript@^5:
+"typescript@>=3 < 6":
   version "5.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
   integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
@@ -11086,10 +11081,10 @@ underscore.string@~3.3.4:
     sprintf-js "^1.1.1"
     util-deprecate "^1.0.2"
 
-undici-types@~5.26.4:
-  version "5.26.5"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
-  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
+undici-types@~6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
+  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 undici-types@~7.16.0:
   version "7.16.0"
@@ -11542,6 +11537,15 @@ workerpool@^3.1.1:
     string-width "^4.1.0"
     strip-ansi "^6.0.0"
 
+wrap-ansi@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
+  integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
 wrap-ansi@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-8.1.0.tgz#56dc22368ee570face1b49819975d9b9a5ead214"
@@ -11672,10 +11676,10 @@ yallist@^5.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-5.0.0.tgz#00e2de443639ed0d78fd87de0d27469fbcffb533"
   integrity sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==
 
-yaml@^2.6.0:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.8.1.tgz#1870aa02b631f7e8328b93f8bc574fac5d6c4d79"
-  integrity sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==
+yaml@2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.9.0.tgz#78274afd93598a1dfdd6130df6a566defcbf9aa4"
+  integrity sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==
 
 yargs-parser@21.1.1, yargs-parser@^21.1.1:
   version "21.1.1"

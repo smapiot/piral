@@ -37,7 +37,7 @@ function extendOptions<T extends GqlOperationOptions>(context: GlobalStateContex
   });
 }
 
-function defaultGqlClient() {
+function defaultGqlClient(): UrqlClient | undefined {
   if (typeof window !== 'undefined') {
     return setupGqlClient();
   } else {
@@ -49,20 +49,22 @@ function defaultGqlClient() {
  * Creates new Pilet API extensions for GraphQL.
  * @param client The specific urql client to be used, if any.
  */
-export function createGqlApi(client: UrqlClient = defaultGqlClient()): PiralPlugin<PiletGqlApi> {
+export function createGqlApi(client?: UrqlClient): PiralPlugin<PiletGqlApi> {
+  const gqlClient = client || defaultGqlClient();
+
   return (context) => {
-    context.includeProvider(<Provider value={client} />);
+    context.includeProvider(<Provider value={gqlClient!} />);
 
     return {
       query(q, o = {}) {
-        return extendOptions(context, o).then((options) => gqlQuery(client, q, options));
+        return extendOptions(context, o).then((options) => gqlQuery(gqlClient!, q, options));
       },
       mutate(q, o = {}) {
-        return extendOptions(context, o).then((options) => gqlMutation(client, q, options));
+        return extendOptions(context, o).then((options) => gqlMutation(gqlClient!, q, options));
       },
       subscribe(q, subscriber, o = {}) {
         const unsubscribe = extendOptions(context, o).then((options) =>
-          gqlSubscription(client, q, subscriber, options),
+          gqlSubscription(gqlClient!, q, subscriber, options),
         );
         return () => unsubscribe.then((cb) => cb());
       },

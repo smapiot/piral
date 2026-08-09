@@ -136,8 +136,8 @@ function createUri(options?: any, tokenType?: string) {
   const qs: Record<string, string> = {
     client_id: options.clientId,
     redirect_uri: options.redirectUri,
-    response_type: tokenType,
-    state: options.state,
+    response_type: tokenType || '',
+    state: options.state || '',
   };
 
   if (options.scopes !== undefined) {
@@ -158,7 +158,7 @@ function auth(username: string, password: string) {
 /**
  * Ensure a value is a string.
  */
-function toString(str: string) {
+function toString(str: string | undefined) {
   return str == null ? '' : String(str);
 }
 
@@ -207,7 +207,7 @@ export class ClientOAuth2 {
   /**
    * Create a new token from existing data.
    */
-  createToken(access: string, refresh: string, type: string, data?: any) {
+  createToken(access?: string, refresh?: string, type?: string, data?: any) {
     var options = Object.assign(
       {},
       data,

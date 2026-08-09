@@ -20,9 +20,10 @@ export function createConverter(config: LitElConverterOptions = {}) {
       el.setAttribute('ctx', JSON.stringify(ctx));
       el.shadowRoot.addEventListener(
         'render-html',
-        (ev: CustomEvent) => {
+        (ev: Event) => {
+          const evt = ev as CustomEvent;
           ev.stopPropagation();
-          piral.renderHtmlExtension(ev.detail.target, ev.detail.props);
+          piral.renderHtmlExtension(evt.detail.target, evt.detail.props);
         },
         false,
       );

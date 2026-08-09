@@ -10,7 +10,7 @@ function pipeToPromise<T>(source: Source<OperationResult<T>>) {
         if (error) {
           reject(error);
         } else {
-          resolve(data);
+          resolve(data!);
         }
       }),
     );

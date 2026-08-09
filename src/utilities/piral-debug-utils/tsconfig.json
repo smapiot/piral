@@ -4,7 +4,7 @@
     "skipLibCheck": true,
     "jsx": "react",
     "importHelpers": true,
-    "rootDir": "."
+    "rootDir": "./src"
   },
   "include": [
     "./src"

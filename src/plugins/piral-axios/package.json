@@ -44,7 +44,7 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf esm lib piral-axios.min.js",
+    "cleanup": "rimraf lib piral-axios.min.js",
     "build": "yarn build:bundle && yarn build:esnext",
     "build:bundle": "esbuild src/index.ts --outfile=piral-axios.min.js --bundle --external:piral-core --minify",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",

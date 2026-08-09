@@ -7,7 +7,7 @@ import { loadLanguage } from '../language';
 export const LanguagePicker: React.FC<LanguagesPickerProps> = ({ selected, available }) => {
   const [open, setOpen] = React.useState(false);
   const [language, setLanguage] = useDynamicLanguage(selected, loadLanguage);
-  const container = React.useRef<HTMLDivElement>();
+  const container = React.useRef<HTMLDivElement>(null);
   const translate = useTranslate();
   useOnClickOutside(container, () => setOpen(false));
 

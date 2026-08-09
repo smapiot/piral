@@ -20,15 +20,13 @@
   "homepage": "https://piral.io",
   "license": "MIT",
   "module": "dist/piral-base-full.mjs",
-  "main": "dist/piral-base-node.js",
   "typings": "lib/index.full.d.ts",
   "piletApiTypings": "lib/types/runtime.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.full.d.ts",
-      "node": "./dist/piral-base-node.js",
-      "import": "./dist/piral-base-full.mjs",
-      "require": "./dist/piral-base-node.js"
+      "node": "./dist/piral-base-node.mjs",
+      "import": "./dist/piral-base-full.mjs"
     },
     "./minimal": {
       "types": "./lib/index.minimal.d.ts",
@@ -36,7 +34,7 @@
     },
     "./node": {
       "types": "./lib/index.node.d.ts",
-      "require": "./dist/piral-base-node.js"
+      "import": "./dist/piral-base-node.mjs"
     },
     "./full": {
       "types": "./lib/index.full.d.ts",
@@ -66,9 +64,9 @@
     "url": "https://github.com/smapiot/piral/issues"
   },
   "scripts": {
-    "cleanup": "rimraf dist esm lib",
+    "cleanup": "rimraf dist lib",
     "build": "yarn build:node && yarn build:full && yarn build:minimal && tsc --project tsconfig.json",
-    "build:node": "esbuild src/index.node.ts --bundle --outfile=dist/piral-base-node.js --platform=node --format=cjs --external:tslib --target=es2020",
+    "build:node": "esbuild src/index.node.ts --bundle --outfile=dist/piral-base-node.mjs --platform=node --format=esm --external:tslib --target=es2020",
     "build:full": "esbuild src/index.full.ts --bundle --outfile=dist/piral-base-full.mjs --platform=browser --format=esm --external:tslib --target=es2020",
     "build:minimal": "esbuild src/index.minimal.ts --bundle --outfile=dist/piral-base-minimal.mjs --platform=browser --format=esm --external:tslib --target=es2020",
     "typedoc": "typedoc src/index.full.ts --json ../../../docs/types/piral-base.json src --exclude \"src/**/*.test.*\""

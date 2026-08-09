@@ -12,24 +12,24 @@ export const RootListener: React.FC = () => {
 
   React.useLayoutEffect(() => {
     if (typeof document !== 'undefined') {
-      const renderHtml: any = (ev: CustomEvent) => {
+      const renderHtml = (ev: Event) => {
         ev.stopPropagation();
-        const { target, props } = ev.detail;
+        const { target, props } = (ev as CustomEvent).detail;
         const [dispose, update] = renderElement(context, target, props);
         target.dispose = dispose;
         target.update = update;
       };
-      const renderContent: any = (ev: CustomEvent) => {
+      const renderContent = (ev: Event) => {
         ev.stopPropagation();
-        const { target, content, portalId } = ev.detail;
+        const { target, content, portalId } = (ev as CustomEvent).detail;
         const portal = createPortal(content, target);
         const dispose = () => context.hidePortal(portalId, portal);
         context.showPortal(portalId, portal);
         target.dispose = dispose;
       };
-      const forwardEvent: any = (ev: CustomEvent) => {
+      const forwardEvent = (ev: Event) => {
         ev.stopPropagation();
-        const { type, args } = ev.detail;
+        const { type, args } = (ev as CustomEvent).detail;
         context.emit(type, args);
       };
       document.body.addEventListener(renderHtmlEvent, renderHtml, false);
