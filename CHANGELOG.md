@@ -3,6 +3,7 @@
 ## 1.12.3 (tbd)
 
 - Fixed using development condition in production dependency resolution (#868)
+- Added support for `react-router` v8
 
 ## 1.12.2 (August 5, 2026)
 
