@@ -3,6 +3,8 @@
 ## 1.12.3 (tbd)
 
 - Fixed using development condition in production dependency resolution (#868)
+- Fixed resolution of bun lockfile (#869) @daniel-rck
+- Fixed issue with input stream pipe direction (#869) @daniel-rck
 - Added support for `react-router` v8
 
 ## 1.12.2 (August 5, 2026)
