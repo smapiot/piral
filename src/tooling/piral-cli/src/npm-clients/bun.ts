@@ -61,7 +61,9 @@ export async function installPackage(packageRef: string, target = '.', ...flags:
 }
 
 export async function detectClient(root: string, stopDir = resolve(root, '/')) {
-  return !!(await findFile(root, 'bun.lockb', stopDir));
+  // Bun replaced the binary "bun.lockb" with the text-based "bun.lock" as its default
+  // lockfile in v1.2; both remain valid, so either one identifies a Bun project.
+  return !!(await findFile(root, 'bun.lock', stopDir)) || !!(await findFile(root, 'bun.lockb', stopDir));
 }
 
 export async function initProject(projectName: string, target: string) {}
