@@ -4,6 +4,7 @@
 
 - Fixed using development condition in production dependency resolution (#868)
 - Added support for `react-router` v8
+- Improved dependency sharing with the mf pilet format
 
 ## 1.12.2 (August 5, 2026)
 
