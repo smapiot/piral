@@ -22,23 +22,23 @@ interface MfContainer {
 }
 
 const appShell = 'piral';
+const systemRegistry = (System as any).registerRegistry as Record<string, unknown>;
+const sharedScope = { current: undefined as MfScope | undefined };
 
 function populateKnownDependencies(scope: MfScope) {
   // SystemJS to MF
-  for (const [entry] of System.entries()) {
+  for (const entry of Object.keys(systemRegistry)) {
     const index = entry.lastIndexOf('@');
 
     if (index > 0 && !entry.match(/^https?:\/\//)) {
       const entryName = entry.substring(0, index);
       const entryVersion = entry.substring(index + 1);
 
-      if (!(entryName in scope)) {
-        scope[entryName] = {};
-      }
-
-      scope[entryName][entryVersion] = {
+      scope[entryName] ??= {};
+      scope[entryName][entryVersion] ??= {
         from: appShell,
         eager: false,
+        loaded: 1,
         get: () => System.import(entry).then((result) => () => result),
       };
     }
@@ -52,10 +52,24 @@ function extractSharedDependencies(scope: MfScope) {
 
     for (const entryVersion of Object.keys(entries)) {
       const entry = entries[entryVersion];
+      const entryKey = `${entryName}@${entryVersion}`;
 
-      if (entry.from !== appShell) {
-        registerModule(`${entryName}@${entryVersion}`, () => entry.get().then((factory) => factory()));
+      if (entry.from !== appShell && !(entryKey in systemRegistry)) {
+        registerModule(entryKey, () => entry.get().then((factory) => factory()));
       }
+
+      // Flagging the scope entry as loaded ensures that subsequent pilets do not
+      // overwrite an entry already registered by an earlier pilet.
+      // We want to avoid overwrites to ensure stability.
+      //
+      // Inside a pilet bundled with the MF format, the corresponding scope
+      // registration flow is equivalent to:
+      //   if (!activeVersion || (!activeVersion.loaded && !hasEagerPrecedence)) {
+      //     writeDependencyToScope();
+      //   }
+      //
+      // -> By setting loaded to 1, we ensure that already registered entries are not overwritten.
+      entry.loaded = 1;
     }
   }
 }
@@ -63,10 +77,14 @@ function extractSharedDependencies(scope: MfScope) {
 function loadMfFactory(piletName: string, exposedName: string) {
   const varName = piletName.replace(/^@/, '').replace('/', '-').replace(/\-/g, '_');
   const container: MfContainer = window[varName];
-  const scope: MfScope = {};
-  container.init(scope);
-  populateKnownDependencies(scope);
-  extractSharedDependencies(scope);
+
+  if (!sharedScope.current) {
+    sharedScope.current = {};
+    populateKnownDependencies(sharedScope.current);
+  }
+
+  container.init(sharedScope.current);
+  extractSharedDependencies(sharedScope.current);
   return container.get(exposedName);
 }
 
