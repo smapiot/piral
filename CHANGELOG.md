@@ -6,6 +6,7 @@
 - Fixed resolution of bun lockfile (#869) @daniel-rck
 - Fixed issue with input stream pipe direction (#869) @daniel-rck
 - Added support for `react-router` v8
+- Improved dependency sharing with the mf pilet format
 - Share nested packages/exports of dependencies when using `piral-cli-webpack5` with the `mf` pilet format
 
 ## 1.12.2 (August 5, 2026)

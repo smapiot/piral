@@ -198,7 +198,7 @@ export interface PiletV3Entry {
 }
 
 /**
- * Metadata for pilets using the v2 schema.
+ * Metadata for pilets using the mf schema.
  */
 export interface PiletMfEntry {
   /**
