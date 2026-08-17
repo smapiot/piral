@@ -5,8 +5,9 @@
 - Fixed using development condition in production dependency resolution (#868)
 - Fixed resolution of bun lockfile (#869) @daniel-rck
 - Fixed issue with input stream pipe direction (#869) @daniel-rck
+- Improved dependency sharing with the mf pilet format @manuelroemer
 - Added support for `react-router` v8
-- Improved dependency sharing with the mf pilet format
+- Added full exports sharing of dependencies when using `piral-cli-webpack5` for `mf` pilets @manuelroemer
 
 ## 1.12.2 (August 5, 2026)
 

@@ -37,12 +37,25 @@ export function getShared(importmap: Array<SharedDependency>, externals: Array<s
 
   for (const dep of importmap) {
     if (dep.type === 'local') {
+      const requiredVersion = dep.requireId.split('@').pop();
+      const version = dep.id.split('@').pop();
+
+      // This shares the root-level package (e.g., `@scope/package`).
       shared[dep.name] = {
         eager: false,
-        requiredVersion: dep.requireId.split('@').pop(),
-        version: dep.id.split('@').pop(),
+        requiredVersion,
+        version,
         packageName: dep.entry,
-        singleton: true,
+        singleton: false,
+      };
+
+      // This shares non-root exports of a package (e.g., `@scope/package/nested-export`).
+      // Ref: https://webpack.js.org/plugins/module-federation-plugin/#sharing-libraries
+      shared[dep.name + "/"] = {
+        eager: false,
+        requiredVersion,
+        version,
+        singleton: false,
       };
     }
   }
