@@ -55,7 +55,6 @@ export function getShared(importmap: Array<SharedDependency>, externals: Array<s
         eager: false,
         requiredVersion,
         version,
-        packageName: dep.name,
         singleton: false,
       };
     }
