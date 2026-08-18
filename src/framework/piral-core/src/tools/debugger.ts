@@ -1,6 +1,7 @@
 import { LoadPiletsOptions } from 'piral-base';
 import { installPiralDebug, DebuggerExtensionOptions } from 'piral-debug-utils';
-import { GlobalStateContext } from '../types';
+
+import type { GlobalStateContext } from '../types';
 
 export function integrateDebugger(
   context: GlobalStateContext,
@@ -22,7 +23,7 @@ export function integrateDebugger(
     },
     fireEvent: context.emit,
     getDependencies() {
-      return Object.keys(options.dependencies);
+      return Object.keys(options.dependencies || {});
     },
     getExtensions() {
       return context.readState((s) => Object.keys(s.registry.extensions));
