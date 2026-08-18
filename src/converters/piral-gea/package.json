@@ -1,6 +1,6 @@
 {
   "name": "piral-gea",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "description": "Plugin for integrating Gea components in Piral.",
   "keywords": [
     "piral",
@@ -52,6 +52,6 @@
   },
   "devDependencies": {
     "@geajs/core": "^1.4.0",
-    "piral-core": "^1.12.2"
+    "piral-core": "^1.12.3"
   }
 }
