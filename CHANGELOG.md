@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.12.3 (tbd)
+## 1.12.3 (August 18, 2026)
 
 - Fixed using development condition in production dependency resolution (#868)
 - Fixed resolution of bun lockfile (#869) @daniel-rck
