@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.12.4 (tbd)
+
+- Updated dependencies
+
 ## 1.12.3 (August 18, 2026)
 
 - Fixed using development condition in production dependency resolution (#868)
