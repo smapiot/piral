@@ -25,7 +25,7 @@ function getPackageJson(root: string, packageName: string) {
   const moduleDir = dirname(getModulePath(root, packageName));
 
   try {
-    const packagePath = findPackagePath(moduleDir);
+    const packagePath = findPackagePath(moduleDir)!;
     const content = readFileSync(packagePath, 'utf8');
     return JSON.parse(content) || {};
   } catch {
@@ -134,7 +134,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
   const asyncAssignments: Array<string> = [];
 
   if (appName) {
-    const parts = [];
+    const parts: Array<string> = [];
 
     for (const item of shared) {
       if (typeof item === 'string') {
@@ -214,13 +214,22 @@ export function createDefaultState(imports: Array<string>, exports: Array<string
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v6.js';`,
       `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v6.js'`,
     );
-  } else {
+  } else if (router.compat === 7) {
     // React Router v7
     imports.push(
       `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v7.js';`,
       `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v7.js';`,
       `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v7.js'`,
     );
+  } else if (router.compat === 8) {
+    // React Router v8
+    imports.push(
+      `import { DefaultRouter } from 'piral-core/${cat}/defaults/DefaultRouter_v8.js';`,
+      `import { DefaultRouteSwitch } from 'piral-core/${cat}/defaults/DefaultRouteSwitch_v8.js';`,
+      `import { createRedirect, createNavigation, useCurrentNavigation } from 'piral-core/${cat}/defaults/navigator_v8.js'`,
+    );
+  } else {
+    throw new Error(`Unsupported router version: ${router.name} v${router.compat}`);
   }
 
   exports.push(`
@@ -288,7 +297,7 @@ export function createDebugHandler(imports: Array<string>, exports: Array<string
 
 export function createRouteHandler(imports: Array<string>, exports: Array<string>, opts: CodegenOptions) {
   const { cat, emulator } = opts;
-  const assignments = [];
+  const assignments: Array<string> = [];
 
   imports.push(`import { useGlobalStateContext } from 'piral-core/${cat}/hooks/globalState.js';`);
 

@@ -5,9 +5,18 @@
 - Updated `engines` field to have a constraint for Node.js >=20.19
 - Removed all CommonJS outputs - frontend and CLI packages are all ESM only
 
-## 1.12.3 (tbd)
+## 1.12.4 (tbd)
+
+- Updated dependencies
+
+## 1.12.3 (August 18, 2026)
 
 - Fixed using development condition in production dependency resolution (#868)
+- Fixed resolution of bun lockfile (#869) @daniel-rck
+- Fixed issue with input stream pipe direction (#869) @daniel-rck
+- Improved dependency sharing with the mf pilet format @manuelroemer
+- Added support for `react-router` v8
+- Added full exports sharing of dependencies when using `piral-cli-webpack5` for `mf` pilets @manuelroemer
 
 ## 1.12.2 (August 5, 2026)
 

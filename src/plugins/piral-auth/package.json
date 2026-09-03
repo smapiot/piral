@@ -1,6 +1,6 @@
 {
   "name": "piral-auth",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "description": "Plugin for handling authentication in Piral.",
   "keywords": [
     "piral",
@@ -49,6 +49,6 @@
     "typedoc": "typedoc --json ../../../docs/types/piral-auth.json src --exclude \"src/**/*.test.*\""
   },
   "devDependencies": {
-    "piral-core": "^1.12.2"
+    "piral-core": "^1.12.3"
   }
 }
