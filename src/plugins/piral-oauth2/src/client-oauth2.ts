@@ -97,7 +97,9 @@ function getAuthError(body: any) {
 
 function parseQuerystring(str: string) {
   const q = new URLSearchParams(str);
-  return Object.fromEntries(q.entries());
+  const result: Record<string, string> = {};
+  q.forEach((value, key) => (result[key] = value));
+  return result;
 }
 
 function stringifyQuerystring(obj: Record<string, string>) {
@@ -271,7 +273,7 @@ export class ClientOAuth2Token {
   tokenType: string;
   accessToken: string;
   refreshToken: string;
-  expires: Date;
+  expires!: Date;
 
   constructor(client: ClientOAuth2, data: any) {
     this.client = client;

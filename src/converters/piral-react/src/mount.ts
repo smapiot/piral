@@ -37,5 +37,5 @@ export function mountReact<T extends BaseComponentProps>(
 
 export function unmountReact(el: HTMLElement) {
   // tslint:disable-next-line:no-null-keyword
-  render(null, el);
+  render(null as any, el);
 }

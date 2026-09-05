@@ -36,9 +36,9 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     update: Updatable = noop;
 
     props = {
-      name: this.getAttribute('name'),
+      name: this.getAttribute('name')!,
       emptySkipsRender: typeof this.getAttribute('empty-skips-render') === 'string',
-      params: tryParseJson(this.getAttribute('params')),
+      params: tryParseJson(this.getAttribute('params')!),
       empty: undefined,
       order: undefined,
       render: undefined,
@@ -220,7 +220,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
 
     connectedCallback() {
       applyStyle(this);
-      const cid = this.getAttribute('cid');
+      const cid = this.getAttribute('cid')!;
       const content = PiralContent.contentAssignments[cid];
       const portal = this.closest('piral-portal');
 
@@ -255,7 +255,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
    */
   class PiralComponent extends HTMLElement {
     get name() {
-      return this.getAttribute('name');
+      return this.getAttribute('name')!;
     }
 
     set name(value: string) {
@@ -263,7 +263,7 @@ if (typeof window !== 'undefined' && 'customElements' in window) {
     }
 
     get origin() {
-      return this.getAttribute('origin');
+      return this.getAttribute('origin')!;
     }
 
     set origin(value: string) {

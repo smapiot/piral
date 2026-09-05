@@ -21,7 +21,7 @@ export interface SetRouteProps<T extends { [K in keyof T]?: string } = {}> {
 export function SetRoute<T extends { [K in keyof T]?: string } = {}>({
   path,
   component,
-}: SetRouteProps<T>): React.ReactElement {
+}: SetRouteProps<T>): React.ReactElement | null {
   const { setRoute } = useGlobalStateContext();
   useSetter(() => component && setRoute(path, component));
   // tslint:disable-next-line:no-null-keyword

@@ -6,6 +6,7 @@
     "jsx": "react",
     "rootDir": "./src",
     "downlevelIteration": true,
+    "ignoreDeprecations": "6.0",
     "importHelpers": true
   },
   "include": [

@@ -51,10 +51,10 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
     defineBlazorReferences(
       references: Array<string>,
       meta: Partial<PiletMetadata> = {},
-      satellites = {},
+      satellites: Record<string, Array<string>> | undefined = {},
       prio = 0,
       kind = 'local',
-      sharedDependencies = [],
+      sharedDependencies: Array<string> = [],
     ) {
       prio = Math.max(prio, 0);
 
@@ -67,7 +67,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
         },
       };
 
-      let result: false | Promise<void> = false;
+      let result: Promise<void> | undefined;
       const load = async ([_, capabilities]: BlazorRootConfig) => {
         // let others (any global, or higher prio) finish first
         await Promise.all(
@@ -89,7 +89,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
 
           const supportsCore = capabilities.includes('core-pilet');
           const dependencies = references.filter((m) => isAssembly.test(m));
-          const assemblyUrl = dependencies.pop();
+          const assemblyUrl = dependencies.pop()!;
           const pdbUrl = toPdb(assemblyUrl);
           const dependencySymbols = dependencies.map(toPdb).filter((dep) => references.includes(dep));
           const id = Math.random().toString(26).substring(2);
@@ -162,7 +162,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
 
       depWithPrio.load = () => {
         if (!result) {
-          result = convert.loader.then(load);
+          result = convert.loader!.then(load);
         }
 
         return result;
@@ -171,7 +171,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       if (isGlobal && !convert.loader) {
         result = convert.boot().then(load);
       } else if (!convert.lazy || isGlobal) {
-        result = convert.loader.then(load);
+        result = convert.loader!.then(load);
       }
 
       dependency = (config) => result || (result = load(config));
@@ -188,7 +188,7 @@ export function createDependencyLoader(convert: ReturnType<typeof createConverte
       for (const reference of references) {
         const entry = loadedDependencies.find((m) => m.name === reference);
 
-        if (--entry.count === 0) {
+        if (entry && --entry.count === 0) {
           loadedDependencies.splice(loadedDependencies.indexOf(entry), 1);
           await unloadResource(entry.url);
         }

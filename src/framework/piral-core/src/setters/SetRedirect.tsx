@@ -19,7 +19,7 @@ export interface SetRedirectProps {
 /**
  * The component capable of setting a global redirect route at mounting.
  */
-export function SetRedirect({ from, to }: SetRedirectProps): React.ReactElement {
+export function SetRedirect({ from, to }: SetRedirectProps): React.ReactElement | null {
   const { setRoute } = useGlobalStateContext();
   useSetter(() => setRoute(from, createRedirect(to)));
   // tslint:disable-next-line:no-null-keyword

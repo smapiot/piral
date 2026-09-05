@@ -16,7 +16,7 @@ export function getTiles(items: Array<InitialTile>, defaultPreferences: TilePref
 
   for (const { component, preferences } of items) {
     tiles[`global-${i++}`] = {
-      pilet: undefined,
+      pilet: '',
       component,
       preferences: getPreferences(defaultPreferences, preferences),
     };
@@ -28,11 +28,13 @@ export function getTiles(items: Array<InitialTile>, defaultPreferences: TilePref
 export function withTiles(tiles: Dict<TileRegistration>) {
   return (state: GlobalState): GlobalState => ({
     ...state,
-    components: {
-      DashboardTile: DefaultTile,
-      DashboardContainer: DefaultContainer,
-      ...state.components,
-    },
+    components: Object.assign(
+      {
+        DashboardTile: DefaultTile,
+        DashboardContainer: DefaultContainer,
+      },
+      state.components,
+    ),
     registry: {
       ...state.registry,
       tiles,

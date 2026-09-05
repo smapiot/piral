@@ -22,7 +22,7 @@ export interface SetErrorProps<TKey extends keyof ErrorComponentsState> {
 export function SetError<TKey extends keyof ErrorComponentsState>({
   type,
   component,
-}: SetErrorProps<TKey>): React.ReactElement {
+}: SetErrorProps<TKey>): React.ReactElement | null {
   const { setErrorComponent } = useGlobalStateContext();
   useSetter(() => component && setErrorComponent(type, component));
   // tslint:disable-next-line:no-null-keyword

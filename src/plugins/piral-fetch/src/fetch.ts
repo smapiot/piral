@@ -27,22 +27,23 @@ export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOp
       typeof body === 'number' ||
       (typeof body === 'object' && body instanceof FormData === false && body instanceof Blob === false);
     const url = new URL(path, baseUrl);
+    const requestHeaders = {
+      ...baseHeaders,
+      ...headers,
+    };
     const init: RequestInit = {
       ...baseInit,
       method,
       body: json ? JSON.stringify(body) : (body as BodyInit),
-      headers: {
-        ...baseHeaders,
-        ...headers,
-      },
+      headers: requestHeaders,
       cache,
       mode,
       signal,
     };
 
     if (json) {
-      init.headers[headerContentType] = 'application/json';
-      init.headers[headerAccept] = mimeApplicationJson;
+      requestHeaders[headerContentType] = 'application/json';
+      requestHeaders[headerAccept] = mimeApplicationJson;
     }
 
     return fetch(url.href, init).then((res) => {
@@ -66,7 +67,7 @@ export function httpFetch<T>(config: FetchConfig, path: string, options: FetchOp
   let middlewareChain: Array<PiletFetchApiFetch>;
   middlewareChain = middlewareFns.map((middleware, i) => {
     const next: PiletFetchApiFetch = (path, options) => middlewareChain[i + 1](path, options);
-    const invoke: PiletFetchApiFetch = (path, options) => middleware(path, options, next);
+    const invoke: PiletFetchApiFetch = (path, options) => middleware(path, options || {}, next);
     return invoke;
   });
 

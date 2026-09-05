@@ -10,8 +10,8 @@ export function createExtension(rootName: string): AureliaModule<ExtensionSlotPr
       <${rootName} ref="host"></${rootName}>
     <template>`)
   class AureliaExtension {
-    private host: HTMLElement;
-    @bindable() private name: string;
+    private host!: HTMLElement;
+    @bindable() private name!: string;
     @bindable() private render: any;
     @bindable() private empty: any;
     @bindable() private params: any;

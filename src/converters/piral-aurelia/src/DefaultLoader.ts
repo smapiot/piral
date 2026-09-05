@@ -4,6 +4,8 @@ import 'aurelia-event-aggregator';
 import 'aurelia-history-browser';
 import { Loader } from 'aurelia-framework';
 
+declare const System: any;
+
 export class DefaultLoader extends Loader {
   private mapping: Record<string, string> = {};
 

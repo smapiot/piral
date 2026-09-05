@@ -42,7 +42,7 @@ function defer() {
 
 function prepareForStartup() {
   const originalApplyHotReload = window.Blazor._internal.applyHotReload;
-  const queue = [];
+  const queue: Array<() => void> = [];
 
   const applyChanges = (api: PiletApi) => {
     const pilet = api.meta;
@@ -64,7 +64,7 @@ function prepareForStartup() {
     .then(getCapabilities)
     .then((capabilities) => {
       if (capabilities.includes('custom-element')) {
-        document.getElementById(blazorRootId).setAttribute('render', 'modern');
+        document.getElementById(blazorRootId)!.setAttribute('render', 'modern');
       }
 
       return {
@@ -130,7 +130,9 @@ function computePath() {
   try {
     throw new Error();
   } catch (t) {
-    const e = ('' + t.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+    const e = (t instanceof Error ? t.stack || '' : String(t)).match(
+      /(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g,
+    );
     if (e) {
       return e[0].replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^\/]+$/, '$1') + '/';
     }

@@ -11,7 +11,7 @@ export interface RiotConverterOptions {
 }
 
 interface RiotState<TProps> {
-  app: Riot.RiotComponent<TProps>;
+  app?: Riot.RiotComponent<TProps>;
 }
 
 export function createConverter(config: RiotConverterOptions = {}) {
@@ -32,7 +32,7 @@ export function createConverter(config: RiotConverterOptions = {}) {
         });
       },
       unmount(el, locals: RiotState<TProps>) {
-        locals.app.unmount(true);
+        locals.app?.unmount(true);
         el.innerHTML = '';
         locals.app = undefined;
       },

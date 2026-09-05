@@ -1,4 +1,4 @@
-import { withKey, GlobalStateContext, PiletEntries, PiletMetadata, PiletEntry } from 'piral-core';
+import { withKey, GlobalStateContext, PiletEntries, PiletEntry } from 'piral-core';
 import { PiletUpdateMode } from './types';
 
 interface HashEntry {
@@ -6,10 +6,10 @@ interface HashEntry {
   version: string;
 }
 
-function getPiletHash(pilet: PiletMetadata): HashEntry {
+function getPiletHash(pilet: PiletEntry): HashEntry {
   return {
-    name: pilet.name,
-    version: pilet.version,
+    name: pilet.name || '',
+    version: 'version' in pilet ? pilet.version || '' : '',
   };
 }
 
@@ -67,11 +67,10 @@ export function checkForUpdates(ctx: GlobalStateContext, pilets: PiletEntries) {
 
   if (currentHash !== previousHash) {
     const currentModes = ctx.readState((s) => s.registry.updatability);
-    const currentPiletNames = currentPilets.map((m) => m.name);
-    const isPending = (pilet: PiletEntry) => currentModes[pilet.name]?.mode === 'ask';
-    const isNotBlocked = (pilet: PiletEntry) => currentModes[pilet.name]?.mode !== 'block';
+    const isPending = (pilet: PiletEntry) => !!pilet.name && currentModes[pilet.name]?.mode === 'ask';
+    const isNotBlocked = (pilet: PiletEntry) => !pilet.name || currentModes[pilet.name]?.mode !== 'block';
 
-    const added = pilets.filter((m) => !currentPiletNames.includes(m.name));
+    const added = pilets.filter((m) => !currentPilets.some((p) => p.name === m.name));
     const removed = currentPilets.filter((m) => !pilets.some((p) => p.name === m.name) && isNotBlocked(m));
     const updated = pilets.filter((pilet) => {
       if ('version' in pilet && isNotBlocked(pilet)) {

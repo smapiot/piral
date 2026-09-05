@@ -31,7 +31,7 @@ function getBreadcrumbs(items: Array<BreadcrumbSettings>) {
 
   for (const settings of items) {
     breadcrumbs[`global-${i++}`] = {
-      pilet: undefined,
+      pilet: '',
       matcher: getMatcher(settings),
       settings,
     };
@@ -43,11 +43,13 @@ function getBreadcrumbs(items: Array<BreadcrumbSettings>) {
 function withBreadcrumbs(breadcrumbs: Dict<BreadcrumbRegistration>) {
   return (state: GlobalState): GlobalState => ({
     ...state,
-    components: {
-      BreadcrumbItem: DefaultBreadbrumbItem,
-      BreadcrumbsContainer: DefaultBreadcrumbsContainer,
-      ...state.components,
-    },
+    components: Object.assign(
+      {
+        BreadcrumbItem: DefaultBreadbrumbItem,
+        BreadcrumbsContainer: DefaultBreadcrumbsContainer,
+      },
+      state.components,
+    ),
     registry: {
       ...state.registry,
       breadcrumbs,

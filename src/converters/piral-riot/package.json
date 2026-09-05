@@ -45,7 +45,7 @@
   "scripts": {
     "cleanup": "rimraf lib convert.d.ts convert.js",
     "build": "yarn build:esnext && yarn build:convert",
-    "build:convert": "tsc convert.ts --skipLibCheck --declaration --module esnext",
+    "build:convert": "tsc convert.ts --ignoreConfig --skipLibCheck --declaration --module esnext",
     "build:esnext": "tsc --project tsconfig.json --outDir lib",
     "typedoc": "typedoc --json ../../../docs/types/piral-riot.json src --exclude \"src/**/*.test.*\""
   },

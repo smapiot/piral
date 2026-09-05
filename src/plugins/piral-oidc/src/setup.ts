@@ -3,6 +3,8 @@ import { Log, User, UserManager, Logger } from 'oidc-client-ts';
 import { OidcError } from './OidcError';
 import { AuthenticationResult, LogLevel, OidcClient, OidcConfig, OidcErrorType, OidcProfile } from './types';
 
+declare const process: { env: { NODE_ENV?: string } };
+
 const logLevelToOidcMap = {
   [LogLevel.none]: 0,
   [LogLevel.error]: 1,

@@ -109,11 +109,13 @@ function getNotifications(
 function withNotifications(notifications: Array<OpenNotification>) {
   return (state: GlobalState): GlobalState => ({
     ...state,
-    components: {
-      NotificationsHost: DefaultHost,
-      NotificationsToast: DefaultToast,
-      ...state.components,
-    },
+    components: Object.assign(
+      {
+        NotificationsHost: DefaultHost,
+        NotificationsToast: DefaultToast,
+      },
+      state.components,
+    ),
     notifications,
   });
 }

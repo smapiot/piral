@@ -13,7 +13,7 @@ export function createExtension(rootName: string): angular.IModule {
     controller: [
       '$element',
       'piral',
-      function ($element, piral) {
+      function (this: any, $element, piral) {
         this.$onInit = () => {
           const container = $element[0].querySelector(rootName);
           piral.renderHtmlExtension(container, {

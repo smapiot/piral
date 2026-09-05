@@ -4,7 +4,7 @@ import { PiletLazyApi, LazyDependencyLoader } from './types';
 
 interface DependencyCache {
   [name: string]: {
-    result: Promise<any>;
+    result?: Promise<any>;
     loader: LazyDependencyLoader;
   };
 }

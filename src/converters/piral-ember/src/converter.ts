@@ -11,7 +11,7 @@ export interface EmberConverterOptions {
 }
 
 interface EmberState<TProps> {
-  app: EmberInstance<TProps>;
+  app?: EmberInstance<TProps>;
 }
 
 export function createConverter(config: EmberConverterOptions = {}) {
@@ -32,13 +32,13 @@ export function createConverter(config: EmberConverterOptions = {}) {
       });
     },
     update(rootElement, props, ctx, locals: EmberState<TProps>) {
-      locals.app.setProperties({
+      locals.app?.setProperties({
         props,
         ctx,
       });
     },
     unmount(rootElement, locals: EmberState<TProps>) {
-      locals.app.destroy();
+      locals.app?.destroy();
       locals.app = undefined;
       rootElement.innerHTML = '';
     },

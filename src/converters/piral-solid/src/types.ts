@@ -5,11 +5,11 @@ declare module 'piral-core/lib/types/custom' {
   interface PiletCustomApi extends PiletSolidApi {}
 
   interface PiralCustomComponentConverters<TProps> {
-    solid(component: SolidComponent<TProps>): ForeignComponent<TProps>;
+    solid(component: SolidComponent<TProps & Record<string, any>>): ForeignComponent<TProps>;
   }
 }
 
-export interface SolidComponent<TProps> {
+export interface SolidComponent<TProps extends Record<string, any>> {
   /**
    * The component root.
    */
@@ -29,7 +29,7 @@ export interface PiletSolidApi {
    * @param component The name of the root component.
    * @returns The Piral Solid component.
    */
-  fromSolid<TProps>(root: Component<TProps>): SolidComponent<TProps>;
+  fromSolid<TProps extends Record<string, any>>(root: Component<TProps>): SolidComponent<TProps>;
   /**
    * Gets the name of the Solid extension.
    */

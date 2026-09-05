@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ErrorBoundary, wrapComponent } from '../components';
 import { defaultRender } from '../utils';
-import { AnyComponent, Errors, PiletApi, BaseComponentProps, GlobalStateContext } from '../types';
+import { AnyComponent, Errors, PiletApi, BaseComponentProps, GlobalStateContext, WrappedComponent } from '../types';
 
 const DefaultWrapper: React.FC<React.PropsWithChildren<{}>> = (props) => defaultRender(props.children);
 
@@ -56,5 +56,5 @@ export function withApi<TProps>(
   const outerProps = { ...captured, piral };
   const converters = context.converters;
   const Wrapper = makeWrapper<TProps>(context, outerProps, wrapperType, errorType);
-  return wrapComponent(converters, component, outerProps, Wrapper);
+  return wrapComponent(converters, component, outerProps, Wrapper) as WrappedComponent<TProps & BaseComponentProps>;
 }

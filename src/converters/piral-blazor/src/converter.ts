@@ -30,16 +30,16 @@ const mediaRules = [
 ];
 
 function prefixMediaSources(component: Element, prefix: string) {
-  const prefixAttributeValue = (el: Element, attr: string) => el.setAttribute(attr, prefix + el.getAttribute(attr));
+  const prefixAttributeValue = (el: Element, attr: string) => el.setAttribute(attr, prefix + el.getAttribute(attr)!);
 
   for (const { attribute, selector } of mediaRules) {
     Array.from(component.querySelectorAll(selector))
-      .filter((el) => el.hasAttribute(attribute) && !el.getAttribute(attribute).match(/^https?:/))
+      .filter((el) => el.hasAttribute(attribute) && !el.getAttribute(attribute)!.match(/^https?:/))
       .forEach((el) => prefixAttributeValue(el, attribute));
   }
 }
 
-function project(component: Element, destination: Element, options: BlazorOptions) {
+function project(component: Element, destination: Element, options?: BlazorOptions) {
   if (options?.resourcePathRoot && !bootConfig.noMutation) {
     prefixMediaSources(component, options.resourcePathRoot);
   }
@@ -125,14 +125,14 @@ export function createConverter(
       window.dispatchEvent(new CustomEvent('loaded-blazor-core'));
       return config;
     });
-  let loader = !lazy && boot(opts);
-  let listener: Disposable = undefined;
+  let loader: Promise<BlazorRootConfig> | undefined = lazy ? undefined : boot(opts);
+  let listener: Disposable | undefined;
 
-  const enqueueChange = (locals: BlazorLocals, update: (root: BlazorRootConfig) => void) => {
+  const enqueueChange = (locals: BlazorLocals, update?: (root: BlazorRootConfig) => void) => {
     if (typeof update !== 'function') {
       // nothing to do in this case
     } else if (locals.state === 'mounted') {
-      loader.then(update);
+      loader!.then(update);
     } else {
       locals.next = update;
     }
@@ -170,7 +170,7 @@ export function createConverter(
       function mountClassic(config: BlazorRootConfig) {
         return activate(moduleName, props).then((refId) => {
           const [root] = config;
-          const node = root.querySelector(`#${refId} > div`);
+          const node = root.querySelector(`#${refId} > div`)!;
 
           locals.unmount = () => {
             root.querySelector(`#${refId}`)?.appendChild(node);

@@ -14,7 +14,7 @@ export interface CycleConverterOptions {
 }
 
 interface CycleState<TProps> {
-  props$: Stream<TProps>;
+  props$?: Stream<TProps>;
   dispose(): void;
 }
 
@@ -25,7 +25,7 @@ export function createConverter(config: CycleConverterOptions = {}) {
     main: M,
   ): ForeignComponent<TProps> => ({
     mount(el, props, ctx, locals: CycleState<TProps>) {
-      locals.props$ = xs.create<TProps>();
+      const props$ = (locals.props$ = xs.create<TProps>());
 
       // The Cycle DOM element is not directly rendered into parent, but into a nested container.
       // This is done because Cycle "erases" information on the host element. If parent was used,
@@ -34,17 +34,17 @@ export function createConverter(config: CycleConverterOptions = {}) {
 
       const drivers: PiralDomDrivers<TProps> = {
         DOM: makeDOMDriver(host),
-        props: () => locals.props$,
+        props: () => props$,
       };
 
       locals.dispose = run(main as Main, drivers);
-      locals.props$.shamefullySendNext(props);
+      props$.shamefullySendNext(props);
     },
     update(el, props, ctx, locals: CycleState<TProps>) {
-      locals.props$.shamefullySendNext(props);
+      locals.props$?.shamefullySendNext(props);
     },
     unmount(el, locals: CycleState<TProps>) {
-      locals.props$.shamefullySendComplete();
+      locals.props$?.shamefullySendComplete();
       locals.dispose();
       locals.props$ = undefined;
     },

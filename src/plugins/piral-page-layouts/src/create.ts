@@ -24,7 +24,7 @@ export interface PageLayoutsConfig {
  * Creates new Pilet API extensions for dealing with page layouts.
  */
 export function createPageLayoutsApi(config: PageLayoutsConfig = {}): PiralPlugin<PiletPageLayoutsApi> {
-  const { layouts = {}, fallback } = config;
+  const { layouts = {}, fallback = 'default' } = config;
 
   return (context) => {
     const findPageLayout = (name: string) => context.readState((s) => s.registry.pageLayouts[name]);

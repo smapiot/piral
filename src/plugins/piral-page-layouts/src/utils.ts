@@ -35,7 +35,7 @@ function createPageWrapper(
 
     const registration = useGlobalState((s) => s.registry.pageLayouts[layout] || s.registry.pageLayouts[fallback]);
     const Layout = registration?.component || DefaultLayout;
-    return createElement(Layout, props, createElement(Routes, props));
+    return createElement(Layout as ComponentType<any>, props, createElement(Routes, props));
   };
 }
 
@@ -45,8 +45,8 @@ export function getPageLayouts(items: Record<string, ComponentType<PageComponent
   if (items && typeof items === 'object') {
     Object.keys(items).forEach((name) => {
       layouts[name] = {
-        pilet: undefined,
-        component: items[name],
+        pilet: '',
+        component: items[name] as PageLayoutRegistration['component'],
       };
     });
   }

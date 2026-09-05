@@ -23,10 +23,7 @@ export function createUpdateApi(config: UpdateConfig = {}): PiralPlugin<PiletUpd
 
     context.dispatch((state) => ({
       ...state,
-      components: {
-        UpdateDialog: DefaultUpdateDialog,
-        ...state.components,
-      },
+      components: Object.assign({ UpdateDialog: DefaultUpdateDialog }, state.components),
       registry: {
         ...state.registry,
         updatability: {},

@@ -175,6 +175,9 @@ export interface FeedConnectorOptions<TData, TItem, TReducers extends FeedConnec
 
 export interface ConnectorDetails<TData, TItem, TReducers extends FeedConnectorReducers<TData> = {}>
   extends FeedConnectorOptions<TData, TItem, TReducers> {
+  connect: FeedSubscriber<TItem>;
+  update: FeedReducer<TData, TItem>;
+  reducers: TReducers;
   /**
    * The ID of the connector.
    */

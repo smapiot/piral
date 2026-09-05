@@ -11,7 +11,7 @@ export function createExtension(rootName: string, selector: string): Component<E
       return createElement(rootName);
     },
     watch: {
-      params(newValue, oldValue) {
+      params(this: any, newValue, oldValue) {
         if (newValue !== oldValue) {
           const newKeys = Object.keys(newValue);
           const oldKeys = Object.keys(oldValue);
@@ -43,7 +43,7 @@ export function createExtension(rootName: string, selector: string): Component<E
         }
       },
     },
-    mounted() {
+    mounted(this: any) {
       this.piral.renderHtmlExtension(this.$el, {
         empty: this.empty,
         params: this.params,

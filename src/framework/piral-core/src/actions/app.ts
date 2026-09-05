@@ -24,12 +24,14 @@ export function initialize(ctx: GlobalStateContext, loading: boolean, error: Err
   }));
 }
 
-export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> | undefined {
-  return ctx.options
-    .loadPilet?.(meta)
+export function addPilet(ctx: GlobalStateContext, meta: PiletEntry): Promise<void> {
+  return ctx.options.loadPilet
+    ? ctx.options
+        .loadPilet(meta)
     .then((pilet) => ctx.injectPilet(pilet))
     .then((pilet) => runPilet(ctx.options.createApi, pilet, ctx.options.hooks))
-    .then(noop);
+        .then(noop)
+    : Promise.resolve();
 }
 
 export function removePilet(ctx: GlobalStateContext, name: string): Promise<void> {

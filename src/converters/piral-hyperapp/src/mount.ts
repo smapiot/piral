@@ -1,5 +1,7 @@
 import type { Component } from './types';
 
+declare const require: any;
+
 const { h, app } = require('hyperapp');
 
 export function mountHyperapp<T extends Object>(

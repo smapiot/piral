@@ -1,6 +1,8 @@
 import { version, ComponentType } from 'react';
 import { createConverter } from './lib/converter';
 
+declare const System: any;
+
 export interface HtmlComponent<TProps> {
   component: {
     mount(element: HTMLElement, props: TProps, ctx: any, locals: any): void;

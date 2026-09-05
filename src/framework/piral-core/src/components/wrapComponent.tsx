@@ -15,7 +15,7 @@ interface CapturedProps {
 function wrapReactComponent<T>(
   Component: React.ComponentType<T & BaseComponentProps>,
   captured: CapturedProps,
-  Wrapper: React.FC<T>,
+  Wrapper: React.FC<React.PropsWithChildren<T>>,
 ): React.ComponentType<T> {
   return (props: T) => (
     <Wrapper {...props}>
@@ -27,7 +27,7 @@ function wrapReactComponent<T>(
 function wrapForeignComponent<T>(
   component: ForeignComponent<T & BaseComponentProps>,
   captured: CapturedProps,
-  Wrapper: React.FC<T>,
+  Wrapper: React.FC<React.PropsWithChildren<T>>,
 ) {
   return React.memo((props: T) => {
     const { destroyPortal, navigation } = useGlobalStateContext();
@@ -58,7 +58,7 @@ export function wrapComponent<T>(
   converters: ComponentConverters<T & BaseComponentProps>,
   component: AnyComponent<T & BaseComponentProps>,
   captured: CapturedProps,
-  Wrapper: React.FC<T>,
+  Wrapper: React.FC<React.PropsWithChildren<T>>,
 ) {
   if (!component) {
     const pilet = captured.piral.meta.name;

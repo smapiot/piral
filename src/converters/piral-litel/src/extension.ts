@@ -3,10 +3,10 @@ import { LitElement, property, customElement } from 'lit-element';
 export function createExtension(selector: string) {
   @customElement(selector)
   class LitElExtension extends LitElement {
-    @property() name: string;
+    @property() name!: string;
     @property() params: any;
-    @property() onEmpty: () => any;
-    @property() onRender: () => any;
+    @property() onEmpty!: () => any;
+    @property() onRender!: () => any;
 
     render() {
       return undefined;

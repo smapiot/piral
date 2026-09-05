@@ -29,7 +29,7 @@ function useNavigationPath() {
 
 function getKeys(template: string) {
   const keys: Array<string> = [];
-  let result: RegExpExecArray;
+  let result: RegExpExecArray | null;
 
   while ((result = getKey.exec(template))) {
     keys.push(result[2]);
@@ -38,7 +38,7 @@ function getKeys(template: string) {
   return keys;
 }
 
-function getParams(current: BreadcrumbRegistration, path: string) {
+function getParams(current: BreadcrumbRegistration | undefined, path: string) {
   const params: Record<string, string> = {};
 
   if (current) {
@@ -57,7 +57,7 @@ function getParams(current: BreadcrumbRegistration, path: string) {
   return params;
 }
 
-function useParams(current: BreadcrumbRegistration, path: string) {
+function useParams(current: BreadcrumbRegistration | undefined, path: string) {
   return React.useMemo(() => getParams(current, path), [current, path]);
 }
 

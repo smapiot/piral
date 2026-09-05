@@ -59,7 +59,7 @@ declare global {
         sourceRef: any,
         fallbackComponent: string | null,
       ): void;
-      emitNavigateEvent(target: Element, path: string, replace?: boolean, state?: any): void;
+      emitNavigateEvent(target: Element | undefined, path: string, replace?: boolean, state?: any): void;
       _internal: {
         navigationManager: any;
         applyHotReload: any;

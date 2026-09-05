@@ -35,10 +35,20 @@ export function isInternalNavigation(event: MouseEvent) {
 
 export function performInternalNavigation(event: MouseEvent) {
   const anchorTarget = getAnchorTarget(event);
+
+  if (!anchorTarget) {
+    return;
+  }
+
   event.preventDefault();
   const baseURI = document.baseURI;
   const baseUriUntilLastSlash = baseURI.substr(0, baseURI.lastIndexOf('/') + 1);
   const to = anchorTarget.getAttribute('href');
+
+  if (!to) {
+    return;
+  }
+
   const path = to.startsWith(baseUriUntilLastSlash) ? to.substring(baseUriUntilLastSlash.length) : to;
   window.Blazor.emitNavigateEvent(anchorTarget, path);
 }

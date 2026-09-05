@@ -38,7 +38,7 @@ export interface UserInfo {
 }
 
 export interface PiralChangeUserEvent {
-  previous: UserInfo;
+  previous: UserInfo | undefined;
   current: UserInfo;
 }
 

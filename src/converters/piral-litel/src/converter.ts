@@ -18,7 +18,7 @@ export function createConverter(config: LitElConverterOptions = {}) {
       const el = parent.appendChild(document.createElement(elementName));
       el.setAttribute('props', JSON.stringify(data));
       el.setAttribute('ctx', JSON.stringify(ctx));
-      el.shadowRoot.addEventListener(
+      el.shadowRoot!.addEventListener(
         'render-html',
         (ev: Event) => {
           const evt = ev as CustomEvent;

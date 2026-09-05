@@ -16,7 +16,7 @@ export function loadEmberApp(appName: string, appUrl: string, vendorUrl?: string
       scriptEl.src = appUrl;
       scriptEl.async = true;
       scriptEl.onload = () => {
-        resolve(window.require(appName + '/app'));
+        resolve((window as any).require(appName + '/app'));
       };
       scriptEl.onerror = reject;
       document.head.appendChild(scriptEl);

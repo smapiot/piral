@@ -77,7 +77,7 @@ function dispatchToRoot(event: any) {
   }
 }
 
-function getFallback(fallbackComponent: string, params: any) {
+function getFallback(fallbackComponent: string | null, params: any) {
   if (typeof fallbackComponent === 'string') {
     const empty = undefined;
     return () => createElement('piral-extension', { name: fallbackComponent, params, empty });
@@ -158,7 +158,7 @@ export function emitRenderEvent(
       const root = document.getElementById(blazorRootId);
 
       // this would be used exclusively by providers
-      if (eventParent && root.getAttribute('render') === 'modern') {
+      if (eventParent && root?.getAttribute('render') === 'modern') {
         return eventParent.dispatchEvent(new CustomEvent(eventNames.render, eventInit));
       }
 
@@ -199,16 +199,16 @@ export function attachLocalEvents(
   render: (ev: CustomEvent) => void,
   navigate: (ev: CustomEvent) => void,
 ) {
-  host.addEventListener(eventNames.render, render, false);
-  host.addEventListener(eventNames.navigate, navigate, false);
+  host.addEventListener(eventNames.render, render as EventListener, false);
+  host.addEventListener(eventNames.navigate, navigate as EventListener, false);
   // install proxy handlers
   globalEventNames.forEach((eventName) => host.addEventListener(eventName, dispatchToRoot));
   // register host as event parent
   eventParents.push(host);
 
   return () => {
-    host.removeEventListener(eventNames.render, render, false);
-    host.removeEventListener(eventNames.navigate, navigate, false);
+    host.removeEventListener(eventNames.render, render as EventListener, false);
+    host.removeEventListener(eventNames.navigate, navigate as EventListener, false);
     // uninstall proxy handlers
     globalEventNames.forEach((eventName) => host.removeEventListener(eventName, dispatchToRoot));
     // unregister host as event parent
