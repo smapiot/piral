@@ -25,6 +25,7 @@
     "./compiler-dynamic": "./compiler-dynamic.js",
     "./convert": "./convert.js",
     "./core-dynamic": "./core-dynamic.js",
+    "./extend-rspack": "./extend-rspack.js",
     "./extend-webpack": "./extend-webpack.js",
     "./standalone": "./lib/standalone.js",
     "./lib/*": {
@@ -37,12 +38,14 @@
   "files": [
     "lib",
     "src",
+    "angular-resource-loader.js",
     "common.d.ts",
     "common.js",
     "compiler-dynamic.js",
     "convert.d.ts",
     "convert.js",
     "core-dynamic.js",
+    "extend-rspack.js",
     "extend-webpack.js"
   ],
   "repository": {

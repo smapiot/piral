@@ -482,6 +482,39 @@ For AoT (i.e. `jitMode: false`) to work correctly the `compilationMode: 'partial
 For AoT to work correctly the Angular sources need to be bundled. This is not the case in scenarios where you installed `piral-ng` as a plugin in your shell or distribute the Angular packages as shared dependencies from your app shell.
 :::
 
+Alternatively, if you want to use Rspack instead of Webpack you can use the convenience `extend-rspack` module.
+
+This is how your *rspack.config.js* can look like:
+
+```js
+const extendRspack = require('piral-ng/extend-rspack');
+
+module.exports = extendRspack();
+```
+
+For using `piral-ng/extend-rspack` you must have installed:
+
+- `@rspack/core`
+- `sass-loader` (only required if you use `.scss`/`.sass` component styles)
+- `piral-cli-rspack`
+
+You can do that via:
+
+```sh
+npm i @rspack/core sass-loader piral-cli-rspack --save-dev
+```
+
+The available options for `piral-ng/extend-rspack` are:
+
+- `ngOptions` (currently only `jitMode`, which must stay at its default of `true`)
+- `patterns` (providing input to the Rspack `CopyRspackPlugin`)
+
+`piral-ng/extend-rspack` relies on Rspack's built-in CSS support (`css/auto`) for regular stylesheets, its built-in `asset/source` module type to inline component templates and component-scoped styles as raw strings, and its built-in `builtin:swc-loader` (configured for legacy decorators and decorator metadata) to compile TypeScript.
+
+::: failure: AoT is not supported with Rspack
+Angular's AoT compiler (`@ngtools/webpack`'s `AngularWebpackPlugin`) depends on Webpack-only compiler internals and does not work with Rspack. `piral-ng/extend-rspack` therefore only supports JIT builds (`jitMode: true`, the default) and throws if `jitMode: false` is requested. If you need an AoT production build with Rspack, use a dedicated Angular/Rspack builder such as [`@nx/angular-rspack`](https://www.npmjs.com/package/@nx/angular-rspack) instead.
+:::
+
 If you have set up the build process then you need to make sure that your application has an entry point (*index.ts*). That entry point has to be a valid pilet entry module. It may look as follows:
 
 ```ts
