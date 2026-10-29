@@ -272,7 +272,7 @@ pilet debug --schema "v0"
 Sets the bundler to use.
 
 - Type: `string`
-- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"xbuild"`
+- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"vite6"`, `"vite7"`, `"vite8"`, `"xbuild"`, `"netpack"`
 - Default: `undefined`
 
 Examples:

@@ -174,13 +174,61 @@ pilet new --npm-client "npm"
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"xbuild"`
+- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"vite6"`, `"vite7"`, `"vite8"`, `"xbuild"`, `"netpack"`
 - Default: `"none"`
 
 Examples:
 
 ```sh
 pilet new --bundler "bun"
+```
+
+### `--ca-cert`
+
+Sets a custom certificate authority to use, if any.
+
+- Type: `string`
+- Default: `undefined`
+
+Examples:
+
+```sh
+pilet new --ca-cert "some value"
+```
+
+### `--allow-self-signed`
+
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `false`
+
+Examples:
+
+```sh
+pilet new --allow-self-signed
+```
+
+```sh
+pilet new --no-allow-self-signed
+```
+
+### `--no-allow-self-signed`
+
+Opposite of:
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `true`
+
+Examples:
+
+```sh
+pilet new --allow-self-signed
+```
+
+```sh
+pilet new --no-allow-self-signed
 ```
 
 ### `--vars`

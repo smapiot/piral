@@ -123,6 +123,54 @@ Examples:
 piral run-emulator --npm-client "npm"
 ```
 
+### `--ca-cert`
+
+Sets a custom certificate authority to use, if any.
+
+- Type: `string`
+- Default: `undefined`
+
+Examples:
+
+```sh
+piral run-emulator --ca-cert "some value"
+```
+
+### `--allow-self-signed`
+
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `false`
+
+Examples:
+
+```sh
+piral run-emulator --allow-self-signed
+```
+
+```sh
+piral run-emulator --no-allow-self-signed
+```
+
+### `--no-allow-self-signed`
+
+Opposite of:
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `true`
+
+Examples:
+
+```sh
+piral run-emulator --allow-self-signed
+```
+
+```sh
+piral run-emulator --no-allow-self-signed
+```
+
 ### `--open`
 
 Opens the Piral instance directly in the browser.

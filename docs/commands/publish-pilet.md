@@ -155,7 +155,7 @@ pilet publish --mode "none"
 Sets the bundler to use.
 
 - Type: `string`
-- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"xbuild"`
+- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"vite6"`, `"vite7"`, `"vite8"`, `"xbuild"`, `"netpack"`
 - Default: `undefined`
 
 Examples:
@@ -237,6 +237,41 @@ pilet publish --interactive
 
 ```sh
 pilet publish --no-interactive
+```
+
+### `--allow-self-signed`
+
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `false`
+
+Examples:
+
+```sh
+pilet publish --allow-self-signed
+```
+
+```sh
+pilet publish --no-allow-self-signed
+```
+
+### `--no-allow-self-signed`
+
+Opposite of:
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `true`
+
+Examples:
+
+```sh
+pilet publish --allow-self-signed
+```
+
+```sh
+pilet publish --no-allow-self-signed
 ```
 
 ### `--base`
