@@ -435,13 +435,17 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.validatePiralDefaults.logLevel)
+        .boolean('strict')
+        .describe('strict', 'Fails validation if configured validators are missing from the loaded rule set.')
+        .default('strict', apps.validatePiralDefaults.strict)
         .string('base')
         .default('base', process.cwd())
         .describe('base', 'Sets the base directory. By default the current directory is used.');
     },
     run(args) {
       return apps.validatePiral(args.base as string, {
-        entry: args.entry as string,
+        entry: args.source as string,
+        strict: args.strict as boolean,
         logLevel: args['log-level'] as LogLevels,
       });
     },
@@ -911,7 +915,7 @@ const allCommands: Array<ToolCommand<any>> = [
     },
     run(args) {
       return apps.validatePilet(args.base as string, {
-        entry: args.entry as string,
+        entry: args.source as string,
         logLevel: args['log-level'] as LogLevels,
         strict: args.strict as boolean,
         app: args.app as string,

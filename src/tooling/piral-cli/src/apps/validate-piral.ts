@@ -14,15 +14,25 @@ export interface ValidatPiralOptions {
    * Sets the log level to use (1-5).
    */
   logLevel?: LogLevels;
+
+  /**
+   * Fails validation if configured validators are missing from the loaded rule set.
+   */
+  strict?: boolean;
 }
 
 export const validatePiralDefaults: ValidatPiralOptions = {
   entry: './',
   logLevel: LogLevels.info,
+  strict: false,
 };
 
 export async function validatePiral(baseDir = process.cwd(), options: ValidatPiralOptions = {}) {
-  const { entry = validatePiralDefaults.entry, logLevel = validatePiralDefaults.logLevel } = options;
+  const {
+    entry = validatePiralDefaults.entry,
+    logLevel = validatePiralDefaults.logLevel,
+    strict = validatePiralDefaults.strict,
+  } = options;
 
   ensure('baseDir', baseDir, 'string');
   ensure('entry', entry, 'string');
@@ -56,7 +66,7 @@ export async function validatePiral(baseDir = process.cwd(), options: ValidatPir
     info,
   };
 
-  await runRules(rules, context, config.validators);
+  await runRules(rules, context, config.validators, strict);
 
   ruleSummary(errors, warnings);
 }
