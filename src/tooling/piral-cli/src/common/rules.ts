@@ -15,7 +15,21 @@ export async function runRules<T extends RuleContext>(
   rules: Array<Rule<T>>,
   context: T,
   configurations: Record<string, any> = {},
+  strict = false,
 ) {
+  const loadedRules = new Set(rules.map(rule => rule.name));
+  const missingRules = Object.keys(configurations).filter(name => !loadedRules.has(name));
+
+  if (missingRules.length > 0) {
+    const message = `Configured validator(s) could not be loaded: ${missingRules.join(', ')}`;
+
+    if (strict) {
+      context.error(message);
+    } else {
+      context.warning(message);
+    }
+  }
+
   for (const rule of rules) {
     log('generalDebug_0003', `Running rule "${rule?.name}" ...`);
     const options = configurations[rule.name];

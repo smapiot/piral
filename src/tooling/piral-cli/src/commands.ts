@@ -900,6 +900,9 @@ const allCommands: Array<ToolCommand<any>> = [
         .number('log-level')
         .describe('log-level', 'Sets the log level to use (1-5).')
         .default('log-level', apps.validatePiletDefaults.logLevel)
+        .boolean('strict')
+        .describe('strict', 'Fails validation if configured validators are missing from the loaded rule set.')
+        .default('strict', apps.validatePiletDefaults.strict)
         .string('app')
         .describe('app', 'Sets the name of the Piral instance.')
         .string('base')
@@ -910,6 +913,7 @@ const allCommands: Array<ToolCommand<any>> = [
       return apps.validatePilet(args.base as string, {
         entry: args.entry as string,
         logLevel: args['log-level'] as LogLevels,
+        strict: args.strict as boolean,
         app: args.app as string,
       });
     },
