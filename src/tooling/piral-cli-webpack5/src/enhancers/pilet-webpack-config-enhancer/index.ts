@@ -1,6 +1,7 @@
 import * as SystemJSPublicPathWebpackPlugin from 'systemjs-webpack-interop/SystemJSPublicPathWebpackPlugin';
 import type { SharedDependency } from 'piral-cli';
-import { Configuration, BannerPlugin, DefinePlugin, container } from 'webpack';
+import * as webpack from 'webpack';
+import type { Configuration } from 'webpack';
 import {
   setEnvironment,
   getDefineVariables,
@@ -14,6 +15,8 @@ import StylesPlugin from '../../plugins/StylesPlugin';
 import SheetPlugin from '../../plugins/SheetPlugin';
 
 const piletCss = 'main.css';
+const { BannerPlugin, DefinePlugin, container } = (webpack as any).default || webpack;
+const SystemJSPublicPathPlugin = (SystemJSPublicPathWebpackPlugin as any).default || SystemJSPublicPathWebpackPlugin;
 
 export interface PiletWebpackConfigEnhancerOptions {
   /**
@@ -154,7 +157,7 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
       include: file,
       raw: true,
     }),
-    new SystemJSPublicPathWebpackPlugin(),
+    new SystemJSPublicPathPlugin(),
   );
 
   compiler.plugins = [...compiler.plugins, ...plugins];

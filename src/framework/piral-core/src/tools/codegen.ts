@@ -33,6 +33,23 @@ function getPackageJson(root: string, packageName: string) {
 }
 
 const reactRouters = ['react-router', 'react-router-dom'];
+const angularCore = '@angular/core';
+const angularCoreSecondaryEntryPoints = [
+  '@angular/core/rxjs-interop',
+  '@angular/core/primitives/di',
+  '@angular/core/primitives/signals',
+];
+
+/**
+ * Angular's public secondary core entry points share private runtime state with
+ * `@angular/core`. Register them from the shell graph whenever core is shared,
+ * so v2 pilets resolve every supported public path to that same graph.
+ */
+export function getDependencyExternals(externals: Array<string>) {
+  return externals.includes(angularCore)
+    ? [...externals, ...angularCoreSecondaryEntryPoints.filter((entry) => !externals.includes(entry))]
+    : externals;
+}
 
 function getRouter(root: string) {
   const routers = [...reactRouters, 'wouter'];
@@ -53,7 +70,7 @@ function getRouter(root: string) {
   };
 }
 
-function getIdentifiers(root: string, packageName: string) {
+export function getIdentifiers(root: string, packageName: string) {
   const identifiers = [packageName];
 
   try {
@@ -62,7 +79,7 @@ function getIdentifiers(root: string, packageName: string) {
     if (details.version) {
       identifiers.push(`${packageName}@${details.version}`);
 
-      if (details.name && details.name !== packageName) {
+      if (details.name && details.name !== packageName && !packageName.startsWith(`${details.name}/`)) {
         identifiers.push(`${details.name}@${details.version}`);
       }
     }
@@ -131,6 +148,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
   const { root, appName, externals, shared, origin } = opts;
   const assignments: Array<string> = [];
   const asyncAssignments: Array<string> = [];
+  const dependencyExternals = getDependencyExternals(externals);
 
   if (appName) {
     const parts: Array<string> = [];
@@ -147,7 +165,7 @@ export function createDependencies(imports: Array<string>, exports: Array<string
     assignments.push(`deps['${appName}']={${parts.join(',')}}`);
   }
 
-  for (const external of externals) {
+  for (const external of dependencyExternals) {
     if (external.endsWith('?')) {
       const name = external.replace(/\?+$/, '');
       const identifiers = getIdentifiers(root, name);

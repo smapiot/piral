@@ -22,7 +22,7 @@ import { declarationEntryExtensions, piralJson, piletJson } from './constants';
 import { satisfies } from './version';
 import { getModulePath } from '../external';
 import type { PiletsInfo, SharedDependency, PiletDefinition, AppDefinition, NpmClient } from '../types';
-import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails } from '../types';
+import type { SourceLanguage, PiralInstancePackageData, PiralInstanceDetails, PiletSchemaVersion } from '../types';
 import type { Framework, FileInfo, TemplateFileLocation, PiletPackageData, PiralPackageData } from '../types';
 
 export interface PiralInstanceData {
@@ -898,8 +898,25 @@ export function combinePiletExternals(
   peerDependencies: Record<string, string>,
   peerModules: Array<string>,
   importmap: Array<SharedDependency>,
+  schemaVersion?: PiletSchemaVersion,
 ) {
   const externals = [...Object.keys(peerDependencies), ...peerModules, ...appShells];
+  const angularCoreSecondaryEntryPoints = new Set([
+    '@angular/core/rxjs-interop',
+    '@angular/core/primitives/di',
+    '@angular/core/primitives/signals',
+  ]);
+
+  const inheritedAngularCore =
+    schemaVersion === 'v2'
+      ? importmap.find(
+          (entry) =>
+            entry.name === '@angular/core' &&
+            Array.isArray(entry.parents) &&
+            appShells.every((app) => entry.parents?.includes(app)),
+        )
+      : undefined;
+  const angularCoreVersion = inheritedAngularCore?.id.substring('@angular/core@'.length);
 
   for (let i = importmap.length; i--; ) {
     const entry = importmap[i];
@@ -911,10 +928,21 @@ export function combinePiletExternals(
       // mentioned / referenced app shells
       // in other cases (e.g., if one app shell does not share this) use the distributed
       // mechanism to ensure that the dependency can also be resolved in this shell
-      if (appShells.every((app) => entry.parents.includes(app))) {
+      if (appShells.every((app) => entry.parents?.includes(app))) {
         externals.push(entry.name);
         importmap.splice(i, 1);
       }
+    } else if (
+      inheritedAngularCore &&
+      angularCoreSecondaryEntryPoints.has(entry.name) &&
+      entry.id === `${entry.name}@${angularCoreVersion}`
+    ) {
+      // Angular core secondary entry points share private reactive runtime state
+      // with the root entry point. A compatible shell core therefore owns all of
+      // its public secondary paths as one runtime instead of a pilet bundling a
+      // second graph for an explicitly requested subpath.
+      externals.push(entry.name);
+      importmap.splice(i, 1);
     }
   }
 

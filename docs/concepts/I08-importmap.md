@@ -198,6 +198,23 @@ If you want to bundle in a dependency that is already declared as a centrally sh
 
 If a dependency is both excluded and marked as a distributed dependency in the `imports` section then the latter wins - explicit imports are always more relevant than exclusions from the inheritance chain.
 
+### Angular v2 secondary entry points
+
+For v2/SystemJS pilets, when an app shell shares `@angular/core`, Piral also
+registers these supported public core secondary entry points from the same shell
+dependency graph:
+
+- `@angular/core/rxjs-interop`
+- `@angular/core/primitives/di`
+- `@angular/core/primitives/signals`
+
+A pilet may keep importing these paths normally. If its resolved secondary
+entry-point version exactly matches the inherited shell core version, Piral
+externalizes that pilet dependency to the shell. This keeps Angular's reactive
+implementation in one compatible runtime. Keep the shell and pilet Angular
+versions aligned; mismatched versions remain separate. This behavior applies to
+the v2/SystemJS schema and does not change other pilet schemas.
+
 ## Importmap Notation
 
 The importmap notation also allows some special syntax that can be used to set up some rules for the dependency. For instance,
