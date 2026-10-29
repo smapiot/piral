@@ -1,6 +1,6 @@
 # Piral Changelog
 
-## 1.12.4 (tbd)
+## 1.12.4 (September 11, 2026)
 
 - Updated dependencies
 - Added `piral-ng/extend-rspack` helper for explicit rspack support in `piral-ng`
