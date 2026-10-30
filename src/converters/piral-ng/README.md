@@ -309,6 +309,17 @@ The related packages should be shared with the pilets via the *package.json*:
 ```
 
 Depending on your Angular needs you'd want to share more packages.
+
+For v2/SystemJS pilets, sharing `@angular/core` with the shell also registers the
+supported core secondary entry points from that same shell dependency graph:
+`@angular/core/rxjs-interop`, `@angular/core/primitives/di`, and
+`@angular/core/primitives/signals`. A pilet can keep importing those public
+paths normally; when its resolved package version matches the inherited shell
+core version, Piral externalizes the secondary entry point to the shell rather
+than bundling a second Angular reactive runtime. Keep Angular package versions
+aligned between shell and pilet. A mismatched secondary entry point remains a
+separate distributed dependency and does not join the shell runtime. This
+automatic secondary-entry routing is specific to the v2/SystemJS pilet schema.
 :::
 
 ## Injected Services

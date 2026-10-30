@@ -279,7 +279,7 @@ export async function debugPilet(baseDir = process.cwd(), options: DebugPiletOpt
       );
       const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
       const piralInstances = apps.map((m) => m.appPackage.name);
-      const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
+      const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap, schemaVersion);
       const mocks = join(targetDir, 'mocks');
       const dest = resolve(root, target);
       const outDir = dirname(dest);
