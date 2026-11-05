@@ -1,5 +1,9 @@
 # Piral Changelog
 
+## 1.13.0 (tbd)
+
+- tbd
+
 ## 1.12.5 (November 5, 2026)
 
 - Updated dependencies
