@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
+import { combinePiletExternals, findPackageVersion, getPiralPackage, getPiletsInfo, retrievePiletData } from './package';
 import { cliVersion } from './info';
 
 const testOptions = {
@@ -7,6 +7,143 @@ const testOptions = {
 };
 
 describe('CLI package module', () => {
+  it('uses compatible Angular core secondary paths from an inherited shell runtime', () => {
+    const importmap = [
+      {
+        entry: '/shell/angular-core.mjs',
+        id: '@angular/core@22.1.6',
+        name: '@angular/core',
+        parents: ['shell'],
+        ref: 'angular-core.js',
+        requireId: '@angular/core@^22.0.0',
+        type: 'local' as const,
+      },
+      {
+        entry: '/pilet/angular-rxjs-interop.mjs',
+        id: '@angular/core/rxjs-interop@22.1.6',
+        name: '@angular/core/rxjs-interop',
+        ref: 'angular-core-rxjs-interop.js',
+        requireId: '@angular/core/rxjs-interop@^22.0.0',
+        type: 'local' as const,
+      },
+    ];
+
+    expect(combinePiletExternals(['shell'], {}, [], importmap, 'v2')).toEqual([
+      'shell',
+      '@angular/core/rxjs-interop',
+      '@angular/core',
+    ]);
+    expect(importmap).toEqual([]);
+  });
+
+  it('uses compatible Angular primitive entry points from an inherited shell runtime', () => {
+    const importmap = [
+      {
+        entry: '/shell/angular-core.mjs',
+        id: '@angular/core@22.1.6',
+        name: '@angular/core',
+        parents: ['shell'],
+        ref: 'angular-core.js',
+        requireId: '@angular/core@^22.0.0',
+        type: 'local' as const,
+      },
+      {
+        entry: '/pilet/angular-signals.mjs',
+        id: '@angular/core/primitives/signals@22.1.6',
+        name: '@angular/core/primitives/signals',
+        ref: 'angular-core-primitives-signals.js',
+        requireId: '@angular/core/primitives/signals@^22.0.0',
+        type: 'local' as const,
+      },
+    ];
+
+    expect(combinePiletExternals(['shell'], {}, [], importmap, 'v2')).toEqual([
+      'shell',
+      '@angular/core/primitives/signals',
+      '@angular/core',
+    ]);
+    expect(importmap).toEqual([]);
+  });
+
+  it('keeps unsupported Angular core subpaths distributed', () => {
+    const importmap = [
+      {
+        entry: '/shell/angular-core.mjs',
+        id: '@angular/core@22.1.6',
+        name: '@angular/core',
+        parents: ['shell'],
+        ref: 'angular-core.js',
+        requireId: '@angular/core@^22.0.0',
+        type: 'local' as const,
+      },
+      {
+        entry: '/pilet/angular-testing.mjs',
+        id: '@angular/core/testing@22.1.6',
+        name: '@angular/core/testing',
+        ref: 'angular-core-testing.js',
+        requireId: '@angular/core/testing@^22.0.0',
+        type: 'local' as const,
+      },
+    ];
+
+    expect(combinePiletExternals(['shell'], {}, [], importmap, 'v2')).toEqual(['shell', '@angular/core']);
+    expect(importmap).toHaveLength(1);
+    expect(importmap[0].name).toBe('@angular/core/testing');
+  });
+
+  it('does not apply Angular secondary-entry routing to non-v2 schemas', () => {
+    const makeImportmap = () => [
+      {
+        entry: '/shell/angular-core.mjs',
+        id: '@angular/core@22.1.6',
+        name: '@angular/core',
+        parents: ['shell'],
+        ref: 'angular-core.js',
+        requireId: '@angular/core@^22.0.0',
+        type: 'local' as const,
+      },
+      {
+        entry: '/pilet/angular-rxjs-interop.mjs',
+        id: '@angular/core/rxjs-interop@22.1.6',
+        name: '@angular/core/rxjs-interop',
+        ref: 'angular-core-rxjs-interop.js',
+        requireId: '@angular/core/rxjs-interop@^22.0.0',
+        type: 'local' as const,
+      },
+    ];
+    const importmap = makeImportmap();
+
+    expect(combinePiletExternals(['shell'], {}, [], importmap, 'v1')).toEqual(['shell', '@angular/core']);
+    expect(importmap).toHaveLength(1);
+    expect(importmap[0].name).toBe('@angular/core/rxjs-interop');
+  });
+
+  it('keeps incompatible Angular core secondary paths distributed', () => {
+    const importmap = [
+      {
+        entry: '/shell/angular-core.mjs',
+        id: '@angular/core@22.1.6',
+        name: '@angular/core',
+        parents: ['shell'],
+        ref: 'angular-core.js',
+        requireId: '@angular/core@^22.0.0',
+        type: 'local' as const,
+      },
+      {
+        entry: '/pilet/angular-rxjs-interop.mjs',
+        id: '@angular/core/rxjs-interop@21.2.22',
+        name: '@angular/core/rxjs-interop',
+        ref: 'angular-core-rxjs-interop.js',
+        requireId: '@angular/core/rxjs-interop@^21.0.0',
+        type: 'local' as const,
+      },
+    ];
+
+    expect(combinePiletExternals(['shell'], {}, [], importmap, 'v2')).toEqual(['shell', '@angular/core']);
+    expect(importmap).toHaveLength(1);
+    expect(importmap[0].name).toBe('@angular/core/rxjs-interop');
+  });
+
   it('findPackageVersion finds the current package version', testOptions, async () => {
     const version = await findPackageVersion(process.cwd(), 'sample-piral');
     expect(version).toBe(cliVersion);
