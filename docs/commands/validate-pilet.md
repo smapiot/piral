@@ -49,6 +49,41 @@ Examples:
 pilet validate --log-level 42
 ```
 
+### `--strict`
+
+Fails validation if configured validators are missing from the loaded rule set.
+
+- Type: `boolean`
+- Default: `false`
+
+Examples:
+
+```sh
+pilet validate --strict
+```
+
+```sh
+pilet validate --no-strict
+```
+
+### `--no-strict`
+
+Opposite of:
+Fails validation if configured validators are missing from the loaded rule set.
+
+- Type: `boolean`
+- Default: `true`
+
+Examples:
+
+```sh
+pilet validate --strict
+```
+
+```sh
+pilet validate --no-strict
+```
+
 ### `--app`
 
 Sets the name of the Piral instance.

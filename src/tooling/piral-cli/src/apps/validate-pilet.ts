@@ -15,6 +15,11 @@ export interface ValidatPiletOptions {
   logLevel?: LogLevels;
 
   /**
+   * Fails validation if configured validators are missing from the loaded rule set.
+   */
+  strict?: boolean;
+
+  /**
    * Overrides the Piral instance used as validation blueprint for the pilet.
    */
   app?: string;
@@ -23,6 +28,7 @@ export interface ValidatPiletOptions {
 export const validatePiletDefaults: ValidatPiletOptions = {
   entry: './src/index',
   logLevel: LogLevels.info,
+  strict: false,
   app: undefined,
 };
 
@@ -30,6 +36,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
   const {
     entry = validatePiletDefaults.entry,
     logLevel = validatePiletDefaults.logLevel,
+    strict = validatePiletDefaults.strict,
     app = validatePiletDefaults.app,
   } = options;
 
@@ -79,7 +86,7 @@ export async function validatePilet(baseDir = process.cwd(), options: ValidatPil
       piletPackage,
     };
 
-    await runRules(rules, context, validators);
+    await runRules(rules, context, validators, strict);
   }
 
   ruleSummary(errors, warnings);

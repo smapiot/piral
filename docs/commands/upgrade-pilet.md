@@ -124,6 +124,54 @@ Examples:
 pilet upgrade --npm-client "npm"
 ```
 
+### `--ca-cert`
+
+Sets a custom certificate authority to use, if any.
+
+- Type: `string`
+- Default: `undefined`
+
+Examples:
+
+```sh
+pilet upgrade --ca-cert "some value"
+```
+
+### `--allow-self-signed`
+
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `false`
+
+Examples:
+
+```sh
+pilet upgrade --allow-self-signed
+```
+
+```sh
+pilet upgrade --no-allow-self-signed
+```
+
+### `--no-allow-self-signed`
+
+Opposite of:
+Indicates that self-signed certificates should be allowed.
+
+- Type: `boolean`
+- Default: `true`
+
+Examples:
+
+```sh
+pilet upgrade --allow-self-signed
+```
+
+```sh
+pilet upgrade --no-allow-self-signed
+```
+
 ### `--vars`
 
 Sets additional variables to be used when scaffolding.

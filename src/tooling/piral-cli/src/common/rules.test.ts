@@ -27,4 +27,24 @@ describe('Rules Module', () => {
     await runRules([], {} as any, {}).then((result) => expect(result).toBeUndefined());
     await runRules([rule], {} as any, { test: {} }).then((result) => expect(result).toBeUndefined());
   });
+
+  it('warns about missing configured rules by default', async () => {
+    const warning = vitest.fn();
+    const error = vitest.fn();
+
+    await runRules([], { warning, error } as any, { missing: {} });
+
+    expect(warning).toHaveBeenCalledWith('Configured validator(s) could not be loaded: missing');
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  it('errors about missing configured rules in strict mode', async () => {
+    const warning = vitest.fn();
+    const error = vitest.fn();
+
+    await runRules([], { warning, error } as any, { missing: {} }, true);
+
+    expect(error).toHaveBeenCalledWith('Configured validator(s) could not be loaded: missing');
+    expect(warning).not.toHaveBeenCalled();
+  });
 });

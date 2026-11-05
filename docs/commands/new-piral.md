@@ -132,7 +132,7 @@ Sets the tag or version of the package to install. By default, this uses the ver
 
 - Aliases: `--piral-version`
 - Type: `string`
-- Default: `"1.6.0"`
+- Default: `"1.12.4"`
 
 Examples:
 
@@ -200,7 +200,7 @@ piral new --npm-client "npm"
 Sets the default bundler to install.
 
 - Type: `string`
-- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"xbuild"`
+- Choices: `"bun"`, `"esbuild"`, `"parcel"`, `"parcel2"`, `"rollup"`, `"rspack"`, `"webpack"`, `"webpack5"`, `"vite"`, `"vite5"`, `"vite6"`, `"vite7"`, `"vite8"`, `"xbuild"`, `"netpack"`
 - Default: `"none"`
 
 Examples:

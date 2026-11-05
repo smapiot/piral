@@ -1,5 +1,11 @@
 # Piral Changelog
 
+## 1.12.5 (tbd)
+
+- Updated dependencies
+- Added `--strict` flag to `pilet validate`
+- Added `--strict` flag to `piral validate`
+
 ## 1.12.4 (September 11, 2026)
 
 - Updated dependencies
