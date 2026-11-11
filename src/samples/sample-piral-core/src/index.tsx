@@ -104,7 +104,7 @@ const SearchResults: React.FC = () => {
       ))}
       {loading && (
         <div className="search-results-loading">
-          <Loader />
+          <Loader type="search" />
         </div>
       )}
     </div>
@@ -121,8 +121,7 @@ const SearchForm: React.FC = () => {
       onSubmit={(ev) => {
         search(value, true);
         return ev.preventDefault();
-      }}
-    >
+      }}>
       <input type="search" placeholder="Search" onChange={(e) => setValue(e.target.value)} value={value} />
       <SearchResults />
     </form>
