@@ -72,7 +72,7 @@ export async function triggerBuildPilet({
     await retrievePiletData(targetDir, app);
   const schemaVersion = originalSchemaVersion || schema || config.schemaVersion || defaultSchemaVersion;
   const piralInstances = apps.map((m) => m.appPackage.name);
-  const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap);
+  const externals = combinePiletExternals(piralInstances, peerDependencies, peerModules, importmap, schemaVersion);
   const { main = defaultOutput } = piletPackage;
   const dest = getTarget(root, main, targetDir, target);
   const outDir = dirname(dest);
