@@ -2,7 +2,7 @@
 
 ## 1.13.0 (tbd)
 
-- tbd
+- Added `type` to `LoadingIndicator` component
 
 ## 1.12.5 (November 5, 2026)
 

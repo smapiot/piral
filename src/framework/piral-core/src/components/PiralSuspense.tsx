@@ -12,7 +12,7 @@ export const PiralSuspense: React.FC<PiralSuspenseProps> = ({ children }) => {
   return error ? (
     <RegisteredErrorInfo type="loading" error={error} />
   ) : loading ? (
-    <RegisteredLoadingIndicator />
+    <RegisteredLoadingIndicator type="app" />
   ) : (
     <>{children}</>
   );

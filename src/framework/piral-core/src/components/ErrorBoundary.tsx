@@ -71,6 +71,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       return <RegisteredErrorInfo type={errorType} error={error} pilet={pilet} {...rest} />;
     }
 
-    return <React.Suspense fallback={<RegisteredLoadingIndicator />}>{children}</React.Suspense>;
+    return <React.Suspense fallback={<RegisteredLoadingIndicator type={errorType} />}>{children}</React.Suspense>;
   }
 }

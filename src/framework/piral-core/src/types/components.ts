@@ -194,7 +194,12 @@ export type ErrorInfoProps = UnionOf<Errors>;
 /**
  * The props of a Loading indicator component.
  */
-export interface LoadingIndicatorProps {}
+export interface LoadingIndicatorProps {
+  /**
+   * The type of content that is loading, e.g., "app" for the whole application.
+   */
+  type: string;
+}
 
 /**
  * The props of a Layout component.

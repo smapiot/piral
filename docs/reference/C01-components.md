@@ -42,6 +42,8 @@ Coming with `piral-core` already there are just a few layout components you'd ne
 - `LoadingIndicator` if you want to add your own loading spinner when the application or sub-parts are loading (recommended)
 - `Layout` to give your application an overall layout, e.g., define how it looks and where the (page's) content should go (recommended)
 
+To distinguish what exactly is loading, the `LoadingIndicator` has a `type` property that gives you the component that triggered it. For the whole app the `type` is simply set to `app`, while an extension component is referred to as `extension` and a `page` is referred to as `page`.
+
 A few optional choices are in here, too, such as:
 
 - `ErrorInfo` if you want to override the overall error display component (usually you'd want to delegate this to individual error components, see [./C02-errors.md](Error Handling))

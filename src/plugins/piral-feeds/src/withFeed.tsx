@@ -11,7 +11,7 @@ export function withFeed<TData, TItem, TProps>(
     const [loaded, data, error] = useFeed(options);
 
     if (!loaded) {
-      return <RegisteredLoadingIndicator />;
+      return <RegisteredLoadingIndicator type="feed" />;
     } else if (data) {
       return <Component {...props} data={data} />;
     } else {

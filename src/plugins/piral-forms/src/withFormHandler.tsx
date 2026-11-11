@@ -21,7 +21,7 @@ export function withFormHandler<TFormData, TRequiredProps, TProps extends TRequi
     );
 
     if (loading) {
-      return <RegisteredLoadingIndicator />;
+      return <RegisteredLoadingIndicator type="form" />;
     } else if (data) {
       return <FormView {...props} initialData={data} />;
     } else {
