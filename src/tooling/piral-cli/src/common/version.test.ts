@@ -241,4 +241,38 @@ describe('semver check module', () => {
     const result = satisfies('1.2.3', '>=0');
     expect(result).toBeTruthy();
   });
+
+  it('satisfies >= when the major version is greater', () => {
+    expect(satisfies('2.0.0', '>=1.4.0')).toBe(true);
+    expect(satisfies('3.1.2', '>=2.2.0')).toBe(true);
+  });
+
+  it('does not satisfy >= when the major version is smaller', () => {
+    expect(satisfies('0.1.2', '>=3.0.1')).toBe(false);
+  });
+
+  it('compares the major version for > and <', () => {
+    expect(satisfies('10.0.0', '>9.0.0')).toBe(true);
+    expect(satisfies('9.0.0', '>10.0.0')).toBe(false);
+    expect(satisfies('1.0.0', '<2.0.0')).toBe(true);
+    expect(satisfies('3.0.0', '<2.0.0')).toBe(false);
+  });
+
+  it('compares the major version for <=', () => {
+    expect(satisfies('3.1.2', '<=1.5.0')).toBe(false);
+    expect(satisfies('1.5.0', '<=3.1.2')).toBe(true);
+    expect(satisfies('1.5.0', '<=1.5.0')).toBe(true);
+  });
+
+  it('compares the major version for =', () => {
+    expect(satisfies('2.0.2', '=3.0.2')).toBe(false);
+    expect(satisfies('3.0.2', '=3.0.2')).toBe(true);
+  });
+
+  it('still compares minor and patch for operator ranges', () => {
+    expect(satisfies('1.4.0', '>=1.4.0')).toBe(true);
+    expect(satisfies('1.3.9', '>=1.4.0')).toBe(false);
+    expect(satisfies('1.4.1', '>1.4.0')).toBe(true);
+    expect(satisfies('1.4.0', '>1.4.0')).toBe(false);
+  });
 });
