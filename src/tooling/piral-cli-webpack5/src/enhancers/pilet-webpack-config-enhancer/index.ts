@@ -9,6 +9,7 @@ import {
   withExternals,
   getDependencies,
   getShared,
+  withSharedChunks,
 } from './helpers';
 import StylesPlugin from '../../plugins/StylesPlugin';
 import SheetPlugin from '../../plugins/SheetPlugin';
@@ -143,6 +144,9 @@ function piletV2WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   setEnvironment(variables);
 
   const dependencies = getDependencies(importmap, compiler);
+
+  withSharedChunks(compiler, importmap);
+
   const banner = `//@pilet v:2(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`;
 
   plugins.push(
@@ -174,6 +178,9 @@ function piletV3WebpackConfigEnhancer(options: SchemaEnhancerOptions, compiler: 
   setEnvironment(variables);
 
   const dependencies = getDependencies(importmap, compiler);
+
+  withSharedChunks(compiler, importmap);
+
   const banner = `//@pilet v:3(webpackChunk${jsonpFunction},${JSON.stringify(dependencies)})`;
 
   plugins.push(

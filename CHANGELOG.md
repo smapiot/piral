@@ -2,6 +2,7 @@
 
 ## 1.13.0 (tbd)
 
+- Improved grouping of shared dependencies (#891)
 - Added `type` to `LoadingIndicator` component
 
 ## 1.12.5 (November 5, 2026)

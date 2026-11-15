@@ -2,6 +2,8 @@ import { join } from 'path';
 import type { SharedDependency } from 'piral-cli';
 import type { Configuration } from 'webpack';
 
+import { getSharedChunkGroups } from '../../plugins/SharedChunks';
+
 export function getVariables(name: string, version: string, env: string): Record<string, string> {
   return {
     NODE_ENV: env,
@@ -51,7 +53,7 @@ export function getShared(importmap: Array<SharedDependency>, externals: Array<s
 
       // This shares non-root exports of a package (e.g., `@scope/package/nested-export`).
       // Ref: https://webpack.js.org/plugins/module-federation-plugin/#sharing-libraries
-      shared[dep.name + "/"] = {
+      shared[dep.name + '/'] = {
         eager: false,
         requiredVersion,
         version,
@@ -79,6 +81,21 @@ export function getDependencies(importmap: Array<SharedDependency>, compilerOpti
   }
 
   return dependencies;
+}
+
+export function withSharedChunks(compilerOptions: Configuration, importmap: Array<SharedDependency>) {
+  const groups = getSharedChunkGroups(importmap);
+  if (groups.length > 0) {
+    compilerOptions.module = compilerOptions.module || {};
+    compilerOptions.module.rules = compilerOptions.module.rules || [];
+    compilerOptions.module.rules.push({
+      enforce: 'pre',
+      test: /\.m?js$/i,
+      include: groups.map((g) => g.root),
+      loader: require.resolve('../../plugins/SharedChunksLoader'),
+      options: { groups },
+    });
+  }
 }
 
 export function withSetPath(compilerOptions: Configuration) {
