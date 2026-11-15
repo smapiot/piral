@@ -2,9 +2,9 @@
 
 ## 1.13.0 (tbd)
 
+- Fixed version range checks with `>`, `>=`, `<`, `<=` and `=` ignoring the major version (#904)
 - Improved grouping of shared dependencies (#891)
 - Added `type` to `LoadingIndicator` component
-- Fixed version range checks with `>`, `>=`, `<`, `<=` and `=` ignoring the major version (#904)
 
 ## 1.12.5 (November 5, 2026)
 
