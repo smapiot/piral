@@ -182,6 +182,23 @@ describe('semver check module', () => {
     expect(result).toBeFalsy();
   });
 
+  it('compares the major version with greater than', () => {
+    expect(satisfies('10.0.0', '>9.0.0')).toBeTruthy();
+    expect(satisfies('2.0.0', '>=1.4.0')).toBeTruthy();
+    expect(satisfies('3.1.2', '>=2.2.0')).toBeTruthy();
+    expect(satisfies('0.1.2', '>=3.0.1')).toBeFalsy();
+  });
+
+  it('compares the major version with less than', () => {
+    expect(satisfies('3.1.2', '<=1.5.0')).toBeFalsy();
+    expect(satisfies('3.1.2', '<4.0.0')).toBeTruthy();
+  });
+
+  it('compares the major version with equals', () => {
+    expect(satisfies('2.0.2', '=3.0.2')).toBeFalsy();
+    expect(satisfies('3.0.2', '=3.0.2')).toBeTruthy();
+  });
+
   it('satisfies exact version match with previews', () => {
     const result = satisfies('1.2.3-pre.5', '1.2.3-pre.5');
     expect(result).toBeTruthy();
