@@ -127,7 +127,8 @@ export function satisfies(v: string, r: string) {
 
     // if gt/lt/eq then operator compare
     if (op !== '^' && op !== '~') {
-      return compare(v, r, op);
+      // strip the operator so that the major version is not parsed as e.g. ">=3"
+      return compare(v, match ? r.substring(op.length) : r, op);
     }
 
     // else range of either "~" or "^" is assumed
