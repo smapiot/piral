@@ -61,3 +61,17 @@ Addtionally, the `pilet` injector can also define `headers` like the `piral` inj
   }
 }
 ```
+
+The `pilet` injector also allows you to configure default session behavior, e.g., to load all pilets directly:
+
+```json
+{
+  "pilet": {
+    "session": {
+      "load-pilets": "on"
+    }
+  }
+}
+```
+
+These are the same options as specified in [`sessionStorage` Variables](./I05-session-variables.md).

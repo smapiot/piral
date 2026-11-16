@@ -49,6 +49,10 @@ export interface PiletInjectorConfig extends KrasInjectorConfig {
    * The additional headers to include.
    */
   headers?: Record<string, string>;
+  /**
+   * The session settings to include.
+   */
+  session?: Record<string, string>;
 }
 
 interface Pilet {
@@ -380,9 +384,20 @@ export default class PiletInjector implements KrasInjector {
 
   async sendIndexFile(target: string, url: string, baseUrl: string): Promise<KrasResult> {
     const indexHtml = await readFile(target, 'utf8');
+    const { session } = this.config;
 
     // mechanism to inject server side debug piletApi config into piral emulator
-    const windowInjectionScript = `window['dbg:pilet-api'] = '${this.getPiletApi(baseUrl)}';`;
+    const instructions = [`window['dbg:pilet-api'] = '${this.getPiletApi(baseUrl)}'`];
+
+    if (session) {
+      Object.entries(session).forEach(([key, value]) => {
+        instructions.push(
+          `if (!sessionStorage.getItem('dbg:${key}')) { sessionStorage.setItem('dbg:${key}', ${JSON.stringify(value)}); }`,
+        );
+      });
+    }
+
+    const windowInjectionScript = instructions.join(';');
     const findStr = `<script`;
     const replaceStr = `<script>/* Pilet Debugging Emulator Config Injection */${windowInjectionScript}</script><script`;
     const content = indexHtml.replace(`${findStr}`, `${replaceStr}`);
