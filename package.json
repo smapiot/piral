@@ -57,8 +57,8 @@
     "glob": "^8",
     "jsdom": "^26",
     "lerna": "^9",
-    "rimraf": "^6",
     "prettier": "^3",
+    "rimraf": "^6",
     "sass": "^1",
     "typedoc": "0.25.2",
     "typescript": "^5",
@@ -72,5 +72,9 @@
     "node-fetch": "^2.6.7",
     "postcss": "^8.5.3",
     "tmp": "^0.2.7"
+  },
+  "dependencies": {
+    "@types/react": "^18",
+    "postcss": "^8.5.3"
   }
 }
