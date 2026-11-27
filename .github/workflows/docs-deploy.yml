@@ -1,0 +1,66 @@
+name: deploy-documentation
+
+on:
+  push:
+    branches: [ documentation ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24.15.0
+  DOCS_DOMAIN: docs.piral.io
+  DOCS_OUTPUT: dist/docs/release
+
+jobs:
+  deploy:
+    name: Build and Publish Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: documentation
+
+      - name: Use Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Enable Corepack (Yarn)
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Assemble Packages
+        run: yarn install --ignore-scripts
+
+      - name: Build Documentation
+        run: yarn ci:docs
+
+      - name: Prepare GitHub Pages Output
+        run: |
+          # SPA fallback: GitHub Pages serves 404.html for unknown paths
+          cp ${DOCS_OUTPUT}/index.html ${DOCS_OUTPUT}/404.html
+          # do not let Jekyll drop files/folders starting with an underscore
+          touch ${DOCS_OUTPUT}/.nojekyll
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.DOCS_OUTPUT }}
+          publish_branch: gh-pages
+          force_orphan: true
+          cname: ${{ env.DOCS_DOMAIN }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'docs: publish documentation'
