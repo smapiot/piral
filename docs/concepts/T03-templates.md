@@ -109,7 +109,7 @@ Here, we use an ES module. To bring that conveniently and efficiently into a Com
   "version": "1.0.0",
   "keywords": ["template", "pilet"],
   "engines": {
-    "node": ">=16.0",
+    "node": ">=22",
     "piral": "1.x"
   },
   "templateOptions": {},

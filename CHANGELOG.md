@@ -4,6 +4,7 @@
 
 - Fixed version range checks with `>`, `>=`, `<`, `<=` and `=` ignoring the major version (#904)
 - Updated dependencies (#907)
+- Updated minimum required Node.js version to 22
 - Improved grouping of shared dependencies (#891)
 - Added `type` to `LoadingIndicator` component
 
