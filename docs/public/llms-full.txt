@@ -1,0 +1,4407 @@
+# Piral — full documentation
+
+> Plain-text concatenation of the Piral documentation for LLM ingestion.
+> Generated at build time. For a navigable index, see /llms.txt.
+
+
+========================================================================
+Source: /getting-started/introduction
+========================================================================
+
+# What is Piral?
+
+You have a frontend. It works. But as it grows, the same friction keeps appearing: every release touches everything, teams block each other, upgrading a shared library breaks things in five places you didn't expect.
+
+Piral is the framework that makes micro frontends practical rather than just theoretically appealing.
+
+## The core idea
+
+Piral lets you compose a web application at runtime from independently deployed modules — called **pilets** — coordinated by a thin host called the **app shell**.
+
+```
+Your users see one application.
+Your teams ship independently.
+```
+
+## Three parts, one application
+
+Every Piral application has the same structure:
+
+**The app shell** — A small, stable host application. It provides layout, authentication, navigation, and the runtime that loads pilets. The app shell rarely changes. It is the stage.
+
+**Pilets** — Self-contained feature modules. Each is an npm-like package, developed and deployed independently by a single team. A pilet registers its pages, menu items, and UI contributions into the app shell at runtime via the Pilet API.
+
+**The feed service** — A small HTTP endpoint the app shell calls on startup: *"which pilets should I load right now, for this user?"* The feed makes runtime composition dynamic — roll out, roll back, or target pilets per user without touching the app shell.
+
+_(Diagram: The feed service says which pilets exist, pilets bring the domain functionality, and the app shell wires them into one application.)_
+
+## What makes Piral distinct
+
+At its core, what sets Piral apart is **loose coupling**. Approaches that wire micro frontends together by importing directly from one another couple them tightly — if a remote disappears or renames an export, its consumers break. Piral instead routes everything through a central engine, so pilets never depend on each other: they only assume the shell is present and interact *indirectly*, through extension slots and events. The features below all exist to make that loose coupling practical.
+
+_(Diagram: Direct imports couple micro frontends — a missing remote or renamed export breaks consumers. Piral routes everything through a central engine, so pilets depend only on the shell and communicate indirectly.)_
+
+**The Pilet API** — A versioned, TypeScript-typed contract between the app shell and every pilet. Pilets register capabilities through a well-defined interface. This makes pilets portable, safe, and introspectable.
+
+**The emulator** — When you build your app shell, the CLI produces an npm package (the emulator) that pilet developers install locally. Running `pilet debug` renders the pilet inside the real shell, with hot reload, without any platform access. This is the single biggest developer experience improvement over other micro frontend approaches.
+
+**Distributed dependency sharing** — Dependencies are not locked to the app shell. Any pilet can declare shared packages via its own `importmap` in `package.json`. If another pilet has already loaded that package, subsequent pilets reuse the same instance — no duplication, no central coordination required between teams.
+
+**Extension slots** — Pilets contribute UI into each other's pages without coupling. A product pilet registers for a slot the cart pilet declares. Neither knows about the other. The shell's registry connects them.
+
+## When to use Piral
+
+Team scaling is the best-known reason to reach for Piral, but it isn't the only one. Piral makes sense whenever an application benefits from being **composed at runtime from independent modules**:
+
+- **Multiple teams** need to ship features independently, on different release cadences.
+- The application is **inherently dynamic** — it's assembled from pieces that vary per user or tenant, come and go behind feature flags, or roll out and back without redeploying the host.
+- You want **strong architectural guidelines** to enforce a highly modular system with clear, contract-based boundaries — valuable even for a single team that prizes modularity.
+- You're **migrating a monolith** incrementally and want to extract features one at a time.
+
+:::warning A word of caution
+Piral adds operational overhead: a feed service to run, pilet packages to publish, more deployment pipelines. If you have a single small application with no need for runtime composition or hard module boundaries, a well-structured monorepo SPA may be the simpler choice. Adopt Piral when modularity, dynamism, or team independence is a genuine goal — not by default.
+:::
+
+## Technology stack
+
+- React for the app shell and pilet runtime (pilets themselves can use other frameworks)
+- `piral-cli` for debugging, building, and publishing — installed per-project, not globally (scaffold with `npm init piral-instance` / `npm init pilet`)
+- MIT licensed, fully open source
+- Actively developed and maintained by the community and [smapiot](https://smapiot.com)
+
+## Where to go next
+
+New here? Start with [Why micro frontends?](/getting-started/why-micro-frontends) to understand the problem space, then come back and follow the [Quick start](/getting-started/quick-start).
+
+Already convinced? Jump straight to [Quick start](/getting-started/quick-start).
+
+Want to understand the architecture first? Go to [Architecture overview](/concepts/architecture).
+
+
+========================================================================
+Source: /getting-started/quick-start
+========================================================================
+
+# Quick start
+
+By the end of this guide you'll have two projects running side by side: an **app shell** (the host) and a **pilet** (a feature module) rendering inside it with hot reload. That pairing is the whole micro frontend pattern in miniature.
+
+## Prerequisites
+
+You need Node.js 22 or newer. Everything else is fetched on demand by npm — there is **no global CLI to install**.
+
+```bash
+node --version   # v22 or higher
+npm --version    # v10 or higher
+```
+
+:::tip No global `piral-cli`
+Older guides told you to run `npm install -g piral-cli`. That's no longer recommended. The scaffolders below add `piral-cli` as a local dev dependency, and you run it through your project's npm scripts (`npm start`, `npm run build`) or with `npx`. This keeps every project pinned to its own CLI version.
+:::
+
+## 1. Create the app shell
+
+Scaffold a new shell with an npm initializer. The `--bundler` flag picks (and installs) a bundler plugin — `webpack5` is a safe default; `esbuild`, `rspack`, `vite`, and `parcel2` are also available.
+
+```bash
+npm init piral-instance@latest -- --target my-app-shell --bundler webpack5
+cd my-app-shell
+```
+
+Start the development server:
+
+```bash
+npm start
+```
+
+Open [http://localhost:1234](http://localhost:1234). The shell is running — intentionally empty, because no pilets are loaded yet.
+
+When you're ready to share the shell with pilet developers, build it:
+
+```bash
+npm run build
+# dist/release/  → the static site you deploy to production
+# dist/emulator/ → an npm package pilet developers install to develop locally
+```
+
+That second output, the **emulator**, is what makes local pilet development possible without running the whole platform. More on that shortly.
+
+## 2. Create your first pilet
+
+Open a second terminal and keep the shell running. Scaffold a pilet that targets the shell you just built. During development, point `--source` at the freshly built emulator tarball so you don't need a published package yet:
+
+```bash
+cd ..
+npm init pilet@latest -- \
+  --source ./my-app-shell/dist/emulator/my-app-shell-1.0.0.tgz \
+  --target my-first-pilet \
+  --bundler webpack5
+cd my-first-pilet
+```
+
+Once the shell is published to a registry, pilets can instead use `--source my-app-shell` to pull the emulator by package name. That registry doesn't have to be public npm — a private/company or local registry works too, and you can skip registries entirely by debugging against an [emulator website](/concepts/emulator#distributing-the-emulator).
+
+Open `src/index.tsx` and register a page:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/hello', () => (
+    <div style={{ padding: '2rem' }}>
+      <h1>Hello from my pilet!</h1>
+      <p>This page was registered at runtime — the shell never knew about it in advance.</p>
+    </div>
+  ));
+}
+```
+
+Start the pilet's dev server:
+
+```bash
+npm start
+```
+
+Visit [http://localhost:1234/hello](http://localhost:1234/hello). Your pilet's page renders inside the real app shell, with hot reload active.
+
+## 3. Add navigation
+
+A page nobody can reach isn't much use. Register a menu item too:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/hello', HelloPage);
+  api.registerMenu(() => <a href="/hello">Hello</a>);
+}
+
+const HelloPage = () => (
+  <div style={{ padding: '2rem' }}>
+    <h1>Hello from my pilet!</h1>
+    <p>Changed without touching the app shell.</p>
+  </div>
+);
+```
+
+Save the file — the nav link appears immediately, no restart required.
+
+## What just happened
+
+You now have two completely independent projects:
+
+The **app shell** owns layout, authentication, navigation chrome, and the runtime. It has no knowledge of your pilet. The **pilet** registered itself at runtime through the Pilet API. It has no knowledge of how the shell renders it.
+
+These can be deployed independently, owned by different teams, and versioned separately. That separation — one stable host, many independently shipped features — is the entire point of Piral.
+
+:::tip Develop against live pilets too
+You can load pilets from a real feed alongside your local one, which is handy for testing cross-pilet interactions:
+
+```bash
+npm start -- --feed https://feed.piral.cloud/api/v1/pilets/YOUR_FEED
+```
+:::
+
+## Next steps
+
+Now that the pieces are moving, a little theory goes a long way:
+
+- See how everything fits together in the [Architecture overview](/concepts/architecture).
+- Learn the [project structure](/getting-started/project-structure) conventions for shells and pilets.
+- Build a production-grade shell in [Building your app shell](/guides/building-app-shell).
+
+
+========================================================================
+Source: /getting-started/why-micro-frontends
+========================================================================
+
+# Why micro frontends?
+
+Before choosing any architecture, you should be honest about what problem you actually have. Micro frontends are best known for solving **frontend development at team scale** — but that's not their only use. They also shine when an application is **inherently dynamic** (composed from pieces at runtime) or when you want **architecture-enforced modularity**. Team scale is the most common driver, so we start there, then come back to the others.
+
+_(Diagram: A monolith routes every team through one shared codebase and release; with micro frontends each team owns and ships its slice independently.)_
+
+## The root cause
+
+A frontend monolith breaks down not because of the technology, but because of coordination. When three teams share one codebase, each deploy becomes a negotiation. The payments team's hotfix waits because the catalog team has an unfinished branch on main. Tests fail in the auth module because of changes in the product module that nobody told you about. A styling change from one team resets CSS variables used by another.
+
+This is Conway's Law: your system's architecture mirrors your organization's communication structure. A monolith built by one team is fine. A monolith built by eight teams is a coordination bottleneck disguised as a technical problem.
+
+Micro frontends move the architecture boundary to match the organizational boundary. Each team owns their vertical slice end-to-end — from API calls to rendered pixels — and deploys it independently.
+
+## What actually changes with micro frontends
+
+**Deploys decouple.** The payments team can push a fix at 2pm on a Friday without a deployment window or a conversation with the catalog team. Their work ships when it's ready.
+
+**Failures isolate.** An uncaught error in the recommendations module doesn't bring down the checkout flow. Error boundaries around each pilet contain the blast radius.
+
+**Technology choices are local.** One team can upgrade their React version. Another can experiment with Svelte. Neither affects the other's release.
+
+**Bundles are smaller per user.** A user who never opens the admin dashboard never downloads that code.
+
+**Onboarding accelerates.** New team members work in a smaller, scoped codebase instead of navigating a 200,000-line monolith.
+
+## What doesn't change
+
+Users still see one application. URLs still work. Navigation still works. The visual design still needs deliberate maintenance — that's what your design system is for, regardless of architecture.
+
+And you can't eliminate coordination entirely. You still need agreement on:
+
+- The Pilet API shape (what capabilities the shell exposes)
+- Extension slot names and their parameter shapes
+- How auth tokens are accessed by pilets
+- How to handle cross-pilet navigation
+
+The difference is these are *interface contracts*, not *shared code commitments*. Once agreed, they change rarely. Day-to-day work proceeds without inter-team friction.
+
+## Beyond team scale
+
+Two other situations justify micro frontends even without many teams:
+
+**Dynamic, composed applications.** Some products *are* a composition: a portal whose modules differ per customer, a platform where third parties or other departments plug in features, an app that turns capabilities on and off at runtime. Here the runtime-composition model isn't overhead — it's the core requirement. You need to add, remove, and target modules without redeploying the host, which is exactly what a feed-driven micro frontend gives you.
+
+**Architecture-enforced modularity.** Even a single team can choose micro frontends to make module boundaries *physical* rather than merely conventional. When each feature is an independently built, contract-bound module, "don't reach into another module's internals" stops being a code-review guideline and becomes something the architecture enforces. For long-lived systems where maintainability and clear seams matter, that discipline can be worth the overhead on its own.
+
+## When simpler alternatives win
+
+:::warning Be honest about team size
+The added infrastructure — a feed service, published pilet packages, separate CI pipelines — has real cost. Don't pay that cost unless you have the specific problem it solves.
+:::
+
+**A shared component library** solves the design consistency problem. If your main frustration is "our button looks different across pages," a design system fixes that without any runtime complexity.
+
+**A monorepo with strict module boundaries** solves the code organization problem. Tools like Turborepo or Nx give you independent build caches, isolated package boundaries, and clean dependency graphs — while keeping a single deploy. The right answer for many mid-sized teams.
+
+**A well-structured single SPA** is viable for teams up to approximately 8–10 engineers. Don't over-engineer until you feel the specific pain that over-engineering fixes.
+
+## The honest summary
+
+Micro frontends are the right answer when you have multiple teams who need to ship independently and have genuinely felt the coordination cost in production. They're the wrong answer when you're adopting them preemptively, when you have one team, or when your real challenge is code quality rather than release independence.
+
+If micro frontends are right for you, the next question is which approach. Read [Why Piral?](/getting-started/why-piral) to see how Piral addresses the common pain points.
+
+
+========================================================================
+Source: /getting-started/why-piral
+========================================================================
+
+# Why Piral?
+
+Module Federation, Native Federation, single-spa, raw import maps, fully custom solutions — there are many ways to implement micro frontends. This page explains what Piral provides that you'd otherwise spend weeks building, and where other approaches might fit better.
+
+## The gap most approaches leave
+
+Module Federation, Native Federation, and single-spa give you the mechanics of loading code across bundle boundaries. What they don't solve out of the box:
+
+- How do you *discover* which modules to load at runtime?
+- How do pilet components *register themselves* into the host application?
+- How do modules contribute UI *into each other's pages* without coupling?
+- How do developers work on a module without running the entire platform?
+- What's the CLI workflow for scaffolding, building, and publishing?
+
+These are all problems you'd assemble yourself. Piral has documented, tested opinions on all of them.
+
+## Dynamic feed: the runtime composition layer
+
+The app shell calls a feed endpoint on startup and gets back a JSON list of pilets to load — which modules, which versions, from which CDN URLs. This is dynamic at runtime. It means:
+
+- Change what a user sees **without redeploying the app shell**
+- Roll out a pilet to 10% of users for a canary test
+- Disable a misbehaving pilet for a specific tenant
+- Restore the previous version in seconds — no CI pipeline, no `git revert`
+
+Compare this to the static remote manifests of Module Federation or Native Federation: those support versioned deploys but don't natively support per-user targeting, gradual rollouts, or instant rollback. (Piral can still *use* either as its transport — see [Module & Native Federation](/advanced/module-federation).)
+
+## The emulator: the most underrated DX feature
+
+Here's the common scenario: you're developing a checkout pilet. To test it realistically, you need it running inside the actual app shell — with real layout, real navigation, real shared dependencies — alongside other pilets.
+
+The naive solution is running the full platform locally. That often means spinning up the app shell, a feed service, and multiple other pilets. Infeasible for most developers, especially contractors or new joiners.
+
+Piral's answer: when the app shell builds, it produces an npm package containing a debug build of the shell itself. A pilet developer installs this package and runs `pilet debug`. They see their pilet running inside the real shell, with hot reload, without any platform access. The emulator is a first-class build artifact.
+
+## Distributed importmap sharing — not just the app shell
+
+This is frequently misunderstood. Shared dependencies in Piral are **not limited to what the app shell declares**.
+
+The app shell's `importmap` establishes centrally shared packages — React, React Router, your design system. Pilets treat these as externals and never bundle them.
+
+But any pilet can *also* declare shared packages in its own `importmap`:
+
+```json
+{
+  "name": "pilet-analytics",
+  "importmap": {
+    "imports": {
+      "recharts": "",
+      "date-fns": ""
+    }
+  }
+}
+```
+
+When this pilet loads, it places those packages into side-bundles. If another pilet needs the same package and it's already been resolved by any other pilet, it reuses the existing instance. No duplicate downloads, no central coordination. Teams independently share what they independently need.
+
+## The Pilet API: a versioned contract
+
+Every pilet receives a typed API object from the shell. That object is the formal, versioned interface between the app shell and the pilet world. It contains everything a pilet can legitimately do: register pages, register menu items, emit events, show notifications, open modals.
+
+This formalization matters because:
+
+- It versions cleanly — bump the shell version when the API changes
+- It's TypeScript-typed — autocomplete shows only what's actually available
+- It's extensible — app shell authors add capabilities via plugins, which appear as first-class typed API
+
+## Extension slots: first-class UI composition
+
+One of Piral's genuine differentiators. A pilet can declare a named slot; other pilets fill it with components. Neither team imports or knows about the other. The shell's extension registry connects them at runtime.
+
+_(Diagram: An extension slot never reaches the provider directly: it asks the Piral engine, which looks up the components registered for that name and renders them with the slot's params.)_
+
+Crucially, this is **declarative UI composition**, not messaging. Every slot resolves through the engine — so the consumer and provider stay fully decoupled, yet the result is a normal component. You *could* try to wire cross-pilet UI with events instead, but events map poorly onto the component lifecycle: there's no natural mount/unmount, props don't flow in cleanly, and a prop or state change won't re-render the right thing on its own. An extension slot mounts, renders with `params`, re-renders when they change, and unmounts — exactly what UIs need. Events stay great for *notifications*; extension slots are the right tool for *rendering*.
+
+Module Federation and single-spa don't provide this out of the box. You'd implement it yourself, with all the version coordination that implies.
+
+## Where other approaches win
+
+:::tip Module Federation might be better if:
+- You're extending an existing setup where it's already configured (Webpack, Rspack, or Next.js — Module Federation 2.0 is no longer Webpack-only)
+- You need first-class SSR *today* (its SSR story is currently more mature — though Piral's lands in v2; see [Server-side rendering](/advanced/ssr))
+- Your team prefers lower-level control over the loading mechanism
+
+:::
+
+:::tip Native Federation might be better if:
+- You want a standards-based transport (native ES modules + import maps) with no bundler lock-in and a minimal runtime
+- You're in the Angular ecosystem where it's the common choice
+- You only need to wire together a small, fixed set of apps without runtime discovery or targeting
+
+:::
+
+:::tip single-spa might be better if:
+- You want framework-agnostic coordination with no React in the host layer
+- You're integrating legacy applications that can't be reasonably wrapped as pilets
+
+:::
+
+These aren't strictly either/or: Piral can sit on top of Module Federation or Native Federation, using them as the transport while adding discovery, targeting, the emulator, and extension slots. For most greenfield micro frontend projects, that combination ships a working system faster than assembling the pieces by hand.
+
+
+========================================================================
+Source: /getting-started/project-structure
+========================================================================
+
+# Project structure
+
+## App shell
+
+```
+my-app-shell/
+├── public/
+│   └── index.html          ← HTML entry point
+├── src/
+│   ├── index.tsx           ← createInstance() + render
+│   └── layout/
+│       ├── DefaultLayout.tsx
+│       ├── NotFoundPage.tsx
+│       └── ErrorPage.tsx
+├── piral.json              ← app shell build/tooling config
+├── package.json            ← deps + importmap (central sharing)
+└── tsconfig.json
+```
+
+`piral.json` configures the CLI for this shell — the entry file, bundler, dev port, and public URL. It's optional (sensible defaults apply) but it's where you tune how the shell builds and debugs. See the [configuration reference](/reference/configuration#piraljson).
+
+### `src/index.tsx`
+
+The entry point creates the Piral instance and renders it:
+
+```tsx
+import { createInstance, Piral } from 'piral';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import * as React from 'react';
+import { render } from 'react-dom';
+import { DefaultLayout } from './layout/DefaultLayout';
+import { NotFoundPage } from './layout/NotFoundPage';
+
+const instance = createInstance({
+  state: {
+    components: { Layout: DefaultLayout },
+    errorComponents: { not_found: NotFoundPage },
+  },
+  plugins: [createMenuApi(), createNotificationsApi()],
+  async requestPilets() {
+    const res = await fetch('https://feed.example.com/api/v1/pilets', {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    return (await res.json()).items;
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
+```
+
+### `package.json` — importmap for central sharing
+
+Declare centrally shared dependencies here so all pilets receive them as externals:
+
+```json
+{
+  "name": "my-app-shell",
+  "importmap": {
+    "imports": {
+      "react": "",
+      "react-dom": "",
+      "react-router-dom": "",
+      "my-design-system": ""
+    }
+  }
+}
+```
+
+## Pilet
+
+```
+my-pilet/
+├── src/
+│   ├── index.tsx           ← setup(api) export
+│   ├── pages/
+│   │   └── FeaturePage.tsx
+│   └── components/
+│       └── FeatureCard.tsx
+├── pilet.json              ← pilet build/tooling config
+├── package.json            ← target shell + importmap (side-bundles)
+└── tsconfig.json
+```
+
+`pilet.json` is the pilet-side counterpart to `piral.json`: it records which app shell this pilet targets, the bundler, dev port, pilet schema, and an optional feed URL for `pilet publish`. See the [configuration reference](/reference/configuration#piletjson).
+
+### `src/index.tsx`
+
+Every pilet exports `setup`:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+import { FeaturePage } from './pages/FeaturePage';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/my-feature', FeaturePage);
+  api.registerMenu(() => <a href="/my-feature">My Feature</a>);
+}
+```
+
+### `package.json` — pilet fields
+
+```json
+{
+  "name": "pilet-my-feature",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "my-app-shell": "*"
+  },
+  "devDependencies": {
+    "my-app-shell": "^1.0.0"
+  },
+  "piral": {
+    "name": "my-app-shell"
+  },
+  "importmap": {
+    "inherit": ["my-app-shell"],
+    "imports": {
+      "date-fns": "",
+      "my-charting-lib": ""
+    }
+  }
+}
+```
+
+Key fields:
+
+| Field | Purpose |
+|---|---|
+| `peerDependencies["my-app-shell"]` | Declares which shell this pilet targets |
+| `devDependencies["my-app-shell"]` | Installs the emulator locally |
+| `piral.name` | Associates the pilet with a specific shell package |
+| `importmap.inherit` | Inherits the app shell's centrally shared dependencies |
+| `importmap.imports` | Declares pilet-level shared dependencies (side-bundles) |
+
+:::warning Don't forget `inherit`
+`"inherit": ["my-app-shell"]` is what tells the pilet to **reuse the dependencies the app shell already shares** (React, the router, your design system) instead of bundling its own copies. It's technically optional, but without it a pilet will bundle packages like React itself — bloating the bundle and risking duplicate React instances on the page. Scaffolded pilets include it by default; keep it.
+:::
+
+## Monorepo layout
+
+For teams managing multiple pilets:
+
+```
+my-portal/
+├── packages/
+│   ├── app-shell/
+│   ├── pilet-checkout/
+│   ├── pilet-catalog/
+│   └── pilet-account/
+├── package.json           ← workspace root
+└── pnpm-workspace.yaml
+```
+
+`pnpm-workspace.yaml`:
+
+```yaml
+packages:
+  - 'packages/*'
+```
+
+In each pilet's `package.json`, reference the local app shell directly:
+
+```json
+{
+  "devDependencies": {
+    "app-shell": "workspace:*"
+  }
+}
+```
+
+`workspace:*` tells pnpm to use the local workspace copy — no npm publish needed during development. See [Monorepo setup](/advanced/monorepo) for a complete configuration.
+
+
+========================================================================
+Source: /concepts/architecture
+========================================================================
+
+# Architecture overview
+
+Every Piral application has the same three-layer structure. Understanding it makes every other part of the documentation easier to follow.
+
+_(Diagram: One stable app shell hosts independently deployed pilets, discovered at runtime from the feed.)_
+
+## The three layers
+
+### 1. The app shell
+
+The app shell is the only thing users download directly from your URL. It is a small, stable, static bundle — typically under 100 KB gzipped — that:
+
+1. Bootstraps the React application and global layout
+2. Calls the feed service to discover which pilets should load for this user
+3. Fetches and evaluates each pilet's JavaScript bundle
+4. Calls each pilet's `setup(api)` function and hands it the Pilet API
+5. Renders the current route using whatever pages the pilets registered
+
+The app shell knows nothing about individual features. It provides the **stage** — navigation chrome, authentication context, shared dependencies — and pilets perform on it.
+
+The app shell should change as infrequently as possible. Every app shell deploy potentially affects every user and every pilet team.
+
+### 2. Pilets
+
+Pilets are the feature modules. Each is a self-contained JavaScript bundle — developed, versioned, and deployed independently by a single team. A pilet has one public interface: its `setup` function.
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/checkout', CheckoutPage);
+  api.registerMenu(() => <a href="/checkout">Checkout</a>);
+  api.registerExtension('order-extras', ShippingInfo);
+}
+```
+
+Pilets do not communicate directly. All interaction — registering UI, sharing data, emitting events — goes through the Pilet API.
+
+### 3. The feed service
+
+The feed service is a simple HTTP endpoint. The app shell calls it once at startup and receives a JSON array of pilet metadata:
+
+```json
+{
+  "items": [
+    {
+      "name": "pilet-checkout",
+      "version": "3.1.0",
+      "link": "https://cdn.example.com/checkout@3.1.0/index.js",
+      "spec": "v2",
+      "integrity": "sha384-...",
+      "dependencies": {},
+      "config": { "checkoutApiUrl": "https://api.example.com/v2" }
+    }
+  ]
+}
+```
+
+The feed can apply any logic: serve this pilet only to authenticated users, only to this tenant, only to users in the beta group, only in certain regions. The app shell doesn't care about any of that — it just fetches the URL and loads whatever comes back.
+
+## The startup sequence
+
+1. **Browser loads the app shell** — a small, cacheable static bundle
+2. **Shell initialises** — React mounts, global layout renders, router starts
+3. **Feed request** — `GET /api/v1/pilets` with the user's auth token
+4. **Bundle loading** — each pilet's JS is fetched in parallel from CDN URLs
+5. **`setup()` calls** — each pilet registers pages, menus, extensions
+6. **Render** — router matches the current URL, renders the correct pilet page
+
+Steps 1–5 complete before the user sees any pilet content. This is why pilet bundle count and initial size matter for perceived performance.
+
+:::tip Lazy pilets
+Pilets can be marked as lazy in the feed response. Lazy pilets skip steps 4–5 at startup — their bundles are fetched only when the user first navigates to one of their routes. This is the primary performance lever for applications with many pilets.
+:::
+
+## Shared dependencies
+
+The app shell declares centrally shared packages in its `importmap`. Pilets treat these as externals and never bundle them.
+
+But any pilet can also share dependencies with other pilets via its own `importmap`. When a pilet loads a side-bundled package, that package becomes available to all subsequently loaded pilets that declare the same name. The first pilet to resolve a dependency wins; others reuse it.
+
+This **distributed sharing model** means teams don't need to coordinate with the app shell team to share a domain library. The team that introduces the library owns the sharing declaration.
+
+## The development loop
+
+The emulator closes the gap between local development and the full platform:
+
+```
+App Shell builds → dist/emulator/my-shell-1.0.tgz
+                           ↓ published to npm
+Pilet installs: npm install --save-dev my-shell
+                           ↓
+pilet debug     → loads shell from node_modules
+                → hot reload on file save
+                → TypeScript types from real shell
+```
+
+See [Emulator](/concepts/emulator) for the complete story.
+
+
+========================================================================
+Source: /concepts/app-shell
+========================================================================
+
+# App shell
+
+The app shell is the host application — the only thing end users download directly. It provides the stage that all pilets perform on.
+
+## The golden rule
+
+> The app shell should contain only things that are genuinely universal. Feature logic belongs in pilets.
+
+Every change to the app shell is a full deploy that affects all users and requires pilet teams to eventually update their emulators. Keep it thin, stable, and focused on infrastructure.
+
+## What the app shell owns
+
+| Concern | Notes |
+|---|---|
+| **Global layout** | Navigation chrome, header, footer, page containers |
+| **Authentication** | Login flow, token management, session lifecycle |
+| **Router** | The top-level React Router instance — pilets register routes into it |
+| **Central shared deps** | React, ReactDOM, React Router — provided to all pilets as externals |
+| **Plugin runtime** | Notifications, modals, dashboard tiles — via installed plugins |
+| **Extension registry** | The system that connects extension slots to registered components |
+| **Error boundaries** | Isolating pilet failures from the rest of the app |
+| **Feed configuration** | Which URL to call, how to pass auth headers |
+
+## Creating an instance
+
+```tsx
+import { createInstance, Piral } from 'piral';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import { createModalsApi } from 'piral-modals';
+import * as React from 'react';
+import { render } from 'react-dom';
+import { AppLayout } from './layout/AppLayout';
+import { NotFoundPage } from './layout/NotFoundPage';
+
+const instance = createInstance({
+  state: {
+    components: {
+      Layout: AppLayout,
+    },
+    errorComponents: {
+      not_found: NotFoundPage,
+      unknown: ({ error }) => <div>Something went wrong: {error.message}</div>,
+    },
+  },
+  plugins: [
+    createMenuApi(),
+    createNotificationsApi(),
+    createModalsApi(),
+  ],
+  async requestPilets() {
+    const token = getToken(); // your auth mechanism
+    const res = await fetch(FEED_URL, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return (await res.json()).items;
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
+```
+
+## Layout components
+
+Override these in `state.components`:
+
+**`Layout`** — The outermost wrapper. Everything visible on every page. The `children` prop is where pilet pages render.
+
+```tsx
+const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="app">
+    <AppHeader />
+    <main>{children}</main>
+    <AppFooter />
+  </div>
+);
+```
+
+**`Router`** — Provides a React Router context. Defaults to `BrowserRouter`.
+
+**`RouteSwitch`** — Renders the page component matching the current URL. Wrap with `Suspense` here to handle lazy-loaded pilet pages gracefully.
+
+**Error components** — Provide fallback UIs for each error type: `not_found`, `unknown`, `loading`, `page`.
+
+## Centrally shared dependencies
+
+Declare packages that all pilets receive as externals in the app shell's `package.json`:
+
+```json
+{
+  "name": "my-app-shell",
+  "importmap": {
+    "imports": {
+      "react": "",
+      "react-dom": "",
+      "react-router-dom": "",
+      "my-design-system": ""
+    }
+  }
+}
+```
+
+These are pure externals — pilets never bundle them. The shell provides the running instance at runtime.
+
+:::info Pilets can also share dependencies
+This central importmap is for packages that *all* pilets need. For domain-specific packages, pilets can declare their own `importmap` entries and share them with each other without involving the app shell. See [Pilets — sharing dependencies](/concepts/pilets#sharing-dependencies).
+:::
+
+## Plugins
+
+Plugins extend the Pilet API. Install them as packages and add to `createInstance`:
+
+```bash
+npm install piral-menu piral-notifications piral-modals piral-dashboard piral-feeds
+```
+
+These are ordinary npm packages added to the app shell — pilet developers never install them directly. They surface in pilets automatically through the typed `PiletApi`.
+
+```tsx
+import { createDashboardApi } from 'piral-dashboard';
+import { createFeedsApi } from 'piral-feeds';
+
+const instance = createInstance({
+  plugins: [
+    createMenuApi(),
+    createNotificationsApi(),
+    createModalsApi(),
+    createDashboardApi(),
+    createFeedsApi(),
+  ],
+});
+```
+
+Each plugin adds typed methods to `PiletApi`. After adding `piral-notifications`, pilets get `api.showNotification(...)`. TypeScript types update automatically.
+
+## Building
+
+```bash
+npm start          # development server
+npm run build      # production build
+```
+
+The build produces:
+
+- `dist/release/` — Static files ready to deploy to a CDN or static host
+- `dist/emulator/my-app-shell-x.y.z.tgz` — The emulator package to publish to npm
+
+Publish the emulator so pilet teams can develop locally:
+
+```bash
+npm publish dist/emulator/my-app-shell-1.0.0.tgz
+# or
+npx piral publish --type emulator
+```
+
+## Common mistakes to avoid
+
+**Don't put feature components in the app shell.** If it's specific to one team's domain, it should be a pilet.
+
+**Don't hardcode pilet lists.** That's the feed service's job. The app shell should only know the feed URL.
+
+**Don't define routes in the app shell.** Pilets register their own routes.
+
+**Don't version-lock the shell to specific pilets.** The whole point is they evolve independently.
+
+
+========================================================================
+Source: /concepts/pilets
+========================================================================
+
+# Pilets
+
+A pilet is a self-contained JavaScript module: independently developed, independently deployed, loaded at runtime by the app shell. It has one public interface — its `setup` function — through which it registers everything it contributes.
+
+## The setup function
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  // Everything the pilet contributes goes here
+}
+```
+
+The shell calls `setup` once when the pilet loads. After it returns, all registrations are live.
+
+`setup` can be async. The shell waits for the promise to resolve:
+
+```tsx
+export async function setup(api: PiletApi) {
+  const flags = await fetch('/api/flags').then(r => r.json());
+
+  // Conditionally register different pages based on feature flags
+  if (flags.newCheckoutFlow) {
+    api.registerPage('/checkout', NewCheckoutPage);
+  } else {
+    api.registerPage('/checkout', LegacyCheckoutPage);
+  }
+}
+```
+
+## The teardown function
+
+Alongside the required `setup`, a pilet may export an optional `teardown(api)`. The shell calls it when the pilet is **removed at runtime** — most commonly when it is hot-reloaded during development, but also when it is updated to a new version or disabled via the feed.
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+let stop: () => void;
+
+export function setup(api: PiletApi) {
+  const handler = () => { /* ... */ };
+  window.addEventListener('resize', handler);
+  stop = () => window.removeEventListener('resize', handler);
+}
+
+export function teardown(api: PiletApi) {
+  stop?.();
+}
+```
+
+You don't need `teardown` for anything the shell tracks itself — pages, menus, and extensions are unregistered automatically when the pilet goes away. Use it for **custom cleanup the shell can't see**: removing DOM/event listeners, closing sockets or timers, or otherwise releasing resources your `setup` acquired.
+
+## What a pilet can register
+
+| Method | Description |
+|---|---|
+| `api.registerPage(path, component)` | Mount a component at a URL route |
+| `api.registerMenu(component, opts?)` | Add an item to a named navigation zone |
+| `api.registerExtension(name, component)` | Contribute to a named extension slot |
+| `api.registerModal(name, component)` | Register a named modal dialog |
+| `api.registerTile(component, prefs?)` | Add a tile to the dashboard (`piral-dashboard`) |
+
+The exact available methods depend on which plugins the app shell has installed. TypeScript types reflect exactly what's available — no guessing.
+
+## Cross-pilet communication
+
+Pilets don't share a module scope. Three mechanisms exist for interaction:
+
+### Events
+
+```tsx
+// Fire an event
+api.emit('cart:item-added', { productId: 'p1', qty: 2 });
+
+// Listen for it (in any pilet)
+api.on('cart:item-added', ({ productId, qty }) => {
+  updateCartBadge(qty);
+});
+```
+
+Events don't replay for late-loading pilets. Use them for real-time notifications, not for initial state.
+
+### Shared data store
+
+```tsx
+// Write (first pilet to write a key owns it)
+api.setData('currentUser', { id: 'u1', name: 'Alice', roles: ['admin'] });
+
+// Read
+const user = api.getData('currentUser');
+
+// Subscribe to changes
+api.on('store-data', ({ name, value }) => {
+  if (name === 'currentUser') refreshUserUI(value);
+});
+```
+
+Write to the store early in `setup` so pilets that load later find the value already there.
+
+### Extension slots
+
+For sharing UI across pilet boundaries — one pilet declares a slot, another fills it. See [Extension slots](/concepts/extension-slots) for the full story.
+
+## Sharing dependencies
+
+_(Diagram: Central sharing flows from the shell to all pilets; distributed sharing lets the first pilet to resolve a package supply it to the rest.)_
+
+Shared dependencies in Piral are **not limited to what the app shell declares**. Any pilet can declare shared packages via the `importmap` field in its `package.json`:
+
+```json
+{
+  "name": "pilet-analytics",
+  "version": "1.0.0",
+  "importmap": {
+    "imports": {
+      "recharts": "",
+      "date-fns": ""
+    }
+  }
+}
+```
+
+When this pilet loads, `recharts` and `date-fns` are placed into side-bundles. If another pilet needs those packages — and they've already been resolved — it reuses the existing instances. No duplicate downloads, no central coordination required.
+
+**Central importmap** (app shell's `package.json`): packages are pure externals, always provided by the shell, never bundled by any pilet.
+
+**Pilet importmap**: creates side-bundles. First pilet to resolve a named package wins; all subsequent pilets reuse it.
+
+:::tip
+Use central sharing for universal packages like React and your design system; use a pilet-level `importmap` for domain libraries only some teams need. For the full mechanics — externals vs side-bundles, resolution order, and where each dependency belongs — see [Dependency sharing](/concepts/dependency-sharing).
+:::
+
+## Pilet lifecycle
+
+_(Diagram: A pilet goes from feed metadata to live registrations in five steps.)_
+
+Registrations persist for the lifetime of the page session. If the pilet is removed at runtime — hot-reloaded, updated, or disabled via the feed — the shell unregisters everything it tracked and calls the pilet's optional [`teardown`](#the-teardown-function) for any custom cleanup. A full page reload clears everything and restarts from step 1.
+
+## Building and publishing
+
+```bash
+npx pilet build      # build the bundle
+npx pilet validate   # check format and metadata
+
+# Publish to a feed service (interactive browser login — no secret to handle)
+npx pilet publish --url https://feed.example.com/api/v1/pilets --interactive
+```
+
+Publishing POSTs the packed `.tgz` to the feed's publish endpoint. The feed stores the bundle on your CDN and records the new version. The next feed response includes it.
+
+In automation (CI/CD) there's no browser, so authenticate with an API key from a secret instead: `npx pilet publish --url … --api-key $FEED_API_KEY`. See [Deploying to production](/guides/deployment).
+
+## Non-React pilets
+
+Official converters exist for Angular, Vue, Svelte, Solid, Preact, Blazor, and more. Set the converter up **inside the pilet** — import its standalone `/convert` submodule and wrap your component. No app-shell changes are required:
+
+```tsx
+import { fromVue3 } from 'piral-vue-3/convert';
+import ProductPage from './ProductPage.vue';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/products', fromVue3(ProductPage));
+}
+```
+
+See [Multi-framework pilets](/guides/multi-framework) for the full setup (and the rare case for registering a converter centrally in the shell).
+
+
+========================================================================
+Source: /concepts/feed-service
+========================================================================
+
+# Feed service
+
+The feed service answers one question: *given this request, which pilets should load?* It is the operational control plane for your micro frontend system.
+
+_(Diagram: One catalog, one feed, three different responses — each user only ever receives (and downloads) the pilets they're allowed to see.)_
+
+## The protocol
+
+The app shell makes one GET request at startup:
+
+```
+GET /api/v1/pilets
+Authorization: Bearer <user-token>
+```
+
+The feed responds with a JSON array:
+
+```json
+{
+  "items": [
+    {
+      "name": "pilet-checkout",
+      "version": "3.1.0",
+      "link": "https://cdn.example.com/checkout@3.1.0/index.js",
+      "spec": "v2",
+      "integrity": "sha384-oqVuAfXRKap...",
+      "dependencies": {},
+      "config": {
+        "checkoutApiUrl": "https://api.example.com/v2/checkout"
+      }
+    },
+    {
+      "name": "pilet-catalog",
+      "version": "8.0.1",
+      "link": "https://cdn.example.com/catalog@8.0.1/index.js",
+      "spec": "v2",
+      "integrity": "sha384-...",
+      "dependencies": {}
+    }
+  ]
+}
+```
+
+### Feed item fields
+
+| Field | Required | Notes |
+|---|---|---|
+| `name` | ✅ | npm package name |
+| `version` | ✅ | semver string |
+| `link` | ✅ | URL to the JS bundle |
+| `spec` | ✅ | Pilet format: `v0`, `v1`, `v2`, or `mf` |
+| `integrity` | Recommended | SRI hash — shell verifies before evaluating |
+| `dependencies` | ✅ | Extra dependency URLs (usually `{}`) |
+| `config` | Optional | Passed to the pilet as `api.meta.config` |
+| `custom` | Optional | Arbitrary metadata |
+
+## Runtime configuration via `config`
+
+The `config` field is underused. It lets you parameterise pilet behaviour from the feed — changing it without redeploying the pilet:
+
+```tsx
+// In the pilet
+export function setup(api: PiletApi) {
+  const { checkoutApiUrl, featureFlags } = api.meta.config;
+
+  api.registerPage('/checkout', () => (
+    <CheckoutPage apiUrl={checkoutApiUrl} flags={featureFlags} />
+  ));
+}
+```
+
+Different environments, tenants, or experiment groups can receive different configs. One pilet build, multiple runtime behaviours.
+
+## Hosting options
+
+**Piral Cloud** — the official, managed feed service from the Piral team, and the recommended starting point. It adds a dashboard for managing pilets, canary rollouts, instant rollback, and per-user targeting.
+
+- Learn about it at [piral.cloud](https://www.piral.cloud).
+- To get started, the online **community edition** at [feed.piral.cloud](https://feed.piral.cloud) is free of charge — ideal for evaluation and small projects.
+- For production, request a demo and a license via [partner.piral.cloud](https://partner.piral.cloud). That gives you the ability to run the feed service **on-premises** for production workloads, and to get **professional support** backing your project.
+
+**Static JSON** — The simplest possible feed: a `.json` file hosted on a static CDN. Useful for demos, integration tests, and simple internal tools. Zero infrastructure, no targeting, no rollback.
+
+```json
+{
+  "items": [
+    {
+      "name": "my-pilet",
+      "version": "1.0.0",
+      "link": "https://cdn.example.com/my-pilet@1.0.0/index.js",
+      "spec": "v2",
+      "integrity": "",
+      "dependencies": {}
+    }
+  ]
+}
+```
+
+**Self-hosted** — Implement the protocol yourself. The [sample-pilet-service](https://github.com/smapiot/sample-pilet-service) provides a Node.js reference implementation. See [Custom feed services](/advanced/custom-feed) for a production guide.
+
+## Per-user pilet targeting
+
+Because the feed has the user's auth token, it can return different pilet sets for different users:
+
+```ts
+app.get('/api/v1/pilets', async (req, res) => {
+  const user = await verifyToken(req.headers.authorization);
+  const all = await db.getActivePilets();
+
+  const visible = all.filter(p => {
+    if (p.requiredRole && !user.roles.includes(p.requiredRole)) return false;
+    if (p.betaOnly && !user.isBetaTester) return false;
+    if (p.tenantId && p.tenantId !== user.tenantId) return false;
+    return true;
+  });
+
+  res.json({ items: toMetadata(visible) });
+});
+```
+
+Users who shouldn't see an admin pilet never receive it — and never download its code. This is stronger than route-level guards inside a pilet.
+
+## Rollback
+
+To roll back a misbehaving pilet:
+
+1. Update the feed to return the previous version (`version` + `link` fields)
+2. Users who reload get the old version
+3. The app shell does not need to change or redeploy
+
+With Piral Cloud, this is a single click. With a self-hosted feed, it's a database update. Either way: no CI pipeline, no `git revert`, no on-call emergency.
+
+:::tip Cache the feed response
+Cache `GET /api/v1/pilets` at your CDN with a short TTL:
+
+```
+Cache-Control: public, max-age=30, stale-while-revalidate=60
+```
+
+Most requests are served from cache (fast), but the cache refreshes every 30 seconds. A rollback propagates to all users within 30–60 seconds of the database update.
+:::
+
+## Publishing a pilet
+
+`pilet publish` POSTs to the feed's publish endpoint. When you have a browser available, prefer the interactive login — you don't have to handle or paste any secret:
+
+```bash
+npx pilet publish --url https://feed.example.com/api/v1/pilets --interactive
+```
+
+For CI/CD and other automation, use an API key instead (typically from a secret):
+
+```bash
+npx pilet publish --url https://feed.example.com/api/v1/pilets --api-key $FEED_API_KEY
+```
+
+The feed unpacks the `.tgz`, extracts the bundle, uploads it to your CDN, and records the new version. The next feed response will include it.
+
+
+========================================================================
+Source: /concepts/pilet-api
+========================================================================
+
+# Pilet API
+
+The Pilet API is the object every pilet receives as the argument to its `setup` function. It is the formal, versioned interface between the app shell and the pilet world — every interaction a pilet has with the rest of the application goes through it.
+
+Its shape has two layers: a **core API** that's always present, and an **extended API** contributed by plugins. TypeScript types reflect precisely what's available for *your* shell — see [TypeScript types](/guides/typescript).
+
+## Core API
+
+The core API is the surface brought in by the two core packages, **`piral-base`** and **`piral-core`**. Every app shell has these methods, no matter which plugins (if any) are installed.
+
+### Registration
+
+```ts
+// Register a page at a URL path
+api.registerPage(path: string, component: AnyComponent): void
+api.unregisterPage(path: string): void
+
+// Contribute to a named extension slot
+api.registerExtension(name: string, component: AnyComponent, defaults?: object): void
+api.unregisterExtension(name: string, component: AnyComponent): void
+```
+
+### Events
+
+```ts
+// Emit an event to all listening pilets
+api.emit(type: string, args: object): void
+
+// Subscribe / unsubscribe
+api.on(type: string, handler: (args: object) => void): void
+api.off(type: string, handler: Function): void
+```
+
+### Shared data store
+
+```ts
+// Write a value (first pilet to write a key owns it)
+api.setData(key: string, value: any): boolean
+
+// Read a value
+api.getData(key: string): any
+```
+
+### Pilet metadata
+
+```ts
+api.meta.name        // Package name from package.json
+api.meta.version     // Semver version
+api.meta.config      // config object from the feed item
+api.meta.basePath    // CDN base path for this pilet's static assets
+api.meta.link        // Full URL to this pilet's bundle
+api.meta.custom      // Any custom fields from the feed item
+```
+
+## Extended API
+
+Everything below is added by **plugins**. The methods listed here come from the standard plugins bundled in **`piral-ext`**, which ships as part of the [`piral`](/reference/piral-packages) framework package — so if you scaffolded with `piral`, they're already on the API. They're physically distributed across several packages (`piral-menu`, `piral-notifications`, `piral-modals`, `piral-dashboard`, `piral-feeds`, `piral-translate`).
+
+Plenty of other official plugins extend the API further (search, forms, breadcrumbs, data fetching, auth, …) — those aren't bundled with `piral` and must be installed and registered explicitly. See [Official plugins](/reference/plugins) for the full catalog.
+
+### `piral-menu` → `api.registerMenu`
+
+Menu items render wherever the shell places `<Menu type="...">`:
+
+```tsx
+api.registerMenu(() => <a href="/products">Products</a>, { type: 'general' });
+```
+
+### `piral-notifications` → `api.showNotification`
+
+```ts
+api.showNotification('Order saved!', {
+  type: 'success',   // 'info' | 'success' | 'warning' | 'error'
+  autoClose: 3000,   // ms, or false to persist
+  title: 'Optional title',
+});
+```
+
+### `piral-modals` → `api.registerModal`, `api.showModal`
+
+```tsx
+api.registerModal('confirm-delete', ({ options, onClose }) => (
+  <div>
+    <p>Delete {options.name}?</p>
+    <button onClick={() => { options.onConfirm(); onClose(); }}>Delete</button>
+    <button onClick={onClose}>Cancel</button>
+  </div>
+));
+
+api.showModal('confirm-delete', { name: 'Invoice #123', onConfirm: doDelete });
+```
+
+### `piral-dashboard` → `api.registerTile`
+
+```tsx
+api.registerTile(
+  () => <div><h3>Revenue today</h3><p>€4,219</p></div>,
+  { initialColumns: 2, initialRows: 1, resizable: true },
+);
+```
+
+### `piral-feeds` → `api.createConnector`
+
+```tsx
+const connector = api.createConnector({
+  initialize: () => fetch('/api/items').then((r) => r.json()),
+  connect: (cb) => {
+    const id = setInterval(() => fetch('/api/items').then((r) => r.json()).then(cb), 30_000);
+    return () => clearInterval(id);
+  },
+  update: (data, item) => [...data, item],
+});
+
+const ItemsPage = connector(({ data, loading }) =>
+  loading ? <Spinner /> : <ItemList items={data} />,
+);
+```
+
+### `piral-translate` → `api.translate`
+
+```ts
+api.setTranslations({ en: { welcome: 'Welcome, {{name}}!' } });
+api.translate('welcome', { name: 'Alice' }); // "Welcome, Alice!"
+```
+
+## Types
+
+A pilet imports its shell's `PiletApi` and gets exactly that shell's API — core plus whatever plugins it installed — fully typed:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.showNotification('Hello!'); // ✅ only if the shell installed piral-notifications
+}
+```
+
+How those types are generated, and how to extend them for your own events and extension slots, is covered in the [TypeScript types](/guides/typescript) guide.
+
+
+========================================================================
+Source: /concepts/dependency-sharing
+========================================================================
+
+# Dependency sharing
+
+If every pilet bundled its own copy of React, your users would download React many times over — and worse, you'd have several *different* React instances on the page, which breaks hooks, context, and anything that relies on a singleton. Dependency sharing solves this. The mechanism is the **importmap**, and the key thing to understand is that it works in two different places, with two different meanings.
+
+## What an importmap is
+
+An importmap is a field in a `package.json` that lists packages which should be **shared** rather than bundled:
+
+```json
+{
+  "name": "my-app-shell",
+  "importmap": {
+    "imports": {
+      "react": "",
+      "react-dom": "",
+      "react-router-dom": "",
+      "my-design-system": ""
+    }
+  }
+}
+```
+
+The value is a version specifier. An **empty string means "use the version installed in this project"** — the most common case, because it keeps the shared version in lockstep with your normal dependency management. You can also pin a range (`"recharts": "^2.10.0"`), or point a name at an explicit URL when you host a prebuilt shared bundle yourself.
+
+At build time, Piral reads the importmap and treats those packages specially instead of inlining them into the output bundle.
+
+## Two importmaps, two behaviors
+
+The same field behaves differently depending on whether it lives in the **app shell** or in a **pilet**.
+
+_(Diagram: The same importmap field means "external" in the shell and "shared side-bundle" in a pilet.)_
+
+### Central sharing — the app shell importmap
+
+Packages in the **app shell's** importmap become **pure externals**. The shell loads them once and provides the running instance to every pilet. Pilets compile against them but never include them in their bundle.
+
+Use this for things that *must* be a single instance or that *everyone* needs:
+
+- **Singletons** — React and React DOM. Two React copies on one page is a bug, not an optimization.
+- **The framework contract** — React Router, so all pilets navigate through the same router.
+- **Your design system** — one shared component library, one consistent UI.
+
+Because the shell owns these, it also owns their version. Bump React in the shell and every pilet gets the new version on the next shell release — pilets don't each declare a React version.
+
+### Distributed sharing — the pilet importmap
+
+Packages in a **pilet's** importmap become **side-bundles**. The first pilet that needs a given package loads it and registers it in a shared runtime registry; any later pilet that declares the same name reuses that instance instead of downloading its own.
+
+Use this for **domain libraries that only some teams need** — a charting library, a date utility, an i18n package. The team that introduces the dependency owns the declaration; no coordination with the shell team is required.
+
+```json
+{
+  "name": "pilet-analytics",
+  "importmap": {
+    "imports": {
+      "recharts": "",
+      "date-fns": ""
+    }
+  }
+}
+```
+
+## How resolution works at runtime
+
+When a pilet's code imports a shared name, Piral resolves it in this order:
+
+1. **Is it a central external?** If the app shell declared it, the pilet uses the shell's instance. Done.
+2. **Is it already in the shared registry?** If an earlier pilet side-bundled it, the pilet reuses that instance.
+3. **Otherwise**, the pilet loads its own side-bundle and registers it so later pilets can reuse it.
+
+"First to resolve wins" means load order matters for *which* build of a side-bundled package is used. For libraries where multiple versions can safely coexist, that's fine. For anything that must be a singleton, promote it to the **central** importmap so there's exactly one source of truth.
+
+## Choosing where a dependency belongs
+
+| Put it in… | When | Examples |
+|---|---|---|
+| **App shell importmap** (external) | Everyone needs it, or it must be a singleton | `react`, `react-dom`, `react-router-dom`, design system |
+| **Pilet importmap** (side-bundle) | Only some pilets need it; versions can vary | `recharts`, `date-fns`, `i18next`, a domain SDK |
+| **Bundled (no importmap)** | Small, pilet-private, no benefit to sharing | one-off helpers, tiny utilities |
+
+:::warning Keep singletons central
+Anything that breaks with multiple instances — React, state libraries, a global event bus — belongs in the **app shell** importmap. Side-bundles allow multiple versions to coexist, which is exactly what you don't want for a singleton.
+:::
+
+See [App shell](/concepts/app-shell#centrally-shared-dependencies) for the shell side and [Pilets](/concepts/pilets#sharing-dependencies) for the pilet side.
+
+
+========================================================================
+Source: /concepts/emulator
+========================================================================
+
+# Emulator
+
+The emulator is Piral's answer to the hardest practical problem in micro frontend development: **how do you work on your piece of the UI without running the entire platform?**
+
+_(Diagram: The emulator lets a pilet run inside the real shell locally — no platform access required.)_
+
+## The problem
+
+In any micro frontend system, a pilet needs to run inside the real app shell to behave correctly. The shell provides the layout your component lives inside, the navigation it links into, the shared dependencies it imports from, and the extension slots it might fill.
+
+Developing against a stub or blank page means integration issues surface late, in staging or production. Running the full platform locally requires infrastructure access that's often impractical — especially for contractors, new joiners, or developers on constrained hardware.
+
+## What the emulator contains
+
+When you build the app shell, the CLI produces two outputs:
+
+```
+dist/
+├── release/            ← deploy to production
+└── emulator/
+    └── my-app-shell-1.0.0.tgz   ← share with pilet developers
+```
+
+The emulator `.tgz` contains:
+
+- A **debug build of the app shell** with source maps, no minification, HMR support
+- **TypeScript type definitions** for `PiletApi` — scoped to the installed plugins
+- The shell's **`importmap` declarations** so the pilet knows what's centrally shared
+- Metadata about the shell version and supported pilet spec
+
+## Using the emulator
+
+```bash
+# The emulator is installed as a dev dependency when you scaffold the pilet.
+# To add or update it manually:
+npm install --save-dev my-app-shell
+
+# Start local pilet development
+npm start
+# or explicitly (the target shell is read from package.json):
+npx pilet debug
+```
+
+`pilet debug`:
+
+1. Reads the emulator from `node_modules/my-app-shell`
+2. Starts a local web server rendering the full app shell
+3. Injects the current pilet bundle via an in-memory API stub
+4. Watches for file changes and hot-reloads in-place
+
+The developer sees their pilet running inside the actual shell — real layout, real navigation, real shared dependencies, real extension slots — without any network access to a live environment.
+
+:::tip Load live pilets alongside your local one
+```bash
+npx pilet debug --feed https://feed.example.com/api/v1/pilets
+```
+This loads pilets from the feed alongside your local pilet — useful for testing extension slot interactions.
+:::
+
+## Distributing the emulator
+
+There are two ways to get the emulator to pilet developers, and neither one ties you to the public npm registry.
+
+**As a package.** The emulator `.tgz` is an ordinary npm package, so you publish it wherever your team already hosts packages — a private/company registry (Azure Artifacts, GitHub Packages, Verdaccio, Nexus, Artifactory) or even a purely local registry. The public npmjs.org registry is just one option, not a requirement. Point each pilet at the right registry the same way you would for any scoped dependency (an `.npmrc` entry), and `npm init pilet`'s `--source` can read from it.
+
+```bash
+npx piral publish --type emulator --registry https://npm.my-company.com
+```
+
+**As an emulator website.** If you'd rather not deal with a registry at all, build the emulator as a hosted website and have pilets debug against its URL:
+
+```bash
+npx piral build --type emulator-website
+# deploy dist/emulator-website/ to any static host, then in the pilet:
+npx pilet debug --app https://emulator.my-portal.example.com
+```
+
+The pilet downloads the debug shell from that URL instead of `node_modules`. This is handy for teams without a private registry, for onboarding (nothing to install but the pilet itself), and for keeping every pilet on a single, centrally updated shell.
+
+:::tip Which to choose
+The package approach gives each pilet a pinned, offline-capable shell version and the best TypeScript story. The website approach removes registry setup entirely and guarantees everyone debugs against the same deployed shell. Many teams use both — a website for quick onboarding, packages for pinned CI builds.
+:::
+
+## Emulator in CI
+
+Pilet build pipelines use the emulator to validate against real shell types:
+
+```yaml
+- run: npm ci                 # installs emulator from package-lock
+- run: npx tsc --noEmit       # type-checks against real PiletApi types
+- run: npx pilet build        # confirms the bundle builds cleanly
+- run: npx pilet validate     # validates pilet format and metadata
+```
+
+A type error here means the pilet is calling an API that doesn't exist in the target shell version — caught before it ever reaches a user.
+
+## Version coordination
+
+When the app shell adds a new plugin or changes the API, it bumps its version and publishes a new emulator. Pilet teams upgrade their dev dependency:
+
+```bash
+npx pilet upgrade          # upgrade to latest emulator
+npx pilet upgrade 2.0.0    # pin to a specific version
+```
+
+Pilets that haven't upgraded continue working — old API methods remain present. New methods only appear in TypeScript once the pilet upgrades. This is how backward compatibility is maintained across dozens of independently developed pilets.
+
+## Differences from production
+
+| Aspect | Emulator | Production |
+|--------|----------|------------|
+| Minification | No | Yes |
+| Source maps | Yes | Optional |
+| Hot reload | Yes | No |
+| Pilet served from | `localhost` API stub | CDN URL |
+| Error display | DevTools overlay | Error boundary |
+| Other pilets | Optional via `--feed` | All from feed response |
+
+These differences exist to make development fast. None affect the pilet's runtime behavior when deployed.
+
+
+========================================================================
+Source: /concepts/extension-slots
+========================================================================
+
+# Extension slots
+
+Extension slots let one pilet declare a named placeholder in its UI that any other pilet can fill — without either pilet knowing anything about the other. The app shell's extension registry connects them at runtime.
+
+_(Diagram: Pilet B fills a slot that Pilet A declared — connected at runtime by the shell, with zero coupling between the two.)_
+
+## Declaring a slot
+
+In any component, render `<ExtensionSlot>` from `piral`:
+
+```tsx
+import { ExtensionSlot } from 'piral';
+
+const CartPage = () => (
+  <div>
+    <CartItemList />
+    <CartSummary />
+
+    {/* Any pilet can render content here */}
+    <ExtensionSlot name="cart-extra" />
+  </div>
+);
+```
+
+If no pilet has registered for this name, nothing renders. You can provide fallback content for the empty state:
+
+```tsx
+<ExtensionSlot name="cart-extra">
+  <p>No additional information.</p>
+</ExtensionSlot>
+```
+
+## Filling a slot
+
+From any pilet's `setup` function:
+
+```tsx
+export function setup(api: PiletApi) {
+  api.registerExtension('cart-extra', PromoWidget);
+}
+```
+
+Multiple pilets can register for the same slot — all contributions render in feed-response order.
+
+## Passing parameters
+
+The slot can pass contextual data to all registered components:
+
+```tsx
+<ExtensionSlot
+  name="cart-extra"
+  params={{ cartTotal: 89.99, itemCount: 3 }}
+/>
+```
+
+Extension components receive `params` as a prop:
+
+```tsx
+const PromoWidget: React.FC<{ params: { cartTotal: number } }> = ({ params }) => {
+  if (params.cartTotal < 50) return null;
+  return <div className="promo">You qualify for free shipping!</div>;
+};
+```
+
+## Conditionally wrapping a slot
+
+There's no `useExtensions` hook — the `ExtensionSlot` decides what to render. To wrap a slot in a section *only when something is registered*, use its `render` prop. It receives the already-rendered extensions and lets you return your own markup around them (or nothing at all):
+
+```tsx
+const CartPage = () => (
+  <div>
+    <CartSummary />
+    <ExtensionSlot
+      name="cart-extra"
+      params={{ cartTotal: total }}
+      render={(nodes) =>
+        nodes.length ? (
+          <section className="cart-extras">
+            <h3>Special offers</h3>
+            {nodes}
+          </section>
+        ) : null
+      }
+    />
+  </div>
+);
+```
+
+This works anywhere a slot does, including inside a pilet — it's just props on the component, not a shell-only hook.
+
+For the simpler "show a fallback when the slot is empty" case, pass `empty` (and `emptySkipsRender` to render nothing instead) rather than checking yourself — see [Declaring a slot](#declaring-a-slot).
+
+:::tip Reading the registry directly (advanced)
+If you genuinely need the raw registrations, a *shell* component can read them from global state: `useGlobalState((s) => s.registry.extensions['cart-extra'] ?? [])`. This is shell-only (pilets can't use it) and couples you to internal state shape — prefer the `render` prop above.
+:::
+
+## Limiting extension count
+
+```tsx
+{/* Render at most one extension */}
+<ExtensionSlot name="featured-promo" limit={1} />
+```
+
+## Extension slots in the app shell layout
+
+Well-designed app shells use extension slots in their layout components. This lets pilets contribute navigation items, header actions, and sidebar widgets without the shell explicitly listing any pilet:
+
+```tsx
+const AppHeader = () => (
+  <header>
+    <Logo />
+    <nav>
+      <ExtensionSlot name="nav-primary" />
+    </nav>
+    <div className="header-actions">
+      <ExtensionSlot name="header-actions" />
+      <UserMenu />
+    </div>
+  </header>
+);
+```
+
+## Slot naming conventions
+
+Slot names are the coordination surface between pilets. They are effectively public API — treat them as such.
+
+- **Kebab-case**: `cart-extra`, not `CartExtra`
+- **Namespace with context**: `checkout-cart-extra` to avoid conflicts with other pilets' slots
+- **Describe purpose, not location**: `product-quick-actions` rather than `product-page-right-col`
+- **Document your slots**: pilet developers need to know what slots exist, what `params` shape they receive, and how many extensions render
+
+Changing a slot name or its `params` shape is a breaking change for every pilet that fills it. Version accordingly.
+
+## Unregistering
+
+You rarely need to do this manually. Everything a pilet registers is **automatically torn down** when the pilet is hot-reloaded during development, updated to a new version, or removed from the feed — so you don't have to clean up on the pilet's behalf.
+
+Calling `unregisterExtension` yourself only makes sense in genuinely *dynamic* scenarios: an extension that should be available for a short time window, or only while some complex runtime condition holds. To unregister, keep a reference to the exact same component you registered:
+
+```tsx
+// Hold a reference to the same function to unregister later
+const component = () => <PromoWidget />;
+api.registerExtension('cart-extra', component);
+
+// Later, when the condition no longer applies:
+api.unregisterExtension('cart-extra', component);
+```
+
+
+========================================================================
+Source: /guides/building-app-shell
+========================================================================
+
+# Building your app shell
+
+The app shell is the host every user loads first. It owns the layout, navigation, authentication, the shared runtime, and the logic that discovers and mounts pilets — but no feature logic of its own. This guide takes a shell from an empty scaffold to a publishable emulator. The guiding principle throughout: keep it thin, because every change here affects all users and all pilet teams.
+
+## Scaffold
+
+```bash
+npm init piral-instance@latest -- --target my-portal --bundler webpack5
+cd my-portal
+npm start   # opens http://localhost:1234
+```
+
+No global install required — the initializer adds `piral-cli` and the bundler plugin as local dev dependencies, and wires up `npm start` / `npm run build` for you.
+
+## Configure the feed
+
+`createInstance` is the heart of the shell. You hand it three things: which structural components to use (`state`), which plugins extend the Pilet API, and a `requestPilets` function that returns the pilets to load. Here `requestPilets` fetches the list from a feed and forwards the user's token, so the feed can decide which pilets that user may see:
+
+`src/index.tsx`:
+
+```tsx
+import { createInstance, Piral } from 'piral';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import * as React from 'react';
+import { render } from 'react-dom';
+import { AppLayout } from './layout/AppLayout';
+import { NotFoundPage } from './layout/NotFoundPage';
+
+const FEED_URL = process.env.NODE_ENV === 'production'
+  ? 'https://feed.example.com/api/v1/pilets'
+  : 'https://feed-dev.example.com/api/v1/pilets';
+
+const instance = createInstance({
+  state: {
+    components: { Layout: AppLayout },
+    errorComponents: { not_found: NotFoundPage },
+  },
+  plugins: [createMenuApi(), createNotificationsApi()],
+  async requestPilets() {
+    const token = sessionStorage.getItem('auth_token');
+    const res = await fetch(FEED_URL, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    return (await res.json()).items;
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
+```
+
+## Layout component
+
+The `Layout` is the frame rendered around every page — header, navigation, footer. Its `children` are where the current pilet's page appears, and it's the natural home for shell-wide plugin outlets like `<Menu>` (navigation zones pilets register into) and `<Notifications>` (where toasts surface):
+
+```tsx
+import * as React from 'react';
+import { Menu, Notifications } from 'piral';
+
+export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="app">
+    <header>
+      <a href="/">My Portal</a>
+      <nav><Menu type="general" /></nav>
+      <div><Menu type="user" /></div>
+    </header>
+    <main>{children}</main>
+    <Notifications />
+  </div>
+);
+```
+
+## Central shared dependencies
+
+Anything listed in the shell's `importmap` is provided to every pilet as an external: pilets compile against these packages but never bundle them, so React, the router, and your design system exist exactly once on the page. Put the truly universal, singleton-sensitive packages here.
+
+In `package.json`:
+
+```json
+{
+  "importmap": {
+    "imports": {
+      "react": "",
+      "react-dom": "",
+      "react-router-dom": "",
+      "my-design-system": ""
+    }
+  }
+}
+```
+
+## Build and publish the emulator
+
+```bash
+npm run build
+# dist/release/  → deploy to production
+# dist/emulator/ → share with pilet developers
+
+npm publish dist/emulator/my-portal-1.0.0.tgz
+```
+
+The emulator is a normal npm package, so any registry works — public npm, a private/company registry, or a local one (pass `--registry` to `npx piral publish`). If you'd rather not run a registry at all, build an emulator website (`npx piral build --type emulator-website`) and let pilets debug against its URL. See [Distributing the emulator](/concepts/emulator#distributing-the-emulator).
+
+:::warning SPA routing
+Configure your host to serve `index.html` for all non-asset routes:
+- Nginx: `try_files $uri /index.html;`
+- Netlify `_redirects`: `/* /index.html 200`
+:::
+
+
+========================================================================
+Source: /guides/creating-pilet
+========================================================================
+
+# Creating your first pilet
+
+A pilet is a single feature module — built, deployed, and loaded into the shell independently. This guide takes one from scaffold to published version. The thing that makes the loop pleasant is the **emulator**: it gives you the real app shell locally, so you can develop and test a pilet with hot reload and accurate types, without running any platform infrastructure.
+
+## Scaffold
+
+```bash
+npm init pilet@latest -- --source my-portal --target my-feature-pilet --bundler webpack5
+cd my-feature-pilet
+```
+
+`--source` is the app shell's package name (or a path to its emulator `.tgz` while you develop locally). The initializer installs the emulator and `piral-cli` for you.
+
+## Write the pilet
+
+A pilet has exactly one required entry: an exported `setup` function. The shell calls it once when the pilet loads, handing over the typed Pilet API — and everything the pilet contributes (pages, menu items, extensions) is registered from there. Import `PiletApi` from the shell package so the API is typed to *your* shell:
+
+`src/index.tsx`:
+
+```tsx
+import * as React from 'react';
+import type { PiletApi } from 'my-portal';
+
+const FeaturePage: React.FC = () => (
+  <div style={{ padding: '2rem' }}>
+    <h1>My Feature</h1>
+    <p>Registered at runtime by a pilet.</p>
+  </div>
+);
+
+export function setup(api: PiletApi) {
+  api.registerPage('/my-feature', FeaturePage);
+  api.registerMenu(() => <a href="/my-feature">My Feature</a>);
+}
+```
+
+## Develop locally
+
+```bash
+npm start
+# http://localhost:1234/my-feature
+```
+
+With hot reload. No platform access needed — the emulator provides the full shell.
+
+## Build and publish
+
+Publishing locally? Use `--interactive` to log in through your browser — there's no API key to create, store, or paste into the terminal:
+
+```bash
+npx pilet build
+npx pilet validate
+npx pilet publish --url https://feed.example.com/api/v1/pilets --interactive
+```
+
+In CI/CD (no browser), authenticate with an API key from a secret instead — see the pipeline below.
+
+## CI pipeline
+
+```yaml
+name: Publish pilet
+on:
+  push:
+    branches: [main]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm test
+      - run: npx pilet publish
+          --url ${{ vars.FEED_URL }}
+          --api-key ${{ secrets.FEED_API_KEY }}
+```
+
+
+========================================================================
+Source: /guides/routing
+========================================================================
+
+# Routing & navigation
+
+Piral uses React Router v6. There's a single router, owned by the app shell — pilets don't configure it, they *contribute* to it. Each `registerPage` call adds a route at runtime, so the application's full route table is assembled from every pilet that happens to be loaded. Inside a pilet's own components you use the ordinary React Router hooks and components (`useParams`, `Link`, `useNavigate`, …); they work unchanged because the pilet renders within the shell's router context.
+
+## Registering routes
+
+```tsx
+export function setup(api: PiletApi) {
+  api.registerPage('/products', ProductsPage);
+  api.registerPage('/products/:id', ProductDetailPage);
+  api.registerPage('/admin/*', AdminSection);
+}
+```
+
+## Route parameters
+
+```tsx
+import { useParams } from 'react-router-dom';
+
+const ProductDetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  return <h1>Product {id}</h1>;
+};
+```
+
+## Navigation links
+
+```tsx
+import { Link } from 'react-router-dom';
+
+const Nav = () => (
+  <nav>
+    <Link to="/products">Products</Link>
+    <Link to="/checkout">Checkout</Link>
+  </nav>
+);
+```
+
+Programmatic:
+
+```tsx
+import { useNavigate } from 'react-router-dom';
+
+const SubmitButton = () => {
+  const navigate = useNavigate();
+  return <button onClick={async () => { await save(); navigate('/success'); }}>Submit</button>;
+};
+```
+
+## Menu items
+
+Routes make a page reachable by URL; menu items make it reachable by clicking. A pilet registers entries into named menu *zones*, and the shell's layout decides where each zone renders — so a pilet adds navigation without knowing anything about the shell's chrome:
+
+```tsx
+api.registerMenu(() => <a href="/products">Products</a>, { type: 'general' });
+api.registerMenu(() => <a href="/admin">Admin</a>, { type: 'admin' });
+```
+
+Shell renders them at: `<Menu type="general" />` and `<Menu type="admin" />`
+
+## Route guards
+
+A guard is just conditional rendering inside the page component — redirect when the user isn't allowed in. Remember this only hides UI; enforce real access on the server and, ideally, with [feed-level targeting](/concepts/feed-service#per-user-pilet-targeting) so unauthorized users never receive the pilet at all.
+
+```tsx
+import { Navigate } from 'react-router-dom';
+
+const AdminPage: React.FC = () => {
+  const isAuthenticated = api.isAuthenticated?.();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <AdminDashboard />;
+};
+
+api.registerPage('/admin', AdminPage);
+```
+
+## Query parameters
+
+```tsx
+import { useSearchParams } from 'react-router-dom';
+
+const ProductsPage = () => {
+  const [params, setParams] = useSearchParams();
+  const category = params.get('category') || 'all';
+  return <ProductList category={category} />;
+};
+```
+
+
+========================================================================
+Source: /guides/shared-state
+========================================================================
+
+# Sharing state between pilets
+
+Pilets are isolated by design. Communication happens through explicit, observable mechanisms — four channels, never direct imports or `window` globals.
+
+_(Diagram: Four explicit channels connect pilets — events, the shared data store, shared libraries, and extension slots.)_
+
+## 1. Events: fire-and-forget
+
+```tsx
+api.emit('cart:item-added', { productId: 'p1', qty: 2 });
+
+api.on('cart:item-added', ({ productId, qty }) => {
+  updateCartBadge(qty);
+});
+```
+
+Good for: real-time notifications, analytics hooks, loose coupling.
+Not for: state a late-loading pilet needs at startup.
+
+## 2. Shared data store: named key-value
+
+```tsx
+// Write early in setup — other pilets find it when they load
+api.setData('currentUser', { id: 'u1', name: 'Alice', roles: ['admin'] });
+
+// Read from any pilet
+const user = api.getData('currentUser');
+
+// Subscribe to changes
+api.on('store-data', ({ name, value }) => {
+  if (name === 'currentUser') setLocalUser(value);
+});
+```
+
+First pilet to write a key owns it. Others can read but not overwrite.
+
+## 3. Shared libraries via importmap
+
+Any pilet can share a package as a side-bundle:
+
+```json
+{
+  "importmap": {
+    "imports": { "my-cart-service": "" }
+  }
+}
+```
+
+Other pilets that declare the same name get the same instance:
+
+```tsx
+import { cartStore } from 'my-cart-service';
+```
+
+For how this resolves (externals vs side-bundles, and where each dependency belongs), see [Dependency sharing](/concepts/dependency-sharing).
+
+## 4. Extension slots: sharing UI
+
+```tsx
+<ExtensionSlot name="order-extras" params={{ orderId }} />
+
+api.registerExtension('order-extras', ({ params }) => (
+  <ShippingTracker orderId={params.orderId} />
+));
+```
+
+## Decision guide
+
+| Scenario | Mechanism |
+|---|---|
+| Notify others of an event | `api.emit` / `api.on` |
+| Small value all pilets need | `api.setData` / `api.getData` |
+| Shared service instance | importmap side-bundle |
+| Shared rendered component | Extension slots |
+| Complex reactive global state | Custom plugin |
+| State surviving page reload | URL params or localStorage |
+
+:::warning
+Never use `window` globals to share state. Untestable, untyped, and a debugging nightmare.
+:::
+
+
+========================================================================
+Source: /guides/multi-framework
+========================================================================
+
+# Multi-framework pilets
+
+Piral's converter system lets a pilet be written in a framework other than React. The app shell stays React; a converter wraps the foreign component so it renders transparently inside the shell.
+
+There are two ways to wire this up. **Set the converter up inside the pilet** (the default, covered first), or — only in special cases — register it centrally in the app shell (the [last section](#setting-up-the-converter-in-the-app-shell-advanced)).
+
+## Available converters
+
+| Framework | Package |
+|---|---|
+| Angular | `piral-ng` |
+| Vue 3 | `piral-vue-3` |
+| Vue 2 | `piral-vue` |
+| Svelte | `piral-svelte` |
+| Solid | `piral-solid` |
+| Preact | `piral-preact` |
+| Blazor | `piral-blazor` ([Piral.Blazor](https://blazor.piral.io)) |
+
+Each one follows the same shape: a `from<Framework>` helper exported from a standalone **`/convert`** submodule, used inside the pilet.
+
+## Use the converter in the pilet (recommended)
+
+Import the converter from its **`/convert` submodule** and wrap your component. Crucially, the import is from the `/convert` submodule — **not** the package root (the package root exports the *plugin*, which belongs in the app shell). Nothing needs to be installed or registered in the app shell: the converter lives in the pilet and produces a plain HTML component the shell already knows how to render.
+
+```bash
+npm install --save-dev piral-svelte
+```
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+import { fromSvelte } from 'piral-svelte/convert'; // ← the /convert submodule, not 'piral-svelte'
+import ProductPage from './ProductPage.svelte';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/products', fromSvelte(ProductPage));
+}
+```
+
+```svelte
+<!-- ProductPage.svelte -->
+<script lang="ts">
+  let products: Array<{ id: string; name: string }> = [];
+  fetch('/api/products').then((r) => r.json()).then((p) => (products = p));
+</script>
+
+<h1>Products</h1>
+<ul>{#each products as p (p.id)}<li>{p.name}</li>{/each}</ul>
+```
+
+Every converter works this way — e.g. `fromVue3` from `piral-vue-3/convert`. Always import from `<package>/convert` in a pilet; check each converter's README for its exact `from…` name.
+
+**Why this is the default.** Yes, each pilet that uses the framework bundles its own copy of the converter (and shares the framework via the importmap — see below), which is a little overhead. In return you get **reliability and flexibility**: the pilet is self-contained, owns its framework version, and can never be broken by a change in the app shell.
+
+## Bundler support for framework files
+
+Frameworks with their own file types (`.svelte`, `.vue`, …) need the bundler to understand them. Converters ship a bundler helper for exactly this — for example, wire `piral-svelte/extend-webpack` into your pilet's webpack config so `*.svelte` files compile. Check each converter's README for the precise setup for your bundler.
+
+## Sharing framework bundles between pilets
+
+Each pilet carrying its own converter doesn't mean shipping the whole framework many times. Declare the framework in your `importmap` so multiple pilets share one instance:
+
+```json
+{
+  "importmap": {
+    "imports": {
+      "@angular/core": "",
+      "@angular/common": "",
+      "vue": ""
+    }
+  }
+}
+```
+
+See [Dependency sharing](/concepts/dependency-sharing) for how this resolves.
+
+## Setting up the converter in the app shell (advanced)
+
+A converter can also be registered centrally, as a **plugin** in the app shell. This is the exception, not the rule — it only makes sense under specific conditions, such as a tightly governed portal where the shell team deliberately owns one framework version for everyone. This is the one case where you import from the package root (the plugin) rather than `/convert`.
+
+```bash
+npm install piral-svelte
+```
+
+```tsx
+import { createSvelteApi } from 'piral-svelte'; // package root = the plugin
+
+const instance = createInstance({
+  plugins: [createSvelteApi()],
+});
+```
+
+With the plugin registered, pilets use `fromSvelte` from the package root (`piral-svelte`), relying on the shell's converter rather than carrying their own.
+
+:::warning Central converters couple framework updates
+When the converter and its framework live in the shell, every pilet using that framework is tied to the shell's version. The day the shell upgrades the framework, all of those pilets must be compatible with the new version at once — coordinated, lockstep updates, which is exactly what micro frontends try to avoid. The in-pilet `/convert` approach trades a little bundle overhead for each pilet owning its framework version independently — far more reliable and flexible. Prefer it unless you have a clear, deliberate reason not to. See [Creating a converter](/reference/creating-a-converter).
+:::
+
+
+========================================================================
+Source: /guides/authentication
+========================================================================
+
+# Authentication
+
+Authentication in Piral comes down to one question: **how does a request prove who the user is?** There are two broad answers, and the choice shapes how much the app shell and pilets have to do.
+
+- **Cookie-based (via a BFF)** — a backend holds the session and the browser carries an HttpOnly cookie automatically. *Recommended for most apps.*
+- **Token-based** — the app shell obtains an access token and attaches it to each request.
+
+A useful rule of thumb: if you control the backend the frontend talks to, prefer the cookie/BFF approach. Reach for tokens when you must call APIs the BFF can't sit in front of.
+
+_(Diagram: Token-based auth keeps a token in the browser and attaches it to every request; with a cookie/BFF the session lives server-side and the browser carries it automatically.)_
+
+## Cookie-based authentication with a BFF (recommended)
+
+A **Backend-For-Frontend (BFF)** is a small server that sits between the browser and your backend services. The user authenticates against the BFF, which keeps the session server-side and sets a secure, **HttpOnly cookie**. From then on the browser attaches that cookie to every request automatically — so neither the app shell nor any pilet has to manage tokens at all.
+
+```tsx
+import { createInstance, Piral } from 'piral';
+import * as React from 'react';
+import { render } from 'react-dom';
+
+const instance = createInstance({
+  // The feed lives behind the BFF (same site). The cookie is sent automatically;
+  // no Authorization header to build.
+  async requestPilets() {
+    const res = await fetch('/bff/api/v1/pilets', { credentials: 'include' });
+    return (await res.json()).items;
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
+```
+
+Inside a pilet, calls to your backend simply work — the cookie rides along:
+
+```tsx
+export function setup(api: PiletApi) {
+  api.registerPage('/orders', () => {
+    // same-origin (or BFF-proxied) request — the session cookie is sent for you
+    const load = () => fetch('/bff/orders', { credentials: 'include' }).then((r) => r.json());
+    return <OrdersPage load={load} />;
+  });
+}
+```
+
+Why this is the default recommendation:
+
+- **More secure.** The token never lives in JavaScript or storage, so it can't be stolen via XSS. HttpOnly + Secure + SameSite cookies are handled by the browser.
+- **More reliable.** No token refresh logic in the frontend, no expiry races; the BFF manages the session lifecycle.
+- **Easier.** The app shell does essentially no auth work, and every pilet's `fetch` just works without a plugin or shared token.
+
+The trade-off is **flexibility**: every backend call has to be reachable through the BFF (directly or proxied). For the large majority of line-of-business portals that's perfectly fine — and well worth the security and simplicity it buys.
+
+:::tip
+With a BFF you usually don't need an auth plugin at all. Plugins like `piral-oidc` exist to bring *tokens* to the Pilet API — if your requests are authenticated by a cookie, there's no token for pilets to consume.
+:::
+
+## Token-based authentication
+
+When a BFF isn't an option — for example pilets must call third-party or cross-origin APIs directly — the app shell obtains an **access token** (often via OpenID Connect) and attaches it to requests as an `Authorization` header.
+
+```tsx
+async function bootstrap() {
+  const token = await getAccessToken(); // your OIDC/OAuth mechanism
+  if (!token) {
+    window.location.href = '/login';
+    return;
+  }
+
+  const instance = createInstance({
+    async requestPilets() {
+      const res = await fetch(FEED_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return (await res.json()).items;
+    },
+  });
+
+  render(<Piral instance={instance} />, document.querySelector('#app'));
+}
+
+bootstrap();
+```
+
+### Letting pilets use the token
+
+Pilets shouldn't each re-implement auth. Expose the token (and an authenticated fetch) through a small plugin in the app shell — this is exactly what an auth plugin is for:
+
+```ts
+import { createPiralPlugin } from 'piral-core';
+
+export function createAuthApi() {
+  return createPiralPlugin(() => () => ({
+    getAccessToken: () => getAccessToken(),
+    async fetchAuthenticated(url: string, init?: RequestInit) {
+      const token = await getAccessToken();
+      return fetch(url, {
+        ...init,
+        headers: { ...(init?.headers ?? {}), Authorization: `Bearer ${token}` },
+      });
+    },
+  }));
+}
+```
+
+### Using an official plugin: `piral-oidc`
+
+Rather than wiring OIDC by hand, the [`piral-oidc`](/reference/plugins) plugin surfaces tokens and sign-in/out to pilets through the API:
+
+```tsx
+import { createOidcApi, OidcClient } from 'piral-oidc';
+
+const client = OidcClient.create({
+  clientId: 'my-app',
+  identityProviderUri: 'https://auth.example.com',
+  redirectUri: `${window.location.origin}/callback`,
+  scopes: ['openid', 'profile'],
+});
+
+const instance = createInstance({
+  plugins: [createOidcApi(client)],
+  async requestPilets() {
+    const token = await client.getAccessToken();
+    return fetch(FEED_URL, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((r) => r.items);
+  },
+});
+```
+
+Be aware of the costs token-based auth brings: the token is reachable from JavaScript (an XSS risk), you must handle refresh and expiry, and every pilet that calls a protected API needs the token. These are the very problems the cookie/BFF approach avoids.
+
+## Feed-level access control
+
+Independent of how requests are authenticated, the feed service can return **different pilets for different users** — the strongest form of access control, because users never even download code they aren't allowed to run:
+
+```ts
+const visible = all.filter((p) =>
+  !p.requiredRole || user.roles.includes(p.requiredRole),
+);
+```
+
+See [Feed service → per-user targeting](/concepts/feed-service#per-user-pilet-targeting).
+
+## Pilet route guards
+
+For in-app gating, a pilet can guard its own routes — useful for hiding UI, though it is not a substitute for server-side checks:
+
+```tsx
+const AdminPage = () => {
+  if (!api.isAuthenticated?.()) return <Navigate to="/login" replace />;
+  return <AdminDashboard />;
+};
+
+api.registerPage('/admin', AdminPage);
+```
+
+
+========================================================================
+Source: /guides/testing
+========================================================================
+
+# Testing pilets
+
+There are two distinct things to test in a pilet, and they call for different styles:
+
+1. **Registration logic** — what your `setup(api)` function registers, and under which conditions. This is plain JavaScript and has *nothing to do with any UI framework*. It's the highest-value, fastest test you can write.
+2. **Rendered output** — what a component actually produces. This is about the **DOM**, so it runs in a DOM environment regardless of whether the component was authored in React, Vue, Svelte, or web components.
+
+All examples here use [Vitest](https://vitest.dev). Nothing below is React-specific except where a concrete component is rendered — and even then the assertions are made against the DOM, so the same approach works for any framework.
+
+## Setup
+
+```bash
+npm install --save-dev vitest
+```
+
+Configure a DOM environment so component tests have a `document` to render into:
+
+```ts
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    environment: 'jsdom',   // or 'happy-dom'
+    globals: true,
+  },
+});
+```
+
+```bash
+npm install --save-dev jsdom
+```
+
+## Testing `setup()` registrations
+
+This is the part unique to Piral, and it needs no DOM and no framework at all. Give `setup` a fake Pilet API and assert what it registered. A small typed factory keeps tests readable:
+
+```ts
+import { vi } from 'vitest';
+import type { PiletApi } from 'my-app-shell';
+
+export function createMockApi(overrides: Partial<PiletApi> = {}): PiletApi {
+  return {
+    registerPage: vi.fn(),
+    registerMenu: vi.fn(),
+    registerExtension: vi.fn(),
+    emit: vi.fn(),
+    on: vi.fn(),
+    getData: vi.fn(),
+    setData: vi.fn(),
+    meta: { name: 'test', version: '0.0.0', config: {}, basePath: '/', link: '' },
+    ...overrides,
+  } as unknown as PiletApi;
+}
+```
+
+```ts
+import { describe, it, expect } from 'vitest';
+import { setup } from './index';
+import { createMockApi } from './test-utils';
+
+describe('pilet setup', () => {
+  it('registers the products page and a menu item', () => {
+    const api = createMockApi();
+
+    setup(api);
+
+    expect(api.registerPage).toHaveBeenCalledWith('/products', expect.any(Function));
+    expect(api.registerMenu).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+Conditional registration is where this really pays off — assert that the right thing is wired up for each input:
+
+```ts
+it('only registers the admin page for admins', () => {
+  const adminApi = createMockApi({ getData: vi.fn(() => ({ roles: ['admin'] })) });
+  const userApi = createMockApi({ getData: vi.fn(() => ({ roles: [] })) });
+
+  setup(adminApi);
+  setup(userApi);
+
+  expect(adminApi.registerPage).toHaveBeenCalledWith('/admin', expect.any(Function));
+  expect(userApi.registerPage).not.toHaveBeenCalledWith('/admin', expect.any(Function));
+});
+```
+
+If your app shell ships test helpers, you can use them instead of a hand-written mock:
+
+```ts
+import { createTestApi } from 'piral-core/test'; // api.registerPage etc. are vi.fn() mocks
+```
+
+## Testing the DOM
+
+To test what a component renders, mount it into the jsdom `document` and assert against the resulting DOM. The example uses React, but the assertions only touch DOM nodes — swap in your framework's mount call and the rest is unchanged:
+
+```tsx
+import { describe, it, expect, afterEach } from 'vitest';
+import { createRoot } from 'react-dom/client';
+import { act } from 'react';
+import { ProductCard } from './ProductCard';
+
+let container: HTMLElement;
+
+afterEach(() => container?.remove());
+
+function mount(node: React.ReactNode) {
+  container = document.createElement('div');
+  document.body.appendChild(container);
+  act(() => createRoot(container).render(node));
+  return container;
+}
+
+describe('ProductCard', () => {
+  it('shows the product name and price', () => {
+    const el = mount(<ProductCard name="Widget Pro" price={29.99} />);
+
+    expect(el.textContent).toContain('Widget Pro');
+    expect(el.querySelector('[data-testid="price"]')?.textContent).toBe('€29.99');
+  });
+});
+```
+
+Prefer a higher-level helper? [@testing-library/dom](https://testing-library.com/docs/dom-testing-library/intro/) is framework-agnostic and pairs naturally with Vitest:
+
+```ts
+import { getByText } from '@testing-library/dom';
+
+const el = mount(<ProductCard name="Widget Pro" price={29.99} />);
+expect(getByText(el, 'Widget Pro')).toBeTruthy();
+```
+
+## Testing extension behavior
+
+Extension components are just components that receive `params`. Render one with sample params and assert the DOM reacts correctly — for example, that a promo only appears above a threshold:
+
+```tsx
+it('shows free-shipping promo only above the threshold', () => {
+  expect(mount(<PromoWidget params={{ cartTotal: 80 }} />).textContent).toContain('free shipping');
+  expect(mount(<PromoWidget params={{ cartTotal: 20 }} />).textContent).toBe('');
+});
+```
+
+## What to test where
+
+Keep most of your coverage in the fast, framework-free `setup()` tests — they catch the integration mistakes (wrong route, missing menu, wrong condition) that actually break a pilet inside the shell. Use DOM tests for the rendering details that matter, and lean on the [emulator](/concepts/emulator) for true end-to-end checks against the real shell.
+
+
+========================================================================
+Source: /guides/typescript
+========================================================================
+
+# TypeScript types
+
+Piral is fully typed around a single type: **`PiletApi`**, the contract a pilet uses to talk to the shell. This guide covers where that type comes from, how to extend it for your own events and extension slots, and how to share types across teams.
+
+## How the types are generated
+
+You don't hand-write the `PiletApi` type. When you build the app shell, Piral **generates** it:
+
+```bash
+npx piral build
+```
+
+The emulator produced by the build contains a generated TypeScript declaration (an `index.d.ts`) describing *that shell's* `PiletApi` — the [core API](/concepts/pilet-api#core-api) plus the methods of every plugin the shell installed. (The `piral declaration` command produces it; the build runs it for you.)
+
+A pilet installs that emulator and imports the type:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.showNotification('Hi'); // ✅ typed only if the shell installed piral-notifications
+}
+```
+
+Because the type is generated from the real shell, a pilet's autocomplete matches production exactly: call a method the shell doesn't provide and it's a compile error, not a runtime surprise. For framework-agnostic utilities that should accept any shell's API, import the base type instead:
+
+```tsx
+import type { PiletApi } from 'piral-core';
+```
+
+## Extending the types
+
+Piral exposes a set of intentionally empty interfaces in `piral-core/lib/types/custom`. You extend the typing by **declaration merging** against them. Put these augmentations in a `.d.ts` file in the **app shell** so they flow into the generated emulator types (or in a shared types package — see below).
+
+### Typing events
+
+Augment `PiralCustomEventMap` so `api.emit` and `api.on` are checked:
+
+```ts
+// types.d.ts (in the app shell)
+import 'piral-core';
+
+declare module 'piral-core/lib/types/custom' {
+  interface PiralCustomEventMap {
+    'cart-item-added': { productId: string; quantity: number };
+  }
+}
+```
+
+```ts
+api.emit('cart-item-added', { productId: 'p1', quantity: 2 }); // ✅ payload checked
+api.on('cart-item-added', ({ productId, quantity }) => {
+  // productId: string, quantity: number — fully typed
+});
+```
+
+### Typing extension slots
+
+Augment `PiralCustomExtensionSlotMap` to map each slot name to the shape of its `params`:
+
+```ts
+declare module 'piral-core/lib/types/custom' {
+  interface PiralCustomExtensionSlotMap {
+    'cart-extra': { cartTotal: number };
+  }
+}
+```
+
+Now both ends of the slot are type-checked:
+
+```tsx
+// rendering the slot
+<ExtensionSlot name="cart-extra" params={{ cartTotal: 89.9 }} />
+
+// filling the slot
+api.registerExtension('cart-extra', ({ params }) => (
+  <Promo total={params.cartTotal} /> // params is typed
+));
+```
+
+### Other extension points
+
+The same module exposes interfaces for more of the surface — for example `PiletCustomApi` to add methods to the Pilet API itself (this is what plugin authors merge into; see [Piral Plugins](/api/piral-plugin)), plus interfaces for shared data, page metadata, and custom errors. Augment whichever one you need; the pattern is always the same.
+
+## Sharing types
+
+Two pilets that emit the same event or fill the same slot need the *same* augmentations. Define the contract once and reuse it:
+
+- **A shared types package.** Extract the `declare module` augmentations into a small package (e.g. `@my-portal/types`) that the shell and every pilet reference. The contract lives in one place.
+- **Automatic fusion via Piral Cloud.** The official [Piral Cloud](https://www.piral.cloud) feed service can go a step further: pilets publish their own types, and the feed **automatically fuses the types published from pilets** into the instance's typing. Consumers then get a complete, always-current typed surface — including types contributed by other teams' pilets — without manually wiring up a shared package.
+
+:::tip
+Keep event and slot augmentations close to whoever *owns* the contract. If the app shell defines a slot, type it in the shell so the definition travels with the generated emulator types. If a pilet introduces a cross-pilet event, a shared types package (or Piral Cloud's type fusion) keeps every consumer in sync.
+:::
+
+
+========================================================================
+Source: /guides/deployment
+========================================================================
+
+# Deploying to production
+
+A Piral application has **two independent deployment streams**, and keeping them separate is the whole point:
+
+- The **app shell** is a static site. You build it once and host the `dist/release/` output like any SPA. It changes rarely.
+- **Pilets** are published to a **feed service**, not bundled into the shell. They ship continuously, on each team's own schedule, without ever redeploying the shell.
+
+This page covers both, plus the server configuration and caching that make it reliable.
+
+_(Diagram: Two independent pipelines: the shell deploys as a static site, pilets publish to the feed — and they meet only in the browser.)_
+
+## Deploying the app shell
+
+`npm run build` produces `dist/release/` — plain static files (HTML, JS, CSS, assets). Serve them from any static host or web server. There is one hard requirement: because routing is client-side, the server must **fall back to `index.html`** for any path that isn't a real file, so deep links and refreshes work.
+
+### Self-hosted: nginx
+
+A complete server block for a self-hosted static deployment, with SPA fallback, compression, and correct caching:
+
+```nginx
+server {
+  listen 443 ssl http2;
+  server_name app.example.com;
+  root /var/www/my-portal;          # contents of dist/release/
+  index index.html;
+
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  gzip_min_length 1024;
+
+  # Hashed assets never change — cache them aggressively
+  location /assets/ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+    try_files $uri =404;
+  }
+
+  # The HTML entry point must never be cached
+  location = /index.html {
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+  }
+
+  # SPA fallback: every other route renders the app shell
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
+
+### Self-hosted: Apache / IIS
+
+For Apache, an `.htaccess` in the web root handles the fallback:
+
+```apache
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+```
+
+For IIS, add a rewrite rule in `web.config` that maps non-file requests to `/index.html`. The principle is identical: real files are served as-is, everything else returns the shell.
+
+### Managed static hosts
+
+Most platforms need only a one-line fallback rule:
+
+| Host | SPA fallback configuration |
+|---|---|
+| Netlify | `_redirects`: `/* /index.html 200` |
+| Vercel | `vercel.json` rewrite: `"source": "/(.*)", "destination": "/index.html"` |
+| GitHub Pages | Copy `index.html` to `404.html` |
+| Azure Static Web Apps | `staticwebapp.config.json` `navigationFallback` → `/index.html` |
+| AWS S3 + CloudFront | Set the error document to `index.html` (403/404 → 200) |
+
+### App shell via GitHub Actions
+
+```yaml
+name: Deploy app shell
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run build
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/release
+```
+
+### App shell to AWS S3 + CloudFront
+
+```bash
+aws s3 sync dist/release s3://my-bucket --delete
+aws cloudfront create-invalidation --distribution-id $CF_DIST_ID --paths "/*"
+```
+
+## Caching strategy
+
+Get these headers right and the app feels instant while still updating predictably:
+
+```
+# Hashed asset bundles (app shell + pilets) — cache forever
+Cache-Control: public, max-age=31536000, immutable
+
+# index.html — never cache, so new releases are picked up immediately
+Cache-Control: no-cache, no-store, must-revalidate
+
+# The feed response — short TTL so rollouts/rollbacks propagate fast
+Cache-Control: public, max-age=30, stale-while-revalidate=60
+```
+
+The feed TTL is the lever that controls how quickly a pilet rollout or rollback reaches users — typically within 30–60 seconds.
+
+## Deploying pilets
+
+Pilets never go through the app shell's pipeline. Each pilet builds and publishes to the feed independently:
+
+```yaml
+name: Publish pilet
+on:
+  push:
+    branches: [main]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm test
+      - run: npx pilet build
+      - run: npx pilet publish --url ${{ vars.FEED_URL }}/api/v1/pilets --api-key ${{ secrets.FEED_API_KEY }}
+```
+
+The feed stores the bundle on your CDN and records the new version; the next feed response includes it. Where the feed lives — [Piral Cloud](https://www.piral.cloud) or a [custom feed service](/advanced/custom-feed) — doesn't change the publish step.
+
+## Rollback
+
+Because the shell only knows the feed URL, rolling back a pilet never touches the shell. Point the feed at the previous version and users pick it up on their next load:
+
+| Feed type | How to roll back |
+|---|---|
+| Piral Cloud | One click in the dashboard |
+| Self-hosted feed | Set the active version in your database |
+| Static JSON feed | Edit the `version` / `link` in the JSON file |
+
+No app shell rebuild, no `git revert`, no redeploy.
+
+
+========================================================================
+Source: /guides/llms
+========================================================================
+
+# Using LLMs with Piral
+
+AI coding assistants — Copilot, Cursor, Claude, and friends — pair unusually well with Piral. A micro frontend is already split into small, self-contained units, so a pilet is a bite-sized, low-blast-radius task a model can reason about from end to end. This guide covers how to get good results, and how to make your own Piral app easy for assistants to work with.
+
+## Why Piral fits LLM-assisted development
+
+- **Small units.** A pilet is one feature behind one `setup(api)` function — small enough to hold in context and reason about completely.
+- **A typed contract.** The Pilet API is fully typed. Point the model at the type and it knows exactly which registrations and methods exist, instead of guessing.
+- **Isolation.** A wrong suggestion inside one pilet can't break the app shell or another pilet, so it's safe to let a model iterate.
+- **Explicit boundaries.** Shared dependencies (importmaps) and extension slot names are written down — concrete facts a model can respect rather than infer.
+
+## Give the model the right context
+
+Context is the single biggest quality lever. Before asking for code, make sure the assistant has:
+
+1. **The docs index.** Point your tool at this site's machine-readable `/llms.txt` — a curated map of every page so the model can pull the right reference on demand.
+2. **The `PiletApi` type.** Paste (or reference) the `PiletApi` type from your app shell package — the emulator ships these definitions. This is the highest-value piece of context: it tells the model precisely which methods exist, so it won't invent `api.showNotification` when you haven't installed `piral-notifications`.
+3. **The target shell and shared dependencies.** Name the app shell package and list the centrally shared externals (from the shell's importmap), so generated code treats `react` and friends as provided rather than bundling them.
+4. **Slot names and config.** The extension slot names and their `params`, plus any feed `config` keys the pilet should read.
+
+A short preamble like this, pasted into the chat or kept in a rules file, dramatically improves output:
+
+```text
+We build on Piral (React micro frontends).
+Target app shell: my-app-shell  (import types via: import type { PiletApi } from 'my-app-shell').
+Installed plugins (only these API methods exist): piral-menu, piral-notifications.
+Shared externals (never bundle): react, react-dom, react-router-dom.
+Extension slots: cart-extra (params: { cartTotal: number }).
+Scaffold with `npm init pilet`; never install piral-cli globally.
+```
+
+## Common tasks
+
+Each of these is a natural, well-scoped request for an assistant. The notes call out where models trained on older material tend to slip.
+
+**Scaffold a pilet.** Ask for the current initializer, not the legacy command:
+
+```bash
+npm init pilet@latest -- --source my-app-shell --target my-pilet --bundler webpack5
+```
+
+If the model suggests `pilet new` or a global `npm i -g piral-cli`, that's stale — correct it (see [CLI reference](/reference/cli)).
+
+**Register a page and a menu item.** A pilet exports exactly one `setup` function:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/orders', OrdersPage);
+  api.registerMenu(() => <a href="/orders">Orders</a>);
+}
+```
+
+**Fill an extension slot.** Remind the model that pilets never import each other — they connect through named slots (see [Extension slots](/concepts/extension-slots)).
+
+**Share a library.** Ask it to add the package to the pilet's `importmap` rather than bundling it (see [Dependency sharing](/concepts/dependency-sharing)).
+
+**Write tests.** "Write Vitest tests for this pilet's `setup` using a mock `PiletApi`" works well, because the registration logic is plain and framework-independent (see [Testing pilets](/guides/testing)).
+
+**Migrate `piral` to `piral-core`.** Point the model at the [Piral packages](/reference/piral-packages) guide — the change is mechanical (swap the dependency, move plugin imports, register plugins explicitly).
+
+## Guardrails to give the model
+
+Models often carry outdated Piral habits from their training data. Stating these rules up front prevents the most common mistakes:
+
+- Scaffold with `npm init piral-instance` / `npm init pilet`; run the CLI via `npx` or npm scripts. Never `npm i -g piral-cli`, never `piral new` / `pilet new`.
+- A pilet's only required entry is an exported `setup(api)` function.
+- Only call Pilet API methods provided by installed plugins; import `PiletApi` from the shell package for accurate, type-checked autocomplete.
+- Treat `react`, `react-dom`, the router, and other shared libraries as externals via the importmap — don't bundle them or import a different version.
+- Pilets never import one another: compose UI through extension slots, and share data through events, the shared data store, or a shared library.
+- Registrations are cleaned up automatically on unload and hot reload; only call `unregister*` for genuinely dynamic cases.
+
+## A drop-in rules file
+
+Most assistants read a project-level instructions file — `AGENTS.md`, `.cursorrules`, or `.github/copilot-instructions.md`. Dropping one into your repo makes every tool follow your conventions automatically. Use this as a starting point and fill in your shell name, plugins, externals, and slots:
+
+```text
+# Piral project rules (for AI assistants)
+
+This repository uses Piral (React micro frontends).
+
+Contract:
+- App shell package: my-app-shell. Types: import type { PiletApi } from 'my-app-shell'.
+- Installed Pilet API plugins (only these methods exist): piral-menu, piral-notifications, piral-modals.
+- Shared externals (never bundle, never import a different version): react, react-dom, react-router-dom.
+- Extension slots: cart-extra (params: { cartTotal: number }).
+
+Conventions:
+- Scaffold with: npm init pilet@latest -- --source my-app-shell
+- Never install piral-cli globally; never use `pilet new` or `piral new`.
+- Run the CLI via npm scripts or npx (npx pilet debug | build | publish).
+- A pilet's entry is a single exported setup(api: PiletApi) function.
+- Only call Pilet API methods provided by the plugins listed above. Do not invent methods.
+- Share libraries via the importmap in package.json; the externals above come from the shell.
+- Pilets must not import each other. Compose UI via extension slots; share data via events or the shared data store.
+- Prefer piral-core for long-lived apps (same API as piral).
+- Write tests with Vitest by unit-testing setup() with a mock PiletApi.
+
+Docs: see /llms.txt for a machine-readable map of the framework documentation.
+```
+
+## Make your app shell LLM-friendly
+
+If you maintain the app shell, a little effort makes every pilet team's assistant far more accurate:
+
+- **Ship accurate types.** The emulator already exports `PiletApi`; keep it in sync with the plugins you actually install so the model's view matches reality.
+- **Document the contract.** List installed plugins, centrally shared dependencies, extension slot names and `params`, and feed `config` keys in one discoverable place.
+- **Provide a template rules file.** Include a pre-filled `AGENTS.md` (like the one above) in your pilet scaffolding template so new pilets start LLM-ready.
+- **Expose an `llms.txt`.** If you host your own developer portal or docs, add an `llms.txt` index — this site ships one at `/llms.txt` — so assistants can navigate it.
+
+:::tip
+The properties that make Piral good for teams make it good for assistants too: small, typed, isolated units with explicit contracts. The clearer your contracts, the better both humans and models perform.
+:::
+
+## Ready-made LLM assets
+
+This documentation ships three assets you can point tools at or copy into your project:
+
+- `/llms.txt` — a curated, linked index of every page (the [llms.txt](https://llmstxt.org) convention).
+- `/llms-full.txt` — the entire documentation concatenated as plain text, regenerated on every build; ideal for pasting into a model's context or ingesting wholesale.
+- `/AGENTS.md` — a ready-to-edit version of the rules file above. Download it, fill in your shell name, plugins, externals, and slots, then drop it into your repo as `AGENTS.md` (or `.cursorrules` / `.github/copilot-instructions.md`).
+
+If you maintain a custom pilet scaffolding template, include a pre-filled `AGENTS.md` so every new pilet starts LLM-ready — a custom template is the natural place to ship conventions like this.
+
+
+========================================================================
+Source: /advanced/custom-feed
+========================================================================
+
+# Custom feed services
+
+The feed service is Piral's discovery layer: on startup the app shell asks it which pilets to load, and `pilet publish` sends new versions to it. Most teams use the managed [Piral Cloud](https://www.piral.cloud) feed and never build one — but the protocol is deliberately small, so running your own is very doable when you need full control, custom targeting logic, or on-prem hosting. This page walks through a minimal, production-shaped implementation you can grow from.
+
+## The protocol
+
+A feed is just two HTTP endpoints — one the shell reads on startup, one the CLI writes to when publishing. Everything else (storage, targeting, rollback) is your implementation detail.
+
+Two endpoints required:
+
+```
+GET  /api/v1/pilets          ← called by the app shell on startup
+POST /api/v1/pilets          ← called by `npx pilet publish`
+```
+
+## Minimal Node.js implementation
+
+The read endpoint returns the metadata the shell needs for each pilet — name, version, bundle URL, and integrity hash. Because it sees the request, it's also where per-user logic lives: filter by role, tenant, or cohort so different users get different pilet sets. The publish endpoint accepts the packed pilet, stores the bundle on a CDN, and records the new version in a database:
+
+```ts
+import express from 'express';
+import multer from 'multer';
+
+const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.get('/api/v1/pilets', async (req, res) => {
+  const user = await verifyToken(req.headers.authorization);
+  const all = await db.getActivePilets();
+
+  const visible = all.filter(p =>
+    (!p.requiredRole || user.roles.includes(p.requiredRole)) &&
+    (!p.tenantId || p.tenantId === user.tenantId)
+  );
+
+  res.json({
+    items: visible.map(p => ({
+      name: p.name,
+      version: p.version,
+      link: `${CDN_BASE}/${p.name}@${p.version}/index.js`,
+      spec: 'v2',
+      integrity: p.integrity,
+      dependencies: {},
+      config: p.config ?? {},
+    })),
+  });
+});
+
+app.post('/api/v1/pilets', verifyApiKey, upload.single('file'), async (req, res) => {
+  const meta = await extractPiletMeta(req.file.buffer);
+  await uploadToCDN(`${meta.name}@${meta.version}/index.js`, req.file.buffer);
+  await db.upsertPilet({ name: meta.name, version: meta.version });
+  res.json({ name: meta.name, version: meta.version });
+});
+
+app.listen(9000);
+```
+
+## Database schema (PostgreSQL)
+
+```sql
+CREATE TABLE pilets (
+  id           SERIAL PRIMARY KEY,
+  name         TEXT NOT NULL,
+  version      TEXT NOT NULL,
+  integrity    TEXT,
+  config       JSONB DEFAULT '{}',
+  active       BOOLEAN DEFAULT true,
+  published_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(name, version)
+);
+```
+
+## Rollback endpoint
+
+```ts
+app.patch('/api/admin/pilets/:name/rollback', adminOnly, async (req, res) => {
+  const { name } = req.params;
+  const { version } = req.body;
+  await db.query(
+    'UPDATE pilets SET active = (version = $2) WHERE name = $1',
+    [name, version]
+  );
+  res.json({ name, activeVersion: version });
+});
+```
+
+## CDN storage
+
+The feed only ever returns *URLs* to bundles — it doesn't serve the JavaScript itself. Host the bundles as static, content-addressed files (each at a `name@version` path) so they can be cached forever and never collide. Any HTTPS-capable static host works:
+
+Pilet bundles must be publicly accessible over HTTPS.
+
+| Option | Notes |
+|---|---|
+| AWS S3 + CloudFront | Production standard. Set `Cache-Control: immutable`. |
+| Azure Blob + CDN | Same pattern on Azure. |
+| Cloudflare R2 | Zero egress cost. |
+| GitHub Releases | Free, adequate for low-traffic internal tools. |
+
+## Feed caching
+
+```
+Cache-Control: public, max-age=30, stale-while-revalidate=60
+```
+
+30-second TTL means rollbacks propagate within 30–60 seconds. Adjust to taste.
+
+
+========================================================================
+Source: /advanced/performance
+========================================================================
+
+# Performance & lazy loading
+
+## The default loading model
+
+On startup, the app shell:
+
+1. Fetches the feed (one request)
+2. Loads every pilet's JS bundle in parallel
+3. Calls each pilet's `setup()`
+
+With 30 pilets averaging 80 KB gzipped, that's 2.4 MB before the page is interactive — even if the user only needs three pilets. The strategies below cut that down.
+
+_(Diagram: Eager loading downloads every pilet up front; lazy techniques defer code until it's actually needed.)_
+
+## Pilets are fast by default
+
+Before reaching for any strategy, it's worth knowing that pilets are inherently fast:
+
+- **Small entry, parallel streaming.** A pilet's `index.js` is small, so it loads quickly — and over HTTP/2 (and newer) many small files stream in parallel, so requesting several pilets at once isn't the penalty it was under HTTP/1.
+- **Cached indefinitely, no collisions.** Each pilet is served from a path that contains its **name and version**, so versions can never collide and bundles can be cached **forever**. (The official [Piral Cloud](https://www.piral.cloud) feed serves them exactly this way.)
+- **Warm loads beat an SPA.** Because unchanged pilets are already on disk from a previous visit, a returning user often loads *faster* than with an equivalent monolithic SPA — only the pilets that actually changed are fetched again.
+
+So the strategies below matter mostly at larger scale (dozens of pilets) or to shave the very first paint — not as everyday necessities.
+
+## Strategy 1: Code splitting within a pilet
+
+This is the everyday lazy-loading technique, and it's always available. Split heavy pages with `React.lazy` so a pilet ships a small entry and pulls in the rest only when a route is opened:
+
+```tsx
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+const ReportsPage   = React.lazy(() => import('./pages/ReportsPage'));
+
+export function setup(api: PiletApi) {
+  api.registerPage('/analytics', DashboardPage);
+  api.registerPage('/analytics/reports', ReportsPage);
+}
+```
+
+Wrap the shell's `RouteSwitch` in `<Suspense>` so the chunk can load gracefully:
+
+```tsx
+const RouteSwitch: React.FC = ({ children }) => (
+  <React.Suspense fallback={<PageSkeleton />}>
+    {children}
+  </React.Suspense>
+);
+```
+
+The pilet still loads at startup, but it stays tiny; the bulk arrives on navigation. Reach for this first — it needs no shell coordination and no feed changes.
+
+## Strategy 2: Deferring whole pilets from the app shell
+
+Sometimes you want to keep an *entire* pilet out of the initial load — an admin area, a rarely used reporting module — without splitting it internally. Because **you** own `requestPilets`, the shell can decide which pilets load at startup and which load later. A nice side effect: this needs no feed-side orchestration — a static JSON file or a fixed list is enough, since the *shell* does the filtering and the timing.
+
+```tsx
+const all = await loadPiletList(); // a static JSON, a fixed list, or a feed response
+const eager = all.filter((p) => !p.custom?.deferred);
+const deferred = all.filter((p) => p.custom?.deferred);
+
+const instance = createInstance({
+  requestPilets: () => Promise.resolve(eager), // load only the essentials at startup
+});
+
+// …later, when the condition applies (a feature flag, a role, a route, a "load more"):
+const meta = deferred.find((p) => p.name === 'pilet-reports');
+await instance.context.addPilet(meta); // load + evaluate + inject on demand
+```
+
+`instance.context.addPilet(meta)` fetches, evaluates, and injects the pilet at runtime — its pages, menu items, and extensions light up immediately. The companion `removePilet(name)` tears one down again, and `injectPilet(pilet)` injects an already-loaded one.
+
+Use Strategy 2 when the unit you want to defer is a whole pilet and the decision lives in the shell; use Strategy 1 when the deferral is *within* a single pilet.
+
+## Strategy 3: Optimise shared dependencies
+
+Audit what each pilet actually bundles:
+
+```bash
+npx pilet build --source-maps
+npx source-map-explorer dist/index.js
+```
+
+If you see React, the router, or your design system inside multiple pilet bundles, move them to the app shell's `importmap` (central externals). For domain libraries shared between only some pilets, use a pilet-level `importmap` side-bundle instead. See [Dependency sharing](/concepts/dependency-sharing).
+
+## Strategy 4: CDN caching
+
+Pilet bundles have content-hashed filenames by default. Cache them forever:
+
+```
+Cache-Control: public, max-age=31536000, immutable
+```
+
+Only `index.html` and the feed JSON should have short cache TTLs.
+
+## Strategy 5: Eliminate the feed round trip
+
+The one thing that can make a Piral app's *first* load longer than a plain SPA is the extra hop to the feed service: the shell loads, asks the feed which pilets to use, then loads them. You can remove that hop by serving `index.html` **dynamically** rather than statically — take the usual static `index.html` and augment it so it already carries the feed response.
+
+Inline the pilet list into the document (for example as a small script the shell reads instead of fetching), and point `requestPilets` at it:
+
+```html
+<!-- injected by the server into index.html -->
+<script>
+  window.__pilets__ = [ /* the feed response, rendered server-side */ ];
+</script>
+```
+
+```tsx
+const instance = createInstance({
+  requestPilets: () => Promise.resolve((window as any).__pilets__ ?? fetchFeed()),
+});
+```
+
+Now the shell starts loading pilets immediately — there's no separate feed request. In the warm-load case those bundles are already cached on disk, so they're available at once, with no network round trip at all for unchanged pilets. This pairs naturally with a server-rendered shell; see [Server-side rendering](/advanced/ssr).
+
+## Performance targets
+
+| Artifact | Good | Warning |
+|---|---|---|
+| App shell JS (gzipped) | < 100 KB | > 200 KB |
+| Individual pilet (gzipped) | < 60 KB | > 150 KB |
+| Feed response JSON | < 5 KB | > 20 KB |
+| Time to first pilet render | < 2s (fast connection) | > 4s |
+
+
+========================================================================
+Source: /advanced/module-federation
+========================================================================
+
+# Module & Native Federation
+
+When people compare Piral to "federation," they usually mean one of two things: **Module Federation** or **Native Federation**. Both solve the *loading* layer of a micro frontend — getting code from one independently built app into another at runtime. Piral solves that layer too, but wraps a whole framework around it. This page draws the lines clearly and shows how they combine.
+
+## What they all share
+
+All three let you:
+
+- Deploy UI modules independently of the host.
+- Share dependencies (React, etc.) at runtime instead of bundling them everywhere.
+- Load code dynamically, without one monolithic bundle.
+
+The difference is how much of the system each one gives you out of the box.
+
+## The three approaches
+
+**Module Federation** is a code-sharing mechanism baked into a bundler. One build exposes modules; another consumes them at runtime. It originated in Webpack 5, and with **Module Federation 2.0** it's no longer Webpack-only — it runs on Rspack and has a bundler-independent runtime, with community plugins for Vite and others. What it still doesn't define for you: how to *discover* which remotes to load, how modules *register* themselves into the host, local developer experience, or the end-to-end CLI workflow.
+
+**Native Federation** takes the same idea but builds it on web standards — native ES modules and [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) — instead of bundler internals. It's bundler-agnostic and framework-agnostic (it grew up in the Angular ecosystem but isn't tied to it), which makes it lightweight and future-proof. Like Module Federation, it's a transport layer: discovery, registration, and tooling are still yours to assemble.
+
+**Piral** is a complete micro frontend *framework*. It includes the discovery layer (the feed service), a typed registration contract (the Pilet API), local development tooling (the emulator and CLI), and runtime UI composition (extension slots). Crucially, Piral is **not a competitor to the transports** — it can load pilets, Module Federation remotes, *and* Native Federation remotes, so the federation choice becomes an implementation detail underneath Piral.
+
+```
+Module Federation / Native Federation  →  the "how" (transport)
+Piral                                  →  the "how" + "what" + "when" + tooling
+```
+
+## Feature comparison
+
+| Capability | Module Federation | Native Federation | Piral |
+|---|---|---|---|
+| Transport for remote modules | ✅ bundler runtime | ✅ import maps + ESM | ✅ (+ can reuse the other two) |
+| Bundler independence | ✅ since MF 2.0 | ✅ by design | ✅ (pick any bundler plugin) |
+| Standards-based (no runtime lib) | ❌ | ✅ | ⚠️ uses a small runtime |
+| Dynamic runtime discovery | ❌ DIY | ❌ DIY | ✅ feed service |
+| Typed registration contract | ❌ | ❌ | ✅ Pilet API |
+| Developer emulator | ❌ | ❌ | ✅ built-in |
+| Extension / slot composition | ❌ | ❌ | ✅ built-in |
+| Per-user / per-tenant targeting | ❌ | ❌ | ✅ via feed |
+| Instant rollback without redeploy | ❌ | ❌ | ✅ via feed |
+| End-to-end CLI workflow | ⚠️ partial | ⚠️ partial | ✅ full |
+
+## When a transport alone is enough
+
+Reach for Module Federation or Native Federation **without** Piral when:
+
+- You only need to share code between a small, fixed set of apps you already control.
+- You don't need runtime discovery, per-user targeting, or instant rollback.
+- You want the absolute minimum runtime — in which case **Native Federation** is the most standards-aligned choice, and **Module Federation** is the natural fit if you're already invested in its ecosystem (e.g. Rspack or Next.js).
+
+## When to choose Piral
+
+- You want discovery, targeting, and rollback handled for you rather than built by hand.
+- A stable, typed registration contract between host and modules matters.
+- Developer experience — the emulator, CLI, and extension slots — is a priority.
+- You have many independently deployed modules and multiple teams.
+
+## Using them together
+
+These are composable, not mutually exclusive. Piral can treat a Module Federation or Native Federation remote as a pilet: the feed describes the remote (a pilet with `spec: "mf"`, or a native-federation remote entry) and Piral loads it like any other pilet — while you keep the feed, emulator, typed API, and extension slots on top.
+
+In other words, you don't have to pick "Piral *or* federation." You pick a federation transport for *how* code is delivered, and Piral for *everything around it*.
+
+
+========================================================================
+Source: /advanced/pilet-portability
+========================================================================
+
+# Pilet portability
+
+When you scaffold a pilet with `--source my-app-shell`, it's easy to assume the pilet is *bound* to that shell. It isn't. That reference exists so the pilet can compile against the shell's TypeScript types and run inside its emulator during development. At **runtime**, a pilet is far more portable: any app shell that satisfies the pilet's assumptions can host it — including a *newer version* of the same shell, or an *entirely different* shell the pilet was never "developed for."
+
+## What a pilet actually depends on
+
+A pilet doesn't depend on a specific shell build. It depends on a set of **capabilities** being present at runtime:
+
+1. **The Pilet API surface it calls.** If a pilet uses `api.registerPage` and `api.showNotification`, the host shell must provide those — meaning it must have the corresponding plugins installed (here, `piral-notifications`).
+2. **The centrally shared dependencies it treats as externals.** A pilet that compiles `react` and `react-router-dom` as externals expects the host to provide them at runtime.
+3. **Any cross-pilet contracts it relies on.** Extension slot names it fills, shared-data keys it reads, events it listens for.
+
+If a host shell provides all of these, the pilet runs. If it's missing one — say, no notifications plugin — the pilet will fail where it tries to use the absent capability. That's the entire contract.
+
+_(Diagram: The same pilet binary runs on any shell that satisfies its assumptions — not just the one it was scaffolded against.)_
+
+## Why this matters
+
+**You can upgrade the shell without rebuilding pilets.** As long as a new shell version keeps providing the API methods and shared dependencies existing pilets use, those pilets keep working untouched. This is how a single shell can host dozens of independently maintained pilets across many versions — old API methods remain present; new ones simply become available to pilets that upgrade their emulator. (See [Emulator → version coordination](/concepts/emulator#version-coordination).)
+
+**You can reuse a pilet across shells.** A "profile" or "notifications" pilet can run in several different portals, as long as each portal's shell offers the capabilities the pilet relies on. The pilet is authored once and dropped into each shell's feed.
+
+**The dev-time link is just a default, not a lock.** The `piral.name` field and the emulator dev dependency tell the tooling which shell to type-check and debug against. They don't restrict where the built pilet can run.
+
+## Keeping pilets portable
+
+- **Depend on the API, not the implementation.** Use the typed Pilet API and shared externals; avoid reaching into shell internals or `window` globals.
+- **Treat the API as a versioned contract.** Additive changes keep old pilets working; removing or changing a method is a breaking change for every pilet that uses it.
+- **Document the capabilities a shell must provide** — which plugins, which centrally shared packages, which extension slot names — so a pilet can be matched to any compatible shell with confidence.
+
+:::tip The flip side
+Portability cuts both ways: if a pilet quietly assumes a plugin or shared package that a target shell doesn't provide, it will break there. Make assumptions explicit (and ideally type-checked against the target emulator) rather than implicit.
+:::
+
+
+========================================================================
+Source: /advanced/monorepo
+========================================================================
+
+# Monorepo setup
+
+Pilets are built and deployed independently — but during development it's often convenient to keep the app shell and several pilets in one repository. You get shared tooling, atomic cross-cutting refactors, and instant local linking with no publish step. A workspace manager (pnpm, Yarn, or npm workspaces) plus a task runner is all it takes, and it changes nothing about how the pieces *deploy*: each pilet still ships on its own.
+
+## Structure
+
+```
+my-portal/
+├── packages/
+│   ├── app-shell/
+│   ├── pilet-checkout/
+│   ├── pilet-catalog/
+│   └── pilet-account/
+├── package.json       ← workspace root
+└── pnpm-workspace.yaml
+```
+
+## pnpm workspaces
+
+`pnpm-workspace.yaml`:
+
+```yaml
+packages:
+  - 'packages/*'
+```
+
+Root `package.json`:
+
+```json
+{
+  "name": "my-portal-monorepo",
+  "private": true,
+  "scripts": {
+    "dev:shell": "pnpm --filter app-shell dev",
+    "build:all": "pnpm -r build",
+    "test:all": "pnpm -r test"
+  }
+}
+```
+
+## Pilet references the local app shell
+
+A pilet always targets a shell by name. In a monorepo that target resolves to the **sibling package** instead of a published one, so a pilet develops against the shell in the same repo:
+
+In `packages/pilet-checkout/package.json`:
+
+```json
+{
+  "name": "pilet-checkout",
+  "devDependencies": {
+    "app-shell": "workspace:*"
+  },
+  "piral": { "name": "app-shell" }
+}
+```
+
+`workspace:*` tells pnpm to use the local version — no npm publish needed during development.
+
+## Turborepo (recommended for large repos)
+
+As the repository grows, a task runner like Turborepo pays off: it caches build outputs and runs tasks only for packages that actually changed — a real time-saver once you have a dozen pilets and a shell to build and test:
+
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "test": { "dependsOn": ["build"] },
+    "dev": { "cache": false, "persistent": true }
+  }
+}
+```
+
+:::tip
+On Turborepo 1.x this top-level key was called `pipeline`; it was renamed to `tasks` in Turborepo 2.0.
+:::
+
+```bash
+turbo build                    # build everything in order
+turbo build --filter=[HEAD^1]  # only changed packages
+```
+
+## CI: only build what changed
+
+```yaml
+- name: Build affected
+  run: turbo build --filter=[HEAD^1]
+
+- name: Test affected
+  run: turbo test --filter=[HEAD^1]
+```
+
+
+========================================================================
+Source: /advanced/ssr
+========================================================================
+
+# Server-side rendering
+
+Server-side rendering is an area of active development for Piral. The honest summary up front: **first-class SSR is being addressed in Piral v2**. Today you can already get good results with a static shell plus client hydration, and the modular foundation Piral gives you is exactly what makes a richer SSR story tractable.
+
+## Why Piral is well-positioned for SSR
+
+A Piral application is already a composition of independent modules. That maps almost one-to-one onto the **islands architecture**: each pilet is a self-contained island that can be rendered on the server and hydrated independently on the client, without forcing the whole page through a single monolithic render.
+
+That modular foundation is the hard part — and Piral already has it. Layering SSR on top is then about *where* and *when* each island renders, rather than re-architecting the app. This is why building on Piral pays off even before the full SSR story lands: the structure you adopt now is the structure SSR wants.
+
+## What works today: static shell + client hydration
+
+The pragmatic approach available right now is to pre-render the app shell's skeleton as static HTML and let pilets load and hydrate on the client as usual.
+
+```html
+<body>
+  <div id="app">
+    <header class="app-header">
+      <a href="/">My Portal</a>
+      <nav id="shell-nav"><!-- pilets fill this --></nav>
+    </header>
+    <main id="shell-main">
+      <div class="loading-placeholder">Loading…</div>
+    </main>
+  </div>
+  <script src="/app-shell.js" defer></script>
+</body>
+```
+
+This gives you a fast, meaningful first paint (header, navigation, layout) with no server-side rendering infrastructure for the pilets themselves. The trade-off is that pilet content isn't in the initial HTML, so it's not ideal for SEO on pilet-rendered pages. For many internal tools and authenticated apps, that's a perfectly good place to stand.
+
+## The direction: islands SSR in Piral v2
+
+The cohesive, first-class SSR story is landing in **Piral v2**, built around the islands model described above — server-rendering pilets and hydrating them independently.
+
+You can already see the direction in an early prototype: the [Netflix islands demo](https://github.com/piral-samples/netflix-islands-demo) is a Netflix-style portal whose pilets use the islands architecture (built on `piral-server`). It's an older, experimental sample rather than a supported API, but it shows where Piral is heading and what islands-based SSR looks like in practice.
+
+:::tip
+Adopt Piral now for the modularity, dynamism, and team independence it gives you today. The investment carries forward: when first-class SSR arrives in v2, it builds on the same modular foundation rather than asking you to restructure.
+:::
+
+## Things to keep in mind
+
+Regardless of the approach, a few constraints apply to any SSR setup:
+
+- Pilets that touch browser-only APIs (`window`, `document`) need guards like `if (typeof window !== 'undefined')` so they can run (or no-op) on the server.
+- Highly dynamic, per-user feeds make full-page output hard to cache — an argument for island-level rendering and hydration rather than monolithic SSR.
+- Non-React pilets (via converters) depend on their framework's own SSR support.
+
+If SEO on pilet-rendered content is a hard requirement today, start with the static shell approach and follow Piral v2 for the first-class path.
+
+
+========================================================================
+Source: /advanced/migration
+========================================================================
+
+# Migrating from a monolith
+
+The strangler fig pattern: introduce Piral alongside your existing app, gradually expand it until the monolith can be retired.
+
+## The migration stages
+
+_(Diagram: The legacy app enters as a single pilet and is strangled feature-by-feature until only independent pilets remain.)_
+
+## Step 1: Create a thin app shell
+
+```bash
+npm init piral-instance@latest -- --target my-portal --bundler webpack5
+```
+
+Add your existing global layout and auth mechanism. Leave the feed empty for now.
+
+## Step 2: Wrap the existing app as a pilet
+
+```tsx
+// pilet-legacy/src/index.tsx
+import type { PiletApi } from 'my-portal';
+
+// Import your existing React app root component
+// Remove the top-level <BrowserRouter> — Piral provides it
+import { LegacyApp } from '../existing-app/src/LegacyApp';
+
+export function setup(api: PiletApi) {
+  // Catch-all: the legacy app handles all routes internally
+  api.registerPage('/*', LegacyApp);
+}
+```
+
+Remove the top-level `<BrowserRouter>` from `LegacyApp` — Piral's shell provides routing. Keep any internal `<Routes>` for nested navigation.
+
+## Step 3: Validate
+
+Build and publish the legacy pilet. Verify the full existing application works through the new shell. Fix CSS scoping issues if global styles conflict.
+
+## Step 4: Extract features team by team
+
+1. Create a new pilet for a feature (`pilet-checkout`)
+2. Move the feature's components into it
+3. Register the feature's routes in the new pilet
+4. Remove those routes from the legacy pilet
+5. Both teams now deploy independently
+
+Repeat for each feature at each team's own pace.
+
+## Step 5: Retire the legacy pilet
+
+Once all features are extracted, disable the legacy pilet in the feed.
+
+## Handling CSS
+
+Scope all legacy global styles to avoid conflicts:
+
+```tsx
+const LegacyApp = () => (
+  <div className="legacy-app-scope">
+    <ActualLegacyApp />
+  </div>
+);
+```
+
+```css
+.legacy-app-scope .button { /* scoped legacy styles */ }
+```
+
+## Timeline expectations
+
+| App size | Teams | Duration |
+|---|---|---|
+| Small (< 20 routes) | 1–2 | 4–8 weeks |
+| Medium (20–80 routes) | 3–6 | 3–6 months |
+| Large (80+ routes) | 7+ | 9–18 months |
+
+The upfront investment (stages 1–3) typically takes 1–3 weeks regardless of app size.
+
+
+========================================================================
+Source: /reference/cli
+========================================================================
+
+# CLI reference
+
+Piral's tooling lives in the `piral-cli` package. You **don't install it globally**. Instead:
+
+- **Scaffolding** is done with npm initializers (`npm init piral-instance`, `npm init pilet`), which download a throwaway scaffolder on demand.
+- The initializers add `piral-cli` (plus a bundler plugin) as a **local dev dependency** of the generated project.
+- You then run commands through the generated **npm scripts** (`npm start`, `npm run build`) or directly with **`npx`** (`npx pilet build`).
+
+This keeps each project pinned to its own CLI and bundler versions, with nothing to maintain on your machine globally.
+
+## Scaffolding
+
+### `npm init piral-instance`
+
+Create a new app shell.
+
+```bash
+npm init piral-instance@latest -- --target my-portal --bundler webpack5
+```
+
+| Option | Default | Description |
+|---|---|---|
+| `--target` | `.` | Output directory |
+| `--bundler` | `webpack5` | `webpack5`, `esbuild`, `rspack`, `vite`, `parcel2` |
+| `--npm-client` | `npm` | `npm`, `yarn`, `pnpm` |
+| `--no-install` | — | Skip dependency installation |
+| `--defaults` | — | Accept all defaults non-interactively |
+
+### `npm init pilet`
+
+Create a new pilet for a given app shell.
+
+```bash
+npm init pilet@latest -- --source my-portal --target my-feature-pilet --bundler webpack5
+```
+
+| Option | Default | Description |
+|---|---|---|
+| `--source` | — | App shell package name, or a path to its emulator `.tgz` |
+| `--target` | `.` | Output directory |
+| `--bundler` | `webpack5` | Bundler plugin to use |
+| `--npm-client` | `npm` | `npm`, `yarn`, `pnpm` |
+
+Everything after the `--` is forwarded to the initializer — don't drop it.
+
+## App shell commands
+
+Run these from inside a shell project, via the generated scripts or `npx`.
+
+### `piral debug`
+
+Start the app shell dev server (this is what `npm start` runs).
+
+```bash
+npx piral debug
+```
+
+| Option | Default | Description |
+|---|---|---|
+| `--port` | `1234` | Dev server port |
+| `--open` | `false` | Open the browser on start |
+| `--log-level` | `info` | `error`, `warn`, `info`, `verbose` |
+
+### `piral build`
+
+Build the app shell for production (this is what `npm run build` runs).
+
+```bash
+npx piral build
+```
+
+| Option | Default | Description |
+|---|---|---|
+| `--type` | `all` | `all`, `release`, `emulator` |
+| `--target` | `./dist` | Output directory |
+| `--minify` | `true` | Minify the release output |
+
+The default `all` produces both `dist/release/` (deploy this) and `dist/emulator/` (publish this for pilet developers).
+
+### `piral publish`
+
+Publish the emulator package so pilet teams can install it.
+
+```bash
+npx piral publish --type emulator
+```
+
+This is equivalent to `npm publish dist/emulator/<shell>-<version>.tgz`. Use `--registry` to target a private registry.
+
+## Pilet commands
+
+Run these from inside a pilet project.
+
+### `pilet debug`
+
+Start the pilet dev server inside the emulated shell (this is what `npm start` runs). The target shell is read from your `package.json`.
+
+```bash
+npx pilet debug
+npx pilet debug --feed https://feed.example.com/api/v1/pilets   # load extra pilets too
+```
+
+### `pilet build`
+
+Build the pilet bundle.
+
+```bash
+npx pilet build
+```
+
+| Option | Default | Description |
+|---|---|---|
+| `--target` | `./dist` | Output directory |
+| `--minify` | `true` | Minify the bundle |
+| `--schema` | `v2` | Pilet spec: `v0`, `v1`, `v2`, `mf` |
+
+### `pilet publish`
+
+Build (if needed) and publish to a feed service. Choose how you authenticate:
+
+```bash
+# Locally / with a browser — log in interactively, no secret to handle
+npx pilet publish --url https://feed.example.com/api/v1/pilets --interactive
+
+# CI/CD / automation — use an API key from a secret
+npx pilet publish --url https://feed.example.com/api/v1/pilets --api-key $FEED_API_KEY
+```
+
+| Option | Description |
+|---|---|
+| `--url` | Feed service publish endpoint (required) |
+| `--interactive` | Log in via the browser instead of passing a key — preferred when you have a browser, since no secret is entered in the terminal |
+| `--api-key` | API key for the feed — use this for CI/CD and other automation |
+| `--from` | `pilet` (build first) or `file` (use an existing `.tgz`) |
+
+:::tip Which auth flow?
+Use `--interactive` for day-to-day publishing from a developer machine — you don't need to create or store a secret. Use `--api-key` (from a CI secret) for pipelines and any non-interactive automation.
+:::
+
+### `pilet upgrade`
+
+Upgrade the emulator dev dependency to a newer shell version.
+
+```bash
+npx pilet upgrade          # latest
+npx pilet upgrade 2.0.0    # pin to a version
+```
+
+### `pilet validate`
+
+Check the pilet's format and metadata before publishing.
+
+```bash
+npx pilet validate
+```
+
+:::tip Add commands to your scripts
+Generated projects already wire `npm start` and `npm run build` to the right CLI calls. Add the rest (`"publish": "pilet publish"`, `"validate": "pilet validate"`) to `package.json` so your team and CI use one consistent entry point.
+:::
+
+
+========================================================================
+Source: /reference/configuration
+========================================================================
+
+# Configuration reference
+
+This page covers everything you can configure in a Piral project: the **runtime** (via `createInstance`), the **project files** (`piral.json` and `pilet.json`), and the relevant **environment variables**.
+
+## createInstance
+
+`createInstance` creates the central Piral runtime for the app shell. It lives in the shell's entry module.
+
+### Signature
+
+```ts
+function createInstance(config: PiralConfig): PiralInstance
+```
+
+```ts
+createInstance({
+  // Required: returns the pilets to load
+  requestPilets(): Promise<PiletMetadata[]>,
+
+  // Optional: override shell components and error pages
+  state?: {
+    components?: Partial<ComponentsState>,
+    errorComponents?: Partial<ErrorComponentsState>,
+  },
+
+  // Optional: extend the Pilet API
+  plugins?: PiralPlugin[],
+
+  // Optional: additional global state actions
+  actions?: GlobalStateActions,
+})
+```
+
+### `requestPilets` (required)
+
+Returns the list of pilets to load. Called once at startup.
+
+```tsx
+// From a live feed with auth
+async requestPilets() {
+  const token = getToken();
+  const res = await fetch(FEED_URL, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!res.ok) throw new Error(`Feed failed: ${res.status}`);
+  return (await res.json()).items;
+},
+
+// Static (for tests or demos)
+requestPilets() {
+  return Promise.resolve([
+    { name: 'my-pilet', version: '1.0.0', link: '/pilets/my-pilet.js',
+      spec: 'v2', integrity: '', dependencies: {} },
+  ]);
+},
+```
+
+### `state.components`
+
+Override the shell's structural components. All keys are optional:
+
+| Key | Type | Description |
+|---|---|---|
+| `Layout` | `React.FC<LayoutProps>` | Outer wrapper for all pages |
+| `Router` | `React.FC` | Router provider (default: `BrowserRouter`) |
+| `RouteSwitch` | `React.FC` | Renders the matched page |
+| `LoadingIndicator` | `React.FC` | Shown while pilets load |
+
+```ts
+state: {
+  components: {
+    Layout: MyLayout,
+    Router: MyRouter,
+    RouteSwitch: MySwitch,
+    LoadingIndicator: Spinner,
+  },
+}
+```
+
+### `state.errorComponents`
+
+Override the error UIs. All keys are optional:
+
+| Key | When rendered |
+|---|---|
+| `not_found` | No registered page matches the URL |
+| `unknown` | Unhandled error in a pilet |
+| `loading` | A pilet bundle failed to load |
+| `page` | A page component threw during render |
+
+### `plugins`
+
+An array of plugin factories that extend the Pilet API (see [Piral Plugins](/api/piral-plugin)). On `piral` the standard plugins are already included; on `piral-core` you list exactly the ones you use:
+
+```ts
+plugins: [
+  createMenuApi(),
+  createNotificationsApi(),
+  createModalsApi(),
+  createDashboardApi(),
+  createMyCustomApi(),
+]
+```
+
+### `actions` (advanced)
+
+Optional additional global state actions, merged into the store. Most apps don't need this — prefer a plugin for custom capabilities.
+
+### Return value: `PiralInstance`
+
+```ts
+interface PiralInstance {
+  context: GlobalStateContext;   // direct store access (advanced)
+  options: PiralInstanceOptions; // the config passed in
+}
+```
+
+Pass it to `<Piral instance={instance} />` to render.
+
+### Full example
+
+```tsx
+import { createInstance, Piral } from 'piral';
+import { createMenuApi } from 'piral-menu';
+import { createNotificationsApi } from 'piral-notifications';
+import * as React from 'react';
+import { render } from 'react-dom';
+import { AppLayout } from './layout/AppLayout';
+import { NotFoundPage } from './layout/NotFoundPage';
+
+const instance = createInstance({
+  state: {
+    components: { Layout: AppLayout },
+    errorComponents: { not_found: NotFoundPage },
+  },
+  plugins: [createMenuApi(), createNotificationsApi()],
+  async requestPilets() {
+    const res = await fetch(FEED_URL);
+    return (await res.json()).items;
+  },
+});
+
+render(<Piral instance={instance} />, document.querySelector('#app'));
+```
+
+## piral.json
+
+The app shell's project-level CLI configuration. It tells `piral debug` / `piral build` how to build *this* shell, so you don't have to pass the same flags every time. It's optional — Piral applies sensible defaults — and lives in the shell project root. (`.piralrc` is an accepted alternative filename.)
+
+```json
+{
+  "entry": "src/index.tsx",
+  "bundler": "webpack5",
+  "emulatorPort": 1234,
+  "publicUrl": "/"
+}
+```
+
+| Field | Purpose |
+|---|---|
+| `entry` | The shell's entry module (where `createInstance` + render live) |
+| `bundler` | Which installed bundler plugin to use (`webpack5`, `esbuild`, `rspack`, `vite`, `parcel2`) |
+| `emulatorPort` | Port for the local debug server |
+| `publicUrl` | Base URL the release is served from (affects asset paths) |
+
+CLI flags override `piral.json`, which in turn overrides the built-in defaults.
+
+## pilet.json
+
+The pilet-side counterpart. It records how *this* pilet builds and which shell it targets, so `pilet debug` / `pilet build` / `pilet publish` work without repeated flags. Optional; lives in the pilet project root. (`.piletrc` is an accepted alternative filename.)
+
+```json
+{
+  "app": "my-portal",
+  "bundler": "webpack5",
+  "port": 1234,
+  "schema": "v2",
+  "feed": "https://feed.example.com/api/v1/pilets"
+}
+```
+
+| Field | Purpose |
+|---|---|
+| `app` | The target app shell (its package name) — what the emulator/types come from |
+| `bundler` | Which installed bundler plugin to use |
+| `port` | Port for the local debug server |
+| `schema` | Pilet output format (`v0`, `v1`, `v2`, `mf`) |
+| `feed` | Default feed URL used by `pilet debug --feed` and `pilet publish` |
+
+Remember the runtime distinction: `app` here is a *development* default for typing and debugging — it doesn't bind the built pilet to that one shell. See [Pilet portability](/advanced/pilet-portability).
+
+## Environment variables
+
+| Variable | Used by | Description |
+|---|---|---|
+| `NODE_ENV` | Both | `development` or `production` |
+| `PORT` | CLI | Dev server port override |
+| `PUBLIC_URL` | App shell | Base URL for asset paths |
+
+
+========================================================================
+Source: /reference/piral-packages
+========================================================================
+
+# Piral packages
+
+Piral ships as a small stack of layered packages. They share one runtime and one API; the difference is **how much opinion comes pre-wired**. Pick the outermost layer you need, and move inward as your app matures.
+
+_(Diagram: Each layer wraps the previous one. Start with piral; graduate to piral-core for the long run.)_
+
+| Package | What it is | Reach for it when |
+|---|---|---|
+| `piral` | The opinionated, batteries-included framework package | Getting started, prototypes, small apps |
+| `piral-core` | The lean React runtime; you choose the plugins | Mid- to long-term, production apps that want control |
+| `piral-base` | The framework-agnostic pilet loader | Building a custom, non-React runtime |
+
+## `piral` — the opinionated starting point
+
+`piral` is the fastest way to a working app shell. It re-exports everything from `piral-core` and `piral-base` and bundles a curated set of standard plugins and sensible defaults, so the common capabilities are already wired up.
+
+```tsx
+import { createInstance } from 'piral';
+
+const instance = createInstance({
+  requestPilets: () => fetch(FEED_URL).then((r) => r.json()).then((r) => r.items),
+});
+```
+
+Out of the box you get `createInstance`, the root rendering component, `ExtensionSlot`, the standard plugin components and APIs (menu, notifications, modals, dashboard, …), and the hooks (`useGlobalState`, `useAction`, `useExtensions`, `usePilet`). It's opinionated about *what's included* but leaves rendering and layout entirely to you. See [createInstance](/reference/configuration#createinstance) for the full options.
+
+## `piral-core` — the choice for the long run
+
+`piral-core` is the same runtime and the same API surface, but **unopinionated about which plugins are included**. You install and register exactly the capabilities you use — nothing more.
+
+That explicitness is exactly what you want as an application matures:
+
+- **Smaller, intentional footprint** — no plugins you don't use.
+- **No surprises on upgrade** — behavior is whatever *you* registered, not whatever the meta-package decided to bundle.
+- **Clear dependency graph** — each capability traces to a package you chose.
+
+For these reasons, `piral-core` is the recommended target for mid- to long-term and production applications. `piral` is the great on-ramp; `piral-core` is where serious apps tend to settle.
+
+## Migrating from `piral` to `piral-core`
+
+The migration is mechanical and low-risk, because the runtime and API are identical — you're just making the implicit explicit.
+
+**1. Swap the dependency.** Remove `piral`; add `piral-core` plus the plugin packages you actually use, and make sure React and React Router are direct dependencies.
+
+```bash
+npm uninstall piral
+npm install piral-core piral-menu piral-notifications piral-modals \
+  react react-dom react-router react-router-dom
+```
+
+**2. Update imports.** Pull the runtime from `piral-core`, and each plugin factory from its own package (with `piral` these came along for free).
+
+```diff
+- import { createInstance, createMenuApi, createNotificationsApi } from 'piral';
++ import { createInstance } from 'piral-core';
++ import { createMenuApi } from 'piral-menu';
++ import { createNotificationsApi } from 'piral-notifications';
+```
+
+**3. Register the plugins explicitly.** Anything `piral` set up for you now goes into the `plugins` array.
+
+```tsx
+const instance = createInstance({
+  plugins: [createMenuApi(), createNotificationsApi(), createModalsApi()],
+  requestPilets: () => fetch(FEED_URL).then((r) => r.json()).then((r) => r.items),
+});
+```
+
+**4. Verify the Pilet API.** Every method your pilets call must come from a plugin you registered. If a pilet uses `api.showNotification` but you didn't add `piral-notifications`, add it. This audit is the point of the move: each capability becomes intentional.
+
+The result behaves identically to your `piral` app — just leaner and fully under your control.
+
+:::tip A pragmatic path
+Start on `piral` to move fast and prove the idea. Plan to graduate to `piral-core` once the app and team mature and you want a tighter, explicit footprint. Because the API is the same, the switch is a dependency-and-imports change, not a rewrite.
+:::
+
+## `piral-base` — the low-level loader
+
+`piral-base` is the foundation both other packages build on: it fetches, evaluates, and manages the lifecycle of pilets, with **no dependency on React or any UI framework**. You'd use it directly only when building a completely custom, non-React runtime. For anything React-based, you'll be on `piral-core` (or `piral`), which already include it.
+
+## Converter packages
+
+Framework **converters** (`piral-vue`, `piral-svelte`, `piral-ng`, …) are a special case worth calling out. They're published as plugin packages, but a converter should **not** be installed as a plugin in the app shell — that would make every pilet depend on the shell having the right converter.
+
+Instead, each converter also ships a **standalone `convert` submodule** that a pilet imports and uses directly:
+
+```tsx
+import { fromSvelte } from 'piral-svelte/convert';
+
+api.registerPage('/profile', fromSvelte(ProfilePage));
+```
+
+Used this way, the converter carries its own logic inside the pilet and emits a plain HTML component the core already knows how to render — so the shell stays framework-agnostic and the pilet stays portable. Reach for the `/convert` submodule in pilets and avoid the plugin form for converters. See [Creating a converter](/reference/creating-a-converter) and [Multi-framework pilets](/guides/multi-framework).
+
+## Shared API surface
+
+Whichever layer you choose, the building blocks are the same — these all come from `piral` and `piral-core` alike:
+
+```ts
+import {
+  createInstance,        // create the runtime
+  ExtensionSlot,         // render registered extensions
+  useGlobalState,        // read global state
+  useAction,             // dispatch a state action
+  useSharedData,         // read the shared data store
+  usePiletApi,           // the root pilet API (shell-only)
+} from 'piral-core';
+
+import type {
+  PiletApi,              // the typed pilet API
+  PiralPlugin,           // plugin factory type
+  PiletMetadata,         // feed response item
+  LayoutProps,           // Layout component props
+  ComponentsState,       // replaceable shell components
+  ErrorComponentsState,  // error page components
+} from 'piral-core';
+```
+
+
+========================================================================
+Source: /api/hooks
+========================================================================
+
+# Hooks
+
+`piral-core` ships a small set of React hooks for reading the runtime's global state and dispatching its actions from inside components. They're the bridge between your shell's React components and the Piral runtime.
+
+:::warning These hooks are for the app shell only
+They read the shell's global-state context, so they work only in components rendered by the **app shell** — your layout, error pages, and any custom shell UI. **Pilets do not have access to them.** A pilet interacts with the application through the typed `PiletApi` it receives in `setup`, not through these hooks. (See the [Pilet API](/concepts/pilet-api).)
+:::
+
+All of them come from `piral-core` (and are re-exported by `piral`):
+
+```ts
+import { useGlobalState, useAction } from 'piral-core';
+```
+
+## `useGlobalState`
+
+Reads the whole global state, or — with a selector — just a subset. With a selector the component re-renders only when that subset changes, which is what you usually want.
+
+```tsx
+import { useGlobalState } from 'piral-core';
+
+const UserGreeting = () => {
+  const user = useGlobalState((s) => s.user);
+  return <span>Hello, {user?.name ?? 'Guest'}</span>;
+};
+```
+
+## `useAction` / `useActions`
+
+Actions are the controlled way to mutate the global state. `useAction` returns one action by name; `useActions` returns all of them. Plugins and the shell add the actions that show up here.
+
+```tsx
+import { useAction } from 'piral-core';
+
+const LogoutButton = () => {
+  const logout = useAction('logout');
+  return <button onClick={logout}>Log out</button>;
+};
+```
+
+## `useSharedData`
+
+Reads the cross-pilet **shared data store** — the values pilets write with `api.setData`. Pass a selector to subscribe to a single slice.
+
+```tsx
+import { useSharedData } from 'piral-core';
+
+const CurrentUser = () => {
+  const user = useSharedData((d) => d.currentUser?.value);
+  return <span>{user?.name}</span>;
+};
+```
+
+## `usePiletApi`
+
+Returns the **root** pilet API, letting shell code call Pilet API methods (for example plugin-provided ones) from within the shell itself. Advanced — most shell code won't need it.
+
+```tsx
+import { usePiletApi } from 'piral-core';
+
+const SaveButton = () => {
+  const api = usePiletApi();
+  return <button onClick={() => api.showNotification('Saved!')}>Save</button>;
+};
+```
+
+## `useMedia`
+
+A small responsive helper: returns a value chosen by which media query currently matches — handy for breakpoint-driven shell layout.
+
+```tsx
+import { useMedia } from 'piral-core';
+
+const columns = useMedia(
+  ['(min-width: 1024px)', '(min-width: 640px)', '(min-width: 0px)'],
+  [3, 2, 1],
+  1,
+);
+```
+
+## `useSetter`
+
+Runs a callback once on mount — a tiny convenience used by some shell components.
+
+```tsx
+import { useSetter } from 'piral-core';
+
+useSetter(() => {
+  document.title = 'My Portal';
+});
+```
+
+## `useGlobalStateContext` (advanced)
+
+The escape hatch: returns the full global-state context — the state plus every action. Prefer `useGlobalState` and `useAction` for everyday work; reach for this only when you genuinely need direct, low-level access to the runtime.
+
+```ts
+import { useGlobalStateContext } from 'piral-core';
+
+const ctx = useGlobalStateContext();
+```
+
+
+========================================================================
+Source: /api/piral-plugin
+========================================================================
+
+# Piral Plugins
+
+A `PiralPlugin` is a factory function that adds methods to the Pilet API for all pilets. It is the primary extension mechanism for app shell authors.
+
+_(Diagram: The app shell builds the Pilet API (core methods plus plugins). Every pilet receives that same API in setup and uses it as the glue — all interaction with the shell and the wider application flows through it.)_
+
+## What plugins are for
+
+Plugins live **only in the app shell** — a pilet never installs or references one. A plugin has exactly one job: to **extend the Pilet API**. That is the entire reason any plugin exists. When the app shell registers a plugin, the methods it returns are merged into the `api` object every pilet receives in `setup`.
+
+This is worth stressing, because it is a common misconception: a plugin is *not* what makes a feature work. The underlying capability — fetching data, authenticating, talking to a backend — works with or without a plugin. The plugin merely exposes a convenient, typed entry point for that capability on the Pilet API.
+
+`piral-oidc` is a good example. It exists to surface OIDC concerns — access tokens, the current user, sign-in and sign-out — to pilets through the API (for instance `api.getAccessToken()`). You do **not** need it to use OIDC, or to have authentication at all: the app shell can authenticate however it likes and never install the plugin. You add `piral-oidc` only when you want pilets to *consume* those tokens through the Pilet API. The same is true of every official plugin — each one is purely a typed extension of the API surface.
+
+## Type signature
+
+```ts
+type PiralPlugin<TApi = {}> =
+  (context: GlobalStateContext) =>
+    (api: PiletApi, meta: PiletMetadata) => TApi;
+```
+
+Three layers:
+
+1. **Outer function** — receives the global state context (for reading/writing app state)
+2. **Inner function** — called once per pilet at load time, receives the base API and pilet metadata
+3. **Return value** — the methods merged into the pilet's `api` object
+
+## Typed plugin example
+
+```ts
+import { PiralPlugin } from 'piral-core';
+
+// 1. Define the API extension interface
+export interface AnalyticsApi {
+  trackEvent(name: string, props?: Record<string, unknown>): void;
+  trackPageView(path: string): void;
+}
+
+// 2. Augment the global PiletApi type
+declare module 'piral-core/lib/types/custom' {
+  interface PiletCustomApi extends AnalyticsApi {}
+}
+
+// 3. Implement
+export function createAnalyticsApi(): PiralPlugin<AnalyticsApi> {
+  return (_context) => (_api, meta) => ({
+    trackEvent(name, props) {
+      analytics.track(name, { ...props, pilet: meta.name, version: meta.version });
+    },
+    trackPageView(path) {
+      analytics.page(path, { pilet: meta.name });
+    },
+  });
+}
+```
+
+Register in the shell:
+
+```tsx
+const instance = createInstance({
+  plugins: [createAnalyticsApi()],
+});
+```
+
+All pilets now have `api.trackEvent('button-click')` — typed.
+
+## Accessing global state
+
+```ts
+export function createThemeApi(): PiralPlugin {
+  return (context) => () => ({
+    setTheme(theme: 'light' | 'dark') {
+      context.dispatch(state => ({ ...state, theme }));
+    },
+    getTheme() {
+      return context.readState(s => (s as any).theme ?? 'light');
+    },
+  });
+}
+```
+
+## Async plugin initialisation
+
+```ts
+export function createRemoteConfigApi(configUrl: string): PiralPlugin {
+  let config: Record<string, string> = {};
+  const ready = fetch(configUrl).then(r => r.json()).then(c => { config = c; });
+
+  return () => () => ({
+    async getConfig(key: string) {
+      await ready;
+      return config[key];
+    },
+  });
+}
+```
+
+
+========================================================================
+Source: /reference/plugins
+========================================================================
+
+# Official plugins
+
+A plugin's only job is to **extend the Pilet API**, and plugins live **only in the app shell** — see [PiralPlugin](/api/piral-plugin) for what that means. Each plugin below adds typed methods to the `api` object every pilet receives; none of them is required to *have* a capability, they just expose it to pilets.
+
+There are two tiers of official plugins:
+
+- **Standard plugins** — bundled in the `piral-ext` package, which ships as part of the all-in-one [`piral`](/reference/piral-packages) package. If you scaffolded with `piral`, these are already available.
+- **Additional official plugins** — developed and published from the [Piral monorepo](https://github.com/smapiot/piral) but installed individually. Add them when you need them (and register them explicitly on `piral-core`).
+
+Install a plugin in the app shell and add its factory to `createInstance({ plugins: [...] })`. Each plugin then surfaces its methods on `PiletApi`, fully typed.
+
+## Standard plugins
+
+These ship in `piral-ext` and are included with the `piral` package. On `piral-core`, install and register the ones you want.
+
+| Package | Adds to the Pilet API | Purpose |
+|---|---|---|
+| `piral-menu` | `registerMenu` | Navigation entries rendered into named menu zones (`<Menu type="…" />`). |
+| `piral-notifications` | `showNotification` | Toast notifications (`<Notifications />`). |
+| `piral-modals` | `registerModal`, `showModal` | Named modal dialogs (`<Modals />`). |
+| `piral-dashboard` | `registerTile` | Tiles on a dashboard page. |
+| `piral-feeds` | `createConnector` | Reactive data connectors with loading/refresh handling. |
+| `piral-translate` | `translate`, `setTranslations` | Localization / i18n for pilets. |
+
+## Additional official plugins
+
+All of these are official (developed in the Piral monorepo); install and register them as needed.
+
+### App & UX features
+
+| Package | Purpose |
+|---|---|
+| `piral-forms` | Managed form state for pilet forms. |
+| `piral-search` | Global search providers contributed by pilets. |
+| `piral-breadcrumbs` | Breadcrumb entries contributed by pilets. |
+| `piral-update` | Notify users when pilets have updates available. |
+| `piral-page-layouts` | Named page layouts that pilets can opt into. |
+| `piral-containers` | Per-pilet state containers. |
+| `piral-tracking` | User activity / interaction tracking hooks. |
+
+### Data access
+
+| Package | Purpose |
+|---|---|
+| `piral-fetch` | A small typed `fetch` wrapper on the API. |
+| `piral-axios` | A shared Axios instance on the API. |
+| `piral-urql` | GraphQL access via [urql](https://formidable.com/open-source/urql/). |
+
+### Authentication
+
+| Package | Purpose |
+|---|---|
+| `piral-auth` | Generic token-based user/session info. |
+| `piral-oidc` | OpenID Connect tokens and flows. |
+| `piral-oauth2` | OAuth 2 tokens and flows. |
+| `piral-adal` | Microsoft Entra ID / Azure AD tokens. |
+
+:::tip Auth plugins only surface tokens
+As described in [PiralPlugin](/api/piral-plugin), these plugins exist purely to bring tokens (and related helpers) to the Pilet API. You do **not** need any of them to implement authentication — the app shell can authenticate on its own. Add one only when pilets should consume tokens through the API. See [Authentication](/guides/authentication).
+:::
+
+### State & performance
+
+| Package | Purpose |
+|---|---|
+| `piral-redux` | Redux store integration. |
+| `piral-lazy` | Lazily load pilets and resources. |
+| `piral-million` | [Million.js](https://million.dev) integration for faster React rendering. |
+
+## Framework converters
+
+Converters let a pilet be written in a framework other than React. A converter is **not** installed as a shell plugin — the pilet imports it from the converter's standalone `/convert` submodule (e.g. `piral-svelte/convert`) and wraps its components with the matching `from…` helper. See [Multi-framework pilets](/guides/multi-framework) and [Creating a converter](/reference/creating-a-converter).
+
+| Package | Framework |
+|---|---|
+| `piral-ng` | Angular |
+| `piral-ngjs` | AngularJS (1.x) |
+| `piral-vue` | Vue 2 |
+| `piral-vue-3` | Vue 3 |
+| `piral-react` | React (isolated/secondary React version) |
+| `piral-react-15` | React 15 |
+| `piral-preact` | Preact |
+| `piral-solid` | Solid |
+| `piral-svelte` | Svelte |
+| `piral-litel` | Lit / LitElement |
+| `piral-mithril` | Mithril |
+| `piral-hyperapp` | Hyperapp |
+| `piral-aurelia` | Aurelia |
+| `piral-inferno` | Inferno |
+| `piral-riot` | Riot |
+| `piral-cycle` | Cycle.js |
+| `piral-elm` | Elm |
+| `piral-ember` | Ember |
+| `piral-blazor` | Blazor / .NET ([Piral.Blazor](https://blazor.piral.io)) |
+
+Plain **web components** need no converter — a custom element is already a DOM element, so it can be used directly.
+
+## Tooling packages (not Pilet API plugins)
+
+Some official `piral-*` packages are *not* Pilet API plugins and don't belong in `createInstance`:
+
+- **Bundler & CLI plugins** — `piral-cli-webpack5`, `piral-cli-esbuild`, `piral-cli-rspack`, `piral-cli-vite`, `piral-cli-parcel2`, `piral-cli-xbuild`, plus helpers like `piral-cli-local-feed` and `piral-cli-dotenv`. These extend the CLI; see the [CLI reference](/reference/cli).
+- **Utility libraries** — e.g. `piral-ssr-utils`, `piral-hooks-utils`, `piral-systemjs-utils`. These are plain helper libraries you import where needed.
+
+## Finding the complete, current list
+
+New plugins are added over time. The authoritative, always-up-to-date list is the [`src/plugins`](https://github.com/smapiot/piral/tree/main/src/plugins) and [`src/converters`](https://github.com/smapiot/piral/tree/main/src/converters) folders in the Piral monorepo, and the `piral-*` packages published on [npm](https://www.npmjs.com/search?q=piral-).
+
+
+========================================================================
+Source: /reference/creating-a-converter
+========================================================================
+
+# Creating a converter
+
+A **converter** lets a pilet render components written in a framework other than React — Vue, Svelte, Angular, Solid, and so on — inside the React-based app shell. This is an advanced, exotic topic: most teams just *use* the official converters ([Multi-framework pilets](/guides/multi-framework)). This page explains how they work and how to build your own, using [`piral-svelte`](https://github.com/smapiot/piral/tree/main/src/converters/piral-svelte) as the blueprint.
+
+## The core idea: a foreign component lifecycle
+
+Every converter does the same job: it turns a foreign component into a **`ForeignComponent`** — a tiny object with three lifecycle hooks the Piral engine calls as the component enters, updates, and leaves the DOM:
+
+```ts
+import type { ForeignComponent, BaseComponentProps } from 'piral-core';
+
+function createConverter() {
+  return <TProps extends BaseComponentProps>(
+    Component: any,
+    captured?: Record<string, any>,
+  ): ForeignComponent<TProps> => ({
+    // called once, when the component is placed into the DOM
+    mount(el, props, ctx, locals) {
+      locals.instance = renderMyFramework(Component, el, { ...captured, ...ctx, ...props });
+    },
+    // called whenever the props change
+    update(el, props, ctx, locals) {
+      locals.instance.setProps({ ...props });
+    },
+    // called once, when the component is removed
+    unmount(el, locals) {
+      locals.instance.destroy();
+      el.innerHTML = '';
+    },
+  });
+}
+```
+
+`el` is the host DOM node, `props` are the React props passed in, `ctx` is contextual data, and `locals` is a per-instance scratch object you use to keep a handle on the mounted instance. This mount → update → unmount shape is exactly how Svelte's converter works — compare `createConverter` in [`piral-svelte`'s `converter.ts`](https://github.com/smapiot/piral/blob/main/src/converters/piral-svelte/src/converter.ts).
+
+## Two forms — and which to use
+
+A converter package is classically published with two faces. Understanding the difference is the whole point of this page.
+
+### Standalone converter (recommended)
+
+The recommended form is a **standalone** converter the pilet imports and uses directly. It wraps the foreign component into a plain **`html`** component — a type the `piral-core` runtime already knows how to render — so it needs *nothing* registered in the shell.
+
+Following `piral-svelte`, this lives in a top-level `convert.ts` that's published as a **`/convert` submodule**:
+
+```ts
+// convert.ts  →  published as "my-converter/convert"
+import { createConverter } from './lib/converter';
+
+const convert = createConverter();
+
+export function fromMyFramework(Component: any, captured?: Record<string, any>) {
+  return { type: 'html', component: convert(Component, captured) };
+}
+```
+
+A pilet then uses it without the shell knowing anything about the framework:
+
+```tsx
+import type { PiletApi } from 'my-app-shell';
+import { fromMyFramework } from 'my-converter/convert';
+import Page from './Page.mf';
+
+export function setup(api: PiletApi) {
+  api.registerPage('/page', fromMyFramework(Page));
+}
+```
+
+### Plugin form (avoid for converters)
+
+The other face is a classic **plugin** that registers a named converter on the shell's engine and exposes a `from…` helper that returns a descriptor tagged with that name:
+
+```ts
+import type { PiralPlugin } from 'piral-core';
+
+export function createMyFrameworkApi(): PiralPlugin<MyFrameworkApi> {
+  return (context) => {
+    const convert = createConverter();
+    // registers a converter named "mf" on the engine
+    context.converters.mf = ({ Component, captured }) => convert(Component, captured);
+
+    return {
+      fromMyFramework: (Component: any, captured?: Record<string, any>) => ({
+        type: 'mf', // resolved later by the engine's "mf" converter
+        Component,
+        captured,
+      }),
+    };
+  };
+}
+```
+
+This is how `createSvelteApi` works. It's a perfectly valid plugin — but for *converters* it's the form to avoid.
+
+:::warning Don't install converters as shell plugins
+A converter registered as a plugin lives in the **app shell**, which means every pilet that uses that framework now depends on the shell having the right converter plugin installed (and at a compatible version). That re-introduces exactly the coupling Piral works to avoid.
+
+Prefer the **standalone `/convert` submodule** instead: the pilet carries its own conversion logic, emits a plain `html` component the core renders unaided, and stays portable across shells. Keep the app shell free of framework-specific converter plugins.
+:::
+
+## Packaging your converter
+
+Model the package on `piral-svelte`'s [`package.json`](https://github.com/smapiot/piral/blob/main/src/converters/piral-svelte/package.json):
+
+- Build `src/` (the plugin) to `lib/` **and** build the root `convert.ts` to `convert.js` + `convert.d.ts`.
+- Expose both via `exports`:
+
+```json
+{
+  "exports": {
+    ".": "./lib/index.js",
+    "./convert": "./convert.js",
+    "./extend-webpack": "./extend-webpack.js"
+  }
+}
+```
+
+- If the framework needs build-time handling of a custom file extension (Svelte's `.svelte`, etc.), ship a bundler helper too — `piral-svelte` exposes `piral-svelte/extend-webpack` for exactly this. Pilet authors then wire it into their bundler config so files like `Page.mf` compile.
+
+## Checklist
+
+- Implement `createConverter()` returning a `ForeignComponent` with `mount` / `update` / `unmount`.
+- Export a standalone `from…` from a root `convert.ts`, returning `{ type: 'html', component }`, and publish it as the `/convert` submodule. **This is what pilets should import.**
+- Optionally provide the plugin (`create…Api`) for completeness, but document the standalone form as the default.
+- Provide a bundler extension if your framework uses custom file types.
+- Use [`piral-svelte`](https://github.com/smapiot/piral/tree/main/src/converters/piral-svelte) as a working reference to copy from.

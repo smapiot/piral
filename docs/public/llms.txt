@@ -1,0 +1,64 @@
+# Piral
+
+> Piral is a React-based framework for building micro frontend applications. A small, stable app shell composes independently developed and deployed modules — called pilets — at runtime, discovered through a feed service. Pilets register their UI through a typed Pilet API and can share dependencies and UI without being coupled to each other.
+
+Essential facts when generating or reviewing Piral code:
+
+- Scaffold with npm initializers: `npm init piral-instance@latest` (app shell) and `npm init pilet@latest` (pilet). The `piral-cli` is a LOCAL dev dependency run via `npx` or npm scripts — never install it globally, and do not use the old `piral new` / `pilet new` commands.
+- A pilet's only entry point is an exported `setup(api)` function. Inside it the pilet registers pages, menu items, extensions, etc. through the Pilet API.
+- Only call Pilet API methods that the target app shell actually provides. Methods beyond the core (e.g. `showNotification`, `registerTile`) exist only if the shell installed the matching plugin (`piral-notifications`, `piral-dashboard`, …).
+- Import the typed `PiletApi` from the app shell package so the available API is exact and type-checked.
+- Shared dependencies use importmaps: the app shell shares packages like `react`, `react-dom`, `react-router-dom` centrally as externals (pilets never bundle them); pilets may also share libraries with each other as side-bundles via their own importmap.
+- Use `piral` to start (opinionated, batteries-included); prefer `piral-core` for the mid-to-long run (you register plugins explicitly). The API is identical, so migrating is a dependency-and-imports change.
+- Extension slots connect pilets without coupling: one pilet renders an `ExtensionSlot`, another fills it via `registerExtension`. Pilets must never import each other directly.
+
+## Getting started
+- [What is Piral?](/getting-started/introduction): What Piral is, the app shell / pilet / feed model, and when to use it.
+- [Quick start](/getting-started/quick-start): Build and run an app shell and a pilet locally in ~10 minutes.
+- [Why micro frontends?](/getting-started/why-micro-frontends): The problems micro frontends solve — team scale, dynamic composition, architecture-enforced modularity.
+- [Why Piral?](/getting-started/why-piral): What Piral adds over Module Federation, Native Federation, single-spa, and custom solutions.
+- [Project structure](/getting-started/project-structure): Conventions and files for app shell and pilet projects (incl. piral.json / pilet.json).
+
+## Concepts
+- [Architecture overview](/concepts/architecture): The three layers — app shell, pilets, feed service — and the startup sequence.
+- [App shell](/concepts/app-shell): What the host owns, how to configure it with createInstance, and what to keep out of it.
+- [Pilets](/concepts/pilets): The setup function, what a pilet can register, cross-pilet communication, and the lifecycle.
+- [Feed service](/concepts/feed-service): The discovery protocol, feed item fields, per-user targeting, and rollback.
+- [Pilet API](/concepts/pilet-api): The typed contract — core methods plus plugin-provided methods.
+- [Dependency sharing](/concepts/dependency-sharing): Importmaps in depth — central externals (app shell) vs distributed side-bundles (pilets).
+- [Emulator](/concepts/emulator): Develop a pilet against the real shell locally; package vs emulator-website distribution.
+- [Extension slots](/concepts/extension-slots): How pilets contribute UI into each other's pages without coupling.
+
+## Guides
+- [Building your app shell](/guides/building-app-shell): A production-ready shell from scaffold to emulator publish.
+- [Creating your first pilet](/guides/creating-pilet): Scaffold, develop, build, and publish a pilet.
+- [Routing & navigation](/guides/routing): React Router v6 usage; registering routes and menu items.
+- [Sharing state between pilets](/guides/shared-state): Events, shared data store, shared libraries, and extension slots.
+- [Multi-framework pilets](/guides/multi-framework): Writing pilets in Angular, Vue, Svelte, Solid, Preact, or Blazor via converters.
+- [Authentication](/guides/authentication): Login flows, exposing auth to pilets, OIDC, and feed-level access control.
+- [Testing pilets](/guides/testing): Vitest — framework-independent setup() tests plus DOM tests.
+- [TypeScript types](/guides/typescript): How PiletApi types are generated, how to extend them (events, extension slots), and how to share them.
+- [Deploying to production](/guides/deployment): App shell static hosting (incl. nginx) and pilet publishing.
+- [Using LLMs with Piral](/guides/llms): Working effectively with AI assistants and making a Piral app LLM-friendly.
+
+## Advanced
+- [Custom feed services](/advanced/custom-feed): Build and run your own pilet feed service.
+- [Performance & lazy loading](/advanced/performance): Lazy pilets, code splitting, dependency optimisation, caching.
+- [Module & Native Federation](/advanced/module-federation): How Piral relates to and can sit on top of both federations.
+- [Pilet portability](/advanced/pilet-portability): Why a pilet isn't bound to one shell — it depends on capabilities, not a specific shell build.
+- [Monorepo setup](/advanced/monorepo): App shell plus multiple pilets in one repository (pnpm, Turborepo).
+- [Server-side rendering](/advanced/ssr): What works today (static shell + hydration) and the islands-based direction in Piral v2.
+- [Migrating from a monolith](/advanced/migration): The strangler-fig strategy for incremental adoption.
+
+## Reference
+- [CLI reference](/reference/cli): Scaffolding initializers and every piral / pilet command (run via npx / npm scripts).
+- [Configuration](/reference/configuration): createInstance options, piral.json and pilet.json, environment variables.
+- [Piral packages](/reference/piral-packages): piral vs piral-core vs piral-base, and migrating from piral to piral-core.
+- [Hooks](/api/hooks): React hooks from piral-core (useGlobalState, useAction, useSharedData, usePiletApi, …) — available in the app shell only, not in pilets.
+- [Piral Plugins](/api/piral-plugin): How plugins extend the Pilet API, and how to build one.
+- [Official plugins](/reference/plugins): The official plugin packages and what they add to the Pilet API.
+- [Creating a converter](/reference/creating-a-converter): Advanced — how to build a framework converter, and why pilets should use the standalone /convert submodule rather than a shell plugin.
+
+## Machine-readable resources
+- /llms-full.txt: The full documentation concatenated as plain text for ingestion.
+- /AGENTS.md: A drop-in rules template for AI assistants working in a Piral repository.

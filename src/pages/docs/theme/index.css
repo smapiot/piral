@@ -1,0 +1,417 @@
+/* =========================================================
+   Piral Documentation — Theme for Rspress v2
+   Brand: Piral green (#5FA51E) on clean light / deep space dark
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── Fonts ──────────────────────────────────────────────── */
+:root {
+  --rp-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --rp-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --rp-font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+/* ── Brand palette (Piral green) ────────────────────────── */
+:root {
+  --rp-c-brand:         #5FA51E;
+  --rp-c-brand-dark:    #4C8717;
+  --rp-c-brand-darker:  #3C6B12;
+  --rp-c-brand-light:   #7CC02E;
+  --rp-c-brand-lighter: #9BD653;
+  --rp-c-brand-dimm:    rgba(108, 181, 45, 0.12);
+
+  /* Soft gradient used in hero + accents (mode-aware: see .dark) */
+  --piral-grad: linear-gradient(120deg, #6CB52D 0%, #3C7D14 100%);
+}
+
+/* ── Light surfaces ─────────────────────────────────────── */
+:root {
+  --rp-c-bg:            #FFFFFF;
+  --rp-c-bg-soft:       #F6F9FB;
+  --rp-c-bg-mute:       #EEF3F7;
+  --rp-c-divider:       #E3E9F0;
+  --rp-c-divider-light: #EEF2F7;
+  --rp-c-text-1:        #0E1A22;
+  --rp-c-text-2:        #3A4A56;
+  --rp-c-text-3:        #6B7C8A;
+}
+
+/* ── Dark surfaces ──────────────────────────────────────── */
+.dark {
+  /* brighter gradient stops so clipped-text stays legible on dark */
+  --piral-grad: linear-gradient(120deg, #9BD653 0%, #5FA51E 100%);
+  --rp-c-bg:            #0C1118;
+  --rp-c-bg-soft:       #121A24;
+  --rp-c-bg-mute:       #18222F;
+  --rp-c-divider:       #243140;
+  --rp-c-divider-light: #1B2632;
+  --rp-c-text-1:        #EAF1F8;
+  --rp-c-text-2:        #B2C2D2;
+  --rp-c-text-3:        #7C8FA0;
+}
+
+/* =========================================================
+   DIAGRAM COLOR SYSTEM — drives inline SVGs in both themes.
+   Inline SVGs reference these via fill/stroke="var(--dg-…)".
+   ========================================================= */
+:root {
+  --dg-canvas:    #F4F8FB;   /* diagram background        */
+  --dg-frame:     #FFFFFF;   /* window / panel surface    */
+  --dg-frame-2:   #F0F5F9;   /* secondary surface         */
+  --dg-line:      #D7E0EA;   /* hairlines / borders       */
+  --dg-line-soft: #E7EDF3;
+  --dg-ink:       #16242F;   /* primary text              */
+  --dg-ink-soft:  #5E7080;   /* secondary text            */
+  --dg-mono:      #7A8CA0;   /* mono / url text           */
+
+  --dg-brand:      #5FA51E;  /* green — shell / core      */
+  --dg-brand-bg:   #ECF6DF;
+  --dg-a:          #2E7CF6;  /* accent A (blue)           */
+  --dg-a-bg:       #E7F0FE;
+  --dg-b:          #C77A1B;  /* accent B (amber)          */
+  --dg-b-bg:       #FBF1DF;
+  --dg-c:          #8B5CF6;  /* accent C (violet)         */
+  --dg-c-bg:       #F1EBFE;
+  --dg-ok:         #22A06B;  /* success / feed            */
+  --dg-ok-bg:      #E2F4EC;
+
+  --dg-shadow:     rgba(13, 38, 59, 0.10);
+}
+
+.dark {
+  --dg-canvas:    #0E1722;
+  --dg-frame:     #15212F;
+  --dg-frame-2:   #1A2735;
+  --dg-line:      #2C3C4E;
+  --dg-line-soft: #233140;
+  --dg-ink:       #E6EEF6;
+  --dg-ink-soft:  #9DB0C2;
+  --dg-mono:      #7E93A8;
+
+  --dg-brand:      #8AD13C;
+  --dg-brand-bg:   rgba(138, 209, 60, 0.15);
+  --dg-a:          #6AA6FF;
+  --dg-a-bg:       rgba(106, 166, 255, 0.13);
+  --dg-b:          #E7B45A;
+  --dg-b-bg:       rgba(231, 180, 90, 0.13);
+  --dg-c:          #B79BFF;
+  --dg-c-bg:       rgba(183, 155, 255, 0.14);
+  --dg-ok:         #4CD699;
+  --dg-ok-bg:      rgba(76, 214, 153, 0.13);
+
+  --dg-shadow:     rgba(0, 0, 0, 0.45);
+}
+
+/* ── Navbar ─────────────────────────────────────────────── */
+.rp-nav {
+  border-bottom: 1px solid var(--rp-c-divider);
+  backdrop-filter: saturate(180%) blur(10px);
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+.dark .rp-nav { background: rgba(12, 17, 24, 0.85) !important; }
+
+/* Logo sizing — works with the official piral-logo.svg / -dark.svg */
+.rp-nav-logo img,
+.rp-nav img[alt~="Piral"] {
+  height: 30px;
+  width: auto;
+}
+
+/* ── Sidebar ────────────────────────────────────────────── */
+.rp-sidebar__menu-item--active > .rp-sidebar__menu-item-link {
+  color: var(--rp-c-brand) !important;
+  background: var(--rp-c-brand-dimm) !important;
+  font-weight: 600;
+  border-radius: 7px;
+}
+.rp-sidebar__menu-item-link { border-radius: 7px; transition: background .15s, color .15s; }
+.rp-sidebar__menu-item-link:hover { background: var(--rp-c-bg-mute); }
+.rp-sidebar-group__title,
+.rp-sidebar h2 {
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rp-c-text-3) !important;
+}
+
+/* ── Body typography ────────────────────────────────────── */
+.rp-doc {
+  font-family: var(--rp-font-family);
+  font-size: 1rem;
+  line-height: 1.78;
+  color: var(--rp-c-text-2);
+}
+.rp-doc p { color: var(--rp-c-text-2); }
+
+/* ── Headings ───────────────────────────────────────────── */
+.rp-doc h1 {
+  font-family: var(--rp-font-display);
+  font-size: 2.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--rp-c-text-1);
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.7rem;
+  position: relative;
+}
+.rp-doc h1::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 56px; height: 3px;
+  border-radius: 3px;
+  background: var(--rp-c-brand);
+}
+.rp-doc h2 {
+  font-family: var(--rp-font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--rp-c-text-1);
+  margin-top: 2.9rem;
+}
+.rp-doc h3 {
+  font-family: var(--rp-font-display);
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--rp-c-text-1);
+  margin-top: 1.8rem;
+}
+.rp-doc h2 a, .rp-doc h3 a { color: inherit; }
+
+/* ── Inline code ────────────────────────────────────────── */
+.rp-doc :not(pre) > code {
+  font-family: var(--rp-font-family-mono);
+  font-size: 0.83em;
+  border-radius: 5px;
+  padding: 0.15em 0.45em;
+  background: rgba(108, 181, 45, 0.09);
+  color: var(--rp-c-brand-dark);
+  border: 1px solid rgba(108, 181, 45, 0.16);
+}
+.dark .rp-doc :not(pre) > code {
+  color: var(--rp-c-brand-light);
+  background: rgba(138, 209, 60, 0.10);
+  border-color: rgba(138, 209, 60, 0.20);
+}
+
+/* ── Code blocks ────────────────────────────────────────── */
+/* rspress already wraps code in .rp-codeblock with a single border +
+   radius. Style only that wrapper — never add a second border on <pre>,
+   which caused the doubled/mismatched corners. */
+.rp-doc pre {
+  font-family: var(--rp-font-family-mono);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+.rp-doc .rp-codeblock {
+  border-color: var(--rp-c-divider);
+  box-shadow: 0 1px 2px rgba(13, 38, 59, 0.04);
+}
+.dark .rp-doc .rp-codeblock { border-color: #1B2940; }
+
+/* ── Tables ─────────────────────────────────────────────── */
+.rp-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 1.4rem 0;
+  border: 1px solid var(--rp-c-divider);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.rp-doc th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rp-c-text-3);
+  background: var(--rp-c-bg-soft);
+  border-bottom: 1px solid var(--rp-c-divider);
+}
+.rp-doc td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--rp-c-divider-light);
+  vertical-align: top;
+  color: var(--rp-c-text-2);
+}
+.rp-doc tr:last-child td { border-bottom: none; }
+.rp-doc tbody tr { transition: background .12s; }
+.rp-doc tbody tr:hover { background: var(--rp-c-bg-soft); }
+
+/* ── Blockquote ─────────────────────────────────────────── */
+.rp-doc blockquote {
+  border-left: 3px solid var(--rp-c-brand);
+  background: var(--rp-c-brand-dimm);
+  border-radius: 0 8px 8px 0;
+  padding: 0.6rem 1.1rem;
+  color: var(--rp-c-text-2);
+  font-style: normal;
+}
+.rp-doc blockquote p { margin: 0.3rem 0; }
+
+/* ── Containers (tip/warning/danger/info) ───────────────── */
+.rp-custom-container {
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.3rem 0;
+  border: 1px solid transparent;
+  border-left-width: 4px;
+  font-size: 0.92rem;
+}
+.rp-custom-container-tip {
+  background: rgba(108, 181, 45, 0.07);
+  border-color: rgba(108, 181, 45, 0.25);
+  border-left-color: var(--rp-c-brand);
+}
+.rp-custom-container-warning {
+  background: rgba(217, 152, 8, 0.08);
+  border-color: rgba(217, 152, 8, 0.28);
+  border-left-color: #D99808;
+}
+.rp-custom-container-danger {
+  background: rgba(225, 60, 60, 0.07);
+  border-color: rgba(225, 60, 60, 0.26);
+  border-left-color: #E13C3C;
+}
+.rp-custom-container-info {
+  background: rgba(46, 124, 246, 0.07);
+  border-color: rgba(46, 124, 246, 0.24);
+  border-left-color: #2E7CF6;
+}
+.rp-custom-container .rp-custom-container-title { font-weight: 700; }
+
+/* ── Links ──────────────────────────────────────────────── */
+.rp-doc a:not([class]) {
+  color: var(--rp-c-brand-dark);
+  text-decoration: underline;
+  text-decoration-color: rgba(108, 181, 45, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: text-decoration-color .15s;
+}
+.rp-doc a:not([class]):hover { text-decoration-color: var(--rp-c-brand); }
+.dark .rp-doc a:not([class]) { color: var(--rp-c-brand-light); }
+
+/* ── Homepage hero ──────────────────────────────────────── */
+/* rspress v2 uses ONE variable (--rp-home-hero-title-bg) for BOTH the
+   "Piral" title and the brand button. Override it to a dark→light green
+   gradient and both are fixed at once. */
+:root {
+  --rp-home-hero-title-bg: linear-gradient(92deg, #3C7D14 0%, #5FA51E 45%, #8AD13C 100%);
+}
+.dark {
+  --rp-home-hero-title-bg: linear-gradient(92deg, #5FA51E 0%, #7CC02E 45%, #B6E866 100%);
+}
+
+.rp-home-hero { padding-top: 3rem; }
+.rp-home-hero__title,
+.rp-home-hero__title-brand,
+.rp-home-hero__subtitle {
+  font-family: var(--rp-font-display);
+  letter-spacing: -0.03em;
+}
+.rp-home-hero__action.rp-button--brand { border: none; }
+.rp-home-hero__image img {
+  filter: drop-shadow(0 12px 40px rgba(108, 181, 45, 0.22));
+}
+
+/* ── Homepage feature cards ─────────────────────────────── */
+.rp-home-feature__card {
+  border: 1px solid var(--rp-c-divider) !important;
+  border-radius: 14px !important;
+  background: var(--rp-c-bg-soft) !important;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.rp-home-feature__card:hover {
+  border-color: var(--rp-c-brand) !important;
+  box-shadow: 0 10px 30px rgba(108, 181, 45, 0.10);
+  transform: translateY(-3px);
+}
+.rp-home-feature__icon { font-size: 1.9rem !important; }
+.rp-home-feature__title { font-family: var(--rp-font-display); }
+
+/* ── SVG diagrams ───────────────────────────────────────── */
+.rp-doc .diagram-wrap {
+  margin: 1.75rem 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--rp-c-divider);
+  background: var(--dg-canvas);
+  box-shadow: 0 1px 2px var(--dg-shadow);
+}
+.rp-doc .diagram-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.rp-doc .diagram-wrap.plain { border: none; background: transparent; box-shadow: none; }
+.rp-doc figure { margin: 1.75rem 0; }
+.rp-doc figcaption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--rp-c-text-3);
+  margin-top: 0.5rem;
+}
+
+/* diagram helper classes (used inside inline SVG via class=) ── */
+/* Text */
+.rp-doc .diagram-wrap text { fill: var(--dg-ink); }
+.d-t  { font: 800 14px var(--rp-font-family); letter-spacing: -0.01em; }
+.d-h  { font: 700 12.5px var(--rp-font-family); }
+.d-l  { font: 600 11px var(--rp-font-family); }
+.d-s  { font: 500 10.5px var(--rp-font-family); }
+.d-m  { font: 500 10px var(--rp-font-family-mono); }
+.d-tc { text-anchor: middle; }
+.d-te { text-anchor: end; }
+/* Strokes / shapes */
+.d-fill   { stroke: none; }
+.d-stroke   { fill: none; stroke-width: 1.5px; }
+.d-stroke-2 { fill: none; stroke-width: 2px; }
+.d-dash     { fill: none; stroke-width: 1.6px; stroke-dasharray: 5 4; stroke-linecap: round; }
+.d-thin     { fill: none; stroke-width: 1px; }
+
+/* ── Misc polish ────────────────────────────────────────── */
+.rp-doc hr { border: none; border-top: 1px solid var(--rp-c-divider); margin: 2rem 0; }
+.rp-doc img { border-radius: 8px; }
+kbd {
+  font-family: var(--rp-font-family-mono);
+  font-size: 0.8em;
+  background: var(--rp-c-bg-mute);
+  border: 1px solid var(--rp-c-divider);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 0.1em 0.4em;
+}
+
+/* "On this page" outline */
+.rp-aside__container a.outline-link:hover,
+.rp-toc a:hover { color: var(--rp-c-brand); }
+
+/* Scrollbars */
+.dark { scrollbar-color: #2A3849 transparent; scrollbar-width: thin; }
+.dark ::-webkit-scrollbar       { width: 7px; height: 7px; }
+.dark ::-webkit-scrollbar-track { background: transparent; }
+.dark ::-webkit-scrollbar-thumb { background: #2A3849; border-radius: 4px; }
+::-webkit-scrollbar       { width: 7px; height: 7px; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+
+/* Edit-this-page link — clean text link, no box */
+.rp-edit-link { font-weight: 600; }
+
+/* Prev / next page buttons — bordered cards with a gap between them */
+.rp-prev-next-page { gap: 1.25rem; }
+.rp-prev-next-page__item {
+  border: 1px solid var(--rp-c-divider);
+  border-radius: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.rp-prev-next-page__item:hover {
+  border-color: var(--rp-c-brand);
+  box-shadow: 0 6px 18px rgba(108, 181, 45, 0.08);
+}

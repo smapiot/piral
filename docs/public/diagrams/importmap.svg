@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" font-family="'Inter',system-ui,sans-serif">
+  <rect width="760" height="350" fill="#F7F9FC" rx="12"/>
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0F172A">Dependency sharing: central (app shell) + distributed (pilet-to-pilet)</text>
+
+  <!-- App Shell -->
+  <rect x="265" y="46" width="230" height="108" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
+  <text x="380" y="70" text-anchor="middle" font-size="13" font-weight="600" fill="#1D4ED8">App Shell</text>
+  <line x1="280" y1="77" x2="480" y2="77" stroke="#BFDBFE" stroke-width="1"/>
+  <text x="380" y="95" text-anchor="middle" font-size="11" fill="#3B82F6">package.json importmap →</text>
+  <rect x="280" y="102" width="200" height="42" rx="4" fill="#DBEAFE"/>
+  <text x="380" y="119" text-anchor="middle" font-size="10" fill="#1D4ED8" font-family="'JetBrains Mono',monospace">"react": "", "react-dom": "",</text>
+  <text x="380" y="136" text-anchor="middle" font-size="10" fill="#1D4ED8" font-family="'JetBrains Mono',monospace">"react-router-dom": "", ...</text>
+
+  <!-- Central share arrows (blue dashed) -->
+  <line x1="300" y1="154" x2="154" y2="202" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <polygon points="149,196 148,208 160,202" fill="#3B82F6"/>
+  <line x1="380" y1="154" x2="380" y2="202" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <polygon points="374,198 380,210 386,198" fill="#3B82F6"/>
+  <line x1="460" y1="154" x2="606" y2="202" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <polygon points="600,196 612,200 602,208" fill="#3B82F6"/>
+  <text x="176" y="186" font-size="10" fill="#3B82F6">centrally shared</text>
+
+  <!-- Pilet A -->
+  <rect x="24" y="210" width="230" height="118" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <text x="139" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Pilet A — Analytics</text>
+  <line x1="40" y1="240" x2="238" y2="240" stroke="#BBF7D0" stroke-width="1"/>
+  <text x="139" y="258" text-anchor="middle" font-size="10" fill="#15803D">importmap in package.json:</text>
+  <rect x="40" y="264" width="198" height="54" rx="4" fill="#DCFCE7"/>
+  <text x="139" y="281" text-anchor="middle" font-size="10" fill="#166534" font-family="'JetBrains Mono',monospace">"recharts": "",</text>
+  <text x="139" y="297" text-anchor="middle" font-size="10" fill="#166534" font-family="'JetBrains Mono',monospace">"date-fns": ""</text>
+  <text x="139" y="313" text-anchor="middle" font-size="10" fill="#166534">→ side-bundles, shared</text>
+
+  <!-- Pilet B -->
+  <rect x="265" y="210" width="230" height="118" rx="8" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <text x="380" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#92400E">Pilet B — Reports</text>
+  <line x1="280" y1="240" x2="480" y2="240" stroke="#FDE68A" stroke-width="1"/>
+  <text x="380" y="258" text-anchor="middle" font-size="10" fill="#B45309">also uses date-fns:</text>
+  <rect x="280" y="264" width="198" height="54" rx="4" fill="#FEF9C3"/>
+  <text x="380" y="281" text-anchor="middle" font-size="10" fill="#92400E" font-family="'JetBrains Mono',monospace">"date-fns": ""</text>
+  <text x="380" y="300" text-anchor="middle" font-size="10" fill="#92400E">If Pilet A loaded first → Pilet B</text>
+  <text x="380" y="315" text-anchor="middle" font-size="10" fill="#92400E">reuses Pilet A's instance ✓</text>
+
+  <!-- Pilet C -->
+  <rect x="506" y="210" width="230" height="118" rx="8" fill="#FAF5FF" stroke="#D8B4FE" stroke-width="1.5"/>
+  <text x="621" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#6B21A8">Pilet C — Maps</text>
+  <line x1="522" y1="240" x2="720" y2="240" stroke="#E9D5FF" stroke-width="1"/>
+  <text x="621" y="258" text-anchor="middle" font-size="10" fill="#7C3AED">independent importmap:</text>
+  <rect x="522" y="264" width="198" height="54" rx="4" fill="#F3E8FF"/>
+  <text x="621" y="281" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">"leaflet": ""</text>
+  <text x="621" y="300" text-anchor="middle" font-size="10" fill="#6B21A8">side-bundled; other pilets</text>
+  <text x="621" y="315" text-anchor="middle" font-size="10" fill="#6B21A8">can reuse it too</text>
+
+  <!-- Pilet-to-pilet sharing arrow -->
+  <line x1="254" y1="275" x2="262" y2="275" stroke="#009D94" stroke-width="2.5"/>
+  <polygon points="258,269 270,275 258,281" fill="#009D94"/>
+  <text x="258" y="262" text-anchor="middle" font-size="10" fill="#009D94" font-weight="600">reuse</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="342" x2="70" y2="342" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="78" y="346" font-size="11" fill="#1D4ED8">Centrally shared by shell (never bundled)</text>
+  <line x1="380" y1="342" x2="410" y2="342" stroke="#009D94" stroke-width="2.5"/>
+  <polygon points="407,337 416,342 407,347" fill="#009D94"/>
+  <text x="420" y="346" font-size="11" fill="#009D94">Pilet-to-pilet side-bundle sharing</text>
+</svg>

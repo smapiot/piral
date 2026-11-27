@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 44" fill="none">
+  <g transform="rotate(-32 22 22)">
+    <rect x="2" y="10" width="28" height="16.5" rx="6.5" fill="#5E9E22"/>
+    <rect x="13.5" y="17.5" width="28" height="16.5" rx="6.5" fill="#7CC02E"/>
+  </g>
+  <text x="48" y="30" font-family="'Inter','Segoe UI',system-ui,sans-serif" font-weight="800" font-size="24" fill="#0E1A22" letter-spacing="-0.6">Piral</text>
+</svg>

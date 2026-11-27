@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="'Inter',system-ui,sans-serif">
+  <!-- Background -->
+  <rect width="760" height="460" fill="#F7F9FC" rx="12"/>
+  <!-- Browser chrome -->
+  <rect x="20" y="16" width="720" height="330" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <rect x="20" y="16" width="720" height="38" rx="10" fill="#F0F4F9" stroke="#E2E8F0" stroke-width="1.5"/>
+  <rect x="20" y="42" width="720" height="12" fill="#F0F4F9"/>
+  <circle cx="44" cy="35" r="6" fill="#FC5F57"/>
+  <circle cx="62" cy="35" r="6" fill="#FEBC2E"/>
+  <circle cx="80" cy="35" r="6" fill="#28C840"/>
+  <rect x="100" y="27" width="380" height="16" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="290" y="39" text-anchor="middle" font-size="11" fill="#94A3B8" font-family="'JetBrains Mono',monospace">https://app.example.com</text>
+  <text x="726" y="39" text-anchor="end" font-size="11" fill="#94A3B8">Browser</text>
+  <!-- App Shell box -->
+  <rect x="38" y="62" width="684" height="268" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <text x="56" y="84" font-size="14" font-weight="600" fill="#1D4ED8">App Shell</text>
+  <text x="56" y="100" font-size="11" fill="#60A5FA">layout · auth · routing · shared runtime · extension registry</text>
+  <!-- Pilet A -->
+  <rect x="56" y="112" width="196" height="202" rx="6" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <text x="154" y="134" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Pilet A</text>
+  <text x="154" y="150" text-anchor="middle" font-size="11" fill="#16A34A">Checkout team</text>
+  <line x1="74" y1="157" x2="234" y2="157" stroke="#BBF7D0" stroke-width="1"/>
+  <rect x="70" y="164" width="168" height="18" rx="3" fill="#DCFCE7"/>
+  <text x="154" y="177" text-anchor="middle" font-size="10" fill="#166534" font-family="'JetBrains Mono',monospace">registerPage('/checkout')</text>
+  <rect x="70" y="188" width="168" height="18" rx="3" fill="#DCFCE7"/>
+  <text x="154" y="201" text-anchor="middle" font-size="10" fill="#166534" font-family="'JetBrains Mono',monospace">registerMenu(...)</text>
+  <rect x="70" y="212" width="168" height="18" rx="3" fill="#DCFCE7"/>
+  <text x="154" y="225" text-anchor="middle" font-size="10" fill="#166534" font-family="'JetBrains Mono',monospace">registerExtension(...)</text>
+  <rect x="74" y="288" width="160" height="20" rx="4" fill="#BBF7D0"/>
+  <text x="154" y="302" text-anchor="middle" font-size="10" fill="#166534">↑ deploy independently</text>
+  <!-- Pilet B -->
+  <rect x="282" y="112" width="196" height="202" rx="6" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.5"/>
+  <text x="380" y="134" text-anchor="middle" font-size="13" font-weight="600" fill="#92400E">Pilet B</text>
+  <text x="380" y="150" text-anchor="middle" font-size="11" fill="#B45309">Catalog team</text>
+  <line x1="300" y1="157" x2="460" y2="157" stroke="#FDE68A" stroke-width="1"/>
+  <rect x="296" y="164" width="168" height="18" rx="3" fill="#FEF9C3"/>
+  <text x="380" y="177" text-anchor="middle" font-size="10" fill="#92400E" font-family="'JetBrains Mono',monospace">registerPage('/products')</text>
+  <rect x="296" y="188" width="168" height="18" rx="3" fill="#FEF9C3"/>
+  <text x="380" y="201" text-anchor="middle" font-size="10" fill="#92400E" font-family="'JetBrains Mono',monospace">registerMenu(...)</text>
+  <rect x="296" y="212" width="168" height="18" rx="3" fill="#FEF9C3"/>
+  <text x="380" y="225" text-anchor="middle" font-size="10" fill="#92400E" font-family="'JetBrains Mono',monospace">registerExtension(...)</text>
+  <rect x="300" y="288" width="160" height="20" rx="4" fill="#FDE68A"/>
+  <text x="380" y="302" text-anchor="middle" font-size="10" fill="#92400E">↑ deploy independently</text>
+  <!-- Pilet C -->
+  <rect x="508" y="112" width="196" height="202" rx="6" fill="#FAF5FF" stroke="#D8B4FE" stroke-width="1.5"/>
+  <text x="606" y="134" text-anchor="middle" font-size="13" font-weight="600" fill="#6B21A8">Pilet C</text>
+  <text x="606" y="150" text-anchor="middle" font-size="11" fill="#7C3AED">Account team</text>
+  <line x1="526" y1="157" x2="686" y2="157" stroke="#E9D5FF" stroke-width="1"/>
+  <rect x="522" y="164" width="168" height="18" rx="3" fill="#F3E8FF"/>
+  <text x="606" y="177" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">registerPage('/account')</text>
+  <rect x="522" y="188" width="168" height="18" rx="3" fill="#F3E8FF"/>
+  <text x="606" y="201" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">registerMenu(...)</text>
+  <rect x="522" y="212" width="168" height="18" rx="3" fill="#F3E8FF"/>
+  <text x="606" y="225" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">registerExtension(...)</text>
+  <rect x="526" y="288" width="160" height="20" rx="4" fill="#E9D5FF"/>
+  <text x="606" y="302" text-anchor="middle" font-size="10" fill="#6B21A8">↑ deploy independently</text>
+  <!-- Arrow to feed service -->
+  <line x1="380" y1="350" x2="380" y2="388" stroke="#64748B" stroke-width="2" stroke-dasharray="5,4"/>
+  <polygon points="373,385 380,398 387,385" fill="#64748B"/>
+  <text x="400" y="366" font-size="11" fill="#64748B">GET /api/v1/pilets (on startup)</text>
+  <!-- Feed service -->
+  <rect x="220" y="400" width="320" height="50" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <text x="380" y="422" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">Feed Service</text>
+  <text x="380" y="440" text-anchor="middle" font-size="11" fill="#16A34A">{ "items": [ pilet metadata + CDN URLs ] }</text>
+</svg>

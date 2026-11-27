@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" font-family="'Inter',system-ui,sans-serif">
+  <rect width="760" height="320" fill="#F7F9FC" rx="12"/>
+  <text x="380" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#0F172A">The emulator: develop locally against the real app shell</text>
+
+  <!-- Step 1: App Shell -->
+  <rect x="24" y="50" width="198" height="148" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <text x="123" y="73" text-anchor="middle" font-size="13" font-weight="600" fill="#1D4ED8">App Shell Team</text>
+  <line x1="40" y1="80" x2="206" y2="80" stroke="#BFDBFE" stroke-width="1"/>
+  <rect x="40" y="90" width="166" height="18" rx="3" fill="#DBEAFE"/>
+  <text x="123" y="103" text-anchor="middle" font-size="10" fill="#1D4ED8" font-family="'JetBrains Mono',monospace">npm run build</text>
+  <text x="123" y="125" text-anchor="middle" font-size="11" fill="#3B82F6">Outputs:</text>
+  <rect x="40" y="132" width="166" height="16" rx="3" fill="#BFDBFE"/>
+  <text x="123" y="144" text-anchor="middle" font-size="10" fill="#1D4ED8" font-family="'JetBrains Mono',monospace">dist/release/ → CDN</text>
+  <rect x="40" y="154" width="166" height="16" rx="3" fill="#93C5FD"/>
+  <text x="123" y="166" text-anchor="middle" font-size="10" fill="#1D4ED8" font-family="'JetBrains Mono',monospace">dist/emulator/ → npm</text>
+  <text x="123" y="187" text-anchor="middle" font-size="10" fill="#3B82F6">piral publish --type emulator</text>
+
+  <!-- Arrow 1 -->
+  <line x1="224" y1="155" x2="272" y2="155" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="267,149 278,155 267,161" fill="#94A3B8"/>
+  <text x="249" y="148" text-anchor="middle" font-size="10" fill="#64748B">publish</text>
+  <text x="249" y="170" text-anchor="middle" font-size="10" fill="#64748B">to npm</text>
+
+  <!-- npm registry -->
+  <rect x="280" y="128" width="148" height="54" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <text x="354" y="151" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">npm registry</text>
+  <text x="354" y="170" text-anchor="middle" font-size="10" fill="#16A34A" font-family="'JetBrains Mono',monospace">my-shell@1.0.0</text>
+
+  <!-- Arrow 2 -->
+  <line x1="430" y1="155" x2="478" y2="155" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="473,149 484,155 473,161" fill="#94A3B8"/>
+  <text x="455" y="148" text-anchor="middle" font-size="10" fill="#64748B">install</text>
+
+  <!-- Pilet Developer -->
+  <rect x="486" y="50" width="250" height="230" rx="8" fill="#FAF5FF" stroke="#D8B4FE" stroke-width="1.5"/>
+  <text x="611" y="73" text-anchor="middle" font-size="13" font-weight="600" fill="#6B21A8">Pilet Developer</text>
+  <line x1="502" y1="80" x2="718" y2="80" stroke="#E9D5FF" stroke-width="1"/>
+  <rect x="502" y="90" width="218" height="18" rx="3" fill="#F3E8FF"/>
+  <text x="611" y="103" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">npm i --save-dev my-shell</text>
+  <rect x="502" y="114" width="218" height="18" rx="3" fill="#F3E8FF"/>
+  <text x="611" y="127" text-anchor="middle" font-size="10" fill="#6B21A8" font-family="'JetBrains Mono',monospace">npm start  (pilet debug)</text>
+  <text x="611" y="152" text-anchor="middle" font-size="11" font-weight="500" fill="#6B21A8">Gets locally:</text>
+  <text x="611" y="170" text-anchor="middle" font-size="11" fill="#7C3AED">✓  Real app shell layout</text>
+  <text x="611" y="188" text-anchor="middle" font-size="11" fill="#7C3AED">✓  Real navigation chrome</text>
+  <text x="611" y="206" text-anchor="middle" font-size="11" fill="#7C3AED">✓  Correct shared dependencies</text>
+  <text x="611" y="224" text-anchor="middle" font-size="11" fill="#7C3AED">✓  TypeScript types for PiletApi</text>
+  <text x="611" y="242" text-anchor="middle" font-size="11" fill="#7C3AED">✓  Hot reload on save</text>
+  <text x="611" y="260" text-anchor="middle" font-size="11" fill="#7C3AED">✓  No platform access needed</text>
+
+  <!-- Bottom note -->
+  <rect x="24" y="212" width="440" height="42" rx="6" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1"/>
+  <text x="244" y="230" text-anchor="middle" font-size="11" font-weight="500" fill="#92400E">Optional: also load pilets from a live feed</text>
+  <text x="244" y="247" text-anchor="middle" font-size="10" fill="#B45309" font-family="'JetBrains Mono',monospace">pilet debug --feed https://feed.example.com/api/v1/pilets</text>
+
+  <!-- Bottom label -->
+  <rect x="24" y="268" width="440" height="36" rx="6" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1"/>
+  <text x="244" y="283" text-anchor="middle" font-size="11" fill="#166534">The emulator version is tied to the app shell version.</text>
+  <text x="244" y="298" text-anchor="middle" font-size="11" fill="#166534">Run <tspan font-family="'JetBrains Mono',monospace">pilet upgrade</tspan> to get new capabilities when the shell updates.</text>
+</svg>

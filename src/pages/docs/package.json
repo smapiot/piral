@@ -1,37 +1,23 @@
 {
-  "name": "piral-documentation-page",
+  "name": "piral-docs",
   "version": "1.12.5",
   "private": true,
   "description": "The documentation page for Piral.",
-  "keywords": [
-    "piral",
-    "page",
-    "documentation",
-    "docs",
-    "website",
-    "modular",
-    "smapiot"
-  ],
-  "author": "smapiot",
-  "homepage": "https://docs.piral.io",
-  "license": "MIT",
-  "files": [
-    "lib",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/smapiot/piral.git"
-  },
-  "bugs": {
-    "url": "https://github.com/smapiot/piral/issues"
-  },
   "scripts": {
-    "build:docs": "piral-docs build --no-versioned",
-    "watch:docs": "piral-docs watch",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "gen:llms": "node scripts/gen-llms-full.mjs",
+    "dev": "node scripts/gen-llms-full.mjs && rspress dev",
+    "build": "node scripts/gen-llms-full.mjs && rspress build",
+    "preview": "rspress preview"
+  },
+  "dependencies": {
+    "@rspress/core": "^2.1.5",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@pidoc/core": "^0.18.4"
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
