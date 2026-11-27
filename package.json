@@ -52,9 +52,9 @@
     "@jsenv/file-size-impact": "14.3.33",
     "@testing-library/dom": "^10",
     "@testing-library/react": "^16",
-    "caniuse-lite": "^1.0.30001341",
+    "caniuse-lite": "^1.0.30001828",
     "esbuild": "^0.28",
-    "glob": "^8",
+    "glob": "^14",
     "jsdom": "^26",
     "lerna": "^9",
     "prettier": "^3",
@@ -67,8 +67,8 @@
   "resolutions": {
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "cookie": "^0.7.1",
-    "js-yaml": "^4.1.1",
+    "cookie": "^0.7.2",
+    "js-yaml": "^4.3.2",
     "node-fetch": "^2.6.7",
     "postcss": "^8.5.3",
     "tmp": "^0.2.7"

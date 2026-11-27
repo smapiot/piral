@@ -3,6 +3,7 @@ import { join, resolve, basename, dirname, extname } from 'path';
 import { exists, lstat, unlink, statSync } from 'fs';
 import { mkdtemp, mkdir, constants } from 'fs';
 import { writeFile, readFile, readdir, copyFile } from 'fs';
+
 import { packageJson, piletJson } from './constants';
 import { log } from './log';
 import { deepMerge } from './merge';
@@ -171,22 +172,10 @@ interface AnyPattern {
 }
 
 function matchPattern(baseDir: string, pattern: string) {
-  return new Promise<Array<string>>((resolve, reject) => {
-    glob(
-      pattern,
-      {
-        cwd: baseDir,
-        nodir: true,
-        absolute: true,
-      },
-      (err, files) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(files);
-        }
-      },
-    );
+  return glob(pattern, {
+    cwd: baseDir,
+    nodir: true,
+    absolute: true,
   });
 }
 
@@ -293,24 +282,13 @@ export async function matchAnyPilet(baseDir: string, patterns: Array<string>) {
   return matches;
 }
 
-export function matchFiles(baseDir: string, pattern: string) {
-  return new Promise<Array<string>>((resolve, reject) => {
-    glob(
-      pattern,
-      {
-        cwd: baseDir,
-        absolute: true,
-        dot: true,
-      },
-      (err, files) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(files.filter(isFile));
-        }
-      },
-    );
+export async function matchFiles(baseDir: string, pattern: string) {
+  const result = await glob(pattern, {
+    cwd: baseDir,
+    absolute: true,
+    dot: true,
   });
+  return result.filter(isFile);
 }
 
 export async function createFileIfNotExists(

@@ -1,9 +1,10 @@
-import glob from 'glob';
+import { glob } from 'glob';
 import { Agent } from 'https';
 import { existsSync, statSync } from 'fs';
 import { stat, readFile, readdir, copyFile, rm } from 'fs/promises';
 import { dirname, basename, resolve } from 'path';
 import { MemoryStream } from 'piral-cli/src/common/MemoryStream';
+
 import { downloadFile } from './http';
 import { runCommand } from './scripts';
 import { logWarn } from './log';
@@ -47,22 +48,10 @@ function isDirectory(item: string) {
 }
 
 function matchFiles(baseDir: string, pattern: string) {
-  return new Promise<Array<string>>((resolve, reject) => {
-    glob(
-      pattern,
-      {
-        cwd: baseDir,
-        absolute: true,
-        dot: true,
-      },
-      (err, files) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(files);
-        }
-      },
-    );
+  return glob(pattern, {
+    cwd: baseDir,
+    absolute: true,
+    dot: true,
   });
 }
 
