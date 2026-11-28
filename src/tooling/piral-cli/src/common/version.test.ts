@@ -275,4 +275,33 @@ describe('semver check module', () => {
     expect(satisfies('1.4.1', '>1.4.0')).toBe(true);
     expect(satisfies('1.4.0', '>1.4.0')).toBe(false);
   });
+
+  it('treats the minor version as breaking for caret ranges on 0.x', () => {
+    expect(satisfies('0.2.3', '^0.2.3')).toBe(true);
+    expect(satisfies('0.2.9', '^0.2.3')).toBe(true);
+    expect(satisfies('0.2.2', '^0.2.3')).toBe(false);
+    expect(satisfies('0.3.0', '^0.2.3')).toBe(false);
+    expect(satisfies('0.2.5', '^0.2')).toBe(true);
+    expect(satisfies('0.3.0', '^0.2')).toBe(false);
+  });
+
+  it('treats the patch version as breaking for caret ranges on 0.0.x', () => {
+    expect(satisfies('0.0.3', '^0.0.3')).toBe(true);
+    expect(satisfies('0.0.4', '^0.0.3')).toBe(false);
+    expect(satisfies('0.0.2', '^0.0.3')).toBe(false);
+    expect(satisfies('0.0.9', '^0.0')).toBe(true);
+    expect(satisfies('0.1.0', '^0.0')).toBe(false);
+  });
+
+  it('keeps accepting the whole 0.x line for ^0 and ^0.x', () => {
+    expect(satisfies('0.9.1', '^0')).toBe(true);
+    expect(satisfies('1.0.0', '^0')).toBe(false);
+    expect(satisfies('0.9.1', '^0.x')).toBe(true);
+  });
+
+  it('still allows minor and patch updates for caret ranges from 1.0.0', () => {
+    expect(satisfies('1.9.0', '^1.2.3')).toBe(true);
+    expect(satisfies('1.2.2', '^1.2.3')).toBe(false);
+    expect(satisfies('2.0.0', '^1.2.3')).toBe(false);
+  });
 });
