@@ -34,6 +34,10 @@ function validateAndParse(v: string) {
   return match;
 }
 
+function isConcrete(v: string | undefined) {
+  return v !== undefined && v !== 'x' && v !== '*';
+}
+
 function compareStrings(a: string, b: string) {
   const ap = parseSegment(a);
   const bp = parseSegment(b);
@@ -138,6 +142,15 @@ export function satisfies(v: string, r: string) {
     if (compareStrings(v1, m1) !== 0) {
       return false;
     } else if (op === '^') {
+      // for 0.x versions the leftmost non-zero part is the breaking one, e.g., ^0.2.3 means >=0.2.3 <0.3.0
+      if (compareStrings(m1, '0') === 0 && isConcrete(m2)) {
+        if (compareStrings(v2, m2) !== 0) {
+          return false;
+        } else if (compareStrings(m2, '0') === 0 && isConcrete(m3)) {
+          return compareStrings(v3, m3) === 0;
+        }
+      }
+
       return compareSegments([v2, v3], [m2, m3]) >= 0;
     } else if (compareStrings(v2, m2) !== 0) {
       return false;

@@ -2,6 +2,7 @@
 
 ## 1.13.0 (tbd)
 
+- Fixed caret ranges on `0.x` versions accepting a newer minor (or patch for `0.0.x`) version
 - Fixed version range checks with `>`, `>=`, `<`, `<=` and `=` ignoring the major version (#904)
 - Updated dependencies (#907)
 - Updated minimum required Node.js version to 22
